@@ -13,13 +13,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { to: "/", label: "Home" },
-  { to: "/scripts", label: "Scripts" },
-  { to: "/keys", label: "Keys" },
-  { to: "/executors", label: "Executors" },
+  { to: "/keys", label: "Get Key" },
   { to: "/premium-keys", label: "Premium" },
-  { to: "/guides", label: "Guides" },
-  { to: "/blog", label: "Blog" },
-  { to: "/faq", label: "FAQ" },
 ];
 
 export function Navbar() {
