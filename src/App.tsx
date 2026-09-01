@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { MotionConfig } from "framer-motion";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,9 +13,6 @@ import { BackButton } from "@/components/BackButton";
 import { RouteProgress } from "@/components/RouteProgress";
 import { ExternalLinkMonetag } from "@/components/ExternalLinkMonetag";
 import { EngagementTracker } from "@/components/EngagementTracker";
-
-// Landing page (eager).
-import Index from "./pages/Index";
 
 // Store + key system.
 const PremiumKeys = lazy(() => import("./pages/PremiumKeys"));
@@ -82,7 +79,7 @@ const App = () => (
               <ExternalLinkMonetag />
               <Suspense fallback={<RouteFallback />}>
                 <Routes>
-                  <Route path="/" element={<Index />} />
+                  <Route path="/" element={<Navigate to="/premium-keys" replace />} />
 
                   {/* Store + key system */}
                   <Route path="/premium-keys" element={<PremiumKeys />} />
