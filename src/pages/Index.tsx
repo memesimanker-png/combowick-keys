@@ -5,12 +5,9 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { FeaturesSection } from "@/components/home/FeaturesSection";
 import { HowItWorksSection } from "@/components/home/HowItWorksSection";
 import { FAQSection } from "@/components/home/FAQSection";
-import { BlogPreviewSection } from "@/components/home/BlogPreviewSection";
 import { GallerySection } from "@/components/home/GallerySection";
-import { FeaturedScriptsSection } from "@/components/home/FeaturedScriptsSection";
 import { TrustSection } from "@/components/home/TrustSection";
 import { VideoBackground } from "@/components/VideoBackground";
-import { DropCadenceTicker } from "@/components/DropCadenceTicker";
 import { AdSlot } from "@/components/AdSlot";
 import { useTranslation } from "@/lib/translation-context";
 import { motion } from "framer-motion";
@@ -76,15 +73,10 @@ export default function Index() {
             transition={{ duration: 0.8, delay: 0.45 }}
             className="flex flex-col sm:flex-row items-start gap-4"
           >
-            <Link to="/scripts">
-              <Button size="lg" className="text-sm px-10 py-7 uppercase tracking-wider font-bold neon-glow group">
-                Enter the Codex
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
             <Link to="/premium-keys">
-              <Button variant="outline" size="lg" className="text-sm px-10 py-7 uppercase tracking-wider border-bronze/30 hover:bg-bronze/10 hover:text-bronze-light">
+              <Button size="lg" className="text-sm px-10 py-7 uppercase tracking-wider font-bold neon-glow group">
                 {t("Premium Keys")}
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link to="/keys">
@@ -98,24 +90,9 @@ export default function Index() {
         <div className="absolute bottom-0 left-0 right-0 h-px line-glow" />
       </section>
 
-      <DropCadenceTicker />
-
-      <FeaturedScriptsSection />
-
-      {/* In-content AdSense unit — between content sections, not in nav/sidebar/footer */}
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <AdSlot slot="1111111111" format="auto" responsive minHeight={280} />
-      </div>
-
       <FeaturesSection />
       <GallerySection />
       <HowItWorksSection />
-
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <AdSlot slot="2222222222" format="auto" responsive minHeight={280} />
-      </div>
-
-      <BlogPreviewSection />
       <TrustSection />
       <FAQSection />
 
@@ -138,14 +115,14 @@ export default function Index() {
             {t("cta_main_desc")}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link to="/scripts">
+            <Link to="/premium-keys">
               <Button size="lg" className="text-sm px-10 py-7 uppercase tracking-wider neon-glow">
-                Enter the Codex
+                {t("Premium Keys")}
               </Button>
             </Link>
-            <Link to="/blog">
+            <Link to="/keys">
               <Button variant="outline" size="lg" className="text-sm px-10 py-7 uppercase tracking-wider border-bronze/30 hover:bg-bronze/10 hover:text-bronze-light">
-                Read the Archives
+                {t("Get Key")}
               </Button>
             </Link>
           </div>
