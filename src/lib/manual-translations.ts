@@ -389,7 +389,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "MEGA WEEKEND",
     "Today's deal ends in": "L'offre du jour se termine dans",
     "Skip Ads — Instant Premium Keys | Click Here": "Ignorer les pubs — Clés Premium instantanées | Cliquez ici",
-    "Close banner": "Fermer la bannière"
+    "Close banner": "Fermer la bannière",
+    "Back": "Retour",
+    "Go back": "Revenir en arrière",
+    "Get Script": "Obtenir le script",
+    "Deal ends in": "L'offre se termine dans"
   },
   "es": {
     " one-time": " pago único",
@@ -777,7 +781,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "LIQUIDACION DE FIN DE SEMANA",
     "Today's deal ends in": "La oferta de hoy termina en",
     "Skip Ads — Instant Premium Keys | Click Here": "Sin anuncios — Claves Premium al instante | Haz clic aquí",
-    "Close banner": "Cerrar banner"
+    "Close banner": "Cerrar banner",
+    "Back": "Atrás",
+    "Go back": "Volver",
+    "Get Script": "Obtener script",
+    "Deal ends in": "La oferta termina en"
   },
   "de": {
     " one-time": " einmalig",
@@ -1165,7 +1173,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "Wochenend-Kracher",
     "Today's deal ends in": "Angebot des Tages endet in",
     "Skip Ads — Instant Premium Keys | Click Here": "Werbung überspringen — Sofortige Premium-Keys | Hier klicken",
-    "Close banner": "Banner schließen"
+    "Close banner": "Banner schließen",
+    "Back": "Zurück",
+    "Go back": "Zurück",
+    "Get Script": "Skript holen",
+    "Deal ends in": "Angebot endet in"
   },
   "pt": {
     " one-time": " único",
@@ -1553,7 +1565,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "Arrasa Fim de Semana",
     "Today's deal ends in": "A oferta de hoje termina em",
     "Skip Ads — Instant Premium Keys | Click Here": "Pule os anúncios — Chaves Premium instantâneas | Clique aqui",
-    "Close banner": "Fechar banner"
+    "Close banner": "Fechar banner",
+    "Back": "Voltar",
+    "Go back": "Voltar",
+    "Get Script": "Obter Script",
+    "Deal ends in": "Oferta termina em"
   },
   "ru": {
     " one-time": " разовый платёж",
@@ -1941,7 +1957,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "РАСПРОДАЖА ВЫХОДНЫХ",
     "Today's deal ends in": "Предложение дня истекает через",
     "Skip Ads — Instant Premium Keys | Click Here": "Без рекламы — мгновенные Premium-ключи | Нажмите здесь",
-    "Close banner": "Закрыть баннер"
+    "Close banner": "Закрыть баннер",
+    "Back": "Назад",
+    "Go back": "Вернуться",
+    "Get Script": "Получить скрипт",
+    "Deal ends in": "Акция закончится через"
   },
   "zh-CN": {
     " one-time": " 一次性",
@@ -2329,7 +2349,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "周末狂欢购",
     "Today's deal ends in": "今日优惠倒计时",
     "Skip Ads — Instant Premium Keys | Click Here": "跳过广告 — 立即获取 Premium 密钥 | 点击这里",
-    "Close banner": "关闭横幅"
+    "Close banner": "关闭横幅",
+    "Back": "返回",
+    "Go back": "返回",
+    "Get Script": "获取脚本",
+    "Deal ends in": "优惠倒计时"
   },
   "ko": {
     " one-time": " 일회성",
@@ -2717,7 +2741,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "주말 파격 세일",
     "Today's deal ends in": "오늘의 특가 종료까지",
     "Skip Ads — Instant Premium Keys | Click Here": "광고 건너뛰기 — 즉시 Premium 키 발급 | 여기 클릭",
-    "Close banner": "배너 닫기"
+    "Close banner": "배너 닫기",
+    "Back": "뒤로",
+    "Go back": "뒤로 가기",
+    "Get Script": "스크립트 받기",
+    "Deal ends in": "혜택 종료까지"
   },
   "th": {
     " one-time": " ครั้งเดียว",
@@ -3105,7 +3133,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "ลดกระหน่ำสุดสัปดาห์",
     "Today's deal ends in": "ดีลวันนี้จะสิ้นสุดใน",
     "Skip Ads — Instant Premium Keys | Click Here": "ข้ามโฆษณา — รับคีย์ Premium ทันที | คลิกที่นี่",
-    "Close banner": "ปิดแบนเนอร์"
+    "Close banner": "ปิดแบนเนอร์",
+    "Back": "กลับ",
+    "Go back": "ย้อนกลับ",
+    "Get Script": "รับสคริปต์",
+    "Deal ends in": "ดีลสิ้นสุดใน"
   },
   "id": {
     " one-time": " sekali bayar",
@@ -3493,7 +3525,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "Obral Akhir Pekan",
     "Today's deal ends in": "Penawaran hari ini berakhir dalam",
     "Skip Ads — Instant Premium Keys | Click Here": "Lewati Iklan — Kunci Premium Instan | Klik Di Sini",
-    "Close banner": "Tutup banner"
+    "Close banner": "Tutup banner",
+    "Back": "Kembali",
+    "Go back": "Kembali",
+    "Get Script": "Ambil Skrip",
+    "Deal ends in": "Penawaran berakhir dalam"
   },
   "fil": {
     " one-time": " isang beses",
@@ -3881,7 +3917,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "WEEKEND BLOWOUT",
     "Today's deal ends in": "Matatapos ang deal ngayon sa loob ng",
     "Skip Ads — Instant Premium Keys | Click Here": "Laktawan ang Ads — Instant na Premium Keys | I-click Dito",
-    "Close banner": "Isara ang banner"
+    "Close banner": "Isara ang banner",
+    "Back": "Bumalik",
+    "Go back": "Bumalik",
+    "Get Script": "Kunin ang Script",
+    "Deal ends in": "Matatapos ang deal sa"
   },
   "vi": {
     " one-time": " một lần",
@@ -4269,6 +4309,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Weekend Blowout": "XẢ HÀNG CUỐI TUẦN",
     "Today's deal ends in": "Ưu đãi hôm nay kết thúc sau",
     "Skip Ads — Instant Premium Keys | Click Here": "Bỏ qua quảng cáo — Nhận key Premium tức thì | Nhấn vào đây",
-    "Close banner": "Đóng biểu ngữ"
+    "Close banner": "Đóng biểu ngữ",
+    "Back": "Quay lại",
+    "Go back": "Quay lại",
+    "Get Script": "Lấy Script",
+    "Deal ends in": "Ưu đãi kết thúc sau"
   }
 };
