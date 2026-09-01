@@ -53,7 +53,14 @@ export function DiscountNotification() {
 
   const constraintsRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const didDragRef = useRef(false);
   const dragControls = useDragControls();
+
+  // A drag should never also fire a click. onDragStart marks the gesture; the
+  // click that concludes the same gesture is suppressed, and the flag clears on
+  // the next tick so later, independent clicks work normally.
+  const startDrag = (e: React.PointerEvent) => dragControls.start(e);
+  const guard = (fn: () => void) => () => { if (!didDragRef.current) fn(); };
 
   // Restore saved position (clamped so the card can't start off-screen).
   const saved = readJSON<{ x: number; y: number }>(POS_KEY);
@@ -140,7 +147,8 @@ export function DiscountNotification() {
             dragListener={false}
             dragConstraints={constraintsRef}
             dragMomentum={false}
-            onDragEnd={persistPos}
+            onDragStart={() => { didDragRef.current = true; }}
+            onDragEnd={() => { persistPos(); setTimeout(() => { didDragRef.current = false; }, 0); }}
             style={{ x, y }}
             initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -153,8 +161,8 @@ export function DiscountNotification() {
             {collapsed ? (
               // Minimized pill
               <button
-                onClick={toggleCollapse}
-                onPointerDown={(e) => dragControls.start(e)}
+                onClick={guard(toggleCollapse)}
+                onPointerDown={startDrag}
                 aria-label={t("View Deal")}
                 className="group flex cursor-grab items-center gap-2 rounded-full border border-green-500/50 bg-gradient-to-br from-green-950/95 to-black/95 py-2 pl-3 pr-4 shadow-2xl shadow-green-900/40 backdrop-blur active:cursor-grabbing"
               >
@@ -174,7 +182,7 @@ export function DiscountNotification() {
 
                 {/* Header / drag handle */}
                 <div
-                  onPointerDown={(e) => dragControls.start(e)}
+                  onPointerDown={startDrag}
                   className="mb-2 flex cursor-grab items-center gap-2 active:cursor-grabbing"
                 >
                   <GripVertical className="h-4 w-4 shrink-0 text-white/30" />
@@ -183,10 +191,10 @@ export function DiscountNotification() {
                     {badge}
                   </span>
                   <div className="ml-auto flex items-center gap-1">
-                    <button onClick={toggleCollapse} aria-label={t("Close")} className="rounded-md p-1 text-muted-foreground/70 transition-colors hover:bg-white/10 hover:text-white">
+                    <button onClick={guard(toggleCollapse)} aria-label={t("Close")} className="rounded-md p-1 text-muted-foreground/70 transition-colors hover:bg-white/10 hover:text-white">
                       <Minus className="h-4 w-4" />
                     </button>
-                    <button onClick={close} aria-label={t("Close")} className="rounded-md p-1 text-muted-foreground/70 transition-colors hover:bg-white/10 hover:text-white">
+                    <button onClick={guard(close)} aria-label={t("Close")} className="rounded-md p-1 text-muted-foreground/70 transition-colors hover:bg-white/10 hover:text-white">
                       <X className="h-4 w-4" />
                     </button>
                   </div>
@@ -211,7 +219,7 @@ export function DiscountNotification() {
                 </p>
 
                 <button
-                  onClick={viewDeal}
+                  onClick={guard(viewDeal)}
                   className="mt-auto inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-green-600 px-3 py-2 pt-2 text-sm font-semibold text-white transition-colors hover:bg-green-500"
                 >
                   {t("View Deal")}
