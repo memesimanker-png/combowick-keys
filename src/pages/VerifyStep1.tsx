@@ -15,6 +15,7 @@ import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
+import { DiscountNotification } from "@/components/DiscountNotification";
 
 
 export default function VerifyStep1() {
@@ -44,6 +45,7 @@ export default function VerifyStep1() {
     <>
       <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
+      <DiscountNotification />
         {isAdEnabled("verify-step1", "skip_ads_banner") && <SkipAdsBanner />}
         <header className="container py-6">
           <div className="flex items-center justify-between">
