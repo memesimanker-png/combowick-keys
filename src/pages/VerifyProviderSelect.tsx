@@ -13,6 +13,7 @@ import { lovable } from "@/integrations/lovable/index";
 import { getTodaySchedule } from "@/lib/day-schedule";
 import { useTranslation } from "@/lib/translation-context";
 import { DiscountNotification } from "@/components/DiscountNotification";
+import { FunnelHeader } from "@/components/FunnelHeader";
 
 
 const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
@@ -334,15 +335,7 @@ export default function VerifyProviderSelect() {
         </div>
       )}
 
-      <header className="container py-6">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
-          </div>
-          <LanguageSelector />
-        </div>
-      </header>
+      <FunnelHeader title={t("ComboWick Verify")} />
 
       <main className="flex-1 container flex flex-col items-center justify-center py-8">
         <div className="max-w-xl w-full mx-auto space-y-4">
