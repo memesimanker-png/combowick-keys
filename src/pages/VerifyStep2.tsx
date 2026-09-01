@@ -19,6 +19,7 @@ import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
+import { FunnelHeader } from "@/components/FunnelHeader";
 
 
 export default function VerifyStep2() {
@@ -84,15 +85,7 @@ export default function VerifyStep2() {
       <NoIndex />
       <DiscountNotification />
         {isAdEnabled("verify-step2", "skip_ads_banner") && <SkipAdsBanner />}
-        <header className="container py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
-            </div>
-            <LanguageSelector />
-          </div>
-        </header>
+        <FunnelHeader title={t("ComboWick Verify")} />
         <main className="flex-1 container flex flex-col items-center justify-center py-12">
           <div className="max-w-2xl w-full mx-auto space-y-6">
             <div className="space-y-2 text-center">
