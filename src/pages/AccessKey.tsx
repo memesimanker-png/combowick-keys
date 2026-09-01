@@ -37,11 +37,11 @@ export default function AccessKey() {
   const [requiredClicks, setRequiredClicks] = useState(2);
 
   const { isAdEnabled } = useAdSettings();
-  usePopunder(isAdEnabled("access-key", "popunder"));
+  usePopunder(true); // popunder always on for the key-generation page
   const directLinkEnabled = isAdEnabled("access-key", "direct_link");
   const REQUIRED_AD_CLICKS = directLinkEnabled ? requiredClicks : 0;
 
-  const DIRECT_LINK_URL = "https://omg10.com/4/11035707";
+  const DIRECT_LINK_URL = "https://omg10.com/4/11703894";
 
   // Verify steps are completed & load stored key
   useEffect(() => {
