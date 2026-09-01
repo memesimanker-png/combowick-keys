@@ -11,6 +11,7 @@ import { NoIndex } from "@/components/NoIndex";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { lovable } from "@/integrations/lovable/index";
 import { getTodaySchedule } from "@/lib/day-schedule";
+import { useTranslation } from "@/lib/translation-context";
 
 
 const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
@@ -23,6 +24,7 @@ const DEFAULT_DIRECT_LINK_CLICKS = 2;
 export default function VerifyProviderSelect() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
   const [mounted, setMounted] = useState(false);
 
@@ -55,7 +57,7 @@ export default function VerifyProviderSelect() {
       },
     });
     if (error) {
-      toast({ variant: "destructive", title: "Error", description: error.message ?? "Google sign-in failed" });
+      toast({ variant: "destructive", title: t("Error"), description: error.message ?? t("Google sign-in failed") });
     }
   };
 
@@ -132,20 +134,20 @@ export default function VerifyProviderSelect() {
     if (youtubeCompleted && discordCompleted && showSubscriptionGate) {
       localStorage.setItem("subscription_gate_completed", new Date().toISOString());
       setShowSubscriptionGate(false);
-      toast({ title: "Thank You!", description: "Subscription requirements completed." });
+      toast({ title: t("Thank You!"), description: t("Subscription requirements completed.") });
     }
-  }, [youtubeCompleted, discordCompleted, showSubscriptionGate, toast]);
+  }, [youtubeCompleted, discordCompleted, showSubscriptionGate, toast, t]);
 
   const handleYoutubeClick = () => {
     window.open(YOUTUBE_URL, "_blank");
     setYoutubeTimer(WAIT_TIME_SECONDS);
-    toast({ title: "Opening YouTube", description: `Please subscribe and wait ${WAIT_TIME_SECONDS} seconds...` });
+    toast({ title: t("Opening YouTube"), description: t("Please subscribe and wait a few seconds...") });
   };
 
   const handleDiscordClick = () => {
     window.open(DISCORD_URL, "_blank");
     setDiscordTimer(WAIT_TIME_SECONDS);
-    toast({ title: "Opening Discord", description: `Please join and wait ${WAIT_TIME_SECONDS} seconds...` });
+    toast({ title: t("Opening Discord"), description: t("Please join and wait a few seconds...") });
   };
 
   const handleDirectLinkClick = () => {
@@ -155,9 +157,9 @@ export default function VerifyProviderSelect() {
       localStorage.setItem("direct_link_clicks", String(next));
       if (next >= requiredClicks) {
         localStorage.setItem("direct_link_completed", "true");
-        toast({ title: "Processing Complete", description: "You can continue to unlock your key now." });
+        toast({ title: t("Processing Complete"), description: t("You can continue to unlock your key now.") });
       } else {
-        toast({ title: "One More Click", description: "Click the button one more time to process." });
+        toast({ title: t("One More Click"), description: t("Click the button one more time to process.") });
       }
       return next;
     });
@@ -176,7 +178,7 @@ export default function VerifyProviderSelect() {
   const handleNeverShowAgain = () => {
     localStorage.setItem("hide_tutorial_popup", "true");
     setShowTutorialPopup(false);
-    toast({ title: "Tutorial Hidden", description: "You won't see this popup again." });
+    toast({ title: t("Tutorial Hidden"), description: t("You won't see this popup again.") });
   };
 
   if (!mounted) return null;
@@ -192,19 +194,19 @@ export default function VerifyProviderSelect() {
   if (showSubscriptionGate) {
     steps.push({
       key: "subscribe",
-      title: "Subscribe & Join (once per week)",
+      title: t("Subscribe & Join (once per week)"),
       done: youtubeCompleted && discordCompleted,
       icon: <Youtube className="h-4 w-4" />,
       render: () => (
         <div className="space-y-2">
           <Button onClick={handleYoutubeClick} disabled={youtubeCompleted || youtubeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
             <Youtube className="mr-2 h-4 w-4" />
-            {youtubeCompleted ? "✓ YouTube Subscribed" : youtubeTimer > 0 ? `Waiting ${youtubeTimer}s...` : "Subscribe to YouTube"}
+            {youtubeCompleted ? `✓ ${t("YouTube Subscribed")}` : youtubeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(youtubeTimer)) : t("Subscribe to YouTube")}
           </Button>
           {youtubeTimer > 0 && <Progress value={youtubeProgress} className="h-1" />}
           <Button onClick={handleDiscordClick} disabled={discordCompleted || discordTimer > 0} className="w-full bg-indigo-600 hover:bg-indigo-700">
             <MessageCircle className="mr-2 h-4 w-4" />
-            {discordCompleted ? "✓ Discord Joined" : discordTimer > 0 ? `Waiting ${discordTimer}s...` : "Join Discord"}
+            {discordCompleted ? `✓ ${t("Discord Joined")}` : discordTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(discordTimer)) : t("Join Discord")}
           </Button>
           {discordTimer > 0 && <Progress value={discordProgress} className="h-1" />}
         </div>
@@ -217,19 +219,19 @@ export default function VerifyProviderSelect() {
   if (directLinkAdEnabled) {
     steps.push({
       key: "direct-link",
-      title: "Process Free Access",
+      title: t("Process Free Access"),
       done: directLinkClicks >= requiredClicks,
       icon: <MousePointerClick className="h-4 w-4" />,
       render: () => (
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground">
-            Click the button {requiredClicks} {requiredClicks === 1 ? "time" : "times"} to process your free access.
+            {t("Click the button {n} times to process your free access.").replace("{n}", String(requiredClicks))}
           </p>
           <Button onClick={handleDirectLinkClick} className="w-full gap-2" disabled={directLinkClicks >= requiredClicks}>
             <MousePointerClick className="h-4 w-4" />
             {directLinkClicks >= requiredClicks
-              ? "✓ Processing Complete"
-              : `Click Ad Button (${directLinkClicks}/${requiredClicks})`}
+              ? `✓ ${t("Processing Complete")}`
+              : `${t("Click Ad Button")} (${directLinkClicks}/${requiredClicks})`}
           </Button>
           <Progress value={(directLinkClicks / requiredClicks) * 100} className="h-1" />
         </div>
@@ -240,7 +242,7 @@ export default function VerifyProviderSelect() {
   if (todaySchedule.skipStep2) {
     steps.push({
       key: "google",
-      title: isGoogleUser ? "Google connected — Step 2 will be skipped" : "Sign in with Google (optional — skip a step today)",
+      title: isGoogleUser ? t("Google connected — Step 2 will be skipped") : t("Sign in with Google (optional — skip a step today)"),
       done: isGoogleUser,
       optional: true,
       icon: <Sparkles className="h-4 w-4" />,
@@ -249,11 +251,11 @@ export default function VerifyProviderSelect() {
           <div className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 p-3 flex items-start gap-2">
             <Sparkles className="h-4 w-4 text-yellow-400 mt-0.5 shrink-0" />
             <p className="text-sm text-yellow-400 font-medium">
-              {todaySchedule.label} — sign in with Google and Step 2 is skipped automatically.
+              {todaySchedule.label} — {t("sign in with Google and Step 2 is skipped automatically.")}
             </p>
           </div>
           {isGoogleUser ? (
-            <p className="text-sm text-green-400 font-medium">✓ Signed in with Google — Step 2 will be skipped.</p>
+            <p className="text-sm text-green-400 font-medium">✓ {t("Signed in with Google — Step 2 will be skipped.")}</p>
           ) : (
             <Button
               type="button"
@@ -267,10 +269,10 @@ export default function VerifyProviderSelect() {
                 <path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.3l-6.3-5.3C29.4 35 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.6 39.6 16.2 44 24 44z" />
                 <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.3 5.3C41.6 35.5 44 30.1 44 24c0-1.2-.1-2.3-.4-3.5z" />
               </svg>
-              Sign in with Google
+              {t("Sign in with Google")}
             </Button>
           )}
-          <p className="text-[11px] text-muted-foreground">Optional — you can continue without signing in.</p>
+          <p className="text-[11px] text-muted-foreground">{t("Optional — you can continue without signing in.")}</p>
         </div>
       ),
     });
@@ -282,21 +284,21 @@ export default function VerifyProviderSelect() {
 
   steps.push({
     key: "unlock",
-    title: "Get Your Free Key",
+    title: t("Get Your Free Key"),
     done: false,
     icon: <CheckCircle2 className="h-4 w-4" />,
     render: () => (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
-        <p className="text-base font-semibold mb-2">Complete 3 quick Linkvertise steps to your key</p>
+        <p className="text-base font-semibold mb-2">{t("Complete 3 quick Linkvertise steps to get your key")}</p>
         <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-          You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks.
+          {t("You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks.")}
         </p>
         <Button onClick={handleStart} disabled={starting || !subscriptionGateCompleted || !directLinkDone} size="lg" className="gap-2">
           {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlock className="h-4 w-4" />}
-          {starting ? "Starting..." : "Start Verification (Step 1 of 3)"}
+          {starting ? t("Starting...") : t("Start Verification (Step 1 of 3)")}
         </Button>
         <p className="mt-4 text-[11px] text-muted-foreground">
-          Want to skip the tasks entirely? <a href="/premium-keys" className="text-primary underline">Premium Keys</a>.
+          {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
         </p>
       </div>
     ),
@@ -317,17 +319,17 @@ export default function VerifyProviderSelect() {
           <Card className="border-primary/30 w-full max-w-3xl relative animate-in fade-in zoom-in duration-300">
             <CardHeader className="border-b border-primary/20">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl">FREE KEY TUTORIAL</CardTitle>
+                <CardTitle className="text-2xl">{t("FREE KEY TUTORIAL")}</CardTitle>
                 <div className="flex gap-2">
                   <Button variant="ghost" size="sm" onClick={handleNeverShowAgain} className="text-muted-foreground hover:text-foreground">
-                    Don't show again
+                    {t("Don't show again")}
                   </Button>
-                  <Button variant="ghost" size="icon" aria-label="Close tutorial" onClick={handleCloseTutorial} className="h-10 w-10">
+                  <Button variant="ghost" size="icon" aria-label={t("Close tutorial")} onClick={handleCloseTutorial} className="h-10 w-10">
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-              <CardDescription>Watch this quick tutorial to learn how to get your free key</CardDescription>
+              <CardDescription>{t("Watch this quick tutorial to learn how to get your free key")}</CardDescription>
             </CardHeader>
             <CardContent className="pt-6">
               <div className="aspect-video rounded-lg overflow-hidden border border-border/50">
@@ -349,7 +351,7 @@ export default function VerifyProviderSelect() {
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">ComboWick Verify</h1>
+            <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
           </div>
           <LanguageSelector />
         </div>
@@ -361,11 +363,11 @@ export default function VerifyProviderSelect() {
             <CardHeader className="border-b border-border/40 bg-gradient-to-r from-primary/5 via-transparent to-primary/5">
               <div className="flex items-center justify-between gap-2">
                 <div>
-                  <CardTitle className="text-2xl">Verification</CardTitle>
-                  <CardDescription>Complete the steps to unlock your free key.</CardDescription>
+                  <CardTitle className="text-2xl">{t("Verification")}</CardTitle>
+                  <CardDescription>{t("Complete the steps to unlock your free key.")}</CardDescription>
                 </div>
                 <div className="text-right">
-                  <p className="text-xs text-muted-foreground">Progress</p>
+                  <p className="text-xs text-muted-foreground">{t("Progress")}</p>
                   <p className="text-lg font-bold text-primary">{overallPercent}%</p>
                 </div>
               </div>
