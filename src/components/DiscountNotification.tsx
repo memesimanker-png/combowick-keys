@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, X, ArrowRight } from "lucide-react";
 import { useKeyDiscounts } from "@/hooks/useKeyDiscounts";
@@ -21,6 +22,7 @@ const TIER_NAMES: Record<string, string> = {
 export function DiscountNotification() {
   const { data: discounts } = useKeyDiscounts();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -61,9 +63,12 @@ export function DiscountNotification() {
     .replace("{percent}", String(best.percent));
   const badge = best.label ? t(best.label) : t("Limited-Time Deal");
 
-  const scrollToPricing = () => {
+  const viewDeal = () => {
+    // On the premium page, scroll to the pricing cards; from the verify/step
+    // flow (no cards present), route to the premium page instead.
     const cards = document.querySelector("[data-pricing-cards]");
     if (cards) cards.scrollIntoView({ behavior: "smooth", block: "start" });
+    else navigate("/premium-keys");
     close();
   };
 
@@ -75,7 +80,7 @@ export function DiscountNotification() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.96 }}
           transition={{ type: "spring", stiffness: 260, damping: 22 }}
-          className="fixed bottom-4 right-4 z-50 w-[min(92vw,22rem)]"
+          className="fixed z-40 bottom-3 left-1/2 -translate-x-1/2 w-[calc(100vw-1.5rem)] max-w-sm sm:left-4 sm:translate-x-0 sm:w-[20rem] sm:max-w-none"
           role="status"
           aria-live="polite"
         >
@@ -111,7 +116,7 @@ export function DiscountNotification() {
             </p>
 
             <button
-              onClick={scrollToPricing}
+              onClick={viewDeal}
               className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-500"
             >
               {t("View Deal")}
