@@ -40,6 +40,47 @@ const RULES: Rule[] = [
 /** Tiers that may never be auto-discounted. */
 const EXCLUDED = new Set(["trial-7day"]);
 
+// Hard ceilings per tier — a flash bump can never push past these, so the
+// lifetime key never looks "cheap" no matter how the dice land.
+const TIER_CAP: Record<string, number> = { monthly: 30, lifetime: 40 };
+
+// ---- Surprise flash sales -------------------------------------------------
+// A per-UTC-day deterministic "random" bump layered on top of the base day
+// rule. Seeded by the calendar date, so every visitor sees the SAME deal that
+// day and it's stable across refreshes (no Math.random at runtime). Feels
+// unpredictable day-to-day — which keeps buyers from always waiting for the sale.
+function daySeed(now: Date): number {
+  const key = String(now.getUTCFullYear() * 10000 + (now.getUTCMonth() + 1) * 100 + now.getUTCDate());
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+}
+function rand01(seed: number, salt: number): number {
+  let x = (seed ^ Math.imul(salt, 2654435761)) >>> 0;
+  x ^= x << 13; x >>>= 0;
+  x ^= x >> 17;
+  x ^= x << 5; x >>>= 0;
+  return (x >>> 0) / 4294967296;
+}
+function tierSalt(t: string): number { let h = 0; for (let i = 0; i < t.length; i++) h = (Math.imul(h, 31) + t.charCodeAt(i)) >>> 0; return h % 97; }
+
+type Flash = { extra: number; label: string } | null;
+function getFlash(tierId: string, now: Date): Flash {
+  if (EXCLUDED.has(tierId)) return null;
+  const seed = daySeed(now);
+  // Mega day (~1 in 12): a bigger, rarer drop for word-of-mouth spikes.
+  if (rand01(seed, 2) < 0.083) {
+    const extra = 12 + Math.floor(rand01(seed, 30 + tierSalt(tierId)) * 8); // +12..+19
+    return { extra, label: "🔥 Mega Sale" };
+  }
+  // Flash day (~1 in 3): a moderate surprise bump.
+  if (rand01(seed, 1) < 0.33) {
+    const extra = 5 + Math.floor(rand01(seed, 40 + tierSalt(tierId)) * 6); // +5..+10
+    return { extra, label: "⚡ Flash Sale" };
+  }
+  return null;
+}
+
 export function getAutoDiscount(tierId: string, now: Date = new Date()): AutoDiscount | null {
   if (EXCLUDED.has(tierId)) return null;
   const day = now.getUTCDay();
@@ -50,6 +91,15 @@ export function getAutoDiscount(tierId: string, now: Date = new Date()): AutoDis
     if (!percent) continue;
     if (!best || percent > best.percent) best = { percent, label: rule.label };
   }
+
+  // Layer today's surprise flash sale on top of the base day rule, capped.
+  const flash = getFlash(tierId, now);
+  if (flash) {
+    const base = best?.percent ?? 0;
+    const boosted = Math.min(base + flash.extra, TIER_CAP[tierId] ?? 40);
+    if (boosted > base) best = { percent: boosted, label: flash.label };
+  }
+
   return best;
 }
 
