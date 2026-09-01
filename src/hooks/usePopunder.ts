@@ -24,6 +24,10 @@ export function usePopunder(enabled: boolean = true) {
     };
     load();
     document.addEventListener("pointerdown", load, { capture: true, once: true });
-    return () => document.removeEventListener("pointerdown", load, { capture: true } as any);
+    return () => {
+      document.removeEventListener("pointerdown", load, { capture: true } as any);
+      const el = document.getElementById(POPUNDER_ID);
+      if (el) el.remove();
+    };
   }, [enabled]);
 }
