@@ -32,7 +32,7 @@ export function StickyMobileCTA() {
     >
       <div className="flex gap-2 p-2 rounded-2xl bg-background/85 backdrop-blur-xl border border-border shadow-lg">
         <Link
-          to="/scripts"
+          to="/keys"
           className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-primary text-primary-foreground text-xs font-semibold active:scale-95 transition"
         >
           <Sparkles className="h-3.5 w-3.5" /> Scripts
