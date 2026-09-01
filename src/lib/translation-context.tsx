@@ -72,30 +72,11 @@ let flushTimer: ReturnType<typeof setTimeout> | null = null;
 let flushPromise: Promise<void> | null = null;
 let currentFlushLang: string | null = null;
 
-async function fetchTranslations(lang: string, texts: string[]): Promise<Record<string, string>> {
+async function fetchTranslations(lang: string, _texts: string[]): Promise<Record<string, string>> {
+  // Manual-only: every translation comes from the statically-seeded cache
+  // (MANUAL_TRANSLATIONS). No runtime translation API is ever called.
+  // Any string not present simply falls back to its English source.
   if (!translationCache[lang]) translationCache[lang] = {};
-
-  // Filter out already cached (in memory + localStorage)
-  const needed = texts.filter(t => !translationCache[lang][t]);
-  if (needed.length === 0) return translationCache[lang];
-
-  try {
-    const { data, error } = await supabase.functions.invoke("translate", {
-      body: { texts: needed, language: lang },
-    });
-
-    if (!error && data?.translations) {
-      Object.assign(translationCache[lang], data.translations);
-      persistCache();
-      reportTranslationOutage(!!data.degraded);
-    } else if (error) {
-      reportTranslationOutage(true);
-    }
-  } catch (e) {
-    console.error("Translation fetch error:", e);
-    reportTranslationOutage(true);
-  }
-
   return translationCache[lang];
 }
 
@@ -165,22 +146,10 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
     document.documentElement.lang = langCode;
   }, []);
 
-  // When language changes, preload all EN_TEXTS translations + start DOM auto-translator
+  // Manual-only: translations are seeded statically into the cache (MANUAL_TRANSLATIONS),
+  // so on language change we just re-render. No translation API, no DOM auto-translator.
   useEffect(() => {
-    if (currentLanguage === "en") {
-      stopAutoTranslator();
-      startAutoTranslator("en");
-      return;
-    }
-    setIsTranslating(true);
-    const allTexts = Object.values(EN_TEXTS);
-    fetchTranslations(currentLanguage, allTexts).then(() => {
-      setIsTranslating(false);
-      forceUpdate(n => n + 1);
-      // Start auto-translating any DOM text not handled by t()
-      startAutoTranslator(currentLanguage);
-    });
-    return () => { stopAutoTranslator(); };
+    forceUpdate((n) => n + 1);
   }, [currentLanguage]);
 
   // Flush queued texts
@@ -198,7 +167,7 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
   }, []);
 
   const t = useCallback((text: string) => {
-    const lang = langRef.current;
+    const lang = currentLanguage; // read from state so a language switch re-renders immediately
     // Resolve EN value: if `text` is a key in EN_TEXTS use the value, otherwise treat `text` itself as the source.
     const enValue = EN_TEXTS[text] ?? text;
     if (lang === "en") return enValue;
@@ -214,7 +183,7 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
 
     // Return English as fallback while loading
     return enValue;
-  }, [flushPending]);
+  }, [flushPending, currentLanguage]);
 
   return (
     <TranslationContext.Provider value={{ currentLanguage, setLanguage, t, isTranslating: isTranslating || autoBusy, translationOutage }}>
