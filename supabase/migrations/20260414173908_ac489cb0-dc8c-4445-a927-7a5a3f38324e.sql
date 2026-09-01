@@ -1,0 +1,1 @@
+ALTER TABLE public.scripts ADD COLUMN game_universe_id bigint DEFAULT NULL;

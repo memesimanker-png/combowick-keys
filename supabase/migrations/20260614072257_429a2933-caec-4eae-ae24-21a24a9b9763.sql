@@ -1,0 +1,2 @@
+UPDATE public.scripts SET slug = 'survive-zombie-arena-instant-kill-all-godmode-skip-waves' WHERE id = '66ec209d-547a-4e19-978a-4f03f462199f';
+UPDATE public.scripts SET slug = 'jurassic-blocky-script-auto-collect-amber-kill-all' WHERE id = 'ca89d8c5-f90f-4fd8-8afc-c76e77b4e31e';

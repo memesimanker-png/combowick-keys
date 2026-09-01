@@ -1,0 +1,19 @@
+project_id = "iphiksvnuzpteoryrdxf"
+
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.check-external-translations]
+    verify_jwt = false
+  [functions.external-setup]
+    verify_jwt = false
+  [functions.inject-today]
+    verify_jwt = false
+  [functions.public-announcements]
+    verify_jwt = false
+  [functions.test-external-supabase]
+    verify_jwt = false
+  [functions.warm-translations]
+    verify_jwt = false
+  [functions.wipe-translations]
+    verify_jwt = false

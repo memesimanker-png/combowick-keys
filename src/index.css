@@ -1,0 +1,297 @@
+/* Self-hosted fonts via @fontsource — no Google Fonts CDN, no render-blocking external request. */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/cinzel/500.css";
+@import "@fontsource/cinzel/600.css";
+@import "@fontsource/cinzel/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Renaissance-Noir — black, bronze, ivory. Quiet authority. */
+    --background: 30 8% 4%;
+    --foreground: 40 25% 90%;
+
+    --card: 30 8% 7%;
+    --card-foreground: 40 25% 90%;
+
+    --popover: 30 8% 6%;
+    --popover-foreground: 40 25% 90%;
+
+    /* Primary = bronze */
+    --primary: 36 55% 50%;
+    --primary-foreground: 30 10% 6%;
+
+    --secondary: 30 8% 10%;
+    --secondary-foreground: 40 20% 85%;
+
+    --muted: 30 6% 9%;
+    --muted-foreground: 38 12% 55%;
+
+    /* Accent = warm ivory highlight */
+    --accent: 38 60% 62%;
+    --accent-foreground: 30 10% 6%;
+
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 36 25% 14%;
+    --input: 36 20% 12%;
+    --ring: 36 55% 50%;
+
+    --radius: 0.375rem;
+
+    --success: 150 50% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+
+    /* Legacy neon tokens remapped to bronze family for backward compat */
+    --neon-cyan: 38 60% 62%;
+    --neon-purple: 36 55% 50%;
+    --neon-blue: 36 55% 50%;
+    --neon-pink: 32 50% 32%;
+
+    --sidebar-background: 30 8% 5%;
+    --sidebar-foreground: 40 25% 88%;
+    --sidebar-primary: 36 55% 50%;
+    --sidebar-primary-foreground: 30 10% 6%;
+    --sidebar-accent: 30 8% 9%;
+    --sidebar-accent-foreground: 40 25% 88%;
+    --sidebar-border: 36 25% 14%;
+    --sidebar-ring: 36 55% 50%;
+
+    /* Cinzel/Trajan-style for headings, Inter for body */
+    --font-heading: 'Cinzel', 'Trajan Pro', Georgia, serif;
+    --font-subheading: 'Cinzel', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-serif: 'Cinzel', 'Trajan Pro', Georgia, serif;
+
+    --bronze: 36 55% 50%;
+    --bronze-light: 38 65% 65%;
+    --bronze-dark: 32 50% 32%;
+    --ivory: 40 30% 92%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+
+  h3, h4, h5, h6 {
+    font-family: var(--font-subheading);
+    letter-spacing: -0.015em;
+  }
+
+  ::selection {
+    background: hsl(36 55% 50% / 0.35);
+    color: hsl(40 30% 95%);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(30 8% 4%);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(36 55% 50% / 0.35);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(36 55% 50% / 0.6);
+  }
+}
+
+@layer utilities {
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(38 65% 65%), hsl(36 55% 50%));
+  }
+
+  .text-gradient-neon {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, hsl(40 30% 92%), hsl(38 65% 65%), hsl(36 55% 50%));
+  }
+
+  .bg-gradient-hero {
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, hsl(36 55% 50% / 0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, hsl(32 50% 32% / 0.08) 0%, transparent 50%),
+                hsl(30 8% 4%);
+  }
+
+  .bg-gradient-section {
+    background: radial-gradient(ellipse 60% 50% at 50% 100%, hsl(36 55% 50% / 0.06) 0%, transparent 60%),
+                hsl(30 8% 4%);
+  }
+
+  .bg-glass {
+    @apply bg-card/60 backdrop-blur-xl;
+    border: 1px solid hsl(36 55% 50% / 0.12);
+  }
+
+  .bg-glass-strong {
+    background: linear-gradient(135deg, hsl(30 8% 8% / 0.92), hsl(30 8% 5% / 0.96));
+    backdrop-filter: blur(20px);
+    border: 1px solid hsl(36 55% 50% / 0.18);
+  }
+
+  .card-neon {
+    position: relative;
+    background: linear-gradient(135deg, hsl(30 8% 7%), hsl(30 8% 5%));
+    border: 1px solid hsl(36 55% 50% / 0.18);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-neon:hover {
+    border-color: hsl(36 55% 50% / 0.45);
+    box-shadow: 0 0 30px -10px hsl(36 55% 50% / 0.25),
+                0 0 60px -20px hsl(38 65% 65% / 0.10),
+                inset 0 1px 0 hsl(38 65% 65% / 0.10);
+  }
+
+  .card-premium {
+    position: relative;
+    background: linear-gradient(135deg, hsl(30 8% 8%), hsl(30 8% 5%));
+    border: 1px solid hsl(36 55% 50% / 0.4);
+    box-shadow: 0 0 40px -15px hsl(36 55% 50% / 0.25);
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 20px -5px hsl(36 55% 50% / 0.4),
+                0 0 40px -10px hsl(36 55% 50% / 0.18);
+  }
+
+  .neon-glow-purple {
+    box-shadow: 0 0 20px -5px hsl(32 50% 32% / 0.4),
+                0 0 40px -10px hsl(38 65% 65% / 0.18);
+  }
+
+  .animate-glow {
+    animation: glow 3s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { box-shadow: 0 0 20px -10px hsl(36 55% 50% / 0.3); }
+    to { box-shadow: 0 0 40px -5px hsl(38 65% 65% / 0.5); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes pulse-neon {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-neon {
+    animation: pulse-neon 2s ease-in-out infinite;
+  }
+
+  .line-glow {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(36 55% 50% / 0.6), transparent);
+  }
+
+  .dot-grid {
+    background-image: radial-gradient(hsl(36 55% 50% / 0.07) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  /* Subtle dust/candlelight specks instead of cosmic stars */
+  .star-field {
+    background-image:
+      radial-gradient(1.5px 1.5px at 20px 30px, hsl(38 60% 70% / 0.18), transparent),
+      radial-gradient(1px 1px at 40px 70px, hsl(40 30% 92% / 0.10), transparent),
+      radial-gradient(1px 1px at 90px 40px, hsl(38 60% 70% / 0.15), transparent),
+      radial-gradient(1px 1px at 130px 80px, hsl(40 30% 92% / 0.08), transparent),
+      radial-gradient(1.5px 1.5px at 160px 30px, hsl(38 60% 70% / 0.12), transparent),
+      radial-gradient(1px 1px at 200px 60px, hsl(36 55% 50% / 0.15), transparent);
+    background-size: 220px 100px;
+  }
+
+  /* === Language selector animated border glow (comet sweep) === */
+  @property --lang-angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+  }
+  .lang-glow-wrap {
+    position: relative;
+    border-radius: 8px;
+    padding: 1.5px;
+    background-color: hsl(230 25% 7%);
+    isolation: isolate;
+  }
+  .lang-glow-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--lang-angle),
+      transparent 0deg,
+      transparent 200deg,
+      hsl(280 95% 75% / 0.6) 270deg,
+      hsl(250 100% 95%) 320deg,
+      hsl(280 95% 75% / 0.6) 360deg,
+      transparent 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    animation: lang-spin 3s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .lang-glow-wrap > .lang-glow-ring {
+    position: absolute;
+    inset: -2px;
+    border-radius: 10px;
+    background: conic-gradient(
+      from var(--lang-angle),
+      transparent 0deg,
+      transparent 220deg,
+      hsl(280 95% 75% / 0.5) 320deg,
+      transparent 360deg
+    );
+    filter: blur(6px);
+    opacity: 0.7;
+    animation: lang-spin 3s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+  @keyframes lang-spin {
+    to { --lang-angle: 360deg; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .lang-glow-wrap::before,
+    .lang-glow-wrap > .lang-glow-ring { animation: none; }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Combo_WICK — Roblox Scripts & Premium Keys",
+  "short_name": "Combo_WICK",
+  "description": "Roblox scripts, premium keys, executor guides and Lua tutorials. Instant delivery.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#070710",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "categories": ["games", "utilities", "shopping"],
+  "icons": [
+    { "src": "/images/combo-wick-logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/combo-wick-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/images/combo-wick-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

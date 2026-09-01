@@ -1,0 +1,29 @@
+# ComboWick
+
+> ComboWick is a Roblox script hub offering free Lua scripts, premium HWID keys, executor reviews, and Lua tutorials with instant PayPal delivery and 24/7 Discord support.
+
+ComboWick (also written COMBO_WICK or Combo Wick) publishes free and premium Roblox scripts compatible with popular executors. Users get free 24-hour keys via a verification flow or buy premium keys ($5 trial, $9.99 monthly, $49.99 lifetime) for full access.
+
+## Pages
+
+- [Home](/): Featured scripts, premium key plans, and brand intro.
+- [Scripts](/scripts): Browse all free and premium Roblox Lua scripts by game and category.
+- [Premium Keys](/premium-keys): Buy HWID premium keys — trial, monthly, or lifetime.
+- [Keys](/keys): Get a free 24-hour HWID key through the verification flow.
+- [Executors](/executors): Recommended Roblox script executors and compatibility notes.
+- [Tutorials](/tutorials): Lua scripting and executor setup walkthroughs.
+- [Guides](/guides): How-to guides for using ComboWick scripts safely.
+- [Docs](/docs): Reference documentation.
+- [Blog](/blog): Articles on Roblox scripting, account safety, and game guides.
+- [FAQ](/faq): Common questions about scripts, keys, and executors.
+- [Changelog](/changelog): Script updates and site release notes.
+- [Contact](/contact): Discord support, YouTube, and direct message form.
+- [About](/about): About the ComboWick project and team.
+
+## Optional
+
+- [Anti-Cheat Guide](/anti-cheat-guide)
+- [Fair Use](/fair-use)
+- [Refund Policy](/refund-policy): All sales are final — no refunds.
+- [Privacy](/privacy)
+- [Terms](/terms)
