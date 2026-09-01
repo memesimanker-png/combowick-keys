@@ -238,7 +238,14 @@ export default function PremiumKeys() {
         </div>
       </section>
 
-      {/* Paid Game Scripts - RIGHT AFTER PRICING */}
+      {/* Donate / Support — placed right under the pricing cards so it's seen without scrolling */}
+      <section className="pt-2 pb-10 sm:pb-14">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+          <DonateCard paypalClientId={paypalClientId} />
+        </div>
+      </section>
+
+      {/* Paid Game Scripts */}
       <section className="py-16 sm:py-20 bg-muted/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="font-heading text-3xl font-bold text-center mb-4">{t("Paid Game Scripts")}</h2>
@@ -293,14 +300,6 @@ export default function PremiumKeys() {
           </div>
         </div>
       </section>
-
-      {/* Donate / Support */}
-      <section className="py-12 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <DonateCard paypalClientId={paypalClientId} />
-        </div>
-      </section>
-
 
       {/* What Are Premium Keys */}
       <section className="py-16 sm:py-20">
