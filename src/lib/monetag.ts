@@ -3,7 +3,7 @@
 // Monetag account (verified via the meta tag in index.html) can serve instead.
 // To re-enable a direct link, set DIRECT_LINK_URL to your NEW Monetag zone URL.
 
-const DIRECT_LINK_URL = ""; // TODO: paste new Monetag Direct Link URL to re-enable
+const DIRECT_LINK_URL = "https://omg10.com/4/11703894"; // Monetag Direct Link (new account)
 const CAP_MS = 3 * 60 * 1000; // 3 minutes between hops, site-wide
 const STORAGE_KEY = "dl_last_at";
 
