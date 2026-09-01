@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Key, Shield, Zap, Check, Star,
-  ChevronDown, ChevronUp, Unlock, RefreshCw, Award, MessageCircle
+  ChevronDown, ChevronUp, Unlock, RefreshCw, Award, MessageCircle, Code2, ExternalLink
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { VideoBackground } from "@/components/VideoBackground";
@@ -45,10 +45,7 @@ const tiers = [
     buttonTextKey: "Purchase Now",
     buttonStyle: "bg-green-600 hover:bg-green-700",
     popular: true,
-    isSubscription: true,
-    subscriptionPrice: 8,
-    subscribeTextKey: "Subscribe & Save $2!",
-    subscribeSubtextKey: "$8 /month with subscription",
+    isSubscription: false,
   },
   {
     id: "lifetime",
@@ -157,6 +154,14 @@ export default function PremiumKeys() {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               {t("prem_hero_desc")}
             </p>
+            <a
+              href="http://combowick.com/scripts"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+            >
+              <Code2 className="h-4 w-4" /> {t("Get Script")} <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+            </a>
           </motion.div>
         </div>
       </section>
