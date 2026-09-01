@@ -395,7 +395,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Obtenir le script",
     "Deal ends in": "L'offre se termine dans",
     "⚡ Flash Sale": "⚡ Vente Flash",
-    "🔥 Mega Sale": "🔥 Méga Promo"
+    "🔥 Mega Sale": "🔥 Méga Promo",
+    "Flagship": "Offre phare",
+    "Owner / Admin Access": "Accès propriétaire / admin",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Devenez propriétaire/admin du Discord ComboWick pendant 5 mois complets.",
+    "Full owner/admin role for 5 months": "Rôle complet de propriétaire/admin pendant 5 mois",
+    "Top of the member list with full server powers": "En haut de la liste des membres avec tous les pouvoirs du serveur",
+    "Direct line to the founder": "Ligne directe avec le fondateur",
+    "5 months • one-time": "5 mois • paiement unique",
+    "Claim on Discord": "Réclamer sur Discord"
   },
   "es": {
     " one-time": " pago único",
@@ -789,7 +797,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Obtener script",
     "Deal ends in": "La oferta termina en",
     "⚡ Flash Sale": "⚡ Oferta Relámpago",
-    "🔥 Mega Sale": "🔥 Mega Oferta"
+    "🔥 Mega Sale": "🔥 Mega Oferta",
+    "Flagship": "Insignia",
+    "Owner / Admin Access": "Acceso de Propietario / Administrador",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Conviértete en propietario/administrador del Discord de ComboWick durante 5 meses completos.",
+    "Full owner/admin role for 5 months": "Rol completo de propietario/administrador durante 5 meses",
+    "Top of the member list with full server powers": "En la cima de la lista de miembros con todos los poderes del servidor",
+    "Direct line to the founder": "Línea directa con el fundador",
+    "5 months • one-time": "5 meses • pago único",
+    "Claim on Discord": "Reclamar en Discord"
   },
   "de": {
     " one-time": " einmalig",
@@ -1183,7 +1199,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Skript holen",
     "Deal ends in": "Angebot endet in",
     "⚡ Flash Sale": "⚡ Blitzverkauf",
-    "🔥 Mega Sale": "🔥 Mega-Sale"
+    "🔥 Mega Sale": "🔥 Mega-Sale",
+    "Flagship": "Flaggschiff",
+    "Owner / Admin Access": "Owner-/Admin-Zugang",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Werde 5 volle Monate lang Owner/Admin des ComboWick Discord.",
+    "Full owner/admin role for 5 months": "Volle Owner-/Admin-Rolle für 5 Monate",
+    "Top of the member list with full server powers": "Ganz oben in der Mitgliederliste mit vollen Serverrechten",
+    "Direct line to the founder": "Direkter Draht zum Gründer",
+    "5 months • one-time": "5 Monate • einmalig",
+    "Claim on Discord": "Auf Discord einlösen"
   },
   "pt": {
     " one-time": " único",
@@ -1577,7 +1601,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Obter Script",
     "Deal ends in": "Oferta termina em",
     "⚡ Flash Sale": "⚡ Oferta Relâmpago",
-    "🔥 Mega Sale": "🔥 Mega Promoção"
+    "🔥 Mega Sale": "🔥 Mega Promoção",
+    "Flagship": "Principal",
+    "Owner / Admin Access": "Acesso de Dono / Admin",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Torne-se dono/admin do Discord ComboWick por 5 meses completos.",
+    "Full owner/admin role for 5 months": "Cargo completo de dono/admin por 5 meses",
+    "Top of the member list with full server powers": "No topo da lista de membros com poderes totais no servidor",
+    "Direct line to the founder": "Linha direta com o fundador",
+    "5 months • one-time": "5 meses • pagamento único",
+    "Claim on Discord": "Resgatar no Discord"
   },
   "ru": {
     " one-time": " разовый платёж",
@@ -1971,7 +2003,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Получить скрипт",
     "Deal ends in": "Акция закончится через",
     "⚡ Flash Sale": "⚡ Молниеносная Распродажа",
-    "🔥 Mega Sale": "🔥 Мега Распродажа"
+    "🔥 Mega Sale": "🔥 Мега Распродажа",
+    "Flagship": "Флагман",
+    "Owner / Admin Access": "Доступ владельца / администратора",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Станьте владельцем/администратором ComboWick Discord на целых 5 месяцев.",
+    "Full owner/admin role for 5 months": "Полная роль владельца/администратора на 5 месяцев",
+    "Top of the member list with full server powers": "Вершина списка участников с полными правами на сервере",
+    "Direct line to the founder": "Прямая связь с основателем",
+    "5 months • one-time": "5 месяцев • разовый платёж",
+    "Claim on Discord": "Получить в Discord"
   },
   "zh-CN": {
     " one-time": " 一次性",
@@ -2365,7 +2405,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "获取脚本",
     "Deal ends in": "优惠倒计时",
     "⚡ Flash Sale": "⚡ 限时闪购",
-    "🔥 Mega Sale": "🔥 超级大促"
+    "🔥 Mega Sale": "🔥 超级大促",
+    "Flagship": "旗舰",
+    "Owner / Admin Access": "所有者 / 管理员权限",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "成为 ComboWick Discord 的所有者/管理员，为期整整 5 个月。",
+    "Full owner/admin role for 5 months": "5 个月完整的所有者/管理员身份",
+    "Top of the member list with full server powers": "位居成员列表顶部，拥有完整的服务器权限",
+    "Direct line to the founder": "与创始人直接联系",
+    "5 months • one-time": "5 个月 • 一次性",
+    "Claim on Discord": "在 Discord 上领取"
   },
   "ko": {
     " one-time": " 일회성",
@@ -2759,7 +2807,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "스크립트 받기",
     "Deal ends in": "혜택 종료까지",
     "⚡ Flash Sale": "⚡ 반짝 세일",
-    "🔥 Mega Sale": "🔥 메가 세일"
+    "🔥 Mega Sale": "🔥 메가 세일",
+    "Flagship": "플래그십",
+    "Owner / Admin Access": "오너 / 관리자 권한",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "5개월 동안 ComboWick Discord의 오너/관리자가 되세요.",
+    "Full owner/admin role for 5 months": "5개월간 전체 오너/관리자 역할",
+    "Top of the member list with full server powers": "멤버 목록 최상단, 서버 전체 권한 보유",
+    "Direct line to the founder": "창립자와의 직접 소통 라인",
+    "5 months • one-time": "5개월 • 일회성",
+    "Claim on Discord": "Discord에서 받기"
   },
   "th": {
     " one-time": " ครั้งเดียว",
@@ -3153,7 +3209,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "รับสคริปต์",
     "Deal ends in": "ดีลสิ้นสุดใน",
     "⚡ Flash Sale": "⚡ ลดฟ้าผ่า",
-    "🔥 Mega Sale": "🔥 ลดกระหน่ำ"
+    "🔥 Mega Sale": "🔥 ลดกระหน่ำ",
+    "Flagship": "เรือธง",
+    "Owner / Admin Access": "สิทธิ์เจ้าของ / แอดมิน",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "เป็นเจ้าของ/แอดมินของ Discord ComboWick เต็ม 5 เดือน",
+    "Full owner/admin role for 5 months": "บทบาทเจ้าของ/แอดมินเต็มรูปแบบเป็นเวลา 5 เดือน",
+    "Top of the member list with full server powers": "อยู่บนสุดของรายชื่อสมาชิกพร้อมอำนาจควบคุมเซิร์ฟเวอร์เต็มรูปแบบ",
+    "Direct line to the founder": "ช่องทางติดต่อผู้ก่อตั้งโดยตรง",
+    "5 months • one-time": "5 เดือน • ชำระครั้งเดียว",
+    "Claim on Discord": "รับสิทธิ์บน Discord"
   },
   "id": {
     " one-time": " sekali bayar",
@@ -3547,7 +3611,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Ambil Skrip",
     "Deal ends in": "Penawaran berakhir dalam",
     "⚡ Flash Sale": "⚡ Diskon Kilat",
-    "🔥 Mega Sale": "🔥 Diskon Besar"
+    "🔥 Mega Sale": "🔥 Diskon Besar",
+    "Flagship": "Unggulan",
+    "Owner / Admin Access": "Akses Owner / Admin",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Jadilah owner/admin ComboWick Discord selama 5 bulan penuh.",
+    "Full owner/admin role for 5 months": "Peran owner/admin penuh selama 5 bulan",
+    "Top of the member list with full server powers": "Di puncak daftar anggota dengan kuasa server penuh",
+    "Direct line to the founder": "Jalur langsung ke pendiri",
+    "5 months • one-time": "5 bulan • sekali bayar",
+    "Claim on Discord": "Klaim di Discord"
   },
   "fil": {
     " one-time": " isang beses",
@@ -3941,7 +4013,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Kunin ang Script",
     "Deal ends in": "Matatapos ang deal sa",
     "⚡ Flash Sale": "⚡ Bilisang Sale",
-    "🔥 Mega Sale": "🔥 Mega Sale"
+    "🔥 Mega Sale": "🔥 Mega Sale",
+    "Flagship": "Flagship",
+    "Owner / Admin Access": "Owner / Admin Access",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Maging owner/admin ng ComboWick Discord sa loob ng buong 5 buwan.",
+    "Full owner/admin role for 5 months": "Buong owner/admin role sa loob ng 5 buwan",
+    "Top of the member list with full server powers": "Nasa itaas ng listahan ng miyembro na may buong kapangyarihan sa server",
+    "Direct line to the founder": "Direktang linya sa founder",
+    "5 months • one-time": "5 buwan • isahang bayad",
+    "Claim on Discord": "I-claim sa Discord"
   },
   "vi": {
     " one-time": " một lần",
@@ -4335,6 +4415,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Get Script": "Lấy Script",
     "Deal ends in": "Ưu đãi kết thúc sau",
     "⚡ Flash Sale": "⚡ Giảm Giá Chớp Nhoáng",
-    "🔥 Mega Sale": "🔥 Siêu Giảm Giá"
+    "🔥 Mega Sale": "🔥 Siêu Giảm Giá",
+    "Flagship": "Cao cấp nhất",
+    "Owner / Admin Access": "Quyền Chủ sở hữu / Quản trị viên",
+    "Become an owner/admin of the ComboWick Discord for 5 full months.": "Trở thành chủ sở hữu/quản trị viên của Discord ComboWick trong trọn 5 tháng.",
+    "Full owner/admin role for 5 months": "Vai trò chủ sở hữu/quản trị viên đầy đủ trong 5 tháng",
+    "Top of the member list with full server powers": "Đứng đầu danh sách thành viên với toàn quyền trên máy chủ",
+    "Direct line to the founder": "Kết nối trực tiếp với người sáng lập",
+    "5 months • one-time": "5 tháng • một lần duy nhất",
+    "Claim on Discord": "Nhận trên Discord"
   }
 };
