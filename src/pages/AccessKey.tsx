@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Copy, User, Clock, Shield, Key, Loader2, Code2, ExternalLink } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
+import { FunnelHeader } from "@/components/FunnelHeader";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
@@ -264,15 +265,7 @@ export default function AccessKey() {
       <NoIndex />
       <ScriptPromoPopup enabled={isAdEnabled("access-key", "script_promo")} />
       {isAdEnabled("access-key", "skip_ads_banner") && <SkipAdsBanner />}
-      <header className="container py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">COMBO WICK</h1>
-          </div>
-          <LanguageSelector />
-        </div>
-      </header>
+      <FunnelHeader title="COMBO WICK" />
 
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <div className="max-w-md w-full mx-auto space-y-6">
