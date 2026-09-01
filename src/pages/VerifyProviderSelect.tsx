@@ -12,6 +12,7 @@ import { useAdSettings } from "@/hooks/useAdSettings";
 import { lovable } from "@/integrations/lovable/index";
 import { getTodaySchedule } from "@/lib/day-schedule";
 import { useTranslation } from "@/lib/translation-context";
+import { DiscountNotification } from "@/components/DiscountNotification";
 
 
 const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
@@ -95,22 +96,7 @@ export default function VerifyProviderSelect() {
       });
   }, []);
 
-  // Monetag popunder — always on for the key-generation page.
-  useEffect(() => {
-    const POPUNDER_ID = "monetag-popunder-11703901";
-    const loadPopunder = () => {
-      if (document.getElementById(POPUNDER_ID)) return;
-      const loader = document.createElement("script");
-      loader.id = POPUNDER_ID;
-      loader.dataset.zone = "11703901";
-      loader.src = "https://al5sm.com/tag.min.js";
-      loader.async = true;
-      document.body.appendChild(loader);
-    };
-    loadPopunder();
-    document.addEventListener("pointerdown", loadPopunder, { capture: true, once: true });
-    return () => document.removeEventListener("pointerdown", loadPopunder, { capture: true } as any);
-  }, [isAdEnabled]);
+  // Popunder intentionally NOT loaded here — it now lives on /verify/step2 only.
 
   useEffect(() => {
     if (youtubeTimer > 0) {
@@ -313,6 +299,7 @@ export default function VerifyProviderSelect() {
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
+      <DiscountNotification />
 
       {showTutorialPopup && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
