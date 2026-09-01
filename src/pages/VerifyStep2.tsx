@@ -17,6 +17,8 @@ import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
+import { usePopunder } from "@/hooks/usePopunder";
+import { DiscountNotification } from "@/components/DiscountNotification";
 
 
 export default function VerifyStep2() {
@@ -31,6 +33,9 @@ export default function VerifyStep2() {
   const [skipLoading, setSkipLoading] = useState(false);
   const [isGoogleUser, setIsGoogleUser] = useState(false);
   const todaySchedule = getTodaySchedule();
+
+  // Monetag popunder now lives on Step 2 (moved off /verify/provider-select).
+  usePopunder(true);
 
   useEffect(() => {
     const step1Done = localStorage.getItem("step1_completed");
@@ -77,6 +82,7 @@ export default function VerifyStep2() {
     <>
       <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
+      <DiscountNotification />
         {isAdEnabled("verify-step2", "skip_ads_banner") && <SkipAdsBanner />}
         <header className="container py-6">
           <div className="flex items-center justify-between">
