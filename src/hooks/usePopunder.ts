@@ -1,21 +1,24 @@
 import { useEffect } from "react";
 
 /**
- * Loads the Monetag popunder tag (zone 11035708) on the current page.
- * The tag is injected once per mount; Monetag controls the actual firing
- * cadence and frequency cap on their end (typically fires on a real user
- * click). Loading it again on revisit is a no-op if it's already present.
+ * Monetag popunder loader.
+ * The OLD account's popunder (zone 11035708, al5sm.com) was removed so the new
+ * Monetag account (verified via the meta tag in index.html) can serve instead.
+ * To re-enable, set POPUNDER_ZONE + POPUNDER_SRC to your NEW Monetag values.
  */
+const POPUNDER_ZONE = ""; // TODO: new Monetag popunder zone id
+const POPUNDER_SRC = "";  // TODO: new Monetag popunder script src
+
 export function usePopunder(enabled: boolean = true) {
   useEffect(() => {
-    if (!enabled) return;
-    const POPUNDER_ID = "monetag-popunder-11035708";
+    if (!enabled || !POPUNDER_ZONE || !POPUNDER_SRC) return;
+    const POPUNDER_ID = `monetag-popunder-${POPUNDER_ZONE}`;
     const load = () => {
       if (document.getElementById(POPUNDER_ID)) return;
       const s = document.createElement("script");
       s.id = POPUNDER_ID;
-      s.dataset.zone = "11035708";
-      s.src = "https://al5sm.com/tag.min.js";
+      s.dataset.zone = POPUNDER_ZONE;
+      s.src = POPUNDER_SRC;
       s.async = true;
       document.body.appendChild(s);
     };
