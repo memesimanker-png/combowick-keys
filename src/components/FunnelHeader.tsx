@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Crown, Key } from "lucide-react";
+import { Shield, Crown, Key, Code2 } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
 
@@ -22,8 +22,16 @@ export function FunnelHeader({ title }: { title?: string }) {
             to="/keys"
             className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary"
           >
-            <Key className="h-3.5 w-3.5" /> <span className="hidden xs:inline sm:inline">{t("Get Key")}</span>
+            <Key className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Get Key")}</span>
           </Link>
+          <a
+            href="http://combowick.com/scripts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary"
+          >
+            <Code2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Get Script")}</span>
+          </a>
           <Link
             to="/premium-keys"
             className="inline-flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1.5 text-xs font-semibold text-primary transition-colors hover:bg-primary/20"
