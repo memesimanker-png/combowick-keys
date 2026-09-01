@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { lovable } from "@/integrations/lovable/index";
+import { supabase } from "@/integrations/supabase/client";
 
 export function GoogleSignInButton({ label = "Continue with Google", redirectPath = "/dashboard" }: { label?: string; redirectPath?: string }) {
   const [loading, setLoading] = useState(false);
@@ -11,14 +11,18 @@ export function GoogleSignInButton({ label = "Continue with Google", redirectPat
   const handleClick = async () => {
     setLoading(true);
     try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: `${window.location.origin}${redirectPath}`,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}${redirectPath}`,
+          queryParams: { prompt: "select_account" },
+        },
       });
-      if (result.error) {
-        toast({ variant: "destructive", title: "Google sign-in failed", description: result.error.message ?? "Please try again." });
+      if (error) {
+        toast({ variant: "destructive", title: "Google sign-in failed", description: error.message ?? "Please try again." });
         setLoading(false);
       }
-      // If redirected, the page will navigate away; otherwise session is set and caller will redirect on auth state change.
+      // On success the browser redirects to Google; the session is set on return.
     } catch (e: any) {
       toast({ variant: "destructive", title: "Google sign-in failed", description: e?.message ?? "Please try again." });
       setLoading(false);
