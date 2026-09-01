@@ -393,7 +393,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Retour",
     "Go back": "Revenir en arrière",
     "Get Script": "Obtenir le script",
-    "Deal ends in": "L'offre se termine dans"
+    "Deal ends in": "L'offre se termine dans",
+    "⚡ Flash Sale": "⚡ Vente Flash",
+    "🔥 Mega Sale": "🔥 Méga Promo"
   },
   "es": {
     " one-time": " pago único",
@@ -785,7 +787,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Atrás",
     "Go back": "Volver",
     "Get Script": "Obtener script",
-    "Deal ends in": "La oferta termina en"
+    "Deal ends in": "La oferta termina en",
+    "⚡ Flash Sale": "⚡ Oferta Relámpago",
+    "🔥 Mega Sale": "🔥 Mega Oferta"
   },
   "de": {
     " one-time": " einmalig",
@@ -1177,7 +1181,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Zurück",
     "Go back": "Zurück",
     "Get Script": "Skript holen",
-    "Deal ends in": "Angebot endet in"
+    "Deal ends in": "Angebot endet in",
+    "⚡ Flash Sale": "⚡ Blitzverkauf",
+    "🔥 Mega Sale": "🔥 Mega-Sale"
   },
   "pt": {
     " one-time": " único",
@@ -1569,7 +1575,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Voltar",
     "Go back": "Voltar",
     "Get Script": "Obter Script",
-    "Deal ends in": "Oferta termina em"
+    "Deal ends in": "Oferta termina em",
+    "⚡ Flash Sale": "⚡ Oferta Relâmpago",
+    "🔥 Mega Sale": "🔥 Mega Promoção"
   },
   "ru": {
     " one-time": " разовый платёж",
@@ -1961,7 +1969,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Назад",
     "Go back": "Вернуться",
     "Get Script": "Получить скрипт",
-    "Deal ends in": "Акция закончится через"
+    "Deal ends in": "Акция закончится через",
+    "⚡ Flash Sale": "⚡ Молниеносная Распродажа",
+    "🔥 Mega Sale": "🔥 Мега Распродажа"
   },
   "zh-CN": {
     " one-time": " 一次性",
@@ -2353,7 +2363,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "返回",
     "Go back": "返回",
     "Get Script": "获取脚本",
-    "Deal ends in": "优惠倒计时"
+    "Deal ends in": "优惠倒计时",
+    "⚡ Flash Sale": "⚡ 限时闪购",
+    "🔥 Mega Sale": "🔥 超级大促"
   },
   "ko": {
     " one-time": " 일회성",
@@ -2745,7 +2757,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "뒤로",
     "Go back": "뒤로 가기",
     "Get Script": "스크립트 받기",
-    "Deal ends in": "혜택 종료까지"
+    "Deal ends in": "혜택 종료까지",
+    "⚡ Flash Sale": "⚡ 반짝 세일",
+    "🔥 Mega Sale": "🔥 메가 세일"
   },
   "th": {
     " one-time": " ครั้งเดียว",
@@ -3137,7 +3151,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "กลับ",
     "Go back": "ย้อนกลับ",
     "Get Script": "รับสคริปต์",
-    "Deal ends in": "ดีลสิ้นสุดใน"
+    "Deal ends in": "ดีลสิ้นสุดใน",
+    "⚡ Flash Sale": "⚡ ลดฟ้าผ่า",
+    "🔥 Mega Sale": "🔥 ลดกระหน่ำ"
   },
   "id": {
     " one-time": " sekali bayar",
@@ -3529,7 +3545,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Kembali",
     "Go back": "Kembali",
     "Get Script": "Ambil Skrip",
-    "Deal ends in": "Penawaran berakhir dalam"
+    "Deal ends in": "Penawaran berakhir dalam",
+    "⚡ Flash Sale": "⚡ Diskon Kilat",
+    "🔥 Mega Sale": "🔥 Diskon Besar"
   },
   "fil": {
     " one-time": " isang beses",
@@ -3921,7 +3939,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Bumalik",
     "Go back": "Bumalik",
     "Get Script": "Kunin ang Script",
-    "Deal ends in": "Matatapos ang deal sa"
+    "Deal ends in": "Matatapos ang deal sa",
+    "⚡ Flash Sale": "⚡ Bilisang Sale",
+    "🔥 Mega Sale": "🔥 Mega Sale"
   },
   "vi": {
     " one-time": " một lần",
@@ -4313,6 +4333,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Back": "Quay lại",
     "Go back": "Quay lại",
     "Get Script": "Lấy Script",
-    "Deal ends in": "Ưu đãi kết thúc sau"
+    "Deal ends in": "Ưu đãi kết thúc sau",
+    "⚡ Flash Sale": "⚡ Giảm Giá Chớp Nhoáng",
+    "🔥 Mega Sale": "🔥 Siêu Giảm Giá"
   }
 };
