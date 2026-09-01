@@ -386,7 +386,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "SOLDE DU LUNDI",
     "Flash Deal": "OFFRE FLASH",
     "Midweek Deal": "OFFRE DE MI-SEMAINE",
-    "Weekend Blowout": "MEGA WEEKEND"
+    "Weekend Blowout": "MEGA WEEKEND",
+    "Today's deal ends in": "L'offre du jour se termine dans",
+    "Skip Ads — Instant Premium Keys | Click Here": "Ignorer les pubs — Clés Premium instantanées | Cliquez ici",
+    "Close banner": "Fermer la bannière"
   },
   "es": {
     " one-time": " pago único",
@@ -771,7 +774,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "OFERTA LUNES",
     "Flash Deal": "OFERTA FLASH",
     "Midweek Deal": "OFERTA ENTRESEMANA",
-    "Weekend Blowout": "LIQUIDACION DE FIN DE SEMANA"
+    "Weekend Blowout": "LIQUIDACION DE FIN DE SEMANA",
+    "Today's deal ends in": "La oferta de hoy termina en",
+    "Skip Ads — Instant Premium Keys | Click Here": "Sin anuncios — Claves Premium al instante | Haz clic aquí",
+    "Close banner": "Cerrar banner"
   },
   "de": {
     " one-time": " einmalig",
@@ -1156,7 +1162,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "Montags-Reset-Sale",
     "Flash Deal": "Blitz-Deal",
     "Midweek Deal": "Wochenmitte-Deal",
-    "Weekend Blowout": "Wochenend-Kracher"
+    "Weekend Blowout": "Wochenend-Kracher",
+    "Today's deal ends in": "Angebot des Tages endet in",
+    "Skip Ads — Instant Premium Keys | Click Here": "Werbung überspringen — Sofortige Premium-Keys | Hier klicken",
+    "Close banner": "Banner schließen"
   },
   "pt": {
     " one-time": " único",
@@ -1541,7 +1550,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "Promo de Segunda",
     "Flash Deal": "Oferta Relâmpago",
     "Midweek Deal": "Oferta do Meio da Semana",
-    "Weekend Blowout": "Arrasa Fim de Semana"
+    "Weekend Blowout": "Arrasa Fim de Semana",
+    "Today's deal ends in": "A oferta de hoje termina em",
+    "Skip Ads — Instant Premium Keys | Click Here": "Pule os anúncios — Chaves Premium instantâneas | Clique aqui",
+    "Close banner": "Fechar banner"
   },
   "ru": {
     " one-time": " разовый платёж",
@@ -1926,7 +1938,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "СКИДКИ ПОНЕДЕЛЬНИКА",
     "Flash Deal": "МОЛНИЯ-СКИДКА",
     "Midweek Deal": "СРЕДА НЕДЕЛИ — СКИДКА",
-    "Weekend Blowout": "РАСПРОДАЖА ВЫХОДНЫХ"
+    "Weekend Blowout": "РАСПРОДАЖА ВЫХОДНЫХ",
+    "Today's deal ends in": "Предложение дня истекает через",
+    "Skip Ads — Instant Premium Keys | Click Here": "Без рекламы — мгновенные Premium-ключи | Нажмите здесь",
+    "Close banner": "Закрыть баннер"
   },
   "zh-CN": {
     " one-time": " 一次性",
@@ -2311,7 +2326,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "周一焕新特惠",
     "Flash Deal": "限时闪购",
     "Midweek Deal": "周中特惠",
-    "Weekend Blowout": "周末狂欢购"
+    "Weekend Blowout": "周末狂欢购",
+    "Today's deal ends in": "今日优惠倒计时",
+    "Skip Ads — Instant Premium Keys | Click Here": "跳过广告 — 立即获取 Premium 密钥 | 点击这里",
+    "Close banner": "关闭横幅"
   },
   "ko": {
     " one-time": " 일회성",
@@ -2696,7 +2714,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "월요일 리셋 세일",
     "Flash Deal": "번개 특가",
     "Midweek Deal": "주중 특가",
-    "Weekend Blowout": "주말 파격 세일"
+    "Weekend Blowout": "주말 파격 세일",
+    "Today's deal ends in": "오늘의 특가 종료까지",
+    "Skip Ads — Instant Premium Keys | Click Here": "광고 건너뛰기 — 즉시 Premium 키 발급 | 여기 클릭",
+    "Close banner": "배너 닫기"
   },
   "th": {
     " one-time": " ครั้งเดียว",
@@ -3081,7 +3102,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "ลดต้อนรับวันจันทร์",
     "Flash Deal": "ดีลฟ้าแลบ",
     "Midweek Deal": "ดีลกลางสัปดาห์",
-    "Weekend Blowout": "ลดกระหน่ำสุดสัปดาห์"
+    "Weekend Blowout": "ลดกระหน่ำสุดสัปดาห์",
+    "Today's deal ends in": "ดีลวันนี้จะสิ้นสุดใน",
+    "Skip Ads — Instant Premium Keys | Click Here": "ข้ามโฆษณา — รับคีย์ Premium ทันที | คลิกที่นี่",
+    "Close banner": "ปิดแบนเนอร์"
   },
   "id": {
     " one-time": " sekali bayar",
@@ -3466,7 +3490,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "Diskon Awal Pekan",
     "Flash Deal": "Diskon Kilat",
     "Midweek Deal": "Diskon Tengah Pekan",
-    "Weekend Blowout": "Obral Akhir Pekan"
+    "Weekend Blowout": "Obral Akhir Pekan",
+    "Today's deal ends in": "Penawaran hari ini berakhir dalam",
+    "Skip Ads — Instant Premium Keys | Click Here": "Lewati Iklan — Kunci Premium Instan | Klik Di Sini",
+    "Close banner": "Tutup banner"
   },
   "fil": {
     " one-time": " isang beses",
@@ -3851,7 +3878,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "BENTA SA LUNES",
     "Flash Deal": "BILISANG DEAL",
     "Midweek Deal": "DEAL SA GITNA NG LINGGO",
-    "Weekend Blowout": "WEEKEND BLOWOUT"
+    "Weekend Blowout": "WEEKEND BLOWOUT",
+    "Today's deal ends in": "Matatapos ang deal ngayon sa loob ng",
+    "Skip Ads — Instant Premium Keys | Click Here": "Laktawan ang Ads — Instant na Premium Keys | I-click Dito",
+    "Close banner": "Isara ang banner"
   },
   "vi": {
     " one-time": " một lần",
@@ -4236,6 +4266,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Monday Reset Sale": "SALE ĐẦU TUẦN",
     "Flash Deal": "ƯU ĐÃI CHỚP NHOÁNG",
     "Midweek Deal": "ƯU ĐÃI GIỮA TUẦN",
-    "Weekend Blowout": "XẢ HÀNG CUỐI TUẦN"
+    "Weekend Blowout": "XẢ HÀNG CUỐI TUẦN",
+    "Today's deal ends in": "Ưu đãi hôm nay kết thúc sau",
+    "Skip Ads — Instant Premium Keys | Click Here": "Bỏ qua quảng cáo — Nhận key Premium tức thì | Nhấn vào đây",
+    "Close banner": "Đóng biểu ngữ"
   }
 };
