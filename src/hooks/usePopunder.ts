@@ -6,8 +6,8 @@ import { useEffect } from "react";
  * Monetag account (verified via the meta tag in index.html) can serve instead.
  * To re-enable, set POPUNDER_ZONE + POPUNDER_SRC to your NEW Monetag values.
  */
-const POPUNDER_ZONE = ""; // TODO: new Monetag popunder zone id
-const POPUNDER_SRC = "";  // TODO: new Monetag popunder script src
+const POPUNDER_ZONE = "11703901"; // Monetag onclick popunder (new account)
+const POPUNDER_SRC = "https://al5sm.com/tag.min.js";
 
 export function usePopunder(enabled: boolean = true) {
   useEffect(() => {
