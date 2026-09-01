@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useDragControls, useMotionValue } from "framer-motion";
 import { Sparkles, X, ArrowRight, GripVertical, Minus, Clock, Tag } from "lucide-react";
 import { useKeyDiscounts } from "@/hooks/useKeyDiscounts";
+import { getAutoDiscount, getAutoWindowEnd } from "@/lib/auto-key-discounts";
 import { useTranslation } from "@/lib/translation-context";
 
 // Map discount tier ids to the same name keys the pricing cards use, so the
@@ -21,19 +22,14 @@ function readJSON<T>(key: string): T | null {
   try { const v = localStorage.getItem(key); return v ? (JSON.parse(v) as T) : null; } catch { return null; }
 }
 
-// ms until the next UTC midnight — when the day-based auto discount recalculates.
-function msUntilUtcMidnight(): number {
-  const now = new Date();
-  const next = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0);
-  return Math.max(0, next - now.getTime());
-}
 function fmtCountdown(ms: number): string {
-  const s = Math.floor(ms / 1000);
-  const h = Math.floor(s / 3600);
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const d = Math.floor(s / 86400);
+  const h = Math.floor((s % 86400) / 3600);
   const m = Math.floor((s % 3600) / 60);
   const sec = s % 60;
   const p = (n: number) => String(n).padStart(2, "0");
-  return `${p(h)}:${p(m)}:${p(sec)}`;
+  return d > 0 ? `${d}d ${p(h)}:${p(m)}:${p(sec)}` : `${p(h)}:${p(m)}:${p(sec)}`;
 }
 
 /**
@@ -49,7 +45,7 @@ export function DiscountNotification() {
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [collapsed, setCollapsed] = useState<boolean>(() => readJSON<boolean>(COLLAPSE_KEY) ?? false);
-  const [remaining, setRemaining] = useState<number>(msUntilUtcMidnight);
+  const [remaining, setRemaining] = useState<number>(0);
 
   const constraintsRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -81,6 +77,17 @@ export function DiscountNotification() {
     return top;
   }, [discounts]);
 
+  // Real end of the featured discount's window (spans multi-day sales honestly).
+  const windowEnd = useMemo(() => (best ? getAutoWindowEnd(best.tier) : null), [best]);
+  // Only show a countdown when the day-based auto sale actually drives (or matches)
+  // the featured %. If an admin set a bigger, open-ended discount, there's no real
+  // deadline — so we hide the timer rather than invent one.
+  const showCountdown = useMemo(() => {
+    if (!best || !windowEnd) return false;
+    const auto = getAutoDiscount(best.tier);
+    return !!auto && auto.percent >= best.percent;
+  }, [best, windowEnd]);
+
   const seenKey = best ? `cw-discount-seen-${best.tier}-${best.percent}` : null;
 
   useEffect(() => {
@@ -90,12 +97,14 @@ export function DiscountNotification() {
     return () => clearTimeout(timer);
   }, [best, seenKey]);
 
-  // Live countdown tick.
+  // Live countdown tick against the real window end.
   useEffect(() => {
-    if (!visible) return;
-    const id = setInterval(() => setRemaining(msUntilUtcMidnight()), 1000);
+    if (!visible || !windowEnd) return;
+    const tick = () => setRemaining(Math.max(0, windowEnd.getTime() - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
-  }, [visible]);
+  }, [visible, windowEnd]);
 
   // Restore saved size + persist future resizes (native CSS resize on the card).
   useEffect(() => {
@@ -154,7 +163,7 @@ export function DiscountNotification() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="pointer-events-auto absolute bottom-3 left-3 w-fit sm:left-4"
+            className="pointer-events-auto absolute bottom-20 left-3 w-fit sm:left-4"
             role="status"
             aria-live="polite"
           >
@@ -207,12 +216,14 @@ export function DiscountNotification() {
 
                 <p className="mt-1 text-sm font-medium text-white/90">{headline}</p>
 
-                {/* Live countdown */}
-                <div className="mt-2 flex items-center gap-1.5 text-xs text-green-300/90">
-                  <Clock className="h-3.5 w-3.5" />
-                  <span>{t("Today's deal ends in")}</span>
-                  <span className="font-mono font-bold tabular-nums text-green-300">{fmtCountdown(remaining)}</span>
-                </div>
+                {/* Live countdown — only when there's a real deadline */}
+                {showCountdown && (
+                  <div className="mt-2 flex items-center gap-1.5 text-xs text-green-300/90">
+                    <Clock className="h-3.5 w-3.5" />
+                    <span>{t("Deal ends in")}</span>
+                    <span className="font-mono font-bold tabular-nums text-green-300">{fmtCountdown(remaining)}</span>
+                  </div>
+                )}
 
                 <p className="mt-0.5 text-xs text-muted-foreground">
                   {t("Grab your discounted key before the deal ends!")}
