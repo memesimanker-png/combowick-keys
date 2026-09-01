@@ -163,7 +163,7 @@ export function DiscountNotification() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            className="pointer-events-auto absolute bottom-20 left-3 w-fit sm:left-4"
+            className="pointer-events-auto absolute bottom-32 left-3 w-fit sm:bottom-24 sm:left-4"
             role="status"
             aria-live="polite"
           >
