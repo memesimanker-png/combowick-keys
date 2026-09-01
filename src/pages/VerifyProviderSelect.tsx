@@ -47,11 +47,15 @@ export default function VerifyProviderSelect() {
   }, []);
 
   const handleGoogleSignIn = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/verify/provider-select`,
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/verify/provider-select`,
+        queryParams: { prompt: "select_account" },
+      },
     });
-    if (result.error) {
-      toast({ variant: "destructive", title: "Error", description: result.error.message ?? "Google sign-in failed" });
+    if (error) {
+      toast({ variant: "destructive", title: "Error", description: error.message ?? "Google sign-in failed" });
     }
   };
 
