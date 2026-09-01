@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Copy, User, Clock, Shield, Key, Loader2 } from "lucide-react";
+import { Copy, User, Clock, Shield, Key, Loader2, Code2, ExternalLink } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { useTranslation } from "@/lib/translation-context";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
@@ -26,6 +27,7 @@ interface StoredKeyData {
 export default function AccessKey() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [generatedKey, setGeneratedKey] = useState("");
   const [keyExpiresAt, setKeyExpiresAt] = useState<string | null>(null);
@@ -348,6 +350,18 @@ export default function AccessKey() {
               )}
             </CardContent>
           </Card>
+
+          {/* Where to grab the actual script once they have a key */}
+          <a
+            href="http://combowick.com/scripts"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+          >
+            <Code2 className="h-4 w-4" />
+            {t("Get Script")}
+            <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+          </a>
         </div>
       </main>
       {isAdEnabled("access-key", "skip_ads_float") && <SkipAdsFloatButton />}
