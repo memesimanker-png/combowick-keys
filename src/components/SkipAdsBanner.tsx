@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "@/lib/translation-context";
 
 export function SkipAdsBanner() {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(true);
   if (!isVisible) return null;
 
@@ -11,13 +13,13 @@ export function SkipAdsBanner() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex-1 text-center">
           <Link to="/premium-keys" className="text-sm md:text-base font-semibold hover:underline">
-            Skip Ads — Instant Premium Keys | Click Here
+            {t("Skip Ads — Instant Premium Keys | Click Here")}
           </Link>
         </div>
         <button
           onClick={() => setIsVisible(false)}
           className="ml-4 p-1 hover:bg-white/20 rounded transition-colors"
-          aria-label="Close banner"
+          aria-label={t("Close banner")}
         >
           <X className="h-4 w-4" />
         </button>
