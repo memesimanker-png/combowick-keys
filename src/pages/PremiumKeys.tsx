@@ -17,6 +17,7 @@ import { PAID_GAMES } from "@/lib/paid-games";
 import { usePaidGameSettings } from "@/hooks/usePaidGames";
 import { useKeyDiscounts, applyDiscount } from "@/hooks/useKeyDiscounts";
 import { DonateCard } from "@/components/DonateCard";
+import { DiscountNotification } from "@/components/DiscountNotification";
 
 
 const tiers = [
@@ -135,6 +136,7 @@ export default function PremiumKeys() {
 
   return (
     <Layout>
+      <DiscountNotification />
       <SEOHead
         title="ComboWick Premium Keys — Plans from $5 to $49.99"
         description="Buy a ComboWick HWID premium key. 7-day trial $5, monthly $9.99, lifetime $49.99. Instant PayPal delivery, full premium script access."
@@ -162,7 +164,7 @@ export default function PremiumKeys() {
       {/* Pricing Cards */}
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div data-pricing-cards className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {tiers.map((tier, i) => {
               const disc = applyDiscount(tier.price, keyDiscounts?.get(tier.id));
               return (
