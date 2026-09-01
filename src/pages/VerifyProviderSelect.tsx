@@ -167,7 +167,9 @@ export default function VerifyProviderSelect() {
   const handleStart = () => {
     setStarting(true);
     localStorage.setItem("selected_ad_provider", "linkvertise");
-    navigate("/verify/step1");
+    // Hard navigation (not SPA) so the Monetag popunder script loaded on this page
+    // is cleared before step1 — keeps the popunder off the verification steps.
+    window.location.href = "/verify/step1";
   };
 
   const handleCloseTutorial = () => setShowTutorialPopup(false);
