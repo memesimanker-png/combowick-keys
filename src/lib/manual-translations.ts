@@ -403,7 +403,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "En haut de la liste des membres avec tous les pouvoirs du serveur",
     "Direct line to the founder": "Ligne directe avec le fondateur",
     "5 months • one-time": "5 mois • paiement unique",
-    "Claim on Discord": "Réclamer sur Discord"
+    "Claim on Discord": "Réclamer sur Discord",
+    "Your Discord username": "Votre nom d'utilisateur Discord",
+    "Enter your Discord username": "Saisissez votre nom d'utilisateur Discord",
+    "All sales are final — NO REFUNDS": "Toutes les ventes sont définitives — AUCUN REMBOURSEMENT",
+    "I understand this purchase is non-refundable.": "Je comprends que cet achat est non remboursable.",
+    "Please enter your Discord username.": "Veuillez saisir votre nom d'utilisateur Discord.",
+    "Payment received!": "Paiement reçu !",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Votre rôle Owner/Admin sera configuré sur Discord sous peu. Surveillez vos messages privés.",
+    "Claim Owner Access": "Obtenir l'accès Owner",
+    "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
     " one-time": " pago único",
@@ -805,7 +814,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "En la cima de la lista de miembros con todos los poderes del servidor",
     "Direct line to the founder": "Línea directa con el fundador",
     "5 months • one-time": "5 meses • pago único",
-    "Claim on Discord": "Reclamar en Discord"
+    "Claim on Discord": "Reclamar en Discord",
+    "Your Discord username": "Tu nombre de usuario de Discord",
+    "Enter your Discord username": "Introduce tu nombre de usuario de Discord",
+    "All sales are final — NO REFUNDS": "Todas las ventas son definitivas — SIN REEMBOLSOS",
+    "I understand this purchase is non-refundable.": "Entiendo que esta compra no es reembolsable.",
+    "Please enter your Discord username.": "Por favor, introduce tu nombre de usuario de Discord.",
+    "Payment received!": "¡Pago recibido!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Tu rol de Owner/Admin se configurará en Discord en breve. Mantente atento a tus mensajes directos.",
+    "Claim Owner Access": "Reclamar acceso de Owner",
+    "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
     " one-time": " einmalig",
@@ -1207,7 +1225,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "Ganz oben in der Mitgliederliste mit vollen Serverrechten",
     "Direct line to the founder": "Direkter Draht zum Gründer",
     "5 months • one-time": "5 Monate • einmalig",
-    "Claim on Discord": "Auf Discord einlösen"
+    "Claim on Discord": "Auf Discord einlösen",
+    "Your Discord username": "Dein Discord-Benutzername",
+    "Enter your Discord username": "Gib deinen Discord-Benutzernamen ein",
+    "All sales are final — NO REFUNDS": "Alle Käufe sind endgültig — KEINE RÜCKERSTATTUNGEN",
+    "I understand this purchase is non-refundable.": "Ich verstehe, dass dieser Kauf nicht erstattungsfähig ist.",
+    "Please enter your Discord username.": "Bitte gib deinen Discord-Benutzernamen ein.",
+    "Payment received!": "Zahlung erhalten!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Deine Owner/Admin-Rolle wird in Kürze auf Discord eingerichtet. Behalte deine DMs im Auge.",
+    "Claim Owner Access": "Owner-Zugang beanspruchen",
+    "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
     " one-time": " único",
@@ -1609,7 +1636,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "No topo da lista de membros com poderes totais no servidor",
     "Direct line to the founder": "Linha direta com o fundador",
     "5 months • one-time": "5 meses • pagamento único",
-    "Claim on Discord": "Resgatar no Discord"
+    "Claim on Discord": "Resgatar no Discord",
+    "Your Discord username": "Seu nome de usuário do Discord",
+    "Enter your Discord username": "Digite seu nome de usuário do Discord",
+    "All sales are final — NO REFUNDS": "Todas as vendas são definitivas — SEM REEMBOLSOS",
+    "I understand this purchase is non-refundable.": "Entendo que esta compra não é reembolsável.",
+    "Please enter your Discord username.": "Por favor, digite seu nome de usuário do Discord.",
+    "Payment received!": "Pagamento recebido!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Seu cargo de Owner/Admin será configurado no Discord em breve. Fique de olho nas suas DMs.",
+    "Claim Owner Access": "Obter acesso de Owner",
+    "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
     " one-time": " разовый платёж",
@@ -2011,7 +2047,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "Вершина списка участников с полными правами на сервере",
     "Direct line to the founder": "Прямая связь с основателем",
     "5 months • one-time": "5 месяцев • разовый платёж",
-    "Claim on Discord": "Получить в Discord"
+    "Claim on Discord": "Получить в Discord",
+    "Your Discord username": "Ваше имя пользователя Discord",
+    "Enter your Discord username": "Введите ваше имя пользователя Discord",
+    "All sales are final — NO REFUNDS": "Все продажи окончательны — БЕЗ ВОЗВРАТА СРЕДСТВ",
+    "I understand this purchase is non-refundable.": "Я понимаю, что эта покупка не подлежит возврату.",
+    "Please enter your Discord username.": "Пожалуйста, введите ваше имя пользователя Discord.",
+    "Payment received!": "Платёж получен!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Ваша роль Owner/Admin будет назначена в Discord в ближайшее время. Следите за личными сообщениями.",
+    "Claim Owner Access": "Получить доступ Owner",
+    "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
     " one-time": " 一次性",
@@ -2413,7 +2458,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "位居成员列表顶部，拥有完整的服务器权限",
     "Direct line to the founder": "与创始人直接联系",
     "5 months • one-time": "5 个月 • 一次性",
-    "Claim on Discord": "在 Discord 上领取"
+    "Claim on Discord": "在 Discord 上领取",
+    "Your Discord username": "您的 Discord 用户名",
+    "Enter your Discord username": "请输入您的 Discord 用户名",
+    "All sales are final — NO REFUNDS": "所有交易一经完成即为最终交易 — 概不退款",
+    "I understand this purchase is non-refundable.": "我了解此次购买不可退款。",
+    "Please enter your Discord username.": "请输入您的 Discord 用户名。",
+    "Payment received!": "付款已收到！",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "您的 Owner/Admin 身份组稍后将在 Discord 上设置完成。请留意您的私信。",
+    "Claim Owner Access": "领取 Owner 权限",
+    "Payment capture failed": "付款扣款失败"
   },
   "ko": {
     " one-time": " 일회성",
@@ -2815,7 +2869,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "멤버 목록 최상단, 서버 전체 권한 보유",
     "Direct line to the founder": "창립자와의 직접 소통 라인",
     "5 months • one-time": "5개월 • 일회성",
-    "Claim on Discord": "Discord에서 받기"
+    "Claim on Discord": "Discord에서 받기",
+    "Your Discord username": "Discord 사용자 이름",
+    "Enter your Discord username": "Discord 사용자 이름을 입력하세요",
+    "All sales are final — NO REFUNDS": "모든 판매는 최종 확정됩니다 — 환불 절대 불가",
+    "I understand this purchase is non-refundable.": "이 구매는 환불되지 않는다는 점을 이해합니다.",
+    "Please enter your Discord username.": "Discord 사용자 이름을 입력하세요.",
+    "Payment received!": "결제가 완료되었습니다!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "곧 Discord에서 Owner/Admin 역할이 설정됩니다. DM을 확인해 주세요.",
+    "Claim Owner Access": "Owner 권한 받기",
+    "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
     " one-time": " ครั้งเดียว",
@@ -3217,7 +3280,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "อยู่บนสุดของรายชื่อสมาชิกพร้อมอำนาจควบคุมเซิร์ฟเวอร์เต็มรูปแบบ",
     "Direct line to the founder": "ช่องทางติดต่อผู้ก่อตั้งโดยตรง",
     "5 months • one-time": "5 เดือน • ชำระครั้งเดียว",
-    "Claim on Discord": "รับสิทธิ์บน Discord"
+    "Claim on Discord": "รับสิทธิ์บน Discord",
+    "Your Discord username": "ชื่อผู้ใช้ Discord ของคุณ",
+    "Enter your Discord username": "กรอกชื่อผู้ใช้ Discord ของคุณ",
+    "All sales are final — NO REFUNDS": "การซื้อทุกรายการถือเป็นที่สิ้นสุด — ไม่มีการคืนเงินโดยเด็ดขาด",
+    "I understand this purchase is non-refundable.": "ฉันเข้าใจว่าการซื้อครั้งนี้ไม่สามารถขอคืนเงินได้",
+    "Please enter your Discord username.": "กรุณากรอกชื่อผู้ใช้ Discord ของคุณ",
+    "Payment received!": "ได้รับการชำระเงินแล้ว!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "บทบาท Owner/Admin ของคุณจะถูกตั้งค่าใน Discord ในไม่ช้า โปรดคอยติดตามข้อความ DM ของคุณ",
+    "Claim Owner Access": "รับสิทธิ์เข้าถึงระดับ Owner",
+    "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
     " one-time": " sekali bayar",
@@ -3619,7 +3691,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "Di puncak daftar anggota dengan kuasa server penuh",
     "Direct line to the founder": "Jalur langsung ke pendiri",
     "5 months • one-time": "5 bulan • sekali bayar",
-    "Claim on Discord": "Klaim di Discord"
+    "Claim on Discord": "Klaim di Discord",
+    "Your Discord username": "Nama pengguna Discord Anda",
+    "Enter your Discord username": "Masukkan nama pengguna Discord Anda",
+    "All sales are final — NO REFUNDS": "Semua penjualan bersifat final — TIDAK ADA PENGEMBALIAN DANA",
+    "I understand this purchase is non-refundable.": "Saya memahami bahwa pembelian ini tidak dapat dikembalikan.",
+    "Please enter your Discord username.": "Silakan masukkan nama pengguna Discord Anda.",
+    "Payment received!": "Pembayaran diterima!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Peran Owner/Admin Anda akan segera disiapkan di Discord. Pantau terus DM Anda.",
+    "Claim Owner Access": "Klaim Akses Owner",
+    "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
     " one-time": " isang beses",
@@ -4021,7 +4102,16 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "Nasa itaas ng listahan ng miyembro na may buong kapangyarihan sa server",
     "Direct line to the founder": "Direktang linya sa founder",
     "5 months • one-time": "5 buwan • isahang bayad",
-    "Claim on Discord": "I-claim sa Discord"
+    "Claim on Discord": "I-claim sa Discord",
+    "Your Discord username": "Ang iyong Discord username",
+    "Enter your Discord username": "Ilagay ang iyong Discord username",
+    "All sales are final — NO REFUNDS": "Pinal ang lahat ng benta — WALANG REFUND",
+    "I understand this purchase is non-refundable.": "Nauunawaan ko na hindi na maibabalik ang bayad sa pagbiling ito.",
+    "Please enter your Discord username.": "Pakilagay ang iyong Discord username.",
+    "Payment received!": "Natanggap na ang bayad!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Maiaayos na sa lalong madaling panahon ang iyong Owner/Admin role sa Discord. Bantayan ang iyong mga DM.",
+    "Claim Owner Access": "I-claim ang Owner Access",
+    "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
     " one-time": " một lần",
@@ -4423,6 +4513,15 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Top of the member list with full server powers": "Đứng đầu danh sách thành viên với toàn quyền trên máy chủ",
     "Direct line to the founder": "Kết nối trực tiếp với người sáng lập",
     "5 months • one-time": "5 tháng • một lần duy nhất",
-    "Claim on Discord": "Nhận trên Discord"
+    "Claim on Discord": "Nhận trên Discord",
+    "Your Discord username": "Tên người dùng Discord của bạn",
+    "Enter your Discord username": "Nhập tên người dùng Discord của bạn",
+    "All sales are final — NO REFUNDS": "Mọi giao dịch là cuối cùng — KHÔNG HOÀN TIỀN",
+    "I understand this purchase is non-refundable.": "Tôi hiểu rằng giao dịch mua này không được hoàn tiền.",
+    "Please enter your Discord username.": "Vui lòng nhập tên người dùng Discord của bạn.",
+    "Payment received!": "Đã nhận thanh toán!",
+    "Your Owner/Admin role will be set up on Discord shortly. Keep an eye on your DMs.": "Vai trò Owner/Admin của bạn sẽ được thiết lập trên Discord trong giây lát. Hãy để ý tin nhắn riêng (DM) của bạn.",
+    "Claim Owner Access": "Nhận quyền Owner",
+    "Payment capture failed": "Thu thanh toán thất bại"
   }
 };
