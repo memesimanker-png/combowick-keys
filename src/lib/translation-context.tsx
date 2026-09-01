@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { LangCode, EN_TEXTS } from "./translations";
+import { MANUAL_TRANSLATIONS } from "./manual-translations";
 import { supabase } from "@/integrations/supabase/client";
 import { startAutoTranslator, stopAutoTranslator, setAutoTranslateBusyListener, setTranslationOutageListener, reportTranslationOutage } from "./auto-translator";
 
@@ -37,7 +38,7 @@ const TranslationContext = createContext<TranslationContextType>({
 });
 
 // Load cache from localStorage on init
-const TRANSLATION_CACHE_VERSION = "v3-gpt52"; // bump to force re-translation with GPT-5.2
+const TRANSLATION_CACHE_VERSION = "v4-manual"; // bump to seed hand-translated strings
 const translationCache: Record<string, Record<string, string>> = (() => {
   try {
     const ver = localStorage.getItem("combowick-translations-ver");
@@ -51,6 +52,13 @@ const translationCache: Record<string, Record<string, string>> = (() => {
     return saved ? JSON.parse(saved) : {};
   } catch { return {}; }
 })();
+
+// Seed hand-translated (manual) strings for the premium + verify/key pages so they render
+// instantly on language-select with zero runtime translation. Manual entries win over cache.
+for (const [lang, dict] of Object.entries(MANUAL_TRANSLATIONS)) {
+  if (!translationCache[lang]) translationCache[lang] = {};
+  Object.assign(translationCache[lang], dict);
+}
 
 function persistCache() {
   try {
