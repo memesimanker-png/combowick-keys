@@ -52,3 +52,20 @@ export function getAutoDiscount(tierId: string, now: Date = new Date()): AutoDis
   }
   return best;
 }
+
+/**
+ * The real end of the current auto-discount window for a tier — the UTC midnight
+ * that starts the first upcoming day whose discount is smaller (or gone). This
+ * honestly spans multi-day sales (e.g. the Fri→Sun weekend deal ends Mon 00:00
+ * UTC, not tonight). Returns null when there's no active auto discount.
+ */
+export function getAutoWindowEnd(tierId: string, now: Date = new Date()): Date | null {
+  const today = getAutoDiscount(tierId, now);
+  if (!today) return null;
+  for (let i = 1; i <= 8; i++) {
+    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + i, 0, 0, 0, 0));
+    const fut = getAutoDiscount(tierId, d);
+    if (!fut || fut.percent < today.percent) return d;
+  }
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0, 0));
+}
