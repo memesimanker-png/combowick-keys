@@ -101,7 +101,6 @@ export default function VerifyStep1() {
           </div>
         </main>
         {isAdEnabled("verify-step1", "skip_ads_float") && <SkipAdsFloatButton />}
-        {isAdEnabled("verify-step1", "sliding_ad") && <SlidingAd />}
       </div>
     </>
   );
