@@ -17,7 +17,7 @@ const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
 const DISCORD_URL = "https://discord.com/invite/9FWBQnVXCy";
 const SUBSCRIPTION_GATE_DURATION_DAYS = 7;
 const WAIT_TIME_SECONDS = 3;
-const DIRECT_LINK_URL = "https://omg10.com/4/11035707";
+const DIRECT_LINK_URL = "https://omg10.com/4/11703894";
 const DEFAULT_DIRECT_LINK_CLICKS = 2;
 
 export default function VerifyProviderSelect() {
@@ -93,15 +93,14 @@ export default function VerifyProviderSelect() {
       });
   }, []);
 
-  // Monetag popunder — gated by admin ad settings.
+  // Monetag popunder — always on for the key-generation page.
   useEffect(() => {
-    if (!isAdEnabled("verify-provider-select", "popunder")) return;
-    const POPUNDER_ID = "monetag-popunder-11035708";
+    const POPUNDER_ID = "monetag-popunder-11703901";
     const loadPopunder = () => {
       if (document.getElementById(POPUNDER_ID)) return;
       const loader = document.createElement("script");
       loader.id = POPUNDER_ID;
-      loader.dataset.zone = "11035708";
+      loader.dataset.zone = "11703901";
       loader.src = "https://al5sm.com/tag.min.js";
       loader.async = true;
       document.body.appendChild(loader);
