@@ -42,7 +42,13 @@ export function useKeyDiscounts() {
 
       return map;
     },
-    staleTime: 60_000,
+    // Discounts are day-based (the queryKey already includes the UTC day, so a
+    // day rollover refetches on its own). Keep it cached long since this query
+    // now runs across the premium + verify-step pages — react-query dedupes it
+    // to a single network call shared by every mounted DiscountNotification.
+    staleTime: 10 * 60_000,
+    gcTime: 30 * 60_000,
+    refetchOnMount: false,
   });
 }
 
