@@ -175,7 +175,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "À vie",
     "Lifetime Access": "Accès à vie",
     "Lifetime Key": "Clé à vie",
-    "Limited-Time Sale": "Offre à durée limitée",
+    "Limited-Time Sale": "OFFRE LIMITEE",
     "Loading payment options...": "Chargement des options de paiement...",
     "Log in and start using your premium access immediately.": "Connectez-vous et commencez à utiliser votre accès Premium immédiatement.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Vous aimez les scripts gratuits ? Un petit don permet de faire tourner nos serveurs et de créer de nouveaux scripts. Chaque contribution compte !",
@@ -382,7 +382,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} est maintenant à {percent}% de réduction",
     "Limited-Time Deal": "Offre à durée limitée",
     "Grab your discounted key before the deal ends!": "Obtenez votre clé à prix réduit avant la fin de l'offre !",
-    "View Deal": "Voir l'offre"
+    "View Deal": "Voir l'offre",
+    "Monday Reset Sale": "SOLDE DU LUNDI",
+    "Flash Deal": "OFFRE FLASH",
+    "Midweek Deal": "OFFRE DE MI-SEMAINE",
+    "Weekend Blowout": "MEGA WEEKEND"
   },
   "es": {
     " one-time": " pago único",
@@ -556,7 +560,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "De por vida",
     "Lifetime Access": "Acceso de por vida",
     "Lifetime Key": "Clave de por vida",
-    "Limited-Time Sale": "Oferta por tiempo limitado",
+    "Limited-Time Sale": "OFERTA POR TIEMPO LIMITADO",
     "Loading payment options...": "Cargando opciones de pago...",
     "Log in and start using your premium access immediately.": "Inicia sesión y empieza a usar tu acceso premium de inmediato.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "¿Te encantan los scripts gratuitos? Una pequeña donación mantiene nuestros servidores en marcha y trae nuevos scripts. ¡Todo suma!",
@@ -763,7 +767,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} ahora con {percent}% DE DESCUENTO",
     "Limited-Time Deal": "Oferta por tiempo limitado",
     "Grab your discounted key before the deal ends!": "¡Consigue tu clave con descuento antes de que termine la oferta!",
-    "View Deal": "Ver oferta"
+    "View Deal": "Ver oferta",
+    "Monday Reset Sale": "OFERTA LUNES",
+    "Flash Deal": "OFERTA FLASH",
+    "Midweek Deal": "OFERTA ENTRESEMANA",
+    "Weekend Blowout": "LIQUIDACION DE FIN DE SEMANA"
   },
   "de": {
     " one-time": " einmalig",
@@ -937,7 +945,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "Lebenslang",
     "Lifetime Access": "Lebenslanger Zugang",
     "Lifetime Key": "Lebenslanger Key",
-    "Limited-Time Sale": "Zeitlich begrenztes Angebot",
+    "Limited-Time Sale": "Nur kurze Zeit",
     "Loading payment options...": "Zahlungsoptionen werden geladen...",
     "Log in and start using your premium access immediately.": "Melde dich an und nutze deinen Premium-Zugang sofort.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Gefallen dir die kostenlosen Scripts? Eine kleine Spende hält unsere Server am Laufen und sorgt für neue Scripts. Jeder Beitrag hilft!",
@@ -1144,7 +1152,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} ist jetzt {percent}% günstiger",
     "Limited-Time Deal": "Zeitlich begrenztes Angebot",
     "Grab your discounted key before the deal ends!": "Sichere dir deinen vergünstigten Key, bevor das Angebot endet!",
-    "View Deal": "Angebot ansehen"
+    "View Deal": "Angebot ansehen",
+    "Monday Reset Sale": "Montags-Reset-Sale",
+    "Flash Deal": "Blitz-Deal",
+    "Midweek Deal": "Wochenmitte-Deal",
+    "Weekend Blowout": "Wochenend-Kracher"
   },
   "pt": {
     " one-time": " único",
@@ -1318,7 +1330,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "Vitalícia",
     "Lifetime Access": "Acesso Vitalício",
     "Lifetime Key": "Chave Vitalícia",
-    "Limited-Time Sale": "Promoção por Tempo Limitado",
+    "Limited-Time Sale": "Promo por Tempo Limitado",
     "Loading payment options...": "Carregando opções de pagamento...",
     "Log in and start using your premium access immediately.": "Faça login e comece a usar seu acesso premium imediatamente.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Gostou dos scripts gratuitos? Uma pequena doação mantém nossos servidores funcionando e novos scripts chegando. Cada contribuição ajuda!",
@@ -1525,7 +1537,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} agora está com {percent}% de desconto",
     "Limited-Time Deal": "Oferta por tempo limitado",
     "Grab your discounted key before the deal ends!": "Garanta sua chave com desconto antes que a oferta acabe!",
-    "View Deal": "Ver oferta"
+    "View Deal": "Ver oferta",
+    "Monday Reset Sale": "Promo de Segunda",
+    "Flash Deal": "Oferta Relâmpago",
+    "Midweek Deal": "Oferta do Meio da Semana",
+    "Weekend Blowout": "Arrasa Fim de Semana"
   },
   "ru": {
     " one-time": " разовый платёж",
@@ -1699,7 +1715,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "Бессрочно",
     "Lifetime Access": "Бессрочный доступ",
     "Lifetime Key": "Бессрочный ключ",
-    "Limited-Time Sale": "Ограниченная распродажа",
+    "Limited-Time Sale": "СКИДКА НА ВРЕМЯ",
     "Loading payment options...": "Загрузка вариантов оплаты...",
     "Log in and start using your premium access immediately.": "Войдите и сразу начните пользоваться премиум-доступом.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Нравятся бесплатные скрипты? Небольшое пожертвование поддерживает наши серверы и появление новых скриптов. Любая сумма важна!",
@@ -1906,7 +1922,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} теперь со скидкой {percent}%",
     "Limited-Time Deal": "Предложение ограничено по времени",
     "Grab your discounted key before the deal ends!": "Успейте купить ключ со скидкой, пока действует предложение!",
-    "View Deal": "Смотреть предложение"
+    "View Deal": "Смотреть предложение",
+    "Monday Reset Sale": "СКИДКИ ПОНЕДЕЛЬНИКА",
+    "Flash Deal": "МОЛНИЯ-СКИДКА",
+    "Midweek Deal": "СРЕДА НЕДЕЛИ — СКИДКА",
+    "Weekend Blowout": "РАСПРОДАЖА ВЫХОДНЫХ"
   },
   "zh-CN": {
     " one-time": " 一次性",
@@ -2080,7 +2100,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "永久",
     "Lifetime Access": "永久访问权限",
     "Lifetime Key": "永久密钥",
-    "Limited-Time Sale": "限时特惠",
+    "Limited-Time Sale": "限时特卖",
     "Loading payment options...": "正在加载支付方式...",
     "Log in and start using your premium access immediately.": "登录并立即开始使用你的高级访问权限。",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "喜欢免费脚本吗?一点小小的捐赠即可让我们的服务器持续运行、新脚本不断推出。每一份支持都很重要!",
@@ -2287,7 +2307,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} 现享 {percent}% 折扣",
     "Limited-Time Deal": "限时优惠",
     "Grab your discounted key before the deal ends!": "在优惠结束前抢购你的折扣密钥！",
-    "View Deal": "查看优惠"
+    "View Deal": "查看优惠",
+    "Monday Reset Sale": "周一焕新特惠",
+    "Flash Deal": "限时闪购",
+    "Midweek Deal": "周中特惠",
+    "Weekend Blowout": "周末狂欢购"
   },
   "ko": {
     " one-time": " 일회성",
@@ -2461,7 +2485,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "평생",
     "Lifetime Access": "평생 이용",
     "Lifetime Key": "평생 키",
-    "Limited-Time Sale": "기간 한정 세일",
+    "Limited-Time Sale": "한정 시간 세일",
     "Loading payment options...": "결제 옵션 불러오는 중...",
     "Log in and start using your premium access immediately.": "로그인하고 Premium 이용을 즉시 시작하세요.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "무료 스크립트가 마음에 드시나요? 작은 후원이 서버를 유지하고 새 스크립트를 계속 만들 수 있게 합니다. 모든 후원이 큰 힘이 됩니다!",
@@ -2668,7 +2692,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} 지금 {percent}% 할인",
     "Limited-Time Deal": "한정 특가",
     "Grab your discounted key before the deal ends!": "혜택이 끝나기 전에 할인된 키를 받으세요!",
-    "View Deal": "혜택 보기"
+    "View Deal": "혜택 보기",
+    "Monday Reset Sale": "월요일 리셋 세일",
+    "Flash Deal": "번개 특가",
+    "Midweek Deal": "주중 특가",
+    "Weekend Blowout": "주말 파격 세일"
   },
   "th": {
     " one-time": " ครั้งเดียว",
@@ -2842,7 +2870,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "ตลอดชีพ",
     "Lifetime Access": "เข้าใช้งานตลอดชีพ",
     "Lifetime Key": "คีย์ตลอดชีพ",
-    "Limited-Time Sale": "ลดราคาช่วงเวลาจำกัด",
+    "Limited-Time Sale": "ลดจำกัดเวลา",
     "Loading payment options...": "กำลังโหลดตัวเลือกการชำระเงิน...",
     "Log in and start using your premium access immediately.": "เข้าสู่ระบบและเริ่มใช้งานสิทธิ์ Premium ของคุณได้ทันที",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "ชอบสคริปต์ฟรีใช่ไหม? การบริจาคเล็กน้อยช่วยให้เซิร์ฟเวอร์ของเราทำงานต่อและมีสคริปต์ใหม่ๆ ทุกการสนับสนุนมีความหมาย!",
@@ -3049,7 +3077,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} ลดราคา {percent}% แล้วตอนนี้",
     "Limited-Time Deal": "ข้อเสนอเวลาจำกัด",
     "Grab your discounted key before the deal ends!": "รับคีย์ราคาพิเศษของคุณก่อนข้อเสนอจะสิ้นสุด!",
-    "View Deal": "ดูข้อเสนอ"
+    "View Deal": "ดูข้อเสนอ",
+    "Monday Reset Sale": "ลดต้อนรับวันจันทร์",
+    "Flash Deal": "ดีลฟ้าแลบ",
+    "Midweek Deal": "ดีลกลางสัปดาห์",
+    "Weekend Blowout": "ลดกระหน่ำสุดสัปดาห์"
   },
   "id": {
     " one-time": " sekali bayar",
@@ -3223,7 +3255,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "Seumur Hidup",
     "Lifetime Access": "Akses Seumur Hidup",
     "Lifetime Key": "Kunci Seumur Hidup",
-    "Limited-Time Sale": "Penjualan Waktu Terbatas",
+    "Limited-Time Sale": "Diskon Waktu Terbatas",
     "Loading payment options...": "Memuat opsi pembayaran...",
     "Log in and start using your premium access immediately.": "Masuk dan mulai gunakan akses premium Anda segera.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Suka dengan script gratisnya? Donasi kecil membuat server kami tetap berjalan dan script baru terus datang. Setiap sedikit sangat berarti!",
@@ -3430,7 +3462,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} kini DISKON {percent}%",
     "Limited-Time Deal": "Penawaran Waktu Terbatas",
     "Grab your discounted key before the deal ends!": "Dapatkan key diskon Anda sebelum penawaran berakhir!",
-    "View Deal": "Lihat Penawaran"
+    "View Deal": "Lihat Penawaran",
+    "Monday Reset Sale": "Diskon Awal Pekan",
+    "Flash Deal": "Diskon Kilat",
+    "Midweek Deal": "Diskon Tengah Pekan",
+    "Weekend Blowout": "Obral Akhir Pekan"
   },
   "fil": {
     " one-time": " isang beses",
@@ -3604,7 +3640,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "Habambuhay",
     "Lifetime Access": "Habambuhay na Access",
     "Lifetime Key": "Habambuhay na Key",
-    "Limited-Time Sale": "Limlimitahang-Oras na Benta",
+    "Limited-Time Sale": "SALE NA PATATAGAL-TAGAL LANG",
     "Loading payment options...": "Nilo-load ang mga opsyon sa pagbabayad...",
     "Log in and start using your premium access immediately.": "Mag-log in at simulang gamitin ang iyong premium access agad.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Gusto mo ba ang mga libreng script? Ang maliit na donation ay tumutulong na patakbuhin ang aming mga server at maglabas ng mga bagong script. Malaki ang maitutulong ng kahit kaunti!",
@@ -3811,7 +3847,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "Ang {name} ay {percent}% OFF na ngayon",
     "Limited-Time Deal": "Deal na May Takdang Panahon",
     "Grab your discounted key before the deal ends!": "Kunin ang iyong nakadiskwentong key bago matapos ang deal!",
-    "View Deal": "Tingnan ang Deal"
+    "View Deal": "Tingnan ang Deal",
+    "Monday Reset Sale": "BENTA SA LUNES",
+    "Flash Deal": "BILISANG DEAL",
+    "Midweek Deal": "DEAL SA GITNA NG LINGGO",
+    "Weekend Blowout": "WEEKEND BLOWOUT"
   },
   "vi": {
     " one-time": " một lần",
@@ -3985,7 +4025,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Lifetime": "Trọn đời",
     "Lifetime Access": "Truy cập trọn đời",
     "Lifetime Key": "Key trọn đời",
-    "Limited-Time Sale": "Khuyến mãi có thời hạn",
+    "Limited-Time Sale": "SALE CÓ HẠN",
     "Loading payment options...": "Đang tải tùy chọn thanh toán...",
     "Log in and start using your premium access immediately.": "Đăng nhập và bắt đầu sử dụng truy cập Premium của bạn ngay lập tức.",
     "Love the free scripts? A small donation keeps our servers running and new scripts coming. Every bit helps!": "Thích các script miễn phí? Một khoản quyên góp nhỏ giúp máy chủ của chúng tôi hoạt động và có thêm script mới. Mọi đóng góp đều quý giá!",
@@ -4192,6 +4232,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "{name} is now {percent}% OFF": "{name} hiện đang giảm {percent}%",
     "Limited-Time Deal": "Ưu đãi có thời hạn",
     "Grab your discounted key before the deal ends!": "Nhận key giảm giá của bạn trước khi ưu đãi kết thúc!",
-    "View Deal": "Xem ưu đãi"
+    "View Deal": "Xem ưu đãi",
+    "Monday Reset Sale": "SALE ĐẦU TUẦN",
+    "Flash Deal": "ƯU ĐÃI CHỚP NHOÁNG",
+    "Midweek Deal": "ƯU ĐÃI GIỮA TUẦN",
+    "Weekend Blowout": "XẢ HÀNG CUỐI TUẦN"
   }
 };
