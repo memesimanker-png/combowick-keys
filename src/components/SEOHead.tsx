@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const BASE_URL = "https://combowick.com";
+const BASE_URL = "https://combowick-keys.vercel.app";
 
 const SUPPORTED_LANGS = ["en", "es", "fr", "de", "pt", "ru", "zh", "ja", "ko", "ar"];
 
