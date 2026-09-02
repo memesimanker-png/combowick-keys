@@ -15,7 +15,6 @@ import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
-import ScriptPromoPopup from "@/components/ScriptPromoPopup";
 
 
 
@@ -148,7 +147,7 @@ export default function AccessKey() {
   const generateKey = async () => {
     if (!canGenerate || isLoading) return;
     if (!selectedGame) {
-      setError("Please pick the game your key is for.");
+      setError(t("Please pick the game your key is for."));
       return;
     }
     if (directLinkEnabled && adClicks < REQUIRED_AD_CLICKS) {
@@ -269,7 +268,6 @@ export default function AccessKey() {
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
-      <ScriptPromoPopup enabled={isAdEnabled("access-key", "script_promo")} />
       {isAdEnabled("access-key", "skip_ads_banner") && <SkipAdsBanner />}
       <FunnelHeader title="COMBO WICK" />
 
@@ -277,26 +275,26 @@ export default function AccessKey() {
         <div className="max-w-md w-full mx-auto space-y-6">
           <div className="text-center space-y-2">
             <Key className="h-12 w-12 text-primary mx-auto" />
-            <h1 className="text-3xl font-bold">Access Key Generator</h1>
-            <p className="text-muted-foreground">Generate your HWID access key below.</p>
+            <h1 className="text-3xl font-bold">{t("Access Key Generator")}</h1>
+            <p className="text-muted-foreground">{t("Generate your HWID access key below.")}</p>
             <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/extend-key")}>
-              <Clock className="h-4 w-4" /> Already have a key? Add more hours
+              <Clock className="h-4 w-4" /> {t("Already have a key? Add more hours")}
             </Button>
           </div>
 
           <Card className="border-primary/30">
             <CardHeader>
-              <CardTitle>Generate Your Key</CardTitle>
-              <CardDescription>Enter a username (optional) and generate your 11-hour HWID key.</CardDescription>
+              <CardTitle>{t("Generate Your Key")}</CardTitle>
+              <CardDescription>{t("Enter a username (optional) and generate your 11-hour HWID key.")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-muted-foreground" />
-                  <label className="text-sm font-medium">Username (optional)</label>
+                  <label className="text-sm font-medium">{t("Username (optional)")}</label>
                 </div>
                 <Input
-                  placeholder="Enter your Roblox username"
+                  placeholder={t("Enter your Roblox username")}
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   disabled={!canGenerate || isLoading}
@@ -306,10 +304,10 @@ export default function AccessKey() {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Gamepad2 className="h-4 w-4 text-muted-foreground" />
-                  <label className="text-sm font-medium">Game <span className="text-primary">*</span></label>
+                  <label className="text-sm font-medium">{t("Game")} <span className="text-primary">*</span></label>
                 </div>
                 <GamePicker value={selectedGame} onChange={setSelectedGame} disabled={!canGenerate || isLoading} />
-                <p className="text-xs text-muted-foreground">Your key will only work in the game you pick.</p>
+                <p className="text-xs text-muted-foreground">{t("Your key will only work in the game you pick.")}</p>
               </div>
 
               {error && (
@@ -320,14 +318,14 @@ export default function AccessKey() {
                 <div className="space-y-3">
                   <div className="rounded-lg bg-black/50 p-4 border border-green-500/30">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-green-400 font-medium">Your HWID Key:</span>
+                      <span className="text-sm text-green-400 font-medium">{t("Your HWID Key:")}</span>
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => copyToClipboard(generatedKey)}
                         className="h-7 text-green-400 hover:text-green-300"
                       >
-                        <Copy className="h-3 w-3 mr-1" /> Copy
+                        <Copy className="h-3 w-3 mr-1" /> {t("Copy")}
                       </Button>
                     </div>
                     <pre className="text-xs font-mono text-green-400 break-all whitespace-pre-wrap select-all leading-relaxed">
@@ -337,7 +335,7 @@ export default function AccessKey() {
                   {keyExpiresAt && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      <span>Display expires in: {formatTimeRemaining()}</span>
+                      <span>{t("Display expires in:")} {formatTimeRemaining()}</span>
                     </div>
                   )}
                 </div>
@@ -348,13 +346,13 @@ export default function AccessKey() {
                   className="w-full bg-gradient-to-r from-primary to-purple-500 hover:shadow-lg transition-all"
                 >
                   {isLoading ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</>
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("Generating...")}</>
                   ) : !selectedGame ? (
-                    <><Gamepad2 className="mr-2 h-4 w-4" /> Select a game first</>
+                    <><Gamepad2 className="mr-2 h-4 w-4" /> {t("Select a game first")}</>
                   ) : adClicks < REQUIRED_AD_CLICKS ? (
-                    <><Key className="mr-2 h-4 w-4" /> Continue (Step {adClicks + 1} of {REQUIRED_AD_CLICKS + 1})</>
+                    <><Key className="mr-2 h-4 w-4" /> {t("Continue")} ({adClicks + 1}/{REQUIRED_AD_CLICKS + 1})</>
                   ) : (
-                    <><Key className="mr-2 h-4 w-4" /> Generate HWID Key</>
+                    <><Key className="mr-2 h-4 w-4" /> {t("Generate HWID Key")}</>
                   )}
                 </Button>
               )}
