@@ -13,7 +13,6 @@ import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
 import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
-import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
