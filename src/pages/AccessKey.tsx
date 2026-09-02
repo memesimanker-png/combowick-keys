@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Copy, User, Clock, Shield, Key, Loader2, Code2, ExternalLink } from "lucide-react";
+import { Copy, User, Clock, Shield, Key, Loader2, Code2, ExternalLink, Gamepad2 } from "lucide-react";
+import { GamePicker } from "@/components/GamePicker";
+import type { GameItem } from "@/hooks/useGamesList";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
 import { FunnelHeader } from "@/components/FunnelHeader";
@@ -29,6 +31,7 @@ export default function AccessKey() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
+  const [selectedGame, setSelectedGame] = useState<GameItem | null>(null);
   const [generatedKey, setGeneratedKey] = useState("");
   const [keyExpiresAt, setKeyExpiresAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -144,6 +147,10 @@ export default function AccessKey() {
 
   const generateKey = async () => {
     if (!canGenerate || isLoading) return;
+    if (!selectedGame) {
+      setError("Please pick the game your key is for.");
+      return;
+    }
     if (directLinkEnabled && adClicks < REQUIRED_AD_CLICKS) {
       handleAdClick();
       return;
@@ -177,7 +184,7 @@ export default function AccessKey() {
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke("generate-hwid-key", {
-        body: { username: username.trim() || undefined, verify_token: verifyToken },
+        body: { username: username.trim() || undefined, verify_token: verifyToken, game_id: selectedGame.game_id },
       });
 
       // Extract real server error message (supabase wraps non-2xx in FunctionsHttpError)
@@ -296,6 +303,15 @@ export default function AccessKey() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Gamepad2 className="h-4 w-4 text-muted-foreground" />
+                  <label className="text-sm font-medium">Game <span className="text-primary">*</span></label>
+                </div>
+                <GamePicker value={selectedGame} onChange={setSelectedGame} disabled={!canGenerate || isLoading} />
+                <p className="text-xs text-muted-foreground">Your key will only work in the game you pick.</p>
+              </div>
+
               {error && (
                 <p className="text-sm text-red-400">{error}</p>
               )}
@@ -328,11 +344,13 @@ export default function AccessKey() {
               ) : (
                 <Button
                   onClick={generateKey}
-                  disabled={!canGenerate || isLoading}
+                  disabled={!canGenerate || isLoading || !selectedGame}
                   className="w-full bg-gradient-to-r from-primary to-purple-500 hover:shadow-lg transition-all"
                 >
                   {isLoading ? (
                     <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</>
+                  ) : !selectedGame ? (
+                    <><Gamepad2 className="mr-2 h-4 w-4" /> Select a game first</>
                   ) : adClicks < REQUIRED_AD_CLICKS ? (
                     <><Key className="mr-2 h-4 w-4" /> Continue (Step {adClicks + 1} of {REQUIRED_AD_CLICKS + 1})</>
                   ) : (
