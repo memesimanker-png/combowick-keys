@@ -124,9 +124,13 @@ export function Navbar() {
             )}
           </div>
 
-          <button aria-label={mobileOpen ? "Close menu" : "Open menu"} className="xl:hidden min-h-11 min-w-11 p-2 text-muted-foreground hover:text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
+          {/* Mobile top-bar: language selector always visible + hamburger */}
+          <div className="flex items-center gap-1 xl:hidden">
+            <LanguageSelector />
+            <button aria-label={mobileOpen ? "Close menu" : "Open menu"} className="min-h-11 min-w-11 p-2 text-muted-foreground hover:text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -140,9 +144,6 @@ export function Navbar() {
             className="xl:hidden border-t border-primary/10 bg-background/95 backdrop-blur-2xl overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1">
-              <div className="pb-3 border-b border-border/50">
-                <LanguageSelector dropUp={false} inline />
-              </div>
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
