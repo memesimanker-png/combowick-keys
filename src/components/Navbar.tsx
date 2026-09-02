@@ -43,12 +43,12 @@ export function Navbar() {
     <header className="sticky top-0 z-50 border-b border-primary/10 bg-background/70 backdrop-blur-2xl">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity group shrink-0">
             <div className="relative">
-              <img src="/images/combo-wick-logo.png" alt="ComboWick Logo" className="h-9 w-9 rounded-lg" />
+              <img src="/images/combo-wick-logo.png" alt="ComboWick Logo" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg" />
               <div className="absolute inset-0 rounded-lg bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
-            <span className="font-heading font-bold text-lg tracking-wider">
+            <span className="font-heading font-bold text-base sm:text-lg tracking-wider">
               <span className="text-primary">COMBO</span>
               <span className="text-foreground">WICK</span>
             </span>
