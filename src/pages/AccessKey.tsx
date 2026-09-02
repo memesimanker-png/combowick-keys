@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Copy, User, Clock, Shield, Key, Loader2, Code2, ExternalLink, Gamepad2 } from "lucide-react";
 import { GamePicker } from "@/components/GamePicker";
 import type { GameItem } from "@/hooks/useGamesList";
+import { useIsAdmin } from "@/hooks/useAuth";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
 import { FunnelHeader } from "@/components/FunnelHeader";
@@ -41,16 +42,18 @@ export default function AccessKey() {
   const [requiredClicks, setRequiredClicks] = useState(2);
 
   const { isAdEnabled } = useAdSettings();
+  const { isAdmin, loading: adminLoading } = useIsAdmin();
   // Popunder moved OFF the key-generation page — it now lives on verify steps 2 & 3.
   const directLinkEnabled = isAdEnabled("access-key", "direct_link");
   const REQUIRED_AD_CLICKS = directLinkEnabled ? requiredClicks : 0;
 
   const DIRECT_LINK_URL = "https://omg10.com/4/11703894";
 
-  // Verify steps are completed & load stored key
+  // Verify steps are completed & load stored key (admins skip the whole verify flow)
   useEffect(() => {
+    if (adminLoading) return; // wait until we know whether this is an admin
     const step3Done = localStorage.getItem("step3_completed");
-    if (!step3Done) {
+    if (!isAdmin && !step3Done) {
       toast({ variant: "destructive", title: "Access Denied", description: "Please complete all verification steps." });
       navigate("/verify/provider-select");
       return;
@@ -67,7 +70,7 @@ export default function AccessKey() {
 
     loadStoredKeyData();
     checkExistingKey();
-  }, [navigate, toast]);
+  }, [navigate, toast, isAdmin, adminLoading]);
 
   const loadStoredKeyData = () => {
     try {
@@ -150,7 +153,7 @@ export default function AccessKey() {
       setError(t("Please pick the game your key is for."));
       return;
     }
-    if (directLinkEnabled && adClicks < REQUIRED_AD_CLICKS) {
+    if (!isAdmin && directLinkEnabled && adClicks < REQUIRED_AD_CLICKS) {
       handleAdClick();
       return;
     }
@@ -173,7 +176,7 @@ export default function AccessKey() {
       localStorage.removeItem("verify_token");
     }
 
-    if (!verifyToken) {
+    if (!isAdmin && !verifyToken) {
       setError("Your verification expired. Please verify again.");
       toast({ variant: "destructive", title: "Verification required", description: "Please complete the verification steps again." });
       setIsLoading(false);
