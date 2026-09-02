@@ -45,7 +45,7 @@ export const AD_TYPES: { id: AdType; label: string }[] = [
 // Which ad types each page actually renders (controls Admin matrix).
 export const PAGE_AD_TYPES: Record<AdPage, AdType[]> = {
   "verify-step1": ["sliding_ad", "skip_ads_banner", "skip_ads_float"],
-  "verify-step2": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
+  "verify-step2": ["popunder", "skip_ads_banner", "skip_ads_float"],
   "verify-step3": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
   "verify-provider-select": ["direct_link"],
   "access-key": ["direct_link", "skip_ads_banner", "skip_ads_float", "script_promo"],
