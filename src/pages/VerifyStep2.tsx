@@ -15,7 +15,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
-import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
@@ -147,7 +146,6 @@ export default function VerifyStep2() {
           </div>
         </main>
         {isAdEnabled("verify-step2", "skip_ads_float") && <SkipAdsFloatButton />}
-        {isAdEnabled("verify-step2", "sliding_ad") && <SlidingAd />}
       </div>
     </>
   );
