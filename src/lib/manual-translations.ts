@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Key stays shown for:": "La clé reste affichée pendant :",
     "Generate your HWID access key below.": "Générez votre clé d'accès HWID ci-dessous.",
     "Already have a key? Add more hours": "Vous avez déjà une clé ? Ajoutez des heures",
     "Generate Your Key": "Générez votre clé",
@@ -434,6 +435,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Key stays shown for:": "La clave se muestra durante:",
     "Generate your HWID access key below.": "Genera tu clave de acceso HWID a continuación.",
     "Already have a key? Add more hours": "¿Ya tienes una clave? Añade más horas",
     "Generate Your Key": "Genera tu clave",
@@ -864,6 +866,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Key stays shown for:": "Schlüssel bleibt sichtbar für:",
     "Generate your HWID access key below.": "Generiere unten deinen HWID-Zugangsschlüssel.",
     "Already have a key? Add more hours": "Hast du schon einen Schlüssel? Stunden hinzufügen",
     "Generate Your Key": "Schlüssel generieren",
@@ -1294,6 +1297,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Key stays shown for:": "A chave fica visível por:",
     "Generate your HWID access key below.": "Gere sua chave de acesso HWID abaixo.",
     "Already have a key? Add more hours": "Já tem uma chave? Adicione mais horas",
     "Generate Your Key": "Gere sua chave",
@@ -1724,6 +1728,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Key stays shown for:": "Ключ отображается ещё:",
     "Generate your HWID access key below.": "Сгенерируйте HWID-ключ доступа ниже.",
     "Already have a key? Add more hours": "Уже есть ключ? Добавьте часы",
     "Generate Your Key": "Сгенерируйте ключ",
@@ -2154,6 +2159,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Key stays shown for:": "密钥显示剩余时间：",
     "Generate your HWID access key below.": "在下方生成您的 HWID 访问密钥。",
     "Already have a key? Add more hours": "已有密钥？添加更多时长",
     "Generate Your Key": "生成您的密钥",
@@ -2584,6 +2590,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Key stays shown for:": "키 표시 시간:",
     "Generate your HWID access key below.": "아래에서 HWID 액세스 키를 생성하세요.",
     "Already have a key? Add more hours": "이미 키가 있나요? 시간 추가",
     "Generate Your Key": "키 생성",
@@ -3014,6 +3021,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Key stays shown for:": "คีย์จะแสดงเป็นเวลา:",
     "Generate your HWID access key below.": "สร้างคีย์การเข้าถึง HWID ของคุณด้านล่าง",
     "Already have a key? Add more hours": "มีคีย์อยู่แล้ว? เพิ่มชั่วโมง",
     "Generate Your Key": "สร้างคีย์ของคุณ",
@@ -3444,6 +3452,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Key stays shown for:": "Kunci ditampilkan selama:",
     "Generate your HWID access key below.": "Buat kunci akses HWID Anda di bawah ini.",
     "Already have a key? Add more hours": "Sudah punya kunci? Tambah jam",
     "Generate Your Key": "Buat Kunci Anda",
@@ -3874,6 +3883,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Key stays shown for:": "Ipapakita ang key sa loob ng:",
     "Generate your HWID access key below.": "Bumuo ng iyong HWID access key sa ibaba.",
     "Already have a key? Add more hours": "May key na? Magdagdag ng mga oras",
     "Generate Your Key": "Bumuo ng Iyong Key",
@@ -4304,6 +4314,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Key stays shown for:": "Khóa hiển thị trong:",
     "Generate your HWID access key below.": "Tạo khóa truy cập HWID của bạn bên dưới.",
     "Already have a key? Add more hours": "Đã có khóa? Thêm giờ",
     "Generate Your Key": "Tạo Khóa Của Bạn",
