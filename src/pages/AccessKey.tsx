@@ -12,7 +12,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
-import { usePopunder } from "@/hooks/usePopunder";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import ScriptPromoPopup from "@/components/ScriptPromoPopup";
 
@@ -40,7 +39,7 @@ export default function AccessKey() {
   const [requiredClicks, setRequiredClicks] = useState(2);
 
   const { isAdEnabled } = useAdSettings();
-  usePopunder(true); // popunder always on for the key-generation page
+  // Popunder moved OFF the key-generation page — it now lives on verify steps 2 & 3.
   const directLinkEnabled = isAdEnabled("access-key", "direct_link");
   const REQUIRED_AD_CLICKS = directLinkEnabled ? requiredClicks : 0;
 
