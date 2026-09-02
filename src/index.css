@@ -83,12 +83,20 @@
     @apply border-border;
   }
 
+  html {
+    overflow-x: hidden;
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
     letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Prevent any stray-wide element from causing horizontal scroll on mobile. */
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
   }
 
   h1, h2 {
