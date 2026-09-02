@@ -15,6 +15,7 @@ import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
+import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 
@@ -24,6 +25,8 @@ export default function VerifyStep3() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
+  // Monetag popunder lives on the verify steps (2 & 3), not the key-generation page.
+  usePopunder(true);
   const [isLoading, setIsLoading] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
