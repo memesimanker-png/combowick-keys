@@ -8,7 +8,7 @@ export interface GameItem {
 
 const EXECUTOR = "https://v0-remix-of-roblox-executor-system.vercel.app";
 const LS_KEY = "cw_games_list_v1";
-const TTL = 60 * 60 * 1000; // 1h — the endpoint itself is also CDN + Redis cached.
+const TTL = 5 * 60 * 1000; // 5 min — near-instant for new games; endpoint is also CDN + Redis cached (busted on admin save).
 
 let mem: GameItem[] | null = null;
 let memAt = 0;
