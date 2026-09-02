@@ -5,46 +5,15 @@ const SITEMAP_CACHE_KEY = "sitemap:xml:v1";
 const SITEMAP_TTL = 900; // 15 min
 let memCache: { at: number; xml: string } | null = null;
 
-const BASE_URL = "https://combowick.com";
+const BASE_URL = "https://combowick-keys.vercel.app";
 
 const STATIC_PAGES = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
-  { loc: "/about", changefreq: "monthly", priority: "0.8" },
-  
   { loc: "/premium-keys", changefreq: "weekly", priority: "0.9" },
-  { loc: "/scripts", changefreq: "daily", priority: "0.9" },
-  { loc: "/executors", changefreq: "weekly", priority: "0.8" },
   { loc: "/keys", changefreq: "weekly", priority: "0.9" },
-  { loc: "/verify/provider-select", changefreq: "weekly", priority: "0.6" },
-  { loc: "/verify/step1", changefreq: "weekly", priority: "0.5" },
-  { loc: "/verify/step2", changefreq: "weekly", priority: "0.5" },
-  { loc: "/verify/step3", changefreq: "weekly", priority: "0.5" },
-  { loc: "/ad-return", changefreq: "weekly", priority: "0.4" },
-  { loc: "/access-key", changefreq: "weekly", priority: "0.5" },
-  { loc: "/claim-access", changefreq: "weekly", priority: "0.4" },
-  { loc: "/register", changefreq: "weekly", priority: "0.4" },
-  { loc: "/tutorials", changefreq: "monthly", priority: "0.7" },
-  { loc: "/docs", changefreq: "monthly", priority: "0.7" },
-  { loc: "/guides", changefreq: "monthly", priority: "0.7" },
-  { loc: "/changelog", changefreq: "monthly", priority: "0.5" },
-  { loc: "/anti-cheat-guide", changefreq: "monthly", priority: "0.6" },
-  { loc: "/fair-use", changefreq: "yearly", priority: "0.4" },
-  { loc: "/faq", changefreq: "monthly", priority: "0.8" },
-  { loc: "/blog", changefreq: "weekly", priority: "0.9" },
-  { loc: "/contact", changefreq: "monthly", priority: "0.6" },
-  { loc: "/login", changefreq: "yearly", priority: "0.4" },
-  { loc: "/signup", changefreq: "yearly", priority: "0.4" },
-  { loc: "/privacy", changefreq: "yearly", priority: "0.3" },
-  { loc: "/terms", changefreq: "yearly", priority: "0.3" },
-  { loc: "/refund-policy", changefreq: "yearly", priority: "0.3" },
-  { loc: "/oils", changefreq: "weekly", priority: "0.7" },
-  { loc: "/dashboard", changefreq: "weekly", priority: "0.5" },
-  { loc: "/wall-of-fame", changefreq: "weekly", priority: "0.6" },
-  // SEO landing pages targeting high-volume game keywords
-  { loc: "/games/blox-fruits", changefreq: "weekly", priority: "0.9" },
-  { loc: "/games/arsenal", changefreq: "weekly", priority: "0.9" },
-  { loc: "/games/pet-simulator", changefreq: "weekly", priority: "0.9" },
-  { loc: "/games/jurassic-blocky", changefreq: "weekly", priority: "0.9" },
+  { loc: "/privacy", changefreq: "monthly", priority: "0.5" },
+  { loc: "/terms", changefreq: "monthly", priority: "0.5" },
+  { loc: "/refund-policy", changefreq: "monthly", priority: "0.5" },
 ];
 
 const BLOG_SLUGS = [
