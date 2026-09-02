@@ -61,6 +61,4 @@ Disallow: /admin
 Disallow: /admin/
 
 # Sitemap (project domain)
-Sitemap: https://combowick.com/sitemap.xml
-# Dynamic sitemap (always up-to-date — includes all scripts and blog posts)
-Sitemap: https://iphiksvnuzpteoryrdxf.supabase.co/functions/v1/dynamic-sitemap
+Sitemap: https://combowick-keys.vercel.app/sitemap.xml
