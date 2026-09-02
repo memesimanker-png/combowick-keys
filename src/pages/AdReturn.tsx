@@ -130,6 +130,8 @@ export default function AdReturn() {
 
     // On final step, request a server-issued verify token so generate-hwid-key
     // can confirm the request came from a real verified user (not curl/PS).
+    // Wait for the token to actually be saved BEFORE navigating to Access Key —
+    // otherwise a slow/failed token request means Access Key sees no token and bounces.
     if (currentStep === "step3") {
       supabase.functions
         .invoke("issue-verify-token", { body: {} })
@@ -143,12 +145,17 @@ export default function AdReturn() {
             console.warn("[AdReturn] issue-verify-token failed", error || data);
           }
         })
-        .catch((err) => console.warn("[AdReturn] issue-verify-token error", err));
+        .catch((err) => console.warn("[AdReturn] issue-verify-token error", err))
+        .finally(() => {
+          timeoutId = window.setTimeout(() => {
+            navigate(NEXT_ROUTE[currentStep], { replace: true });
+          }, 800);
+        });
+    } else {
+      timeoutId = window.setTimeout(() => {
+        navigate(NEXT_ROUTE[currentStep], { replace: true });
+      }, 1500);
     }
-
-    timeoutId = window.setTimeout(() => {
-      navigate(NEXT_ROUTE[currentStep], { replace: true });
-    }, 1500);
 
     return () => {
       if (timeoutId) {
