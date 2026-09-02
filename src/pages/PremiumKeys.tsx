@@ -169,42 +169,6 @@ export default function PremiumKeys() {
         </div>
       </section>
 
-      {/* Flagship: Owner/Admin access — high-ticket, placed up top so it's seen without scrolling */}
-      <section className="pb-2 pt-2 sm:pt-4">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-yellow-950/40 via-black/60 to-black/60 p-6 sm:p-8">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-yellow-500/10 blur-3xl" />
-            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-              <div className="flex-1">
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-300">
-                  <Crown className="h-3 w-3" /> {t("Flagship")}
-                </div>
-                <h3 className="font-heading text-2xl font-bold text-yellow-300">{t("Owner / Admin Access")}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {t("Become an owner/admin of the ComboWick Discord for 5 full months.")}
-                </p>
-                <ul className="mt-4 space-y-2 text-sm">
-                  <li className="flex items-center gap-2"><Crown className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Full owner/admin role for 5 months")}</li>
-                  <li className="flex items-center gap-2"><Star className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Top of the member list with full server powers")}</li>
-                  <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Direct line to the founder")}</li>
-                </ul>
-              </div>
-              <div className="text-center sm:text-right">
-                <div className="text-4xl font-extrabold text-yellow-300">$1,000</div>
-                <p className="text-xs text-muted-foreground">{t("5 months • one-time")}</p>
-                <p className="mb-4 mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-400/70">{t("All sales are final — NO REFUNDS")}</p>
-                <button
-                  onClick={() => setOwnerOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-yellow-500 px-5 py-2.5 text-sm font-bold text-black transition-colors hover:bg-yellow-400"
-                >
-                  <Crown className="h-4 w-4" /> {t("Claim Owner Access")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Pricing Cards */}
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -278,6 +242,42 @@ export default function PremiumKeys() {
               </motion.div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Flagship: Owner/Admin access — high-ticket, moved below the key tiers */}
+      <section className="pb-2 pt-2 sm:pt-4">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-yellow-950/40 via-black/60 to-black/60 p-6 sm:p-8">
+            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-yellow-500/10 blur-3xl" />
+            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
+              <div className="flex-1">
+                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-300">
+                  <Crown className="h-3 w-3" /> {t("Flagship")}
+                </div>
+                <h3 className="font-heading text-2xl font-bold text-yellow-300">{t("Owner / Admin Access")}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {t("Become an owner/admin of the ComboWick Discord for 5 full months.")}
+                </p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  <li className="flex items-center gap-2"><Crown className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Full owner/admin role for 5 months")}</li>
+                  <li className="flex items-center gap-2"><Star className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Top of the member list with full server powers")}</li>
+                  <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Direct line to the founder")}</li>
+                </ul>
+              </div>
+              <div className="text-center sm:text-right">
+                <div className="text-4xl font-extrabold text-yellow-300">$1,000</div>
+                <p className="text-xs text-muted-foreground">{t("5 months • one-time")}</p>
+                <p className="mb-4 mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-400/70">{t("All sales are final — NO REFUNDS")}</p>
+                <button
+                  onClick={() => setOwnerOpen(true)}
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-yellow-500 px-5 py-2.5 text-sm font-bold text-black transition-colors hover:bg-yellow-400"
+                >
+                  <Crown className="h-4 w-4" /> {t("Claim Owner Access")}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
