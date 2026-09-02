@@ -13,7 +13,6 @@ import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
 import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
-import SlidingAd from "@/components/SlidingAd";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
@@ -96,7 +95,6 @@ export default function VerifyStep3() {
           </div>
         </main>
         {isAdEnabled("verify-step3", "skip_ads_float") && <SkipAdsFloatButton />}
-        {isAdEnabled("verify-step3", "sliding_ad") && <SlidingAd />}
       </div>
     </>
   );
