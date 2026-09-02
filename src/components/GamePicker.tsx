@@ -3,6 +3,7 @@ import { Search, Gamepad2, Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useGamesList, type GameItem } from "@/hooks/useGamesList";
 import { fetchGameThumbnailByUniverseId } from "@/lib/roblox-thumbnails";
+import { useTranslation } from "@/lib/translation-context";
 
 function GameThumb({ game, size = 32 }: { game: GameItem; size?: number }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -41,6 +42,7 @@ export function GamePicker({
   disabled?: boolean;
 }) {
   const { games, loading } = useGamesList();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const rootRef = useRef<HTMLDivElement>(null);
@@ -79,7 +81,7 @@ export function GamePicker({
               <Gamepad2 className="h-4 w-4 text-muted-foreground" />
             </div>
             <span className="min-w-0 flex-1 truncate text-muted-foreground">
-              {loading ? "Loading games…" : "Select a game"}
+              {loading ? t("Loading games…") : t("Select a game")}
             </span>
           </>
         )}
@@ -94,17 +96,17 @@ export function GamePicker({
               autoFocus
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search games…"
+              placeholder={t("Search games…")}
               className="h-8 border-0 bg-transparent px-0 focus-visible:ring-0"
             />
           </div>
           <div className="max-h-64 overflow-y-auto py-1">
             {loading ? (
               <div className="flex items-center gap-2 px-3 py-6 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" /> Loading games…
+                <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading games…")}
               </div>
             ) : filtered.length === 0 ? (
-              <div className="px-3 py-6 text-center text-sm text-muted-foreground">No games found.</div>
+              <div className="px-3 py-6 text-center text-sm text-muted-foreground">{t("No games found.")}</div>
             ) : (
               filtered.map((g) => {
                 const active = value?.game_id === g.game_id;
@@ -131,7 +133,7 @@ export function GamePicker({
           </div>
           {!loading && games.length > filtered.length && (
             <div className="border-t border-border px-3 py-1.5 text-center text-[11px] text-muted-foreground">
-              Showing {filtered.length} of {games.length} — keep typing to narrow
+              {filtered.length} / {games.length}
             </div>
           )}
         </div>
