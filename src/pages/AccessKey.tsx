@@ -338,7 +338,7 @@ export default function AccessKey() {
                   {keyExpiresAt && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Clock className="h-4 w-4" />
-                      <span>{t("Display expires in:")} {formatTimeRemaining()}</span>
+                      <span>{t("Key stays shown for:")} {formatTimeRemaining()}</span>
                     </div>
                   )}
                 </div>
