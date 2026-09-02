@@ -79,7 +79,7 @@ const App = () => (
               <ExternalLinkMonetag />
               <Suspense fallback={<RouteFallback />}>
                 <Routes>
-                  <Route path="/" element={<Navigate to="/premium-keys" replace />} />
+                  <Route path="/" element={<Navigate to="/keys" replace />} />
 
                   {/* Store + key system */}
                   <Route path="/premium-keys" element={<PremiumKeys />} />
