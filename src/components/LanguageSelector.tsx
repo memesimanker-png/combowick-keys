@@ -7,9 +7,10 @@ import { motion, AnimatePresence } from "framer-motion";
 interface LanguageSelectorProps {
   dropUp?: boolean;
   inline?: boolean;
+  compact?: boolean;
 }
 
-export function LanguageSelector({ dropUp = false, inline = false }: LanguageSelectorProps) {
+export function LanguageSelector({ dropUp = false, inline = false, compact = false }: LanguageSelectorProps) {
   const { currentLanguage, setLanguage, isTranslating } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -38,8 +39,8 @@ export function LanguageSelector({ dropUp = false, inline = false }: LanguageSel
           onClick={() => setOpen(!open)}
           className="relative z-[2] flex items-center gap-2 px-3 py-2 rounded-[7px] text-sm font-medium text-muted-foreground hover:text-foreground bg-transparent transition-all"
         >
-          <Globe className="h-4 w-4 text-primary" />
-          <span>{current.label}</span>
+          <Globe className="h-4 w-4 text-primary shrink-0" />
+          <span className={compact ? "hidden sm:inline" : ""}>{current.label}</span>
           {isTranslating ? (
             <Loader2 className="h-3 w-3 animate-spin text-primary" />
           ) : (
