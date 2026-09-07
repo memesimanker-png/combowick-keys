@@ -140,7 +140,10 @@ export default function VerifyProviderSelect() {
       localStorage.setItem("direct_link_clicks", String(next));
       if (next >= requiredClicks) {
         localStorage.setItem("direct_link_completed", "true");
-        toast({ title: t("Processing Complete"), description: t("You can continue to unlock your key now.") });
+        localStorage.setItem("selected_ad_provider", "linkvertise");
+        toast({ title: t("Processing Complete"), description: t("Taking you to Step 1...") });
+        // Go straight to Step 1 — no extra explainer/button. Small delay so the toast shows.
+        setTimeout(() => { window.location.href = "/verify/step1"; }, 600);
       } else {
         toast({ title: t("One More Click"), description: t("Click the button one more time to process.") });
       }
@@ -272,10 +275,6 @@ export default function VerifyProviderSelect() {
     icon: <CheckCircle2 className="h-4 w-4" />,
     render: () => (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
-        <p className="text-base font-semibold mb-2">{t("Complete 3 quick Linkvertise steps to get your key")}</p>
-        <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-          {t("You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks.")}
-        </p>
         <Button onClick={handleStart} disabled={starting || !subscriptionGateCompleted || !directLinkDone} size="lg" className="gap-2">
           {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlock className="h-4 w-4" />}
           {starting ? t("Starting...") : t("Start Verification (Step 1 of 3)")}
