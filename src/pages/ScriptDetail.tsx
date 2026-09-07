@@ -178,7 +178,7 @@ export default function ScriptDetail() {
           <article className="flex-1 min-w-0">
             <header className="mb-6">
               <div className="flex items-start gap-4 mb-4">
-                <GameThumbnail gameName={script.game} universeId={(script as any).game_universe_id} size="lg" />
+                <GameThumbnail gameName={script.game} universeId={(script as any).game_universe_id} customUrl={(script as any).thumbnail_url} size="lg" />
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2 mb-2">
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
@@ -353,7 +353,7 @@ export default function ScriptDetail() {
                         className="block rounded-lg border border-border bg-secondary/30 p-3 hover:border-primary/50 transition-colors"
                       >
                         <div className="flex items-center gap-2 mb-2">
-                          <GameThumbnail gameName={s.game} universeId={(s as any).game_universe_id} size="sm" />
+                          <GameThumbnail gameName={s.game} universeId={(s as any).game_universe_id} customUrl={(s as any).thumbnail_url} size="sm" />
                           <span className="text-xs text-muted-foreground">{s.game}</span>
                           {s.is_paid && (
                             <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-bold">PAID</span>
