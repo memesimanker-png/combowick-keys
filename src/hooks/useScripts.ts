@@ -58,7 +58,7 @@ export function useScriptBySlug(slug: string | undefined) {
 
 // Lightweight projection for list/card views — skips the heavy `code`,
 // `long_description`, and `faqs` columns. Cuts row payload by ~80% on /scripts.
-const LIST_COLS = "id,slug,title,description,game,category,tags,created_at,updated_at,trending,verified,game_universe_id,is_paid,youtube_url,game_url";
+const LIST_COLS = "id,slug,title,description,game,category,tags,created_at,updated_at,trending,verified,game_universe_id,is_paid,youtube_url,game_url,thumbnail_url";
 
 export function useSearchScripts(query: string, category: string) {
   return useQuery({
