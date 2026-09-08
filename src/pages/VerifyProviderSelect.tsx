@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Unlock, Loader2, MousePointerClick, Sparkles } from "lucide-react";
+import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Unlock, Loader2, MousePointerClick } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +10,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { lovable } from "@/integrations/lovable/index";
-import { getTodaySchedule } from "@/lib/day-schedule";
 import { useTranslation } from "@/lib/translation-context";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
@@ -41,28 +40,6 @@ export default function VerifyProviderSelect() {
   const [directLinkClicks, setDirectLinkClicks] = useState(0);
   const [requiredClicks, setRequiredClicks] = useState(DEFAULT_DIRECT_LINK_CLICKS);
   const [starting, setStarting] = useState(false);
-  const [isGoogleUser, setIsGoogleUser] = useState(false);
-  const todaySchedule = getTodaySchedule();
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setIsGoogleUser(data?.user?.app_metadata?.provider === "google");
-    }).catch(() => setIsGoogleUser(false));
-  }, []);
-
-  const handleGoogleSignIn = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/verify/provider-select`,
-        queryParams: { prompt: "select_account" },
-      },
-    });
-    if (error) {
-      toast({ variant: "destructive", title: t("Error"), description: error.message ?? t("Google sign-in failed") });
-    }
-  };
-
 
   useEffect(() => {
     setMounted(true);
@@ -70,9 +47,13 @@ export default function VerifyProviderSelect() {
     const hideTutorial = localStorage.getItem("hide_tutorial_popup");
     if (!hideTutorial) setShowTutorialPopup(true);
 
-    // Subscribe / Join-Discord gate removed — the unlock pages already require social
-    // actions, so the key flow no longer forces a YouTube subscribe + Discord join.
-    setShowSubscriptionGate(false);
+    const gateCompletedAt = localStorage.getItem("subscription_gate_completed");
+    if (gateCompletedAt) {
+      const daysSince = (Date.now() - new Date(gateCompletedAt).getTime()) / (1000 * 60 * 60 * 24);
+      setShowSubscriptionGate(daysSince >= SUBSCRIPTION_GATE_DURATION_DAYS);
+    } else {
+      setShowSubscriptionGate(true);
+    }
 
     // Fresh run of the 3-step Linkvertise flow.
     localStorage.removeItem("step1_completed");
@@ -140,10 +121,7 @@ export default function VerifyProviderSelect() {
       localStorage.setItem("direct_link_clicks", String(next));
       if (next >= requiredClicks) {
         localStorage.setItem("direct_link_completed", "true");
-        localStorage.setItem("selected_ad_provider", "linkvertise");
-        toast({ title: t("Processing Complete"), description: t("Taking you to Step 1...") });
-        // Go straight to Step 1 — no extra explainer/button. Small delay so the toast shows.
-        setTimeout(() => { window.location.href = "/verify/step1"; }, 600);
+        toast({ title: t("Processing Complete"), description: t("You can continue to unlock your key now.") });
       } else {
         toast({ title: t("One More Click"), description: t("Click the button one more time to process.") });
       }
@@ -225,47 +203,6 @@ export default function VerifyProviderSelect() {
     });
   }
 
-  if (todaySchedule.skipStep2) {
-    steps.push({
-      key: "google",
-      title: isGoogleUser ? t("Google connected — Step 2 will be skipped") : t("Sign in with Google (optional — skip a step today)"),
-      done: isGoogleUser,
-      optional: true,
-      icon: <Sparkles className="h-4 w-4" />,
-      render: () => (
-        <div className="space-y-3">
-          <div className="rounded-lg border border-yellow-500/40 bg-yellow-500/10 p-3 flex items-start gap-2">
-            <Sparkles className="h-4 w-4 text-yellow-400 mt-0.5 shrink-0" />
-            <p className="text-sm text-yellow-400 font-medium">
-              {todaySchedule.label} — {t("sign in with Google and Step 2 is skipped automatically.")}
-            </p>
-          </div>
-          {isGoogleUser ? (
-            <p className="text-sm text-green-400 font-medium">✓ {t("Signed in with Google — Step 2 will be skipped.")}</p>
-          ) : (
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full bg-white text-black hover:bg-white/90 hover:text-black gap-2"
-              onClick={handleGoogleSignIn}
-            >
-              <svg className="h-4 w-4" viewBox="0 0 48 48" aria-hidden="true">
-                <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.6-6 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.2 5.6 29.4 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.3-.4-3.5z" />
-                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 16 18.9 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.2 5.6 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" />
-                <path fill="#4CAF50" d="M24 44c5.3 0 10.1-2 13.7-5.3l-6.3-5.3C29.4 35 26.8 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.6 39.6 16.2 44 24 44z" />
-                <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.2 5.7l6.3 5.3C41.6 35.5 44 30.1 44 24c0-1.2-.1-2.3-.4-3.5z" />
-              </svg>
-              {t("Sign in with Google")}
-            </Button>
-          )}
-          <p className="text-[11px] text-muted-foreground">{t("Optional — you can continue without signing in.")}</p>
-        </div>
-      ),
-    });
-  }
-
-
-
   const directLinkDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
 
   steps.push({
@@ -275,6 +212,10 @@ export default function VerifyProviderSelect() {
     icon: <CheckCircle2 className="h-4 w-4" />,
     render: () => (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
+        <p className="text-base font-semibold mb-2">{t("Complete 3 quick Linkvertise steps to get your key")}</p>
+        <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
+          {t("You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks.")}
+        </p>
         <Button onClick={handleStart} disabled={starting || !subscriptionGateCompleted || !directLinkDone} size="lg" className="gap-2">
           {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlock className="h-4 w-4" />}
           {starting ? t("Starting...") : t("Start Verification (Step 1 of 3)")}
