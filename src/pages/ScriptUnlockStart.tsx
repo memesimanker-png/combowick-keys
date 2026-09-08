@@ -43,8 +43,18 @@ export default function ScriptUnlockStart() {
         .eq("is_paid", false)
         .limit(1)
         .maybeSingle();
+      let resolvedSlug = data?.slug as string | undefined;
+      // No page for this game yet → auto-create it (service-role edge function).
+      if (!resolvedSlug) {
+        try {
+          const { data: fn } = await supabase.functions.invoke("ensure-script", {
+            body: { universe, name: params.get("n") || "" },
+          });
+          resolvedSlug = (fn as any)?.slug || undefined;
+        } catch { /* ignore */ }
+      }
       if (!alive) return;
-      if (data?.slug) { setSlug(data.slug); setResolving(false); }
+      if (resolvedSlug) { setSlug(resolvedSlug); setResolving(false); }
       else navigate("/scripts", { replace: true });
     })();
     return () => { alive = false; };
