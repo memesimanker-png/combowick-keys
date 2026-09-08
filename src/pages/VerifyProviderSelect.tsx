@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Unlock, Loader2, MousePointerClick } from "lucide-react";
+import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,6 +40,7 @@ export default function VerifyProviderSelect() {
   const [directLinkClicks, setDirectLinkClicks] = useState(0);
   const [requiredClicks, setRequiredClicks] = useState(DEFAULT_DIRECT_LINK_CLICKS);
   const [starting, setStarting] = useState(false);
+  const [verifySteps, setVerifySteps] = useState(3); // 2 or 3, admin-configured
 
   useEffect(() => {
     setMounted(true);
@@ -66,11 +67,13 @@ export default function VerifyProviderSelect() {
 
     supabase
       .from("verify_settings")
-      .select("direct_link_clicks")
+      .select("direct_link_clicks, verify_steps")
       .eq("id", 1)
       .maybeSingle()
       .then(({ data }) => {
-        if ((data as any)?.direct_link_clicks) setRequiredClicks((data as any).direct_link_clicks);
+        const d = data as any;
+        if (d?.direct_link_clicks) setRequiredClicks(d.direct_link_clicks);
+        if (d?.verify_steps === 2 || d?.verify_steps === 3) setVerifySteps(d.verify_steps);
       });
   }, []);
 
@@ -138,6 +141,17 @@ export default function VerifyProviderSelect() {
     window.location.href = "/verify/step1";
   };
 
+  // Auto-advance to Step 1 once the Monetag direct-link clicks are done — no manual button.
+  useEffect(() => {
+    if (showTutorialPopup || starting || showSubscriptionGate) return;
+    const dlEnabled = isAdEnabled("verify-provider-select", "direct_link");
+    const directLinkDone = !dlEnabled || directLinkClicks >= requiredClicks;
+    if (!directLinkDone) return;
+    const tmr = setTimeout(() => handleStart(), 900);
+    return () => clearTimeout(tmr);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate]);
+
   const handleCloseTutorial = () => setShowTutorialPopup(false);
   const handleNeverShowAgain = () => {
     localStorage.setItem("hide_tutorial_popup", "true");
@@ -146,8 +160,6 @@ export default function VerifyProviderSelect() {
   };
 
   if (!mounted) return null;
-
-  const subscriptionGateCompleted = !showSubscriptionGate || (youtubeCompleted && discordCompleted);
 
   const youtubeProgress = youtubeTimer > 0 ? ((WAIT_TIME_SECONDS - youtubeTimer) / WAIT_TIME_SECONDS) * 100 : youtubeCompleted ? 100 : 0;
   const discordProgress = discordTimer > 0 ? ((WAIT_TIME_SECONDS - discordTimer) / WAIT_TIME_SECONDS) * 100 : discordCompleted ? 100 : 0;
@@ -212,15 +224,23 @@ export default function VerifyProviderSelect() {
     icon: <CheckCircle2 className="h-4 w-4" />,
     render: () => (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
-        <p className="text-base font-semibold mb-2">{t("Complete 3 quick Linkvertise steps to get your key")}</p>
-        <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-          {t("You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks.")}
+        <p className="text-base font-semibold mb-2">
+          {`Complete ${verifySteps} quick Linkvertise ${verifySteps === 1 ? "step" : "steps"} to get your key`}
         </p>
-        <Button onClick={handleStart} disabled={starting || !subscriptionGateCompleted || !directLinkDone} size="lg" className="gap-2">
-          {starting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Unlock className="h-4 w-4" />}
-          {starting ? t("Starting...") : t("Start Verification (Step 1 of 3)")}
-        </Button>
+        <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
+          {verifySteps === 2
+            ? "You'll complete two short Linkvertise checkpoints (Step 1 → 2), then your HWID key unlocks."
+            : "You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks."}
+        </p>
+        {directLinkDone ? (
+          <div className="flex items-center justify-center gap-2 text-primary font-medium">
+            <Loader2 className="h-4 w-4 animate-spin" /> {t("Starting verification...")}
+          </div>
+        ) : (
+          <p className="text-sm text-muted-foreground">Finish the step above to continue…</p>
+        )}
         <p className="mt-4 text-[11px] text-muted-foreground">
+          {directLinkDone && <>Not redirecting? <button type="button" onClick={handleStart} className="text-primary underline">Continue</button> · </>}
           {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
         </p>
       </div>
