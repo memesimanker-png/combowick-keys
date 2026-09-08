@@ -14,22 +14,9 @@ type Rule = {
   tiers: Record<string, number>;
 };
 
+// Weekend-only sale. Monday–Thursday are FULL PRICE (the deal popup won't show then),
+// so prices genuinely return to normal during the week instead of a permanent "sale".
 const RULES: Rule[] = [
-  {
-    days: [1], // Monday
-    label: "Monday Reset Sale",
-    tiers: { monthly: 15, lifetime: 20 },
-  },
-  {
-    days: [2, 4], // Tuesday + Thursday
-    label: "Flash Deal",
-    tiers: { monthly: 12, lifetime: 18 },
-  },
-  {
-    days: [3], // Wednesday
-    label: "Midweek Deal",
-    tiers: { monthly: 10, lifetime: 15 },
-  },
   {
     days: [5, 6, 0], // Friday → Sunday
     label: "Weekend Blowout",
@@ -92,12 +79,14 @@ export function getAutoDiscount(tierId: string, now: Date = new Date()): AutoDis
     if (!best || percent > best.percent) best = { percent, label: rule.label };
   }
 
-  // Layer today's surprise flash sale on top of the base day rule, capped.
-  const flash = getFlash(tierId, now);
-  if (flash) {
-    const base = best?.percent ?? 0;
-    const boosted = Math.min(base + flash.extra, TIER_CAP[tierId] ?? 40);
-    if (boosted > base) best = { percent: boosted, label: flash.label };
+  // Flash sales only BOOST an already-active sale (the weekend) — they never create a
+  // discount on a normal-price weekday. This keeps Mon–Thu at full price.
+  if (best) {
+    const flash = getFlash(tierId, now);
+    if (flash) {
+      const boosted = Math.min(best.percent + flash.extra, TIER_CAP[tierId] ?? 40);
+      if (boosted > best.percent) best = { percent: boosted, label: flash.label };
+    }
   }
 
   return best;
