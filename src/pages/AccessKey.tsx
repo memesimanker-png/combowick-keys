@@ -371,9 +371,9 @@ export default function AccessKey() {
             </CardContent>
           </Card>
 
-          {/* Where to grab the actual script once they have a key */}
+          {/* Where to grab the actual script once they have a key → main YouTube channel */}
           <a
-            href="http://combowick.com/scripts"
+            href="https://www.youtube.com/@COMBO_WICK"
             target="_blank"
             rel="noopener noreferrer"
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
