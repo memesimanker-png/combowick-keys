@@ -10,7 +10,9 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwaGlrc3ZudXpwdGVvcnlyZHhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjE2MzIsImV4cCI6MjA5MDgzNzYzMn0.jDERthuKYBOIu6KRFQB1WQjoCjWfKPmesZFQK8K9Clk";
-const BASE_URL = "https://combowick.com";
+// Canonical host. Was hardcoded to combowick.com — which told Google to index these
+// pages on a different domain. Now matches the SPA's own domain (override with SITE_URL env).
+const BASE_URL = (process.env.SITE_URL || "https://combowick-keys.vercel.app").replace(/\/$/, "");
 
 const esc = (s: any) =>
   String(s ?? "")
