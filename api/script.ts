@@ -62,7 +62,7 @@ export default async function handler(req: any, res: any) {
     const { data: script } = await supabase
       .from("scripts")
       .select(
-        "slug,title,description,long_description,game,game_universe_id,updated_at,created_at,thumbnail_url,category"
+        "slug,title,description,long_description,game,game_universe_id,updated_at,created_at,thumbnail_url,category,faqs"
       )
       .eq("slug", slug)
       .maybeSingle();
@@ -130,6 +130,21 @@ export default async function handler(req: any, res: any) {
       },
     ];
 
+    // FAQPage — wins the FAQ rich-snippet dropdown on "[game] script" results (big CTR).
+    const faqs = Array.isArray(script.faqs) ? script.faqs : [];
+    const validFaqs = faqs.filter((f: any) => f && f.question && f.answer).slice(0, 10);
+    if (validFaqs.length) {
+      jsonLd.push({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: validFaqs.map((f: any) => ({
+          "@type": "Question",
+          name: String(f.question),
+          acceptedAnswer: { "@type": "Answer", text: String(f.answer) },
+        })),
+      });
+    }
+
     const headTags = `
     <title>${esc(title)}</title>
     <meta name="description" content="${esc(description)}" />
@@ -176,6 +191,7 @@ export default async function handler(req: any, res: any) {
     <li>Launch your executor and inject.</li>
     <li>Paste the ComboWick ${esc(game)} script and execute.</li>
   </ol>
+  ${validFaqs.length ? `<h2>${esc(game)} script FAQ</h2>${validFaqs.map((f: any) => `<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join("")}` : ""}
   <p>Related: <a href="/scripts?game=${esc(encodeURIComponent(game))}">More ${esc(game)} scripts</a> · <a href="/scripts">All Roblox scripts</a> · <a href="/executors">Best Roblox executors</a></p>
 </div>`;
 
