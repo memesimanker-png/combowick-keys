@@ -26,7 +26,7 @@ export function FunnelHeader({ title }: { title?: string }) {
             <Key className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Get Key")}</span>
           </Link>
           <a
-            href="http://combowick.com/scripts"
+            href="https://www.youtube.com/@COMBO_WICK"
             target="_blank"
             rel="noopener noreferrer"
             aria-label={t("Get Script")}
