@@ -69,12 +69,25 @@ export default function AdReturn() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const [completedStep, setCompletedStep] = useState<VerificationStep | null>(null);
+  const [isFinalStep, setIsFinalStep] = useState(false);
 
   const queryStep = searchParams.get("step");
   const hash = searchParams.get("hash");
 
   useEffect(() => {
     let timeoutId: number | undefined;
+    let cancelled = false;
+
+    (async () => {
+    // How many Linkvertise steps the admin configured (2 or 3). Determines the final step.
+    let verifySteps = 3;
+    try {
+      const { data } = await supabase.from("verify_settings").select("verify_steps").eq("id", 1).maybeSingle();
+      const v = (data as any)?.verify_steps;
+      if (v === 2 || v === 3) verifySteps = v;
+    } catch { /* default 3 */ }
+    if (cancelled) return;
+    const lastStep: VerificationStep = verifySteps === 2 ? "step2" : "step3";
 
     const currentStep = routeStep || queryStep || localStorage.getItem("verification_step");
     const selectedProvider = localStorage.getItem("selected_ad_provider") || "linkvertise";
@@ -124,47 +137,40 @@ export default function AdReturn() {
     localStorage.removeItem("verification_step");
     setCompletedStep(currentStep);
 
-    const message = getStepMessage(currentStep);
-    toast({ title: message.title, description: message.description });
+    const isLast = currentStep === lastStep;
+    setIsFinalStep(isLast);
+    toast({
+      title: "Verification Successful",
+      description: isLast ? "All verification steps completed!" : `Step ${currentStep.replace("step", "")} has been completed.`,
+    });
     setIsLoading(false);
 
-    // On final step, request a server-issued verify token so generate-hwid-key
-    // can confirm the request came from a real verified user (not curl/PS).
-    // Wait for the token to actually be saved BEFORE navigating to Access Key —
-    // otherwise a slow/failed token request means Access Key sees no token and bounces.
-    if (currentStep === "step3") {
+    // On the FINAL step (step2 in 2-step mode, step3 in 3-step), request a server-issued
+    // verify token so generate-hwid-key can confirm a real verified user, then go to the key.
+    if (isLast) {
       supabase.functions
         .invoke("issue-verify-token", { body: {} })
         .then(({ data, error }) => {
           if (!error && data?.success && data?.token) {
-            localStorage.setItem(
-              "verify_token",
-              JSON.stringify({ token: data.token, expires_at: data.expires_at }),
-            );
+            localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at }));
           } else {
             console.warn("[AdReturn] issue-verify-token failed", error || data);
           }
         })
         .catch((err) => console.warn("[AdReturn] issue-verify-token error", err))
         .finally(() => {
-          timeoutId = window.setTimeout(() => {
-            navigate(NEXT_ROUTE[currentStep], { replace: true });
-          }, 800);
+          timeoutId = window.setTimeout(() => { if (!cancelled) navigate("/access-key", { replace: true }); }, 800);
         });
     } else {
-      timeoutId = window.setTimeout(() => {
-        navigate(NEXT_ROUTE[currentStep], { replace: true });
-      }, 1500);
+      timeoutId = window.setTimeout(() => { if (!cancelled) navigate(NEXT_ROUTE[currentStep], { replace: true }); }, 1500);
     }
+    })();
 
     return () => {
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
+      cancelled = true;
+      if (timeoutId) window.clearTimeout(timeoutId);
     };
   }, [navigate, toast, routeStep, queryStep, hash]);
-
-  const message = completedStep ? getStepMessage(completedStep) : null;
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
@@ -178,7 +184,7 @@ export default function AdReturn() {
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>{completedStep === "step3" ? "Final Verification" : "Verification"}</CardTitle>
+            <CardTitle>{isFinalStep ? "Final Verification" : "Verification"}</CardTitle>
             <CardDescription>Processing your verification...</CardDescription>
           </CardHeader>
           <CardContent>
@@ -190,8 +196,12 @@ export default function AdReturn() {
             ) : (
               <div className="flex flex-col items-center justify-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500" />
-                <p className="mt-4 text-center font-medium">{message?.description}</p>
-                <p className="text-center text-muted-foreground">{message?.redirectText}</p>
+                <p className="mt-4 text-center font-medium">
+                  {isFinalStep ? "All verification steps completed!" : `Step ${completedStep?.replace("step", "")} completed.`}
+                </p>
+                <p className="text-center text-muted-foreground">
+                  {isFinalStep ? "Redirecting to access key..." : "Redirecting to the next step..."}
+                </p>
               </div>
             )}
           </CardContent>
