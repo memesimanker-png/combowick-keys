@@ -9,7 +9,6 @@ import { SEOHead } from "@/components/SEOHead";
 import { GameThumbnail } from "@/components/GameThumbnail";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdSlot } from "@/components/AdSlot";
-import { usePopunder } from "@/hooks/usePopunder";
 
 export default function Scripts() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,11 +19,6 @@ export default function Scripts() {
     setQuery(searchParams.get("q") ?? "");
     setCategory(searchParams.get("category") ?? "All");
   }, [searchParams]);
-
-  // Monetag popunder — load on this page
-  usePopunder();
-
-
 
   // Press "/" to focus the search box (skip when typing in another input)
   const searchRef = useRef<HTMLInputElement | null>(null);
