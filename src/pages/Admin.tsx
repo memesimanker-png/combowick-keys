@@ -1898,12 +1898,13 @@ function VerifyStepsControl() {
   const [lv1, setLv1] = useState<string>("");
   const [lv2, setLv2] = useState<string>("");
   const [lv3, setLv3] = useState<string>("");
+  const [steps, setSteps] = useState<number>(3); // 2 or 3 Linkvertise steps
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     supabase.from("verify_settings")
-      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3")
+      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps")
       .eq("id", 1).maybeSingle()
       .then(({ data }) => {
         const d = data as any;
@@ -1913,6 +1914,7 @@ function VerifyStepsControl() {
         if (d?.linkvertise_link_1) setLv1(d.linkvertise_link_1);
         if (d?.linkvertise_link_2) setLv2(d.linkvertise_link_2);
         if (d?.linkvertise_link_3) setLv3(d.linkvertise_link_3);
+        if (d?.verify_steps === 2 || d?.verify_steps === 3) setSteps(d.verify_steps);
         setLoading(false);
       });
   }, []);
@@ -1921,7 +1923,10 @@ function VerifyStepsControl() {
     if (clicks < 1 || clicks > 10) { toast({ variant: "destructive", title: "Provider-Select clicks must be 1–10" }); return; }
     if (accessClicks < 0 || accessClicks > 10) { toast({ variant: "destructive", title: "Access Key clicks must be 0–10" }); return; }
     if (extHours < 1 || extHours > 876000) { toast({ variant: "destructive", title: "Extension hours must be 1–876000" }); return; }
-    if (!lv1.trim() || !lv2.trim() || !lv3.trim()) { toast({ variant: "destructive", title: "All 3 Linkvertise links are required" }); return; }
+    if (!lv1.trim() || !lv2.trim() || (steps === 3 && !lv3.trim())) {
+      toast({ variant: "destructive", title: steps === 3 ? "All 3 Linkvertise links are required" : "Both Linkvertise links are required" });
+      return;
+    }
     setSaving(true);
     const { error } = await supabase.from("verify_settings")
       .update({
@@ -1931,12 +1936,13 @@ function VerifyStepsControl() {
         linkvertise_link_1: lv1.trim(),
         linkvertise_link_2: lv2.trim(),
         linkvertise_link_3: lv3.trim(),
+        verify_steps: steps,
         updated_at: new Date().toISOString(),
       } as any)
       .eq("id", 1);
     setSaving(false);
     if (error) { toast({ variant: "destructive", title: "Failed to save", description: error.message }); return; }
-    toast({ title: "Saved", description: `Provider-Select: ${clicks} • Access Key: ${accessClicks} • Extension: +${extHours}h.` });
+    toast({ title: "Saved", description: `${steps}-step verify • Provider-Select: ${clicks} • Access Key: ${accessClicks} • Extension: +${extHours}h.` });
   };
 
   const numCls = "w-24 rounded-lg border border-border bg-secondary/50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50";
@@ -1963,8 +1969,20 @@ function VerifyStepsControl() {
 
       <div className="border-t border-border/50 pt-4 space-y-3">
         <div>
-          <h3 className="font-semibold flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Linkvertise 3-Step Flow</h3>
-          <p className="text-sm text-muted-foreground">The 3 Linkvertise links users complete in sequence (Step 1 → 2 → 3). Paste your Linkvertise link for each step. Also used for key extensions.</p>
+          <h3 className="font-semibold flex items-center gap-2"><Clock className="h-4 w-4 text-primary" /> Linkvertise Flow</h3>
+          <p className="text-sm text-muted-foreground">The Linkvertise links users complete in sequence. Choose how many steps the free-key flow requires. Also used for key extensions.</p>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Number of steps</label>
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-secondary/50 w-fit">
+            {[2, 3].map((n) => (
+              <button key={n} type="button" disabled={loading} onClick={() => setSteps(n)}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${steps === n ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+                {n} steps
+              </button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">{steps === 2 ? "Step 1 → Step 2 → key (less friction, more completions)." : "Step 1 → Step 2 → Step 3 → key (more ad revenue per key)."}</p>
         </div>
         <div>
           <label className="text-sm font-medium mb-1 block">Linkvertise Link — Step 1</label>
@@ -1974,10 +1992,12 @@ function VerifyStepsControl() {
           <label className="text-sm font-medium mb-1 block">Linkvertise Link — Step 2</label>
           <input type="text" disabled={loading} value={lv2} onChange={(e) => setLv2(e.target.value)} placeholder="https://link-to.net/1234567" className={txtCls} />
         </div>
-        <div>
-          <label className="text-sm font-medium mb-1 block">Linkvertise Link — Step 3</label>
-          <input type="text" disabled={loading} value={lv3} onChange={(e) => setLv3(e.target.value)} placeholder="https://link-to.net/1234567" className={txtCls} />
-        </div>
+        {steps === 3 && (
+          <div>
+            <label className="text-sm font-medium mb-1 block">Linkvertise Link — Step 3</label>
+            <input type="text" disabled={loading} value={lv3} onChange={(e) => setLv3(e.target.value)} placeholder="https://link-to.net/1234567" className={txtCls} />
+          </div>
+        )}
         <div>
           <label className="text-sm font-medium mb-1 block">Extension hours per completion (1–876000)</label>
           <p className="text-xs text-muted-foreground mb-1">Hours added (stacked) each time a user completes the flow to extend an existing key.</p>
