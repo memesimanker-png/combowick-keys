@@ -17,6 +17,7 @@ import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
+import { supabase } from "@/integrations/supabase/client";
 
 
 export default function VerifyStep3() {
@@ -38,6 +39,10 @@ export default function VerifyStep3() {
       navigate("/verify/step1");
       return;
     }
+    // In 2-step mode there is no Step 3 — step 2 was the final step, so go to the key.
+    supabase.from("verify_settings").select("verify_steps").eq("id", 1).maybeSingle().then(({ data }) => {
+      if ((data as any)?.verify_steps === 2) navigate("/access-key", { replace: true });
+    });
     const provider = localStorage.getItem("selected_ad_provider");
     setSelectedProvider(provider);
   }, [navigate, toast, t]);
