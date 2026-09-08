@@ -29,6 +29,7 @@ const AdReturn = lazy(() => import("./pages/AdReturn"));
 const ExtendReturn = lazy(() => import("./pages/ExtendReturn"));
 const ScriptUnlockReturn = lazy(() => import("./pages/ScriptUnlockReturn"));
 const ScriptUnlockStep2 = lazy(() => import("./pages/ScriptUnlockStep2"));
+const ScriptUnlockStart = lazy(() => import("./pages/ScriptUnlockStart"));
 
 // Auth + user.
 const Login = lazy(() => import("./pages/Login"));
@@ -93,6 +94,7 @@ const App = () => (
                   <Route path="/verify/step2" element={<VerifyStep2 />} />
                   <Route path="/verify/step3" element={<VerifyStep3 />} />
                   <Route path="/ad-return" element={<AdReturn />} />
+                  <Route path="/unlock" element={<ScriptUnlockStart />} />
                   <Route path="/ad-return/script-step2" element={<ScriptUnlockStep2 />} />
                   <Route path="/ad-return/script" element={<ScriptUnlockReturn />} />
                   <Route path="/ad-return/ext/:step" element={<ExtendReturn />} />
