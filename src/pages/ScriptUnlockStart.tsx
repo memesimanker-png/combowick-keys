@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { NoIndex } from "@/components/NoIndex";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * External entry point for the script unlock (e.g. arrived from the YouTube smart-link gate).
@@ -24,11 +25,34 @@ export default function ScriptUnlockStart() {
   const navigate = useNavigate();
   const links = useVerifyLinks();
   const [error, setError] = useState<string | null>(null);
+  const [slug, setSlug] = useState<string | null>(params.get("slug"));
+  const [resolving, setResolving] = useState(!params.get("slug"));
   const fired = useRef(false);
-  const slug = params.get("slug");
+  const universe = params.get("u"); // key-system universe id (from the YouTube game picker)
+
+  // Resolve a universe id → this store's script slug (scripts carry game_universe_id).
+  useEffect(() => {
+    if (slug) { setResolving(false); return; }
+    if (!universe) { navigate("/scripts", { replace: true }); return; }
+    let alive = true;
+    (async () => {
+      const { data } = await supabase
+        .from("scripts")
+        .select("slug")
+        .eq("game_universe_id", universe)
+        .eq("is_paid", false)
+        .limit(1)
+        .maybeSingle();
+      if (!alive) return;
+      if (data?.slug) { setSlug(data.slug); setResolving(false); }
+      else navigate("/scripts", { replace: true });
+    })();
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [universe, slug]);
 
   const launch = () => {
-    if (!slug) { navigate("/scripts", { replace: true }); return; }
+    if (!slug) return;
     try {
       const origin = window.location.origin;
       const nonce = makeNonce();
@@ -40,16 +64,15 @@ export default function ScriptUnlockStart() {
     }
   };
 
-  // Auto-fire once the Linkvertise link config has loaded (same-tab nav — not popup-blocked).
+  // Auto-fire once slug is resolved AND the Linkvertise config has loaded (same-tab nav).
   useEffect(() => {
-    if (fired.current) return;
-    if (!slug) { navigate("/scripts", { replace: true }); return; }
+    if (fired.current || resolving || !slug) return;
     if (links.every((l) => l === null)) return; // wait for config
     fired.current = true;
     const t = setTimeout(launch, 400);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [links, slug]);
+  }, [links, slug, resolving]);
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
