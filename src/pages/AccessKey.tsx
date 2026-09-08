@@ -52,24 +52,33 @@ export default function AccessKey() {
   // Verify steps are completed & load stored key (admins skip the whole verify flow)
   useEffect(() => {
     if (adminLoading) return; // wait until we know whether this is an admin
-    const step3Done = localStorage.getItem("step3_completed");
-    if (!isAdmin && !step3Done) {
-      toast({ variant: "destructive", title: "Access Denied", description: "Please complete all verification steps." });
-      navigate("/verify/provider-select");
-      return;
-    }
+    let cancelled = false;
+    (async () => {
+      // Respect the admin's 2-vs-3 step setting — the final step is step2 (2-step) or step3 (3-step).
+      let steps = 3;
+      const { data } = await supabase
+        .from("verify_settings")
+        .select("access_key_clicks, verify_steps")
+        .eq("id", 1)
+        .maybeSingle();
+      if (cancelled) return;
+      const d = data as any;
+      if (d?.verify_steps === 2 || d?.verify_steps === 3) steps = d.verify_steps;
+      if (d?.access_key_clicks != null) setRequiredClicks(d.access_key_clicks);
 
-    supabase
-      .from("verify_settings")
-      .select("access_key_clicks")
-      .eq("id", 1)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data?.access_key_clicks != null) setRequiredClicks(data.access_key_clicks);
-      });
+      const finalStepDone = steps === 2
+        ? localStorage.getItem("step2_completed")
+        : localStorage.getItem("step3_completed");
+      if (!isAdmin && !finalStepDone) {
+        toast({ variant: "destructive", title: "Access Denied", description: "Please complete all verification steps." });
+        navigate("/verify/provider-select");
+        return;
+      }
 
-    loadStoredKeyData();
-    checkExistingKey();
+      loadStoredKeyData();
+      checkExistingKey();
+    })();
+    return () => { cancelled = true; };
   }, [navigate, toast, isAdmin, adminLoading]);
 
   const loadStoredKeyData = () => {
