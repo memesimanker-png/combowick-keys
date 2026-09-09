@@ -205,7 +205,7 @@ export default function ScriptDetail() {
                       </span>
                     )}
                   </div>
-                  <h1 className="text-2xl md:text-3xl font-bold font-heading" style={{ textWrap: "balance" as any }}>
+                  <h1 className="text-lg sm:text-2xl md:text-3xl font-bold font-heading" style={{ textWrap: "balance" as any }}>
                     {script.title}
                   </h1>
                 </div>
