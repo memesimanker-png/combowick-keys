@@ -48,13 +48,10 @@ export default function VerifyProviderSelect() {
     const hideTutorial = localStorage.getItem("hide_tutorial_popup");
     if (!hideTutorial) setShowTutorialPopup(true);
 
-    const gateCompletedAt = localStorage.getItem("subscription_gate_completed");
-    if (gateCompletedAt) {
-      const daysSince = (Date.now() - new Date(gateCompletedAt).getTime()) / (1000 * 60 * 60 * 24);
-      setShowSubscriptionGate(daysSince >= SUBSCRIPTION_GATE_DURATION_DAYS);
-    } else {
-      setShowSubscriptionGate(true);
-    }
+    // Subscribe-to-YouTube / Join-Discord gate REMOVED per owner — never enable it.
+    // (State + handlers left inert below; the step never renders and never blocks
+    // the auto-advance guard on line ~146.)
+    setShowSubscriptionGate(false);
 
     // Fresh run of the 3-step Linkvertise flow.
     localStorage.removeItem("step1_completed");
