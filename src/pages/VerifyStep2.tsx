@@ -57,7 +57,7 @@ export default function VerifyStep2() {
       <NoIndex />
       <DiscountNotification />
         {isAdEnabled("verify-step2", "skip_ads_banner") && <SkipAdsBanner />}
-        <FunnelHeader title={t("ComboWick Verify")} />
+        <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
         <main className="flex-1 container flex flex-col items-center justify-center py-12">
           <div className="max-w-2xl w-full mx-auto space-y-6">
             <div className="space-y-2 text-center">
