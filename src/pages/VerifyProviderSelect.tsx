@@ -288,7 +288,7 @@ export default function VerifyProviderSelect() {
         </div>
       )}
 
-      <FunnelHeader title={t("ComboWick Verify")} />
+      <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
 
       <main className="flex-1 container flex flex-col items-center justify-center py-8">
         <div className="max-w-xl w-full mx-auto space-y-4">
