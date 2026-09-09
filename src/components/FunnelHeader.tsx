@@ -8,14 +8,24 @@ import { useTranslation } from "@/lib/translation-context";
  * (clickable brand + Get Key / Premium) so they're never stranded — especially
  * on mobile, where the sticky bottom bar is hidden on these pages.
  */
-export function FunnelHeader({ title }: { title?: string }) {
+export function FunnelHeader({ title, short }: { title?: string; short?: string }) {
   const { t } = useTranslation();
   return (
     <header className="border-b border-border/40 bg-black/40 backdrop-blur-md">
       <div className="container flex items-center justify-between gap-2 py-4">
         <Link to="/premium-keys" className="flex items-center gap-2 min-w-0">
           <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
-          <span className="text-base sm:text-lg font-bold truncate">{title || "ComboWick"}</span>
+          {/* Compact brand on mobile (short), full brand on sm+ where there's room. */}
+          <span className="text-sm sm:text-lg font-bold truncate">
+            {short ? (
+              <>
+                <span className="sm:hidden">{short}</span>
+                <span className="hidden sm:inline">{title || "ComboWick"}</span>
+              </>
+            ) : (
+              title || "ComboWick"
+            )}
+          </span>
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <Link
