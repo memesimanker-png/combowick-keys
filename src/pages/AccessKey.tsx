@@ -268,6 +268,20 @@ export default function AccessKey() {
     }
   };
 
+  // Grab a key for a DIFFERENT game. Each key needs its own verification (the token is
+  // single-use), so this resets the page and routes back through the verify flow — which is
+  // also another ad pass, so it's win-win: better UX than a dead-end + more revenue per key.
+  const startNewKey = () => {
+    localStorage.removeItem("hwid_key_data");
+    setGeneratedKey("");
+    setKeyExpiresAt(null);
+    setSelectedGame(null);
+    setUsername("");
+    setCanGenerate(true);
+    setError("");
+    navigate("/verify/provider-select");
+  };
+
   const formatTimeRemaining = () => {
     if (!keyExpiresAt) return "";
     const remaining = new Date(keyExpiresAt).getTime() - Date.now();
@@ -370,6 +384,19 @@ export default function AccessKey() {
               )}
             </CardContent>
           </Card>
+
+          {/* After a key is shown, offer a key for a DIFFERENT game instead of a dead-end wait. */}
+          {generatedKey && (
+            <Card className="border-primary/20 bg-primary/5">
+              <CardContent className="py-5 text-center space-y-3">
+                <p className="text-sm font-medium">{t("Need a key for a different game?")}</p>
+                <p className="text-xs text-muted-foreground">{t("Each key only works in one game. Generate another for a different game.")}</p>
+                <Button onClick={startNewKey} variant="outline" className="w-full gap-2 border-primary/40 hover:bg-primary/10">
+                  <Gamepad2 className="h-4 w-4" /> {t("Generate a key for another game")}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Where to grab the actual script once they have a key → main YouTube channel */}
           <a
