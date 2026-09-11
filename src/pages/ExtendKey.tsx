@@ -4,7 +4,8 @@ import { Shield, Clock, Loader2, KeyRound, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { LanguageSelector } from "@/components/LanguageSelector";
+import { FunnelHeader } from "@/components/FunnelHeader";
+import { useTranslation } from "@/lib/translation-context";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
@@ -15,6 +16,7 @@ import { getDeviceId } from "@/lib/device-id";
 export default function ExtendKey() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const links = useVerifyLinks();
   const [key, setKey] = useState("");
   const [hours, setHours] = useState<number | null>(null);
@@ -76,39 +78,31 @@ export default function ExtendKey() {
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
-      <header className="container py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">COMBO WICK</h1>
-          </div>
-          <LanguageSelector />
-        </div>
-      </header>
+      <FunnelHeader title="COMBO WICK" />
 
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <div className="max-w-md w-full mx-auto space-y-6">
           <div className="text-center space-y-2">
             <Clock className="h-12 w-12 text-primary mx-auto" />
-            <h1 className="text-3xl font-bold">Add More Hours</h1>
+            <h1 className="text-3xl font-bold">{t("Add More Hours")}</h1>
             <p className="text-muted-foreground">
-              Complete the 3 Linkvertise steps to add{hours ? ` +${hours}` : ""} hours on top of your key's remaining time.
+              {t("Complete 3 quick Linkvertise steps to stack more hours onto your key's remaining time.")}
             </p>
           </div>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><KeyRound className="h-4 w-4 text-primary" /> Your HWID Key</CardTitle>
-              <CardDescription>The hours stack on your existing key — nothing is reset.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><KeyRound className="h-4 w-4 text-primary" /> {t("Your HWID Key")}</CardTitle>
+              <CardDescription>{t("The hours stack on your existing key — nothing is reset.")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Input value={key} onChange={(e) => setKey(e.target.value)} placeholder="paste your key e.g. abc123-def456..." className="font-mono" />
+              <Input value={key} onChange={(e) => setKey(e.target.value)} placeholder={t("Paste your key here…")} className="font-mono" />
               <Button onClick={handleStart} disabled={loading} className="w-full gap-2">
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                {loading ? "Starting..." : `Extend Key (+${hours ?? 11}h)`}
+                {loading ? t("Starting...") : `${t("Extend Key")} (+${hours ?? 11}h)`}
               </Button>
               <Button variant="ghost" className="w-full" onClick={() => navigate("/access-key")}>
-                Back
+                {t("Back")}
               </Button>
             </CardContent>
           </Card>
