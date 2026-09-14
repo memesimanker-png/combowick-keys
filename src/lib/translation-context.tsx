@@ -38,7 +38,7 @@ const TranslationContext = createContext<TranslationContextType>({
 });
 
 // Load cache from localStorage on init
-const TRANSLATION_CACHE_VERSION = "v5-manual"; // bump to seed hand-translated strings
+const TRANSLATION_CACHE_VERSION = "v6-manual"; // bump to seed hand-translated strings
 const translationCache: Record<string, Record<string, string>> = (() => {
   try {
     const ver = localStorage.getItem("combowick-translations-ver");
