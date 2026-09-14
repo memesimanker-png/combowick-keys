@@ -143,7 +143,7 @@ export const EN_TEXTS: Record<string, string> = {
   "Key System": "Key System",
   // Premium page
   "Premium Features": "Premium Features",
-  "prem_hero_desc": "Skip all verification steps and get instant access to premium keys with extended validity, priority support, and exclusive features.",
+  "prem_hero_desc": "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.",
   "7-Day Trial": "7-Day Trial",
   "3-Day Trial": "7-Day Trial",
   "Monthly Access": "Monthly Access",
