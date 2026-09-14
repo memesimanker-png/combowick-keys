@@ -5,7 +5,7 @@ const SITEMAP_CACHE_KEY = "sitemap:xml:v1";
 const SITEMAP_TTL = 900; // 15 min
 let memCache: { at: number; xml: string } | null = null;
 
-const BASE_URL = "https://combowick-keys.vercel.app";
+const BASE_URL = "https://keys.combowick.com";
 
 const STATIC_PAGES = [
   { loc: "/", changefreq: "weekly", priority: "1.0" },
