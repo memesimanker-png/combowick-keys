@@ -10,7 +10,7 @@ const SUPABASE_KEY =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxYWh2aWlieWtyemx3bnVsZ213Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyODAxNjQsImV4cCI6MjEwMzg1NjE2NH0.mvRGR-d3EOcy8bBlCTDwIHEF4ELIU9PfVXDi8NSALlA";
 // One place to change the canonical host — set SITE_URL env when you move to a custom domain.
-const BASE = (process.env.SITE_URL || "https://combowick-keys.vercel.app").replace(/\/$/, "");
+const BASE = (process.env.SITE_URL || "https://keys.combowick.com").replace(/\/$/, "");
 
 const STATIC: { path: string; priority: string; freq: string }[] = [
   { path: "/", priority: "1.0", freq: "daily" },
