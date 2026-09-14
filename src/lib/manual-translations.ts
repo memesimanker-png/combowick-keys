@@ -448,6 +448,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "🎮 Works in EVERY game — one key": "🎮 Funciona en TODOS los juegos — una sola clave",
+    "No per-game unlocks, no cooldown": "Sin desbloqueos por juego, sin tiempo de espera",
+    "No per-game unlocks, no cooldown, forever": "Sin desbloqueos por juego, sin tiempo de espera, para siempre",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Una sola clave que funciona en TODOS los juegos — sin desbloqueos por juego y sin tiempos de espera, nunca. La versión gratuita desbloquea un juego a la vez; una clave premium los desbloquea todos, al instante, con soporte prioritario y todos los scripts que creamos.",
     "Need a key for a different game?": "¿Necesitas una clave para otro juego?",
     "Each key only works in one game. Generate another for a different game.": "Cada clave solo funciona en un juego. Genera otra para un juego diferente.",
     "Generate a key for another game": "Generar una clave para otro juego",
@@ -888,6 +892,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "🎮 Works in EVERY game — one key": "🎮 Funktioniert in JEDEM Spiel — ein Schlüssel",
+    "No per-game unlocks, no cooldown": "Keine Freischaltung pro Spiel, keine Wartezeit",
+    "No per-game unlocks, no cooldown, forever": "Keine Freischaltung pro Spiel, keine Wartezeit, für immer",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Ein Schlüssel, der in JEDEM Spiel funktioniert — keine Freischaltung pro Spiel und keine Wartezeiten, niemals. Die kostenlose Version schaltet ein Spiel nach dem anderen frei; ein Premium-Schlüssel schaltet alle sofort frei, mit priorisiertem Support und allen Skripten, die wir erstellen.",
     "Need a key for a different game?": "Brauchst du einen Schlüssel für ein anderes Spiel?",
     "Each key only works in one game. Generate another for a different game.": "Jeder Schlüssel funktioniert nur in einem Spiel. Erstelle einen weiteren für ein anderes Spiel.",
     "Generate a key for another game": "Schlüssel für ein anderes Spiel generieren",
@@ -1328,6 +1336,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "🎮 Works in EVERY game — one key": "🎮 Funciona em TODOS os jogos — uma única chave",
+    "No per-game unlocks, no cooldown": "Sem desbloqueios por jogo, sem tempo de espera",
+    "No per-game unlocks, no cooldown, forever": "Sem desbloqueios por jogo, sem tempo de espera, para sempre",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Uma única chave que funciona em TODOS os jogos — sem desbloqueios por jogo e sem tempos de espera, nunca. A versão gratuita desbloqueia um jogo por vez; uma chave premium desbloqueia todos, instantaneamente, com suporte prioritário e todos os scripts que criamos.",
     "Need a key for a different game?": "Precisa de uma chave para outro jogo?",
     "Each key only works in one game. Generate another for a different game.": "Cada chave só funciona em um jogo. Gere outra para um jogo diferente.",
     "Generate a key for another game": "Gerar uma chave para outro jogo",
@@ -1768,6 +1780,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "🎮 Works in EVERY game — one key": "🎮 Работает в КАЖДОЙ игре — один ключ",
+    "No per-game unlocks, no cooldown": "Без отдельной разблокировки для каждой игры, без перезарядки",
+    "No per-game unlocks, no cooldown, forever": "Без отдельной разблокировки для каждой игры, без перезарядки, навсегда",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Один ключ, работающий в КАЖДОЙ игре — без отдельной разблокировки для каждой игры и без перезарядки, никогда. Бесплатная версия разблокирует по одной игре за раз; премиум-ключ открывает их все сразу, с приоритетной поддержкой и всеми скриптами, которые мы создаём.",
     "Need a key for a different game?": "Нужен ключ для другой игры?",
     "Each key only works in one game. Generate another for a different game.": "Каждый ключ работает только в одной игре. Создайте другой для другой игры.",
     "Generate a key for another game": "Создать ключ для другой игры",
@@ -2208,6 +2224,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "🎮 Works in EVERY game — one key": "🎮 适用于所有游戏 — 一把钥匙",
+    "No per-game unlocks, no cooldown": "无需逐游戏解锁，无冷却时间",
+    "No per-game unlocks, no cooldown, forever": "无需逐游戏解锁，无冷却时间，永久有效",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "一把钥匙即可在所有游戏中使用 — 无需逐个游戏解锁，也永远没有冷却时间。免费版每次只能解锁一个游戏；高级密钥可立即解锁全部游戏，并提供优先支持和我们制作的所有脚本。",
     "Need a key for a different game?": "需要其他游戏的密钥吗？",
     "Each key only works in one game. Generate another for a different game.": "每个密钥只能在一个游戏中使用。为其他游戏生成另一个密钥。",
     "Generate a key for another game": "为其他游戏生成密钥",
@@ -2648,6 +2668,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "🎮 Works in EVERY game — one key": "🎮 모든 게임에서 작동 — 키 하나로",
+    "No per-game unlocks, no cooldown": "게임별 잠금 해제 없음, 대기시간 없음",
+    "No per-game unlocks, no cooldown, forever": "게임별 잠금 해제 없음, 대기시간 없음, 평생",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "모든 게임에서 작동하는 키 하나 — 게임별 잠금 해제도, 대기시간도 전혀 없습니다. 무료 버전은 한 번에 한 게임만 잠금 해제되지만, 프리미엄 키는 모든 게임을 즉시 열어주며 우선 지원과 우리가 만드는 모든 스크립트를 제공합니다.",
     "Need a key for a different game?": "다른 게임의 키가 필요하신가요?",
     "Each key only works in one game. Generate another for a different game.": "각 키는 하나의 게임에서만 작동합니다. 다른 게임용으로 새 키를 생성하세요.",
     "Generate a key for another game": "다른 게임용 키 생성",
@@ -3088,6 +3112,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "🎮 Works in EVERY game — one key": "🎮 ใช้ได้ทุกเกม — คีย์เดียว",
+    "No per-game unlocks, no cooldown": "ไม่ต้องปลดล็อกแยกแต่ละเกม ไม่มีคูลดาวน์",
+    "No per-game unlocks, no cooldown, forever": "ไม่ต้องปลดล็อกแยกแต่ละเกม ไม่มีคูลดาวน์ ตลอดไป",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "คีย์เดียวที่ใช้ได้ทุกเกม — ไม่ต้องปลดล็อกแยกแต่ละเกมและไม่มีคูลดาวน์ตลอดไป เวอร์ชันฟรีปลดล็อกได้ทีละเกม ส่วนคีย์พรีเมียมปลดล็อกทั้งหมดทันที พร้อมการสนับสนุนแบบพิเศษและสคริปต์ทุกตัวที่เราสร้าง",
     "Need a key for a different game?": "ต้องการคีย์สำหรับเกมอื่นไหม?",
     "Each key only works in one game. Generate another for a different game.": "แต่ละคีย์ใช้ได้เพียงเกมเดียว สร้างคีย์ใหม่สำหรับเกมอื่น",
     "Generate a key for another game": "สร้างคีย์สำหรับเกมอื่น",
@@ -3528,6 +3556,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "🎮 Works in EVERY game — one key": "🎮 Berfungsi di SEMUA game — satu kunci",
+    "No per-game unlocks, no cooldown": "Tanpa buka kunci per game, tanpa masa tunggu",
+    "No per-game unlocks, no cooldown, forever": "Tanpa buka kunci per game, tanpa masa tunggu, selamanya",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Satu kunci yang berfungsi di SEMUA game — tanpa buka kunci per game dan tanpa masa tunggu, selamanya. Versi gratis membuka satu game dalam satu waktu; kunci premium membuka semuanya secara instan, dengan dukungan prioritas dan semua skrip yang kami buat.",
     "Need a key for a different game?": "Butuh key untuk game lain?",
     "Each key only works in one game. Generate another for a different game.": "Setiap key hanya berfungsi di satu game. Buat key lain untuk game berbeda.",
     "Generate a key for another game": "Buat key untuk game lain",
@@ -3968,6 +4000,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "🎮 Works in EVERY game — one key": "🎮 Gumagana sa LAHAT ng laro — isang key",
+    "No per-game unlocks, no cooldown": "Walang per-game unlock, walang cooldown",
+    "No per-game unlocks, no cooldown, forever": "Walang per-game unlock, walang cooldown, habambuhay",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Isang key na gumagana sa LAHAT ng laro — walang per-game unlock at walang cooldown, kailanman. Ang libreng bersyon ay nag-a-unlock ng isang laro sa bawat pagkakataon; ang premium key ay ina-unlock ang lahat nang instant, kasama ang priority support at lahat ng script na ginagawa namin.",
     "Need a key for a different game?": "Kailangan ng key para sa ibang laro?",
     "Each key only works in one game. Generate another for a different game.": "Bawat key ay gumagana lang sa isang laro. Gumawa ng iba para sa ibang laro.",
     "Generate a key for another game": "Gumawa ng key para sa ibang laro",
@@ -4408,6 +4444,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "🎮 Works in EVERY game — one key": "🎮 Hoạt động trong MỌI game — chỉ một key",
+    "No per-game unlocks, no cooldown": "Không cần mở khóa từng game, không thời gian chờ",
+    "No per-game unlocks, no cooldown, forever": "Không cần mở khóa từng game, không thời gian chờ, vĩnh viễn",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Một key duy nhất hoạt động trong MỌI game — không cần mở khóa từng game và không bao giờ có thời gian chờ. Bản miễn phí mở khóa từng game một; key premium mở khóa tất cả ngay lập tức, kèm hỗ trợ ưu tiên và mọi script chúng tôi tạo ra.",
     "Need a key for a different game?": "Cần key cho game khác?",
     "Each key only works in one game. Generate another for a different game.": "Mỗi key chỉ hoạt động trong một game. Tạo key khác cho game khác.",
     "Generate a key for another game": "Tạo key cho game khác",
