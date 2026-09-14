@@ -14,6 +14,7 @@ import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
+import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 
@@ -23,6 +24,7 @@ export default function VerifyStep1() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
+  usePopunder(true); // Monetag popunder on step 1 (matches step 2/3)
   const [isLoading, setIsLoading] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
