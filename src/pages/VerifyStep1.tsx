@@ -24,7 +24,7 @@ export default function VerifyStep1() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
-  usePopunder(true); // Monetag popunder on step 1 (matches step 2/3)
+  usePopunder(isAdEnabled("verify-step1", "popunder")); // Monetag popunder on step 1 (matches step 2/3)
   const [isLoading, setIsLoading] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
