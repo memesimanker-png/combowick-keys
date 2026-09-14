@@ -13,11 +13,27 @@ import { EmailScriptButton } from "@/components/EmailScriptButton";
 import { AdSlot } from "@/components/AdSlot";
 import { ScriptUnlockGate, useScriptUnlocked } from "@/components/ScriptUnlockGate";
 
+// Game-tie + attribution: for a FREE script, inject the game's universe id as
+// getgenv().cb_game (so this keyless unlock only grants free IN this game) and
+// getgenv().cb_src="store" (source tracking). Paid/key scripts, missing universe,
+// or code that already carries cb_game are returned unchanged.
+function buildStoreLoadstring(script: any): string {
+  const raw = (script?.code ?? "") as string;
+  const uni = script?.game_universe_id;
+  if (!raw || script?.is_paid || !uni || raw.includes("cb_game")) return raw;
+  const inject = ` getgenv().cb_game="${uni}"; getgenv().cb_src="store";`;
+  if (/getgenv\(\)\.cb_f\s*=\s*true\s*;?/.test(raw)) {
+    return raw.replace(/getgenv\(\)\.cb_f\s*=\s*true\s*;?/, (m) => `${m}${inject}`);
+  }
+  return `getgenv().cb_f=true;${inject} ${raw}`;
+}
+
 export default function ScriptDetail() {
   const { slug } = useParams<{ slug: string }>();
   const unlocked = useScriptUnlocked(slug); // Linkvertise gate: code hidden until unlocked (24h/device)
 
   const { data: script, isLoading } = useScriptBySlug(slug);
+  const displayCode = buildStoreLoadstring(script);
   const { data: related = [] } = useRelatedScripts(
     script?.id || "",
     script?.game || "",
@@ -247,13 +263,13 @@ export default function ScriptDetail() {
                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                   <h2 className="text-lg font-semibold">Script Code</h2>
                   <div className="flex gap-2">
-                    <EmailScriptButton script={script} />
-                    <CopyButton text={script.code} />
+                    <EmailScriptButton script={{ ...script, code: displayCode }} />
+                    <CopyButton text={displayCode} />
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-secondary/50 p-4 overflow-x-auto">
                   <pre className="text-sm text-muted-foreground whitespace-pre font-mono leading-relaxed">
-                    {script.code}
+                    {displayCode}
                   </pre>
                 </div>
               </section>
@@ -320,7 +336,7 @@ export default function ScriptDetail() {
                   <DollarSign className="h-4 w-4" /> Purchase Access
                 </Link>
               ) : (
-                <CopyButton text={script.code} className="w-full justify-center" />
+                <CopyButton text={displayCode} className="w-full justify-center" />
               )}
 
 
