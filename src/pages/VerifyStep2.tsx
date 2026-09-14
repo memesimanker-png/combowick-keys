@@ -30,7 +30,7 @@ export default function VerifyStep2() {
   const links = useVerifyLinks();
 
   // Monetag popunder now lives on Step 2 (moved off /verify/provider-select).
-  usePopunder(true);
+  usePopunder(isAdEnabled("verify-step2", "popunder"));
 
   useEffect(() => {
     const step1Done = localStorage.getItem("step1_completed");
