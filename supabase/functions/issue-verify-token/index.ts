@@ -9,14 +9,20 @@ const ALLOWED_ORIGINS = [
   "https://shop-ready.lovable.app",
   "https://combowick.com",
   "https://www.combowick.com",
+  "https://keys.combowick.com",
   "https://id-preview--46bfc42e-0173-43f1-8213-8466f9d67044.lovable.app",
 ];
 
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   if (ALLOWED_ORIGINS.includes(origin)) return true;
-  // allow lovable preview/sandbox subdomains
-  return /\.lovable\.app$/.test(new URL(origin).hostname);
+  try {
+    const h = new URL(origin).hostname;
+    // lovable preview/sandbox subdomains + this project's Vercel domains (prod + previews)
+    return /.lovable.app$/.test(h) || /^combowick-keys[w-]*.vercel.app$/.test(h);
+  } catch {
+    return false;
+  }
 }
 
 function getIp(req: Request): string {
