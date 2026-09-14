@@ -13,17 +13,27 @@ export function usePopunder(enabled: boolean = true) {
   useEffect(() => {
     if (!enabled || !POPUNDER_ZONE || !POPUNDER_SRC) return;
     const POPUNDER_ID = `monetag-popunder-${POPUNDER_ZONE}`;
-    const load = () => {
+    const load = (e?: Event) => {
       if (document.getElementById(POPUNDER_ID)) return;
+      // Don't arm the popunder when the user is opting OUT of ads — i.e. clicking a
+      // "Skip Ads" control or any link to /premium-keys. They chose to skip, so no
+      // popunder should ride along into the premium page. (Return WITHOUT removing the
+      // listener so a later, non-skip interaction still arms it.)
+      const t = e && (e.target as HTMLElement | null);
+      if (t && typeof t.closest === "function" && t.closest('a[href*="/premium-keys"], [data-no-popunder]')) {
+        return;
+      }
       const s = document.createElement("script");
       s.id = POPUNDER_ID;
       s.dataset.zone = POPUNDER_ZONE;
       s.src = POPUNDER_SRC;
       s.async = true;
       document.body.appendChild(s);
+      document.removeEventListener("pointerdown", load, { capture: true } as any);
     };
-    load();
-    document.addEventListener("pointerdown", load, { capture: true, once: true });
+    // Arm on the first REAL user interaction (not on mount) so a straight-to-Skip-Ads
+    // click never loads Monetag at all.
+    document.addEventListener("pointerdown", load, { capture: true });
     return () => {
       document.removeEventListener("pointerdown", load, { capture: true } as any);
       const el = document.getElementById(POPUNDER_ID);
