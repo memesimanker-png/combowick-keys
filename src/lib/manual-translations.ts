@@ -4,6 +4,10 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "🎮 Works in EVERY game — one key": "🎮 Fonctionne dans TOUS les jeux — une seule clé",
+    "No per-game unlocks, no cooldown": "Aucun déblocage par jeu, aucun temps d'attente",
+    "No per-game unlocks, no cooldown, forever": "Aucun déblocage par jeu, aucun temps d'attente, à vie",
+    "One key that works in EVERY game — no per-game unlocks and no cooldowns, ever. The free version unlocks one game at a time; a premium key unlocks them all, instantly, with priority support and every script we make.": "Une seule clé qui fonctionne dans TOUS les jeux — aucun déblocage par jeu et aucun temps d'attente, jamais. La version gratuite débloque un jeu à la fois ; une clé premium les débloque tous, instantanément, avec un support prioritaire et tous les scripts que nous créons.",
     "Need a key for a different game?": "Besoin d'une clé pour un autre jeu ?",
     "Each key only works in one game. Generate another for a different game.": "Chaque clé ne fonctionne que dans un seul jeu. Générez-en une autre pour un jeu différent.",
     "Generate a key for another game": "Générer une clé pour un autre jeu",
