@@ -2036,9 +2036,9 @@ function AdToggleControl() {
     script_promo: "Script Promo Popup",
   };
   const PAGE_AD_TYPES: Record<string, string[]> = {
-    "verify-step1": ["sliding_ad", "skip_ads_banner", "skip_ads_float"],
-    "verify-step2": ["sliding_ad", "skip_ads_banner", "skip_ads_float"],
-    "verify-step3": ["sliding_ad", "skip_ads_banner", "skip_ads_float"],
+    "verify-step1": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
+    "verify-step2": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
+    "verify-step3": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
     "verify-provider-select": ["popunder", "direct_link"],
     "access-key": ["popunder", "direct_link", "skip_ads_banner", "skip_ads_float", "script_promo"],
     keys: ["popunder", "script_promo"],
