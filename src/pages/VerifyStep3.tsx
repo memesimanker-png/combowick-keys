@@ -26,7 +26,7 @@ export default function VerifyStep3() {
   const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
   // Monetag popunder lives on the verify steps (2 & 3), not the key-generation page.
-  usePopunder(true);
+  usePopunder(isAdEnabled("verify-step3", "popunder"));
   const [isLoading, setIsLoading] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
