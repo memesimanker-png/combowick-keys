@@ -10,13 +10,16 @@ const ALLOWED_ORIGINS = [
   "https://shop-ready.lovable.app",
   "https://combowick.com",
   "https://www.combowick.com",
+  "https://keys.combowick.com",
 ];
 
 function isAllowedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   if (ALLOWED_ORIGINS.includes(origin)) return true;
   try {
-    return /\.lovable\.app$/.test(new URL(origin).hostname);
+    const h = new URL(origin).hostname;
+    // lovable preview/sandbox subdomains + this project's Vercel domains (prod + previews)
+    return /.lovable.app$/.test(h) || /^combowick-keys[w-]*.vercel.app$/.test(h);
   } catch {
     return false;
   }
