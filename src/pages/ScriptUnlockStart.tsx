@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * External entry point for the script unlock (e.g. arrived from the YouTube smart-link gate).
- * Sets the same-origin anti-bypass nonce, then fires ONE Linkvertise step that returns to
+ * Sets the same-origin anti-bypass nonce, then fires the FIRST of TWO Linkvertise steps (routes through step 2) before returning to
  * /ad-return/script — which validates referrer + nonce and unlocks the loadstring on /scripts/:slug.
  * The nonce must be written here (store origin) because localStorage is per-domain.
  */
@@ -67,7 +67,7 @@ export default function ScriptUnlockStart() {
       const origin = window.location.origin;
       const nonce = makeNonce();
       localStorage.setItem("script_unlock_pending", JSON.stringify({ slug, nonce, ts: Date.now() }));
-      const destination = `${origin}/ad-return/script?slug=${encodeURIComponent(slug)}&hash=${nonce}`;
+      const destination = `${origin}/ad-return/script-step2?slug=${encodeURIComponent(slug)}&hash=${nonce}`;
       window.location.href = buildLinkvertiseUrl(links[0], destination);
     } catch (e: any) {
       setError(e?.message || "Could not start unlock. Try again.");
@@ -97,7 +97,7 @@ export default function ScriptUnlockStart() {
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle>Unlock Your Script</CardTitle>
-            <CardDescription>One quick step to reveal the loadstring.</CardDescription>
+            <CardDescription>Two quick steps to reveal the loadstring.</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8 gap-4">
