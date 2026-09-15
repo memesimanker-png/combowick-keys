@@ -19,6 +19,7 @@ import { useKeyDiscounts, applyDiscount } from "@/hooks/useKeyDiscounts";
 import { DonateCard } from "@/components/DonateCard";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { OwnerCheckoutModal } from "@/components/OwnerCheckoutModal";
+import { BugReportWidget } from "@/components/BugReportWidget";
 
 
 const tiers = [
@@ -444,6 +445,7 @@ export default function PremiumKeys() {
           paypalClientId={paypalClientId}
         />
       )}
+      <BugReportWidget page="premium-key" />
     </Layout>
   );
 }
