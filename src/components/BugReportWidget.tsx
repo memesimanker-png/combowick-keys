@@ -98,7 +98,7 @@ export function BugReportWidget({ page, game }: Props) {
           onClick={() => setOpen(true)}
           data-no-popunder
           aria-label={t("Report a problem")}
-          className="fixed bottom-4 left-4 z-40 flex items-center gap-2 rounded-full border border-primary/40 bg-black/80 px-4 py-2 text-sm font-medium text-primary shadow-lg backdrop-blur transition-colors hover:bg-primary/15"
+          className="fixed bottom-4 right-4 z-40 flex items-center gap-2 rounded-full border border-primary/40 bg-black/80 px-4 py-2 text-sm font-medium text-primary shadow-lg backdrop-blur transition-colors hover:bg-primary/15"
         >
           <Bug className="h-4 w-4" />
           <span className="hidden sm:inline">{t("Report a problem")}</span>
@@ -106,7 +106,7 @@ export function BugReportWidget({ page, game }: Props) {
       )}
 
       {open && (
-        <div className="fixed bottom-4 left-4 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-xl border border-primary/30 bg-zinc-950/95 p-4 shadow-2xl backdrop-blur">
+        <div className="fixed bottom-4 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-xl border border-primary/30 bg-zinc-950/95 p-4 shadow-2xl backdrop-blur">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Bug className="h-4 w-4 text-primary" />
