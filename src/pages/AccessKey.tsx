@@ -16,6 +16,7 @@ import { NoIndex } from "@/components/NoIndex";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
+import { BugReportWidget } from "@/components/BugReportWidget";
 
 
 
@@ -412,6 +413,7 @@ export default function AccessKey() {
         </div>
       </main>
       {isAdEnabled("access-key", "skip_ads_float") && <SkipAdsFloatButton />}
+      <BugReportWidget page="access-key" game={selectedGame?.name} />
     </div>
   );
 }
