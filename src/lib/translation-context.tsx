@@ -109,10 +109,12 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
       CN: "zh-CN", TW: "zh-CN", HK: "zh-CN", SG: "zh-CN",
       KR: "ko", TH: "th", ID: "id", PH: "fil", VN: "vi",
     };
-    fetch("https://ipapi.co/json/")
-      .then((r) => r.json())
-      .then((d) => {
-        const country = (d?.country_code || d?.country || "").toUpperCase();
+    // Cloudflare edge geo (unlimited, same-origin) — store is behind Cloudflare, so
+    // /cdn-cgi/trace returns loc=<country>. Replaces ipapi.co (was rate-limited → 429).
+    fetch("/cdn-cgi/trace")
+      .then((r) => r.text())
+      .then((txt) => {
+        const country = ((txt.match(/loc=([A-Z]{2})/) || [])[1] || "").toUpperCase();
         const detected = COUNTRY_TO_LANG[country];
         localStorage.setItem("combowick-geo-checked", "1");
         if (detected && detected !== langRef.current) {
