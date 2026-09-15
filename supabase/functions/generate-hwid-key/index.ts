@@ -108,9 +108,9 @@ Deno.serve(async (req) => {
 
     if (cntErr) {
       console.error("[generate-hwid-key] rate-limit count error:", cntErr);
-    } else if ((count ?? 0) >= 1) {
+    } else if ((count ?? 0) >= 5) {
       return new Response(
-        JSON.stringify({ success: false, error: "Rate limit: only 1 key per 10 hours per IP." }),
+        JSON.stringify({ success: false, error: "Rate limit: only 5 keys per 10 hours per IP." }),
         { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
