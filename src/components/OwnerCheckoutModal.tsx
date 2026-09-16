@@ -4,7 +4,7 @@ import { X, Loader2, CheckCircle, Crown, Lock, AlertTriangle } from "lucide-reac
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 
-const OWNER_PRICE = 1000;
+const OWNER_PRICE = 100;
 
 interface Props {
   isOpen: boolean;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 /**
- * High-ticket ($1000) Owner/Admin checkout. Collects the buyer's Discord
+ * ($100) Owner/Admin checkout. Collects the buyer's Discord
  * username BEFORE payment, requires a no-refund acknowledgement, captures via
  * PayPal (server-side, no key issued), then pings the owner's Discord webhook
  * (server-side, via `notify-owner-purchase`) with the username.
@@ -47,7 +47,7 @@ export function OwnerCheckoutModal({ isOpen, onClose, paypalClientId }: Props) {
     setError(null);
     if (!ready) { setError(t("Please enter your Discord username.")); throw new Error("not ready"); }
     const { data, error: fnError } = await supabase.functions.invoke("paypal-create-order", {
-      body: { amount: OWNER_PRICE, tier: "owner", description: `ComboWick Owner/Admin (5mo) — Discord: ${discord.trim()}` },
+      body: { amount: OWNER_PRICE, tier: "owner", description: `ComboWick Owner/Admin (1mo) — Discord: ${discord.trim()}` },
     });
     if (fnError || !data?.order_id) { setError(t("Payment failed. Please try again.")); throw new Error("create failed"); }
     return data.order_id;
