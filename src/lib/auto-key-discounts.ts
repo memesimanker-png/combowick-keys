@@ -14,9 +14,17 @@ type Rule = {
   tiers: Record<string, number>;
 };
 
-// Weekend-only sale. Monday–Thursday are FULL PRICE (the deal popup won't show then),
-// so prices genuinely return to normal during the week instead of a permanent "sale".
+// Every day has a deal now: weekdays a lighter always-on nudge, weekends the big blowout.
+// An impulse buyer is never stuck at full price, but the weekend stays clearly the best
+// BASE deal. Because the flash/mega bumps below only fire when a base deal is active, this
+// also extends surprise Flash/Mega sales to EVERY day — so buyers can't just wait for the
+// weekend (a random Tuesday might beat it), which kills the "I'll wait" instinct.
 const RULES: Rule[] = [
+  {
+    days: [1, 2, 3, 4], // Monday → Thursday
+    label: "Weekday Deal",
+    tiers: { monthly: 12, lifetime: 15 },
+  },
   {
     days: [5, 6, 0], // Friday → Sunday
     label: "Weekend Blowout",
