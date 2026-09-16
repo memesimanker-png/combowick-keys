@@ -9,7 +9,7 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const OWNER_AMOUNT = 1000;
+const OWNER_AMOUNT = 100;
 
 async function paypalToken(): Promise<string> {
   const id = Deno.env.get("PAYPAL_CLIENT_ID")!;
@@ -71,7 +71,7 @@ serve(async (req) => {
       allowed_mentions: { parse: ["everyone"] },
       embeds: [{
         title: "👑 NEW OWNER / ADMIN PURCHASE",
-        description: `**${safe}** just bought **Owner/Admin access** ($${OWNER_AMOUNT}, 5 months).`,
+        description: `**${safe}** just bought **Owner/Admin access** (${OWNER_AMOUNT}, 1 month).`,
         color: 0xFFD400,
         fields: [
           { name: "Discord", value: safe, inline: true },
@@ -83,7 +83,7 @@ serve(async (req) => {
 
     // Ping #2 — second @everyone so it notifies twice, as requested.
     await post({
-      content: `@everyone 👑 Set up **${safe}** with their Owner/Admin role — 5 month term.`,
+      content: `@everyone 👑 Set up **${safe}** with their Owner/Admin role — 1 month term.`,
       allowed_mentions: { parse: ["everyone"] },
     });
 
