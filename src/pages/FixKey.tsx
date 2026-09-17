@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyRound, Loader2, CheckCircle2, ShieldCheck } from "lucide-react";
+import { KeyRound, Loader2, CheckCircle2, ShieldCheck, XCircle, ShieldQuestion } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,32 @@ export default function FixKey() {
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const [keyStatus, setKeyStatus] = useState<{ valid: boolean; msg: string } | null>(null);
+
+  const checkKey = async () => {
+    if (!key.trim()) { toast({ variant: "destructive", title: t("Enter your key first.") }); return; }
+    setChecking(true); setKeyStatus(null);
+    try {
+      const res = await fetch(SELF_SKIP, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: key.trim(), check: true }) });
+      const data = await res.json().catch(() => ({}));
+      if (data?.valid) {
+        const exp = data.expires_at ? new Date(data.expires_at) : null;
+        const days = exp ? Math.max(0, Math.ceil((exp.getTime() - Date.now()) / 86400000)) : null;
+        setKeyStatus({ valid: true, msg: days != null ? t("Valid key — expires in {n} day(s)").replace("{n}", String(days)) : t("Valid key") });
+      } else {
+        const reasonMap: Record<string, string> = {
+          not_found: t("Key not found — double-check it."),
+          expired: t("This key has expired."),
+          inactive: t("This key is inactive."),
+          not_hwid: t("That isn't an HWID key."),
+        };
+        setKeyStatus({ valid: false, msg: reasonMap[data?.reason] || t("This key isn't valid.") });
+      }
+    } catch {
+      toast({ variant: "destructive", title: t("Network error"), description: t("Please try again.") });
+    } finally { setChecking(false); }
+  };
 
   const submit = async () => {
     if (!key.trim()) { toast({ variant: "destructive", title: t("Enter your key first.") }); return; }
@@ -64,7 +90,17 @@ export default function FixKey() {
                 <>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2"><KeyRound className="h-4 w-4 text-muted-foreground" /><label className="text-sm font-medium">{t("Your Key")}</label></div>
-                    <Input placeholder={t("Paste your key")} value={key} onChange={(e) => setKey(e.target.value)} disabled={loading} />
+                    <div className="flex gap-2">
+                      <Input placeholder={t("Paste your key")} value={key} onChange={(e) => { setKey(e.target.value); setKeyStatus(null); }} disabled={loading} />
+                      <Button type="button" variant="outline" onClick={checkKey} disabled={loading || checking || !key.trim()} className="shrink-0 gap-1.5">
+                        {checking ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldQuestion className="h-4 w-4" />} {t("Check")}
+                      </Button>
+                    </div>
+                    {keyStatus && (
+                      <p className={`text-xs flex items-center gap-1.5 ${keyStatus.valid ? "text-green-400" : "text-destructive"}`}>
+                        {keyStatus.valid ? <CheckCircle2 className="h-3.5 w-3.5" /> : <XCircle className="h-3.5 w-3.5" />} {keyStatus.msg}
+                      </p>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-medium">{t("Your Roblox Account")}</label>
