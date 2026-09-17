@@ -35,6 +35,7 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
             {
               title: t("Resources"),
               links: [
+                { to: "/fix-key", label: t("Fix Your Key") },
                 { to: "/guides", label: t("Guides") },
                 { to: "/tutorials", label: "Lua Tutorials" },
                 { to: "/docs", label: "Docs" },
