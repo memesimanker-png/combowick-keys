@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ShieldCheck, ChevronRight, TrendingUp, DollarSign, Play, Share2, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useScriptBySlug, useRelatedScripts } from "@/hooks/useScripts";
+import { useScriptBySlug } from "@/hooks/useScripts";
 import { Layout } from "@/components/Layout";
 import { CopyButton } from "@/components/CopyButton";
 import { ScriptCard } from "@/components/ScriptCard";
@@ -34,11 +34,6 @@ export default function ScriptDetail() {
 
   const { data: script, isLoading } = useScriptBySlug(slug);
   const displayCode = buildStoreLoadstring(script);
-  const { data: related = [] } = useRelatedScripts(
-    script?.id || "",
-    script?.game || "",
-    script?.category || ""
-  );
   const { toast } = useToast();
   const [shared, setShared] = useState(false);
 
@@ -364,34 +359,6 @@ export default function ScriptDetail() {
                 {shared ? <Check className="h-4 w-4 text-green-400" /> : <Share2 className="h-4 w-4" />}
                 {shared ? "Copied!" : "Share Script"}
               </button>
-
-              {related.length > 0 && (
-                <div className="rounded-lg border border-border bg-card p-5">
-                  <h3 className="font-semibold mb-4 text-primary">Related Scripts</h3>
-                  <div className="space-y-4">
-                    {related.map((s) => (
-                      <Link
-                        key={s.id}
-                        to={s.is_paid ? "/premium-keys" : `/scripts/${s.slug}`}
-                        className="block rounded-lg border border-border bg-secondary/30 p-3 hover:border-primary/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-2 mb-2">
-                          <GameThumbnail gameName={s.game} universeId={(s as any).game_universe_id} size="sm" />
-                          <span className="text-xs text-muted-foreground">{s.game}</span>
-                          {s.is_paid && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-bold">PAID</span>
-                          )}
-                          {s.verified && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-green-400/10 text-green-400 font-medium">Safe</span>
-                          )}
-                        </div>
-                        <h4 className="text-sm font-semibold leading-snug mb-1">{s.title}</h4>
-                        <p className="text-xs text-muted-foreground line-clamp-2">{s.description}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </aside>
         </div>
