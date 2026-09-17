@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
-import { Loader2, Sparkles, Plus, Save, Trash2, Edit, Key, Users, Code, Eye, EyeOff, Copy, UserCheck, Mail, MailOpen, MailX, Bell, ShieldCheck, ShieldAlert, Shield, MessageSquare, Upload, ImageIcon, X, Wrench, Search, RefreshCw, Ban, ArrowLeftRight, Clock, MousePointerClick, Megaphone } from "lucide-react";
+import { Loader2, Sparkles, Plus, Save, Trash2, Edit, Key, Users, Code, Eye, EyeOff, Copy, UserCheck, Mail, MailOpen, MailX, Bell, ShieldCheck, ShieldAlert, Shield, MessageSquare, Upload, ImageIcon, X, Wrench, Search, RefreshCw, Ban, ArrowLeftRight, Clock, MousePointerClick, Megaphone, Smartphone } from "lucide-react";
 import { useAllScripts } from "@/hooks/useScripts";
 import { CATEGORIES } from "@/lib/scripts-data";
 import { Navigate, Link } from "react-router-dom";
@@ -1821,6 +1821,46 @@ function KeyToolsTab() {
     if (d) { toast({ title: "HWID reset", description: "Key will bind to the next device." }); doInfo(); }
   };
 
+  // ── Skip validation (device whitelist) ──
+  const [skipEntries, setSkipEntries] = useState<any[] | null>(null);
+  const [skipUserId, setSkipUserId] = useState("");
+  const [skipHwid, setSkipHwid] = useState("");
+  const [skipNote, setSkipNote] = useState("");
+  const skipCall = async (action: string, body: Record<string, unknown> = {}) => {
+    setBusy(action);
+    try {
+      const { data, error } = await supabase.functions.invoke("shop-key", { body: { action, ...body } });
+      if (error) {
+        let msg = error.message;
+        try { const ctx = await (error as any).context?.json?.(); if (ctx?.error) msg = ctx.error; } catch { /* noop */ }
+        toast({ variant: "destructive", title: "Failed", description: msg });
+        return null;
+      }
+      if (data?.success === false) { toast({ variant: "destructive", title: "Failed", description: data.error }); return null; }
+      return data;
+    } finally { setBusy(null); }
+  };
+  const loadSkips = async () => {
+    const k = key.trim();
+    if (!k) { toast({ variant: "destructive", title: "Paste the key first" }); return; }
+    const d = await skipCall("skip-list", { key: k });
+    if (d) setSkipEntries(d.entries || []);
+  };
+  const addSkip = async () => {
+    const k = key.trim();
+    const uid = skipUserId.trim();
+    const hw = skipHwid.trim();
+    if (!uid && !hw) { toast({ variant: "destructive", title: "Enter a Roblox UserId (or HWID)" }); return; }
+    if (uid && !/^\d{2,20}$/.test(uid)) { toast({ variant: "destructive", title: "UserId must be numbers only" }); return; }
+    const d = await skipCall("skip-add", { key: k || undefined, user_id: uid || undefined, hwid: hw || undefined, note: skipNote.trim() || "admin" });
+    if (d) { toast({ title: "Device whitelisted", description: "The key will now work on this device until it expires." }); setSkipUserId(""); setSkipHwid(""); setSkipNote(""); loadSkips(); }
+  };
+  const removeSkip = async (id: string) => {
+    if (!confirm("Remove this whitelist entry? The device-lock will apply again.")) return;
+    const d = await skipCall("skip-remove", { id });
+    if (d) { toast({ title: "Entry removed" }); loadSkips(); }
+  };
+
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
@@ -1869,6 +1909,54 @@ function KeyToolsTab() {
             </Button>
           </div>
         </div>
+      </Card>
+
+      <Card className="p-6 space-y-4">
+        <div>
+          <h3 className="font-semibold flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" /> Fix Device (skip device-lock)</h3>
+          <p className="text-sm text-muted-foreground">For a paying customer stuck on "Invalid Key" on their own device (bad/unstable HWID). Whitelisting their <b>Roblox UserId</b> bypasses only the device-lock — the key still expires normally. Uses the key pasted above.</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label className="text-sm font-medium mb-1 block">Roblox UserId</label>
+            <input value={skipUserId} onChange={e => setSkipUserId(e.target.value)} className={inputCls} placeholder="e.g. 11627930451" />
+          </div>
+          <div>
+            <label className="text-sm font-medium mb-1 block">HWID <span className="text-muted-foreground font-normal">(optional)</span></label>
+            <input value={skipHwid} onChange={e => setSkipHwid(e.target.value)} className={`${inputCls} font-mono`} placeholder="only if you don't have their UserId" />
+          </div>
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-1 block">Note <span className="text-muted-foreground font-normal">(optional)</span></label>
+          <input value={skipNote} onChange={e => setSkipNote(e.target.value)} className={inputCls} placeholder="e.g. Discord: user#0001" />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={addSkip} disabled={!!busy} className="gap-2">
+            {busy === "skip-add" ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />} Whitelist Device
+          </Button>
+          <Button onClick={loadSkips} disabled={!!busy} variant="outline" className="gap-2">
+            {busy === "skip-list" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />} View Whitelist For This Key
+          </Button>
+        </div>
+        {skipEntries && (
+          skipEntries.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No whitelist entries for this key.</p>
+          ) : (
+            <div className="space-y-2">
+              {skipEntries.map((e: any) => (
+                <div key={e.id} className={`flex items-center justify-between gap-3 rounded-lg border p-3 text-sm ${e.expired ? "border-border/50 opacity-60" : "border-primary/30 bg-primary/5"}`}>
+                  <div className="min-w-0">
+                    <p className="font-medium">{e.user_id ? `UserId ${e.user_id}` : `HWID ${String(e.hwid).slice(0, 16)}…`}{e.expired && <span className="ml-2 text-xs text-destructive">expired</span>}</p>
+                    <p className="text-xs text-muted-foreground truncate">{e.note || "—"} • expires {e.expires_at ? new Date(e.expires_at).toLocaleString() : "—"}</p>
+                  </div>
+                  <Button onClick={() => removeSkip(e.id)} disabled={!!busy} variant="ghost" size="sm" className="gap-1.5 text-destructive shrink-0">
+                    <Trash2 className="h-4 w-4" /> Remove
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )
+        )}
       </Card>
 
       {info && (
