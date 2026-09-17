@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "« Clé invalide » sur votre appareil ? Corrigez-le ici",
     "Fix Your Key": "Réparer votre clé",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Vous obtenez « Clé invalide » sur votre appareil alors que votre clé est valide ? Ajoutez votre appareil à la liste blanche ici.",
     "Whitelist Your Device": "Ajouter votre appareil à la liste blanche",
@@ -501,6 +502,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "¿«Clave no válida» en tu dispositivo? Arréglalo aquí",
     "Fix Your Key": "Arregla tu clave",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "¿Recibes «Clave no válida» en tu dispositivo aunque tu clave es válida? Añade tu dispositivo a la lista blanca aquí.",
     "Whitelist Your Device": "Añade tu dispositivo a la lista blanca",
@@ -998,6 +1000,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "„Ungültiger Schlüssel“ auf deinem Gerät? Hier beheben",
     "Fix Your Key": "Schlüssel reparieren",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Du bekommst „Ungültiger Schlüssel“ auf deinem Gerät, obwohl dein Schlüssel gültig ist? Setze dein Gerät hier auf die Whitelist.",
     "Whitelist Your Device": "Gerät auf die Whitelist setzen",
@@ -1495,6 +1498,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "\"Chave inválida\" no seu dispositivo? Corrija aqui",
     "Fix Your Key": "Corrigir sua chave",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Recebendo \"Chave inválida\" no seu dispositivo mesmo com a chave válida? Adicione seu dispositivo à lista de permissões aqui.",
     "Whitelist Your Device": "Adicionar seu dispositivo à lista de permissões",
@@ -1992,6 +1996,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "«Неверный ключ» на вашем устройстве? Исправьте здесь",
     "Fix Your Key": "Починить ключ",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Появляется «Неверный ключ» на вашем устройстве, хотя ключ действителен? Добавьте устройство в белый список здесь.",
     "Whitelist Your Device": "Добавить устройство в белый список",
@@ -2489,6 +2494,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "设备显示“无效密钥”？在此修复",
     "Fix Your Key": "修复你的密钥",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "密钥有效但设备却显示“无效密钥”？在此将你的设备加入白名单。",
     "Whitelist Your Device": "将你的设备加入白名单",
@@ -2986,6 +2992,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "기기에서 \"잘못된 키\"가 뜨나요? 여기서 해결하세요",
     "Fix Your Key": "키 문제 해결",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "키가 유효한데도 기기에서 \"잘못된 키\"가 뜨나요? 여기서 기기를 화이트리스트에 등록하세요.",
     "Whitelist Your Device": "기기를 화이트리스트에 등록",
@@ -3483,6 +3490,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "ขึ้น \"คีย์ไม่ถูกต้อง\" บนเครื่องของคุณ? แก้ไขที่นี่",
     "Fix Your Key": "แก้ไขคีย์ของคุณ",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "ขึ้น \"คีย์ไม่ถูกต้อง\" บนเครื่องของคุณทั้งที่คีย์ใช้งานได้? เพิ่มเครื่องของคุณในไวต์ลิสต์ที่นี่",
     "Whitelist Your Device": "เพิ่มเครื่องของคุณในไวต์ลิสต์",
@@ -3980,6 +3988,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "Muncul \"Kunci Tidak Valid\" di perangkat Anda? Perbaiki di sini",
     "Fix Your Key": "Perbaiki Kunci Anda",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Muncul \"Kunci Tidak Valid\" di perangkat Anda padahal kunci valid? Masukkan perangkat Anda ke daftar putih di sini.",
     "Whitelist Your Device": "Masukkan Perangkat ke Daftar Putih",
@@ -4477,6 +4486,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "\"Invalid Key\" sa device mo? Ayusin dito",
     "Fix Your Key": "Ayusin ang Iyong Key",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Nakukuha ang \"Invalid Key\" sa device mo kahit valid ang key mo? I-whitelist ang device mo dito.",
     "Whitelist Your Device": "I-whitelist ang Iyong Device",
@@ -4974,6 +4984,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Getting \"Invalid Key\" on your device? Fix it here": "Thiết bị báo \"Khóa không hợp lệ\"? Sửa tại đây",
     "Fix Your Key": "Sửa khóa của bạn",
     "Getting \"Invalid Key\" on your device even though your key is valid? Whitelist your device here.": "Thiết bị của bạn báo \"Khóa không hợp lệ\" dù khóa vẫn còn hạn? Thêm thiết bị của bạn vào danh sách trắng tại đây.",
     "Whitelist Your Device": "Thêm thiết bị vào danh sách trắng",
