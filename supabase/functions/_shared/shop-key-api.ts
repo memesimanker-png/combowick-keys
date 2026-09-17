@@ -52,3 +52,16 @@ export async function keyInfo(key: string): Promise<ShopKeyResult> {
   try { data = JSON.parse(text); } catch { data = { success: false, error: text }; }
   return { ok: res.ok && data?.success !== false, status: res.status, data };
 }
+
+// ── Skip-validation (device-lock bypass) management ──
+export async function skipList(key: string): Promise<ShopKeyResult> {
+  return post("/api/skip-manage", { op: "list", key });
+}
+
+export async function skipAdd(body: { key?: string; user_id?: string; hwid?: string; hours?: number; note?: string }): Promise<ShopKeyResult> {
+  return post("/api/skip-manage", { op: "add", ...body });
+}
+
+export async function skipRemove(id: string): Promise<ShopKeyResult> {
+  return post("/api/skip-manage", { op: "remove", id });
+}
