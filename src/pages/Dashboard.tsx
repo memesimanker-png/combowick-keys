@@ -80,6 +80,31 @@ export default function Dashboard() {
   const [topUpKey, setTopUpKey] = useState<string | null>(null);
   const [liveStatus, setLiveStatus] = useState<Record<string, any>>({});
   const [checkingKey, setCheckingKey] = useState<string | null>(null);
+  const [fixKey, setFixKey] = useState<string | null>(null);
+  const [fixUserId, setFixUserId] = useState("");
+  const [fixBusy, setFixBusy] = useState(false);
+  const [fixDone, setFixDone] = useState<Record<string, boolean>>({});
+
+  const SELF_SKIP = "https://v0-remix-of-roblox-executor-system.vercel.app/api/self-skip";
+  const submitFix = async (keyValue: string) => {
+    const uid = fixUserId.trim();
+    if (!/^\d{2,20}$/.test(uid)) { toast({ variant: "destructive", title: "Enter a valid Roblox UserId (numbers only)" }); return; }
+    setFixBusy(true);
+    try {
+      const res = await fetch(SELF_SKIP, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: keyValue, user_id: uid }) });
+      const data = await res.json().catch(() => ({ success: false }));
+      if (data?.success) {
+        setFixDone((s) => ({ ...s, [keyValue]: true }));
+        setFixKey(null);
+        setFixUserId("");
+        toast({ title: "Device whitelisted!", description: "Re-run the script — it'll work now." });
+      } else {
+        toast({ variant: "destructive", title: "Couldn't fix it", description: data?.error || "Please try again." });
+      }
+    } catch {
+      toast({ variant: "destructive", title: "Network error", description: "Please try again." });
+    } finally { setFixBusy(false); }
+  };
 
   const checkLiveStatus = async (keyValue: string) => {
     setCheckingKey(keyValue);
@@ -465,6 +490,39 @@ Message: ${supportForm.message || "(none)"}
                                 {checkingKey === purchase.key_generated ? <div className="h-3.5 w-3.5 rounded-full border-2 border-primary/40 border-t-primary animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
                                 Check live status
                               </Button>
+                              {!isExpired && !fixDone[purchase.key_generated] && (
+                                <Button size="sm" variant="outline" className="gap-1.5" onClick={() => { setFixKey(fixKey === purchase.key_generated ? null : purchase.key_generated); setFixUserId(""); }}>
+                                  <Smartphone className="h-3.5 w-3.5" /> Fix device ("Invalid Key")
+                                </Button>
+                              )}
+                            </div>
+                          )}
+
+                          {fixDone[purchase.key_generated] && (
+                            <div className="mt-3 rounded-lg border border-success/30 bg-success/5 p-3 text-xs flex items-center gap-2">
+                              <Check className="h-4 w-4 text-success shrink-0" />
+                              <span>Device whitelisted — re-run the script and it'll work (until your key expires).</span>
+                            </div>
+                          )}
+
+                          {fixKey === purchase.key_generated && !fixDone[purchase.key_generated] && (
+                            <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2.5">
+                              <p className="text-xs text-muted-foreground">
+                                Getting "Invalid Key" on your own device even though your key is valid? Enter your <b>Roblox UserId</b> to whitelist this device.
+                                Find it in the script's Info tab, or your profile URL: roblox.com/users/<b>YOUR-ID</b>/profile.
+                              </p>
+                              <div className="flex flex-col sm:flex-row gap-2">
+                                <input
+                                  value={fixUserId}
+                                  onChange={(e) => setFixUserId(e.target.value)}
+                                  placeholder="e.g. 11627930451"
+                                  className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                />
+                                <Button size="sm" className="gap-1.5 shrink-0" disabled={fixBusy} onClick={() => submitFix(purchase.key_generated)}>
+                                  {fixBusy ? <div className="h-3.5 w-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" /> : <Smartphone className="h-3.5 w-3.5" />}
+                                  Whitelist my device
+                                </Button>
+                              </div>
                             </div>
                           )}
 
