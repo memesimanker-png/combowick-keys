@@ -3,6 +3,7 @@ import { Search, Loader2, BadgeCheck, RefreshCw, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/lib/translation-context";
 
 type RobloxUser = { id: number; name: string; displayName: string; hasVerifiedBadge?: boolean; avatarUrl?: string };
 
@@ -10,6 +11,7 @@ type RobloxUser = { id: number; name: string; displayName: string; hasVerifiedBa
 // Two modes: search by username (shows avatar + display name so the user can confirm it's
 // really them) OR type the numeric UserId directly. Emits the chosen id via onChange.
 export function RobloxUserField({ value, onChange, disabled }: { value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<"username" | "id">("username");
   const [uname, setUname] = useState("");
   const [busy, setBusy] = useState(false);
@@ -29,12 +31,12 @@ export function RobloxUserField({ value, onChange, disabled }: { value: string; 
 
   const searchUsername = () => {
     const u = uname.trim();
-    if (u.length < 3) { setErr("Enter your Roblox username."); return; }
+    if (u.length < 3) { setErr(t("Enter your Roblox username.")); return; }
     lookup({ username: u });
   };
   const confirmId = () => {
     const id = value.trim();
-    if (!/^\d{2,20}$/.test(id)) { setErr("Enter a valid UserId (numbers only)."); return; }
+    if (!/^\d{2,20}$/.test(id)) { setErr(t("Enter a valid UserId (numbers only).")); return; }
     lookup({ user_id: id });
   };
   const reset = () => { setUser(null); setErr(""); };
@@ -45,8 +47,8 @@ export function RobloxUserField({ value, onChange, disabled }: { value: string; 
   return (
     <div className="space-y-2">
       <div className="flex gap-1.5 p-1 rounded-lg bg-background/50 border border-border">
-        <button type="button" disabled={disabled} className={tabCls(mode === "username")} onClick={() => { setMode("username"); reset(); }}>Search by username</button>
-        <button type="button" disabled={disabled} className={tabCls(mode === "id")} onClick={() => { setMode("id"); reset(); }}>Enter UserId</button>
+        <button type="button" disabled={disabled} className={tabCls(mode === "username")} onClick={() => { setMode("username"); reset(); }}>{t("Search by username")}</button>
+        <button type="button" disabled={disabled} className={tabCls(mode === "id")} onClick={() => { setMode("id"); reset(); }}>{t("Enter UserId")}</button>
       </div>
 
       {user ? (
@@ -57,31 +59,31 @@ export function RobloxUserField({ value, onChange, disabled }: { value: string; 
           <div className="min-w-0 flex-1">
             <p className="font-semibold flex items-center gap-1 truncate">{user.displayName}{user.hasVerifiedBadge && <BadgeCheck className="h-4 w-4 text-primary shrink-0" />}</p>
             <p className="text-xs text-muted-foreground truncate">@{user.name} · UserId {user.id}</p>
-            <button type="button" onClick={reset} disabled={disabled} className="mt-1 text-xs text-primary hover:underline flex items-center gap-1"><RefreshCw className="h-3 w-3" /> Not you? Change</button>
+            <button type="button" onClick={reset} disabled={disabled} className="mt-1 text-xs text-primary hover:underline flex items-center gap-1"><RefreshCw className="h-3 w-3" /> {t("Not you? Change")}</button>
           </div>
         </div>
       ) : mode === "username" ? (
         <div className="flex gap-2">
-          <Input placeholder="Your Roblox username" value={uname} disabled={disabled || busy}
+          <Input placeholder={t("Your Roblox username")} value={uname} disabled={disabled || busy}
             onChange={(e) => setUname(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); searchUsername(); } }} />
           <Button type="button" onClick={searchUsername} disabled={disabled || busy} className="shrink-0 gap-1.5">
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />} Search
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />} {t("Search")}
           </Button>
         </div>
       ) : (
         <div className="flex gap-2">
-          <Input placeholder="e.g. 11627930451" inputMode="numeric" value={value} disabled={disabled || busy}
+          <Input placeholder={t("e.g. 11627930451")} inputMode="numeric" value={value} disabled={disabled || busy}
             onChange={(e) => { onChange(e.target.value.replace(/\D/g, "")); if (err) setErr(""); }}
             onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); confirmId(); } }} />
           <Button type="button" variant="outline" onClick={confirmId} disabled={disabled || busy} className="shrink-0 gap-1.5">
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <User className="h-4 w-4" />} Check
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <User className="h-4 w-4" />} {t("Check")}
           </Button>
         </div>
       )}
 
       {err && <p className="text-xs text-destructive">{err}</p>}
-      {mode === "id" && !user && <p className="text-xs text-muted-foreground">Find it in your profile URL: roblox.com/users/<b>YOUR-ID</b>/profile</p>}
+      {mode === "id" && !user && <p className="text-xs text-muted-foreground">{t("Find it in your profile URL: roblox.com/users/YOUR-ID/profile")}</p>}
     </div>
   );
 }
