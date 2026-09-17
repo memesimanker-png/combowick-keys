@@ -12,7 +12,7 @@ export function useScriptUnlocked(slug: string | undefined) {
   const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
-    if (!slug) return;
+    if (!slug) { setUnlocked(false); return; }
     const raw = localStorage.getItem(storageKey(slug));
     if (raw) {
       const ts = Number(raw);
@@ -22,6 +22,9 @@ export function useScriptUnlocked(slug: string | undefined) {
       }
       localStorage.removeItem(storageKey(slug));
     }
+    // Not unlocked for THIS slug — reset (fixes leak where unlocking one script
+    // left `unlocked` true when SPA-navigating to a different, still-locked script).
+    setUnlocked(false);
   }, [slug]);
 
   return unlocked;
