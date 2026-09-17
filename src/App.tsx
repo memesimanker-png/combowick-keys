@@ -19,6 +19,7 @@ const PremiumKeys = lazy(() => import("./pages/PremiumKeys"));
 const Keys = lazy(() => import("./pages/Keys"));
 const AccessKey = lazy(() => import("./pages/AccessKey"));
 const ExtendKey = lazy(() => import("./pages/ExtendKey"));
+const FixKey = lazy(() => import("./pages/FixKey"));
 const ClaimAccess = lazy(() => import("./pages/ClaimAccess"));
 const Blocked = lazy(() => import("./pages/Blocked"));
 const VerifyProviderSelect = lazy(() => import("./pages/VerifyProviderSelect"));
@@ -88,7 +89,8 @@ const App = () => (
                   <Route path="/premium-keys" element={<PremiumKeys />} />
                   <Route path="/keys" element={<Keys />} />
                   <Route path="/access-key" element={<AccessKey />} />
-                  <Route path="/extend-key" element={<ExtendKey />} />
+                  <Route path="/extend-key" element={<ExtendKey />
+              <Route path="/fix-key" element={<FixKey />} />} />
                   <Route path="/claim-access" element={<ClaimAccess />} />
                   <Route path="/blocked" element={<Blocked />} />
                   <Route path="/verify/provider-select" element={<VerifyProviderSelect />} />
