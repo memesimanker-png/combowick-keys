@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/components/ui/use-toast";
 import { FunnelHeader } from "@/components/FunnelHeader";
 import { NoIndex } from "@/components/NoIndex";
+import { RobloxUserField } from "@/components/RobloxUserField";
 import { useTranslation } from "@/lib/translation-context";
 
 const SELF_SKIP = "https://v0-remix-of-roblox-executor-system.vercel.app/api/self-skip";
@@ -66,9 +67,8 @@ export default function FixKey() {
                     <Input placeholder={t("Paste your key")} value={key} onChange={(e) => setKey(e.target.value)} disabled={loading} />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">{t("Your Roblox UserId")}</label>
-                    <Input placeholder={t("e.g. 11627930451")} value={userId} onChange={(e) => setUserId(e.target.value)} disabled={loading} />
-                    <p className="text-xs text-muted-foreground">{t("Find it in the script's Info tab (\"UserId\"), or in your Roblox profile URL: roblox.com/users/YOUR-ID/profile")}</p>
+                    <label className="text-sm font-medium">{t("Your Roblox Account")}</label>
+                    <RobloxUserField value={userId} onChange={setUserId} disabled={loading} />
                   </div>
                   <Button onClick={submit} disabled={loading} className="w-full bg-gradient-to-r from-primary to-purple-500 hover:shadow-lg transition-all">
                     {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("Whitelisting…")}</> : <>{t("Whitelist My Device")}</>}
