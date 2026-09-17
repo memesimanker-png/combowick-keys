@@ -1,32 +1,43 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { extendKey, deactivateKey, transferKey, keyInfo } from "../_shared/shop-key-api.ts";
+import { extendKey, deactivateKey, transferKey, keyInfo, skipList, skipAdd, skipRemove } from "../_shared/shop-key-api.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-type Action = "info" | "extend" | "deactivate" | "transfer";
-const ADMIN_ACTIONS: Action[] = ["extend", "deactivate", "transfer"];
+type Action = "info" | "extend" | "deactivate" | "transfer" | "skip-list" | "skip-add" | "skip-remove";
+const ALL_ACTIONS: Action[] = ["info", "extend", "deactivate", "transfer", "skip-list", "skip-add", "skip-remove"];
+// Everything except a plain key "info" is admin-only.
+const ADMIN_ACTIONS: Action[] = ["extend", "deactivate", "transfer", "skip-list", "skip-add", "skip-remove"];
+// Actions that don't operate on a `key` (so `key` isn't required for them).
+const NO_KEY_ACTIONS: Action[] = ["skip-add", "skip-remove"];
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    const { action, key, hours } = (await req.json().catch(() => ({}))) as {
-      action?: Action; key?: string; hours?: number;
+    const { action, key, hours, id, user_id, hwid, note } = (await req.json().catch(() => ({}))) as {
+      action?: Action; key?: string; hours?: number; id?: string;
+      user_id?: string; hwid?: string; note?: string;
     };
 
-    if (!action || !["info", "extend", "deactivate", "transfer"].includes(action)) {
+    if (!action || !ALL_ACTIONS.includes(action)) {
       return json({ success: false, error: "Invalid action" }, 400);
     }
-    if (!key || typeof key !== "string") {
+    if (!NO_KEY_ACTIONS.includes(action) && (!key || typeof key !== "string")) {
       return json({ success: false, error: "key is required" }, 400);
     }
     if (action === "extend") {
       if (typeof hours !== "number" || hours < 1 || hours > 876000) {
         return json({ success: false, error: "hours must be a number between 1 and 876000" }, 400);
       }
+    }
+    if (action === "skip-remove" && (!id || typeof id !== "string")) {
+      return json({ success: false, error: "id is required" }, 400);
+    }
+    if (action === "skip-add" && !user_id && !hwid) {
+      return json({ success: false, error: "Provide a Roblox UserId or an HWID" }, 400);
     }
 
     const service = createClient(
@@ -75,10 +86,13 @@ Deno.serve(async (req) => {
     }
 
     let result;
-    if (action === "info") result = await keyInfo(key);
-    else if (action === "extend") result = await extendKey(key, hours!);
-    else if (action === "deactivate") result = await deactivateKey(key);
-    else result = await transferKey(key);
+    if (action === "info") result = await keyInfo(key!);
+    else if (action === "extend") result = await extendKey(key!, hours!);
+    else if (action === "deactivate") result = await deactivateKey(key!);
+    else if (action === "transfer") result = await transferKey(key!);
+    else if (action === "skip-list") result = await skipList(key!);
+    else if (action === "skip-add") result = await skipAdd({ key, user_id, hwid, hours, note });
+    else result = await skipRemove(id!);
 
     // Keep DB expires_at in sync when an admin extends a key.
     if (action === "extend" && result.ok && result.data?.new_expires_at) {
