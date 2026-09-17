@@ -89,8 +89,8 @@ const App = () => (
                   <Route path="/premium-keys" element={<PremiumKeys />} />
                   <Route path="/keys" element={<Keys />} />
                   <Route path="/access-key" element={<AccessKey />} />
-                  <Route path="/extend-key" element={<ExtendKey />
-              <Route path="/fix-key" element={<FixKey />} />} />
+                  <Route path="/extend-key" element={<ExtendKey />} />
+                  <Route path="/fix-key" element={<FixKey />} />
                   <Route path="/claim-access" element={<ClaimAccess />} />
                   <Route path="/blocked" element={<Blocked />} />
                   <Route path="/verify/provider-select" element={<VerifyProviderSelect />} />
