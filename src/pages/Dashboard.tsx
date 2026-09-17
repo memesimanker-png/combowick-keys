@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { SEOHead } from "@/components/SEOHead";
 import { TopUpModal } from "@/components/TopUpModal";
+import { RobloxUserField } from "@/components/RobloxUserField";
+import { Link } from "react-router-dom";
 
 type KeyPurchase = {
   id: string;
@@ -410,6 +412,12 @@ Message: ${supportForm.message || "(none)"}
               </Card>
             ) : (
               <div className="space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/60 bg-secondary/30 px-4 py-2.5">
+                  <p className="text-sm text-muted-foreground flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" /> Key says "Invalid Key" on your device? Fix it yourself in seconds.</p>
+                  <Button asChild variant="outline" size="sm" className="gap-1.5">
+                    <Link to="/fix-key"><Smartphone className="h-3.5 w-3.5" /> Open Fix Key page</Link>
+                  </Button>
+                </div>
                 {keys.map((purchase) => {
                   const isPending = purchase.status === "pending";
                   const isFailed = purchase.status === "failed";
@@ -508,21 +516,13 @@ Message: ${supportForm.message || "(none)"}
                           {fixKey === purchase.key_generated && !fixDone[purchase.key_generated] && (
                             <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2.5">
                               <p className="text-xs text-muted-foreground">
-                                Getting "Invalid Key" on your own device even though your key is valid? Enter your <b>Roblox UserId</b> to whitelist this device.
-                                Find it in the script's Info tab, or your profile URL: roblox.com/users/<b>YOUR-ID</b>/profile.
+                                Getting "Invalid Key" on your own device even though your key is valid? Confirm your <b>Roblox account</b> to whitelist this device.
                               </p>
-                              <div className="flex flex-col sm:flex-row gap-2">
-                                <input
-                                  value={fixUserId}
-                                  onChange={(e) => setFixUserId(e.target.value)}
-                                  placeholder="e.g. 11627930451"
-                                  className="flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                                />
-                                <Button size="sm" className="gap-1.5 shrink-0" disabled={fixBusy} onClick={() => submitFix(purchase.key_generated)}>
-                                  {fixBusy ? <div className="h-3.5 w-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" /> : <Smartphone className="h-3.5 w-3.5" />}
-                                  Whitelist my device
-                                </Button>
-                              </div>
+                              <RobloxUserField value={fixKey === purchase.key_generated ? fixUserId : ""} onChange={setFixUserId} disabled={fixBusy} />
+                              <Button size="sm" className="gap-1.5 w-full sm:w-auto" disabled={fixBusy || !fixUserId} onClick={() => submitFix(purchase.key_generated)}>
+                                {fixBusy ? <div className="h-3.5 w-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" /> : <Smartphone className="h-3.5 w-3.5" />}
+                                Whitelist my device
+                              </Button>
                             </div>
                           )}
 
