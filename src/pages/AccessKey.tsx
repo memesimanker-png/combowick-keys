@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -410,6 +410,15 @@ export default function AccessKey() {
             {t("Get Script")}
             <ExternalLink className="h-3.5 w-3.5 opacity-70" />
           </a>
+
+          {/* Device troubleshooting — key valid but "Invalid Key" on their device */}
+          <Link
+            to="/fix-key"
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-border/60 bg-secondary/30 px-4 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary hover:border-primary/40"
+          >
+            <Shield className="h-3.5 w-3.5" />
+            {t("Getting \"Invalid Key\" on your device? Fix it here")}
+          </Link>
         </div>
       </main>
       {isAdEnabled("access-key", "skip_ads_float") && <SkipAdsFloatButton />}
