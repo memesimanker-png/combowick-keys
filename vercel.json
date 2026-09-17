@@ -8,6 +8,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/api/hub", "destination": "https://sqahviibykrzlwnulgmw.supabase.co/functions/v1/hub" },
     { "source": "/sitemap.xml", "destination": "/api/sitemap" },
     { "source": "/llms.txt", "destination": "/api/llms" },
     { "source": "/robots.txt", "destination": "/robots.txt" },
