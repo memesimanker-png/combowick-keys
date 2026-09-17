@@ -1007,10 +1007,60 @@ function OrdersTab() {
                   <p className="text-xs text-muted-foreground mt-1">{new Date(o.created_at).toLocaleDateString()}</p>
                 </div>
               </div>
+              {o.status === "completed" && o.key_generated && <BackupHubButton order={o} />}
             </Card>
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─── Backup Hub: device-bypass link for a paid key stuck on "Invalid Key" ─── */
+function BackupHubButton({ order }: { order: any }) {
+  const { toast } = useToast();
+  const [busy, setBusy] = useState(false);
+  const [loadstring, setLoadstring] = useState<string | null>(null);
+  const [tokens, setTokens] = useState<any[] | null>(null);
+  const call = async (action: string, extra: any = {}) => {
+    setBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("hub-admin", { body: { action, key_value: order.key_generated, purchase_id: order.id, customer: order.customer_email, ...extra } });
+      if (error || data?.success === false) { toast({ variant: "destructive", title: "Failed", description: data?.error || error?.message }); return null; }
+      return data;
+    } finally { setBusy(false); }
+  };
+  const generate = async () => { const d = await call("generate"); if (d) { setLoadstring(d.loadstring); toast({ title: "Backup link generated" }); loadList(); } };
+  const loadList = async () => { const d = await call("list"); if (d) setTokens(d.tokens || []); };
+  const revoke = async (token: string) => { if (!confirm("Revoke this backup link? The customer loses access.")) return; const d = await call("revoke", { token }); if (d) { toast({ title: "Revoked" }); loadList(); } };
+  const copy = (s: string) => { navigator.clipboard.writeText(s); toast({ title: "Copied" }); };
+  return (
+    <div className="mt-3 border-t border-border/50 pt-2.5">
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1"><Wrench className="h-3 w-3" /> Backup Hub (device fix)</span>
+        <Button size="sm" variant="outline" className="gap-1.5 h-7 text-xs" disabled={busy} onClick={generate}>
+          {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />} Generate Link
+        </Button>
+        <Button size="sm" variant="ghost" className="h-7 text-xs" disabled={busy} onClick={loadList}>View existing</Button>
+      </div>
+      {loadstring && (
+        <div className="mt-2 flex items-center gap-2">
+          <code className="text-[10px] font-mono bg-secondary px-2 py-1 rounded break-all flex-1">{loadstring}</code>
+          <button onClick={() => copy(loadstring)} className="text-muted-foreground hover:text-foreground shrink-0"><Copy className="h-3.5 w-3.5" /></button>
+        </div>
+      )}
+      {tokens && (tokens.length === 0 ? <p className="mt-2 text-[10px] text-muted-foreground">No backup links yet.</p> : (
+        <div className="mt-2 space-y-1">
+          {tokens.map((t: any) => (
+            <div key={t.token} className={`flex items-center gap-2 text-[10px] ${t.revoked ? "opacity-50" : ""}`}>
+              <code className="font-mono">{t.token.slice(0, 16)}…</code>
+              <span className="text-muted-foreground">{t.revoked ? "revoked" : (t.last_used_at ? "used " + new Date(t.last_used_at).toLocaleDateString() : "unused")}</span>
+              <button onClick={() => copy(t.loadstring)} className="text-primary hover:underline">copy</button>
+              {!t.revoked && <button onClick={() => revoke(t.token)} className="text-destructive hover:underline">revoke</button>}
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
