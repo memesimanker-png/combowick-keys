@@ -24,11 +24,13 @@ export default function VerifyStep1() {
   const { toast } = useToast();
   const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
-  usePopunder(isAdEnabled("verify-step1", "popunder")); // Monetag popunder on step 1 (matches step 2/3)
   const [isLoading, setIsLoading] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
   const links = useVerifyLinks();
+
+  // Popunder on Step 1 too (previously only Step 2) so it can load on both steps.
+  usePopunder(true);
 
   useEffect(() => {
     localStorage.setItem("selected_ad_provider", "linkvertise");
@@ -58,7 +60,7 @@ export default function VerifyStep1() {
             </div>
             <Card>
               <div className="p-6 pb-0">
-                <YouTubeVideoPlayer step="step1" timerSeconds={4} onTimerComplete={() => setButtonEnabled(true)} />
+                <YouTubeVideoPlayer step="step1" timerSeconds={7} onTimerComplete={() => setButtonEnabled(true)} />
               </div>
               <CardHeader>
                 <CardTitle>{t("First Verification")}</CardTitle>

@@ -18,6 +18,9 @@ import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 
+// Seconds the continue button stays disabled so the Monetag popunder has time to
+// fully load + register before the user leaves for Linkvertise.
+const AD_LOAD_WAIT = 7;
 
 export default function VerifyStep2() {
   const navigate = useNavigate();
@@ -25,12 +28,20 @@ export default function VerifyStep2() {
   const { t } = useTranslation();
   const { isAdEnabled } = useAdSettings();
   const [isLoading, setIsLoading] = useState(false);
-  const [buttonEnabled, setButtonEnabled] = useState(true);
+  const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [secondsLeft, setSecondsLeft] = useState(AD_LOAD_WAIT);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
   const links = useVerifyLinks();
 
   // Monetag popunder now lives on Step 2 (moved off /verify/provider-select).
-  usePopunder(isAdEnabled("verify-step2", "popunder"));
+  usePopunder(true);
+
+  // Hold the continue button until the popunder has had time to load.
+  useEffect(() => {
+    if (secondsLeft <= 0) { setButtonEnabled(true); return; }
+    const id = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
+    return () => clearTimeout(id);
+  }, [secondsLeft]);
 
   useEffect(() => {
     const step1Done = localStorage.getItem("step1_completed");
@@ -89,7 +100,7 @@ export default function VerifyStep2() {
                   disabled={isLoading || !buttonEnabled}
                 >
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  {isLoading ? t("Processing...") : t("Proceed to Verification")}
+                  {isLoading ? t("Processing...") : !buttonEnabled ? `${t("Please wait")} ${secondsLeft}s…` : t("Proceed to Verification")}
                 </Button>
               </CardFooter>
             </Card>
