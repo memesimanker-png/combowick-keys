@@ -81,6 +81,20 @@ export const cpaSession = {
   reset: () => { Object.values(SS).forEach(ssDel); ssDel(STARTED); },
 };
 
+// Offers this device already completed. Most offers are "new users only", so they can never pay
+// twice — hide them for good (the server also hides offers completed from the same IP).
+const DONE_KEY = "cpa_done_offers";
+export function doneOffers(): Set<string> {
+  try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch { return new Set(); }
+}
+export function markOfferDone(offerId: string) {
+  try {
+    const d = doneOffers();
+    d.add(offerId);
+    localStorage.setItem(DONE_KEY, JSON.stringify([...d].slice(-100)));
+  } catch {}
+}
+
 let country = "";
 export function cpaTrack(subid: string, event: string, extra: { kind?: string; offer_id?: string } = {}) {
   try {
@@ -117,7 +131,9 @@ export function useCpaOffers(enabled: boolean | null) {
         done = true;
         window.clearTimeout(timer);
         country = d?.country || "";
-        const offers: CpaOffer[] = (Array.isArray(d?.offers) ? d.offers : []).filter((o: CpaOffer) => CPA_KINDS.includes(o.kind));
+        const alreadyDone = doneOffers();
+        const offers: CpaOffer[] = (Array.isArray(d?.offers) ? d.offers : [])
+          .filter((o: CpaOffer) => CPA_KINDS.includes(o.kind) && !alreadyDone.has(o.offer_id));
         setState({ status: offers.length ? "ready" : "none", offers, country });
         cpaTrack(subid, offers.length ? "view" : "no_offers");
       })

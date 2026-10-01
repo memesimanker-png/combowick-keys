@@ -3,7 +3,7 @@ import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCh
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import {
-  CPA_AWAY_SECONDS, CPA_KINDS, CPA_STATUS_URL, cpaSession, cpaTrack,
+  CPA_AWAY_SECONDS, CPA_KINDS, CPA_STATUS_URL, cpaSession, cpaTrack, markOfferDone,
   type CpaKind, type CpaOffer,
 } from "@/lib/cpa";
 
@@ -99,7 +99,13 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
     const tick = async () => {
       try {
         const r = await fetch(`${CPA_STATUS_URL}?subid=${encodeURIComponent(subid)}`);
-        if (r.ok && (await r.json())?.completed) setFinished(true);
+        if (r.ok) {
+          const j = await r.json();
+          if (j?.completed) {
+            if (j.offer_id) markOfferDone(String(j.offer_id));
+            setFinished(true);
+          }
+        }
       } catch {}
     };
     tick();
