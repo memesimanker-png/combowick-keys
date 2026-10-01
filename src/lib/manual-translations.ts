@@ -4,6 +4,10 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Still waiting for the offer to confirm…": "En attente de la confirmation de l'offre…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Assurez-vous de l'avoir entièrement terminée. Certaines offres mettent quelques minutes à être confirmées.",
+    "Stuck? You can unlock with Linkvertise instead.": "Bloqué ? Vous pouvez débloquer avec Linkvertise à la place.",
+    "Use Linkvertise instead": "Utiliser Linkvertise",
     "Already opened — check your other tab.": "Déjà ouvert — vérifiez votre autre onglet.",
     "Start": "Commencer",
     "Paused for now": "En pause pour le moment",
@@ -540,6 +544,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Still waiting for the offer to confirm…": "Esperando la confirmación de la oferta…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Asegúrate de haberla terminado por completo. Algunas ofertas tardan unos minutos en confirmarse.",
+    "Stuck? You can unlock with Linkvertise instead.": "¿Atascado? Puedes desbloquear con Linkvertise en su lugar.",
+    "Use Linkvertise instead": "Usar Linkvertise",
     "Already opened — check your other tab.": "Ya está abierto — revisa tu otra pestaña.",
     "Start": "Empezar",
     "Paused for now": "En pausa por ahora",
@@ -1076,6 +1084,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Still waiting for the offer to confirm…": "Warte auf die Bestätigung des Angebots…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Stell sicher, dass du es komplett abgeschlossen hast. Manche Angebote brauchen ein paar Minuten zur Bestätigung.",
+    "Stuck? You can unlock with Linkvertise instead.": "Hängst du fest? Du kannst stattdessen mit Linkvertise freischalten.",
+    "Use Linkvertise instead": "Linkvertise nutzen",
     "Already opened — check your other tab.": "Schon geöffnet — schau in deinen anderen Tab.",
     "Start": "Starten",
     "Paused for now": "Vorerst pausiert",
@@ -1612,6 +1624,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Still waiting for the offer to confirm…": "Aguardando a confirmação da oferta…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Verifique se você terminou tudo. Algumas ofertas levam alguns minutos para confirmar.",
+    "Stuck? You can unlock with Linkvertise instead.": "Travou? Você pode desbloquear com o Linkvertise no lugar.",
+    "Use Linkvertise instead": "Usar o Linkvertise",
     "Already opened — check your other tab.": "Já aberto — confira sua outra aba.",
     "Start": "Começar",
     "Paused for now": "Pausado por enquanto",
@@ -2148,6 +2164,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Still waiting for the offer to confirm…": "Ждём подтверждения предложения…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Убедитесь, что вы полностью его выполнили. Некоторые предложения подтверждаются несколько минут.",
+    "Stuck? You can unlock with Linkvertise instead.": "Застряли? Можно разблокировать через Linkvertise.",
+    "Use Linkvertise instead": "Использовать Linkvertise",
     "Already opened — check your other tab.": "Уже открыто — проверьте другую вкладку.",
     "Start": "Начать",
     "Paused for now": "Временно приостановлено",
@@ -2684,6 +2704,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Still waiting for the offer to confirm…": "正在等待任务确认…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "请确保你已完整完成。有些任务需要几分钟才能确认。",
+    "Stuck? You can unlock with Linkvertise instead.": "卡住了？你可以改用 Linkvertise 解锁。",
+    "Use Linkvertise instead": "改用 Linkvertise",
     "Already opened — check your other tab.": "已打开 — 请查看另一个标签页。",
     "Start": "开始",
     "Paused for now": "暂时停用",
@@ -3220,6 +3244,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Still waiting for the offer to confirm…": "오퍼 확인을 기다리는 중…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "오퍼를 완전히 끝냈는지 확인하세요. 일부 오퍼는 확인까지 몇 분이 걸립니다.",
+    "Stuck? You can unlock with Linkvertise instead.": "막혔나요? 대신 Linkvertise로 잠금 해제할 수 있어요.",
+    "Use Linkvertise instead": "Linkvertise 사용하기",
     "Already opened — check your other tab.": "이미 열렸습니다 — 다른 탭을 확인하세요.",
     "Start": "시작",
     "Paused for now": "잠시 중단됨",
@@ -3756,6 +3784,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Still waiting for the offer to confirm…": "กำลังรอการยืนยันข้อเสนอ…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "ตรวจสอบให้แน่ใจว่าทำเสร็จครบแล้ว บางข้อเสนอใช้เวลาสองสามนาทีในการยืนยัน",
+    "Stuck? You can unlock with Linkvertise instead.": "ติดอยู่ใช่ไหม? คุณสามารถปลดล็อกด้วย Linkvertise แทนได้",
+    "Use Linkvertise instead": "ใช้ Linkvertise แทน",
     "Already opened — check your other tab.": "เปิดแล้ว — ดูที่แท็บอื่นของคุณ",
     "Start": "เริ่ม",
     "Paused for now": "หยุดชั่วคราว",
@@ -4292,6 +4324,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Still waiting for the offer to confirm…": "Menunggu konfirmasi offer…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Pastikan kamu benar-benar menyelesaikannya. Beberapa offer butuh beberapa menit untuk dikonfirmasi.",
+    "Stuck? You can unlock with Linkvertise instead.": "Macet? Kamu bisa membuka pakai Linkvertise saja.",
+    "Use Linkvertise instead": "Pakai Linkvertise",
     "Already opened — check your other tab.": "Sudah dibuka — cek tab kamu yang lain.",
     "Start": "Mulai",
     "Paused for now": "Dijeda sementara",
@@ -4828,6 +4864,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Still waiting for the offer to confirm…": "Hinihintay pa ang kumpirmasyon ng offer…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Siguraduhing natapos mo talaga ito. May mga offer na ilang minuto bago makumpirma.",
+    "Stuck? You can unlock with Linkvertise instead.": "Na-stuck? Puwede kang mag-unlock gamit ang Linkvertise.",
+    "Use Linkvertise instead": "Gamitin ang Linkvertise",
     "Already opened — check your other tab.": "Nabuksan na — tingnan ang isa mong tab.",
     "Start": "Simulan",
     "Paused for now": "Naka-pause muna",
@@ -5364,6 +5404,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Still waiting for the offer to confirm…": "Đang chờ xác nhận ưu đãi…",
+    "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Hãy chắc chắn bạn đã hoàn thành hết. Một số ưu đãi mất vài phút để xác nhận.",
+    "Stuck? You can unlock with Linkvertise instead.": "Bị kẹt? Bạn có thể mở khóa bằng Linkvertise thay thế.",
+    "Use Linkvertise instead": "Dùng Linkvertise",
     "Already opened — check your other tab.": "Đã mở — hãy xem tab còn lại của bạn.",
     "Start": "Bắt đầu",
     "Paused for now": "Tạm dừng",

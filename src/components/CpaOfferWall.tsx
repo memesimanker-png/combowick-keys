@@ -8,9 +8,9 @@ import {
 } from "@/lib/cpa";
 
 // Offer wall for the free key. Visitors pick a section (Apps / Surveys / Phone / Email) and do
-// one offer. Unlocks on a CPALead postback, or after CPA_AWAY_SECONDS spent AWAY on the offer
-// tab (pauses while they sit on this page). Either way the server (issue-verify-token, CPA mode)
-// re-checks before handing out the key token.
+// one offer. Unlocks ONLY on a real CPALead postback (server re-checks in issue-verify-token).
+// After CPA_AWAY_SECONDS spent away on the offer without a postback, the visitor is offered a
+// "stuck? use Linkvertise instead" way out (onStuckFallback) — the timer never unlocks anything.
 
 const SECTIONS: Record<CpaKind, { label: string; title: string; note: string; icon: typeof Smartphone; text: string; on: string }> = {
   app: {
@@ -37,7 +37,9 @@ const SECTIONS: Record<CpaKind, { label: string; title: string; note: string; ic
 
 type Phase = "pick" | "confirming" | "done" | "error";
 
-export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; subid: string; onDone: () => void }) {
+export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
+  offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void;
+}) {
   const { t } = useTranslation();
   const byKind = useMemo(() => {
     const m: Record<CpaKind, CpaOffer[]> = { app: [], survey: [], phone: [], email: [] };
@@ -50,7 +52,8 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
   const [awayMs, setAwayMs] = useState(() => cpaSession.getAway());
   const [isAway, setIsAway] = useState(false);
   const [phase, setPhase] = useState<Phase>("pick");
-  const [finished, setFinished] = useState(false); // timer reached or postback seen
+  const [finished, setFinished] = useState(false); // real postback seen
+  const [stuck, setStuck] = useState(false); // spent CPA_AWAY_SECONDS on the offer, still no postback
 
   const awaySince = useRef<number | null>(null);
   const awayBase = useRef(awayMs);
@@ -58,7 +61,7 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
 
   // ---- timer: only counts while the visitor is away on the offer ----
   useEffect(() => {
-    if (!current || finished) return;
+    if (!current || finished || stuck) return;
     const away = () => document.visibilityState === "hidden" || !document.hasFocus();
     const sync = () => {
       const now = Date.now();
@@ -72,7 +75,7 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
       const total = awayBase.current + (awaySince.current !== null ? now - awaySince.current : 0);
       setAwayMs(total);
       cpaSession.setAway(total);
-      if (total >= CPA_AWAY_SECONDS * 1000) setFinished(true);
+      if (total >= CPA_AWAY_SECONDS * 1000) { setStuck(true); cpaTrack(subid, "stuck", current ? { kind: current.kind, offer_id: current.offer_id } : {}); }
     };
     sync();
     const id = window.setInterval(sync, 500);
@@ -85,7 +88,7 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
       window.removeEventListener("blur", sync);
       window.removeEventListener("focus", sync);
     };
-  }, [current, finished]);
+  }, [current, finished, stuck, subid]);
 
   // ---- postback: a real completion unlocks right away ----
   useEffect(() => {
@@ -96,7 +99,8 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
         if (r.ok && (await r.json())?.completed) setFinished(true);
       } catch {}
     };
-    const id = window.setInterval(tick, 5000);
+    tick();
+    const id = window.setInterval(tick, 4000);
     return () => window.clearInterval(id);
   }, [current, finished, subid]);
 
@@ -108,7 +112,7 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
       localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at }));
       ["step1_completed", "step2_completed", "step3_completed"].forEach((k) => localStorage.setItem(k, "true"));
       localStorage.removeItem("verification_step");
-      cpaTrack(subid, "timer_unlock", current ? { kind: current.kind, offer_id: current.offer_id } : {});
+      cpaTrack(subid, "verified_unlock", current ? { kind: current.kind, offer_id: current.offer_id } : {});
       cpaSession.reset();
       setPhase("done");
       window.setTimeout(onDone, 1200);
@@ -177,7 +181,9 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
           <div className="flex items-center gap-2 text-xs">
             {isAway ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <PauseCircle className="h-4 w-4 shrink-0 text-amber-400" />}
             <span className="min-w-0 flex-1">
-              {isAway
+              {stuck && !isAway
+                ? <><b>{t("Still waiting for the offer to confirm…")}</b> {t("Make sure you fully finished it. Some offers take a few minutes to confirm.")}</>
+                : isAway
                 ? <><b className="block truncate">{current.title}</b>{t("Checking… finish the offer in the other tab.")}</>
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}
             </span>
@@ -188,6 +194,15 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
             )}
           </div>
           {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
+          {stuck && (
+            <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
+              <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
+              <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
+                className="mt-2 inline-flex items-center gap-1 rounded-md border border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10">
+                {t("Use Linkvertise instead")} <ArrowRight className="h-3 w-3" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
