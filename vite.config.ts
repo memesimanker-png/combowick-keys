@@ -16,6 +16,16 @@ export default defineConfig(({ mode }) => ({
     },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  build: {
+    rollupOptions: {
+      // "-r2" suffix renamed every file once (2026-10-01) so URLs Cloudflare had cached as 404 are never requested again.
+      output: {
+        entryFileNames: "assets/[name]-[hash]-r2.js",
+        chunkFileNames: "assets/[name]-[hash]-r2.js",
+        assetFileNames: "assets/[name]-[hash]-r2[extname]",
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
