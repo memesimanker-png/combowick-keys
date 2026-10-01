@@ -278,6 +278,20 @@
         pointer-events:none!important;position:absolute!important;left:-99999px!important;top:-99999px!important;
       }
     </style>
+    <!-- Self-heal: if the main bundle fails to load (e.g. a CDN cached a 404 for it mid-deploy),
+         retry it once with a cache-busting query instead of leaving a blank page. -->
+    <script>
+      window.addEventListener("error", function (e) {
+        var s = e.target;
+        if (!s || s.tagName !== "SCRIPT" || !//assets/index-/.test(s.src || "") || s.getAttribute("data-retry")) return;
+        var n = document.createElement("script");
+        n.type = "module";
+        n.crossOrigin = "anonymous";
+        n.setAttribute("data-retry", "1");
+        n.src = s.src.split("?")[0] + "?r=" + Date.now();
+        document.head.appendChild(n);
+      }, true);
+    </script>
   </head>
   <body>
     <div id="root"></div>
