@@ -33,7 +33,7 @@ export function LanguageSelector({ dropUp = false, inline = false, compact = fal
 
   return (
     <div className="relative" ref={ref} data-no-translate>
-      <div className="relative rounded-lg lang-glow-wrap">
+      <div className="cw-glow lang-glow-wrap">
         <span aria-hidden className="lang-glow-ring" />
         <button
           onClick={() => setOpen(!open)}

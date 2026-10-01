@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CheckCircle2, ClipboardList, ExternalLink, Loader2, Mail, Phone, ShieldCheck, Smartphone, Timer } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, Timer } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import {
@@ -181,7 +181,10 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
         </div>
       )}
 
-      <p className="text-xs text-muted-foreground">{t("Pick the kind of step you like best, then do one.")}</p>
+      <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <Sparkles className="h-4 w-4 shrink-0 text-primary" />
+        <span>{t("Pick the kind of step you like best, then do one.")}</span>
+      </p>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {CPA_KINDS.map((k) => {
@@ -210,14 +213,14 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
             <sec.icon className={`h-4 w-4 ${sec.text}`} />
             <h4 className="text-sm font-bold">{t(sec.title)}</h4>
           </div>
-          <p className="mb-3 text-xs text-muted-foreground">{t(sec.note)}</p>
-          <div className="space-y-2">
+          <p className={`mb-3 text-xs font-medium ${sec.text}`}>{t(sec.note)}</p>
+          <div className="space-y-2.5">
             {byKind[tab].map((o) => (
+              <div key={o.offer_id} className="cw-glow">
               <button
-                key={o.offer_id}
                 type="button"
                 onClick={() => openOffer(o)}
-                className={`flex w-full items-center gap-3 rounded-lg border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/50 hover:bg-secondary/50 ${current?.offer_id === o.offer_id ? "border-primary/60" : "border-border"}`}
+                className="group flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] p-3 text-left transition-colors hover:bg-primary/5"
               >
                 <img
                   src={o.offerphoto}
@@ -227,18 +230,21 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
                 />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-semibold">{o.title}</span>
+                  <span className="line-clamp-2 block text-[15px] font-bold leading-snug text-foreground">{o.title}</span>
                   <span className="line-clamp-2 block text-xs text-muted-foreground">{o.description}</span>
                 </span>
-                <ExternalLink className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
+                  {current?.offer_id === o.offer_id ? t("Continue") : t("Start")} <ArrowRight className="h-3.5 w-3.5" />
+                </span>
               </button>
+              </div>
             ))}
           </div>
         </section>
       )}
 
-      <p className="flex items-center justify-center gap-1.5 text-center text-[11px] text-muted-foreground">
-        <ShieldCheck className="h-3.5 w-3.5" /> {t("Finish the step in the new tab — this page unlocks automatically.")}
+      <p className="flex items-center justify-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-medium text-primary">
+        <ShieldCheck className="h-4 w-4 shrink-0" /> {t("Finish the step in the new tab — this page unlocks automatically.")}
       </p>
     </div>
   );

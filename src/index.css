@@ -241,65 +241,76 @@
     background-size: 220px 100px;
   }
 
-  /* === Language selector animated border glow (comet sweep) === */
-  @property --lang-angle {
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
-  }
-  .lang-glow-wrap {
+  /* === Animated glowing border (comet sweep) ===
+     A rotating conic gradient on an oversized pseudo-element, clipped by the wrapper and
+     covered in the middle by a fill — so only a thin border glows. Uses transform rotation
+     (works in every browser) instead of animating a registered @property, which froze the
+     sweep on one side in browsers / Windows settings that don't run it.
+     Usage: <div class="cw-glow"> <child sitting on top (z-index 2)> </div>
+     Tune per element with --glow (color), --glow-fill (inner bg), --glow-radius, --glow-speed. */
+  .cw-glow {
+    --glow: 36 80% 60%;
+    --glow-fill: var(--card);
+    --glow-radius: 0.5rem;
+    --glow-speed: 3.2s;
     position: relative;
-    border-radius: 8px;
+    border-radius: var(--glow-radius);
     padding: 1.5px;
-    background-color: hsl(230 25% 7%);
+    overflow: hidden;
     isolation: isolate;
+    animation: cw-glow-pulse var(--glow-speed) ease-in-out infinite;
   }
-  .lang-glow-wrap::before {
+  .cw-glow::before {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.5px;
+    left: 50%;
+    top: 50%;
+    width: max(150%, 220px);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%) rotate(0deg);
     background: conic-gradient(
-      from var(--lang-angle),
-      transparent 0deg,
-      transparent 200deg,
-      hsl(280 95% 75% / 0.6) 270deg,
-      hsl(250 100% 95%) 320deg,
-      hsl(280 95% 75% / 0.6) 360deg,
-      transparent 360deg
+      from 0deg,
+      hsl(var(--glow) / 0.12) 0deg,
+      hsl(var(--glow) / 0.12) 200deg,
+      hsl(var(--glow) / 0.7) 285deg,
+      hsl(0 0% 100% / 0.95) 330deg,
+      hsl(var(--glow) / 0.7) 350deg,
+      hsl(var(--glow) / 0.12) 360deg
     );
-    -webkit-mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    animation: lang-spin 3s linear infinite;
+    animation: cw-glow-spin var(--glow-speed) linear infinite;
     pointer-events: none;
     z-index: 0;
   }
-  .lang-glow-wrap > .lang-glow-ring {
+  .cw-glow::after {
+    content: "";
     position: absolute;
-    inset: -2px;
-    border-radius: 10px;
-    background: conic-gradient(
-      from var(--lang-angle),
-      transparent 0deg,
-      transparent 220deg,
-      hsl(280 95% 75% / 0.5) 320deg,
-      transparent 360deg
-    );
-    filter: blur(6px);
-    opacity: 0.7;
-    animation: lang-spin 3s linear infinite;
+    inset: 1.5px;
+    border-radius: calc(var(--glow-radius) - 1.5px);
+    background: hsl(var(--glow-fill));
     pointer-events: none;
-    z-index: -1;
+    z-index: 1;
   }
-  @keyframes lang-spin {
-    to { --lang-angle: 360deg; }
+  .cw-glow > * { position: relative; z-index: 2; }
+  @keyframes cw-glow-spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
   }
+  @keyframes cw-glow-pulse {
+    0%, 100% { box-shadow: 0 0 6px hsl(var(--glow) / 0.15); }
+    50% { box-shadow: 0 0 16px hsl(var(--glow) / 0.35); }
+  }
+
+  /* Language selector = purple variant of the same glow */
+  .lang-glow-wrap {
+    --glow: 280 95% 75%;
+    --glow-fill: 230 25% 7%;
+    --glow-radius: 8px;
+    --glow-speed: 3s;
+  }
+  .lang-glow-wrap > .lang-glow-ring { display: none; }
+
   @media (prefers-reduced-motion: reduce) {
-    .lang-glow-wrap::before,
-    .lang-glow-wrap > .lang-glow-ring { animation: none; }
+    /* Many Windows PCs report reduced motion just because "animation effects" is off.
+       Keep the gentle border sweep (owner wants it visible) but slower, and drop the pulse. */
+    .cw-glow { --glow-speed: 6s; animation: none; box-shadow: 0 0 10px hsl(var(--glow) / 0.25); }
   }
 }

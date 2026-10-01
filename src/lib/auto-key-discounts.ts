@@ -14,17 +14,10 @@ type Rule = {
   tiers: Record<string, number>;
 };
 
-// Every day has a deal now: weekdays a lighter always-on nudge, weekends the big blowout.
-// An impulse buyer is never stuck at full price, but the weekend stays clearly the best
-// BASE deal. Because the flash/mega bumps below only fire when a base deal is active, this
-// also extends surprise Flash/Mega sales to EVERY day — so buyers can't just wait for the
-// weekend (a random Tuesday might beat it), which kills the "I'll wait" instinct.
+// Deals run on the WEEKEND only (Fri → Sun UTC). Mon–Thu is full price — a sale that runs
+// every day stops feeling like a sale (owner call, 2026-10-01). Flash/Mega bumps below only
+// boost an active base deal, so they also only ever land on weekends.
 const RULES: Rule[] = [
-  {
-    days: [1, 2, 3, 4], // Monday → Thursday
-    label: "Weekday Deal",
-    tiers: { monthly: 12, lifetime: 15 },
-  },
   {
     days: [5, 6, 0], // Friday → Sunday
     label: "Weekend Blowout",

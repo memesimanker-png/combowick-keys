@@ -36,7 +36,8 @@ function fmtCountdown(ms: number): string {
  * A neat, draggable + resizable popup that announces whichever key discount is
  * currently live — fully translated. Users can move it, resize it, or minimize
  * it to a small pill; position/size/collapsed state persist across sessions.
- * Shows the single biggest active discount and only once per browser session.
+ * Shows the single biggest active discount, at most once per deal window per browser
+ * (closing it keeps it closed until the next sale — it no longer re-pops every visit).
  */
 export function DiscountNotification() {
   const { data: discounts } = useKeyDiscounts();
@@ -88,11 +89,14 @@ export function DiscountNotification() {
     return !!auto && auto.percent >= best.percent;
   }, [best, windowEnd]);
 
-  const seenKey = best ? `cw-discount-seen-${best.tier}-${best.percent}` : null;
+  // One key per deal window (tier + % + the window's end date), remembered in localStorage.
+  const seenKey = best
+    ? `cw-discount-seen-${best.tier}-${best.percent}-${windowEnd ? windowEnd.toISOString().slice(0, 10) : "open"}`
+    : null;
 
   useEffect(() => {
     if (!best || !seenKey) return;
-    try { if (sessionStorage.getItem(seenKey)) return; } catch { /* ignore */ }
+    try { if (localStorage.getItem(seenKey)) return; } catch { /* ignore */ }
     const timer = setTimeout(() => setVisible(true), 1000);
     return () => clearTimeout(timer);
   }, [best, seenKey]);
@@ -131,7 +135,7 @@ export function DiscountNotification() {
   const close = () => {
     setVisible(false);
     setDismissed(true);
-    try { if (seenKey) sessionStorage.setItem(seenKey, "1"); } catch { /* ignore */ }
+    try { if (seenKey) localStorage.setItem(seenKey, "1"); } catch { /* ignore */ }
   };
   const viewDeal = () => {
     const cards = document.querySelector("[data-pricing-cards]");

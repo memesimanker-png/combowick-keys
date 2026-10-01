@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft } from "lucide-react";
+import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft, ArrowRight } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -248,16 +248,19 @@ export default function VerifyProviderSelect() {
       </div>
     ) : (
       <div className="space-y-3">
+        <div className="cw-glow">
         <button type="button" onClick={() => pickChoice("cpa")}
-          className="relative flex w-full items-center gap-3 rounded-lg border border-primary/50 bg-gradient-to-br from-primary/10 to-primary/5 p-4 text-left transition-colors hover:border-primary">
+          className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-left transition-colors hover:from-primary/25">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary"><Zap className="h-5 w-5" /></span>
           <span className="min-w-0 flex-1">
             <span className="flex items-center gap-2 font-semibold">{t("Complete 1 offer")}
               <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("Fastest")}</span>
             </span>
-            <span className="block text-xs text-muted-foreground">{t("Do one quick task and your key unlocks.")}</span>
+            <span className="block text-xs font-medium text-foreground/80">{t("Do one quick task and your key unlocks.")}</span>
           </span>
+          <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
         </button>
+        </div>
         <button type="button" onClick={() => pickChoice("linkvertise")} disabled={!lvChoice} aria-disabled={!lvChoice}
           className={`flex w-full items-center gap-3 rounded-lg border p-4 text-left transition-colors ${lvChoice ? "border-border bg-secondary/30 hover:border-primary/50" : "cursor-not-allowed border-dashed border-border/70 bg-secondary/10"}`}>
           <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground ${lvChoice ? "" : "opacity-50"}`}><Link2 className="h-5 w-5" /></span>
