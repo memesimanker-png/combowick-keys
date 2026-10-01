@@ -240,7 +240,7 @@ export default function VerifyProviderSelect() {
   const renderCpaChoice = () => (
     choice === "cpa" ? (
       <div className="space-y-3">
-        <CpaOfferWall offers={cpa.offers} subid={cpaSubid} onDone={() => navigate("/access-key")}
+        <CpaOfferWall offers={cpa.offers} subid={cpaSubid} country={cpa.country} onDone={() => navigate("/access-key")}
           onStuckFallback={() => { cpaSession.setChoice(null); handleStart(); }} />
         {lvChoice && (
           <button type="button" onClick={() => { cpaSession.setChoice(null); setChoice(null); }} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">

@@ -37,8 +37,13 @@ const SECTIONS: Record<CpaKind, { label: string; title: string; note: string; ic
 
 type Phase = "pick" | "confirming" | "done" | "error";
 
-export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
-  offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void;
+// CPALead Link Locker (overlay mode) — extra offers incl. pay-per-click ones that only exist inside
+// lockers (US desktop). Completions inside it postback with our subid like any other offer.
+const LOCKER = { toolId: "66967", slug: "GkKQSbW", publisherId: 3363958, hash: "#cw-locker" };
+const isDesktop = () => !/android|iphone|ipad|ipod|mobi/i.test(navigator.userAgent || "");
+
+export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "" }: {
+  offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void; country?: string;
 }) {
   const { t } = useTranslation();
   const byKind = useMemo(() => {
@@ -138,6 +143,38 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
 
   useEffect(() => { if (finished && phase === "pick") confirm(); }, [finished, phase, confirm]);
 
+  // ---- Link Locker for US desktop visitors ----
+  const lockerEligible = country === "US" && isDesktop();
+  useEffect(() => {
+    if (!lockerEligible) return;
+    (window as any).CPAlead_PublisherUserId = LOCKER.publisherId;
+    if (!document.getElementById("cpalead-interact")) {
+      const sc = document.createElement("script");
+      sc.id = "cpalead-interact";
+      sc.src = "https://cdnflair.com/js/interact-form.js";
+      sc.async = true;
+      document.body.appendChild(sc);
+    }
+    // On unlock the locker navigates to the link's href — ours is this page + #cw-locker, so it is only
+    // a hash change (no reload). Close its overlay; our postback poll hands out the key.
+    const onHash = () => {
+      if (window.location.hash !== LOCKER.hash) return;
+      document.getElementById("interact-form-overlay")?.remove();
+      document.body.style.overflow = "";
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [lockerEligible]);
+
+  const openLocker = () => {
+    const o: CpaOffer = { offer_id: "locker", title: t("More offers"), description: "", kind: "app", offerlink: "", offerphoto: "" };
+    setOpenedThisVisit(true);
+    setCurrent(o);
+    cpaSession.setCurrent(o);
+    cpaTrack(subid, "open_offer", { kind: "locker", offer_id: "locker" });
+  };
+
   // Offers open through real <a target="_blank"> links (popup blockers stop window.open on
   // some phones — people then spam-tapped one offer ~60x, which looks like click fraud to
   // CPALead). Re-opening the same offer within REOPEN_MS doesn't fire another click — every
@@ -199,7 +236,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
                 ? <><b className="block truncate">{current.title}</b>{t("Checking… finish the offer in the other tab.")}</>
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}
             </span>
-            {!isAway && (
+            {!isAway && current.offer_id !== "locker" && (
               <a href={cpaSession.linkFor(current)} target="_blank" rel="noopener noreferrer" onClick={(e) => onOfferClick(e, current)} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
                 {t("Finish offer")}
               </a>
@@ -216,6 +253,30 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
               </button>
             </div>
           )}
+        </div>
+      )}
+
+      {lockerEligible && (
+        <div className="cw-glow">
+          <a
+            href={`${window.location.origin}${window.location.pathname}${LOCKER.hash}`}
+            data-interact-trigger=""
+            data-tool-id={LOCKER.toolId}
+            data-tool-slug={LOCKER.slug}
+            data-subid={subid}
+            data-static-title={t("Complete 1 offer below")}
+            onClick={openLocker}
+            className="group flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] p-3 text-left transition-colors hover:bg-primary/5"
+          >
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary/15 text-xl">💻</span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-bold text-foreground">{t("More offers")}</span>
+              <span className="block text-xs text-muted-foreground">{t("Opens a box with extra offers. Finish any one.")}</span>
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
+              {t("Start")} <ArrowRight className="h-3.5 w-3.5" />
+            </span>
+          </a>
         </div>
       )}
 
