@@ -18,6 +18,7 @@ export type CpaOffer = {
   kind: CpaKind;
   offerlink: string;
   offerphoto: string;
+  payout?: string; // CPALead payout (USD) — used only to order offers, never shown
 };
 
 const SS = {

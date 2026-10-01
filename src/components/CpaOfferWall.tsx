@@ -61,8 +61,14 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     return m;
   }, [offers]);
 
-  const kindsWithOffers = useMemo(() => CPA_KINDS.filter((k) => byKind[k].length > 0), [byKind]);
-  const [tab, setTab] = useState<CpaKind | null>(() => CPA_KINDS.find((k) => byKind[k].length) ?? null);
+  // Offers arrive best-earner first (server sorts by EPC, then payout). Sections follow that order,
+  // so the section holding the best offer comes first and opens by default.
+  const kindsWithOffers = useMemo(() => {
+    const order: CpaKind[] = [];
+    for (const o of offers) if (CPA_KINDS.includes(o.kind) && !order.includes(o.kind)) order.push(o.kind);
+    return order;
+  }, [offers]);
+  const [tab, setTab] = useState<CpaKind | null>(() => kindsWithOffers[0] ?? null);
   const [current, setCurrent] = useState<CpaOffer | null>(() => cpaSession.getCurrent());
   // Away time / "stuck" is per visit — a returning visitor starts fresh (their offer is still remembered
   // and polled quietly, so a late postback still unlocks them).
@@ -211,6 +217,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   }, [lockerOpen]);
   const lockerBoxRef = useRef<HTMLDivElement | null>(null);
 
+  const lockerTrackedAt = useRef(0);
   const openLocker = () => {
     setLockerOpen(true);
     window.setTimeout(() => lockerBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
@@ -218,7 +225,12 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
-    cpaTrack(subid, "open_offer", { kind: "locker", offer_id: "locker" });
+    // One open per 10s at most — double taps were logging 5-6 opens per second.
+    const now = Date.now();
+    if (now - lockerTrackedAt.current > 10000) {
+      lockerTrackedAt.current = now;
+      cpaTrack(subid, "open_offer", { kind: "locker", offer_id: "locker" });
+    }
   };
 
   // Offers open through real <a target="_blank"> links (popup blockers stop window.open on
