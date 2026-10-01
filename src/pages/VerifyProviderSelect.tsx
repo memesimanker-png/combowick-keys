@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick } from "lucide-react";
+import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +13,8 @@ import { lovable } from "@/integrations/lovable/index";
 import { useTranslation } from "@/lib/translation-context";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
+import { CpaOfferWall } from "@/components/CpaOfferWall";
+import { useCpaOffers, getCpaSubid, cpaSession, cpaTrack } from "@/lib/cpa";
 
 
 const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
@@ -41,6 +43,12 @@ export default function VerifyProviderSelect() {
   const [requiredClicks, setRequiredClicks] = useState(DEFAULT_DIRECT_LINK_CLICKS);
   const [starting, setStarting] = useState(false);
   const [verifySteps, setVerifySteps] = useState(3); // 2 or 3, admin-configured
+  // CPA offer wall — offered as a choice next to Linkvertise (admin toggle verify_settings.cpa_enabled).
+  const [cpaEnabled, setCpaEnabled] = useState<boolean | null>(null);
+  const cpa = useCpaOffers(cpaEnabled);
+  const cpaAvailable = cpa.status === "ready";
+  const [choice, setChoice] = useState<string | null>(() => cpaSession.getChoice());
+  const cpaSubid = React.useMemo(getCpaSubid, []);
 
   useEffect(() => {
     setMounted(true);
@@ -64,14 +72,15 @@ export default function VerifyProviderSelect() {
 
     supabase
       .from("verify_settings")
-      .select("direct_link_clicks, verify_steps")
+      .select("direct_link_clicks, verify_steps, cpa_enabled")
       .eq("id", 1)
       .maybeSingle()
       .then(({ data }) => {
         const d = data as any;
         if (d?.direct_link_clicks) setRequiredClicks(d.direct_link_clicks);
         if (d?.verify_steps === 2 || d?.verify_steps === 3) setVerifySteps(d.verify_steps);
-      });
+        setCpaEnabled(d?.cpa_enabled !== false);
+      }, () => setCpaEnabled(false));
   }, []);
 
   // Popunder intentionally NOT loaded here — it now lives on /verify/step2 only.
@@ -129,6 +138,13 @@ export default function VerifyProviderSelect() {
     });
   };
 
+  const pickChoice = (c: "cpa" | "linkvertise") => {
+    cpaTrack(cpaSubid, "tab", { kind: c === "cpa" ? "choice_cpa" : "choice_lv" });
+    if (c === "linkvertise") { cpaSession.setChoice(null); handleStart(); return; }
+    cpaSession.setChoice("cpa");
+    setChoice("cpa");
+  };
+
   // Start the 3-step Linkvertise verification.
   const handleStart = () => {
     setStarting(true);
@@ -141,13 +157,15 @@ export default function VerifyProviderSelect() {
   // Auto-advance to Step 1 once the Monetag direct-link clicks are done — no manual button.
   useEffect(() => {
     if (showTutorialPopup || starting || showSubscriptionGate) return;
+    // Wait for the offer check; if there are offers the visitor CHOOSES (no auto-advance).
+    if (cpa.status === "loading" || cpaAvailable) return;
     const dlEnabled = isAdEnabled("verify-provider-select", "direct_link");
     const directLinkDone = !dlEnabled || directLinkClicks >= requiredClicks;
     if (!directLinkDone) return;
     const tmr = setTimeout(() => handleStart(), 900);
     return () => clearTimeout(tmr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate]);
+  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable]);
 
   const handleCloseTutorial = () => setShowTutorialPopup(false);
   const handleNeverShowAgain = () => {
@@ -214,12 +232,47 @@ export default function VerifyProviderSelect() {
 
   const directLinkDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
 
+  const renderCpaChoice = () => (
+    choice === "cpa" ? (
+      <div className="space-y-3">
+        <CpaOfferWall offers={cpa.offers} subid={cpaSubid} onDone={() => navigate("/access-key")} />
+        <button type="button" onClick={() => { cpaSession.setChoice(null); setChoice(null); }} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-3 w-3" /> {t("Use the other method instead")}
+        </button>
+      </div>
+    ) : (
+      <div className="space-y-3">
+        <button type="button" onClick={() => pickChoice("cpa")}
+          className="relative flex w-full items-center gap-3 rounded-lg border border-primary/50 bg-gradient-to-br from-primary/10 to-primary/5 p-4 text-left transition-colors hover:border-primary">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary"><Zap className="h-5 w-5" /></span>
+          <span className="min-w-0 flex-1">
+            <span className="flex items-center gap-2 font-semibold">{t("Complete 1 offer")}
+              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("Fastest")}</span>
+            </span>
+            <span className="block text-xs text-muted-foreground">{t("Do one quick task and your key unlocks.")}</span>
+          </span>
+        </button>
+        <button type="button" onClick={() => pickChoice("linkvertise")}
+          className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground"><Link2 className="h-5 w-5" /></span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">{t("Linkvertise steps")}</span>
+            <span className="block text-xs text-muted-foreground">{t("Complete {n} short Linkvertise checkpoints.").replace("{n}", String(verifySteps))}</span>
+          </span>
+        </button>
+        <p className="text-center text-[11px] text-muted-foreground">
+          {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
+        </p>
+      </div>
+    )
+  );
+
   steps.push({
     key: "unlock",
-    title: t("Get Your Free Key"),
+    title: cpaAvailable ? t("Choose How to Get Your Key") : t("Get Your Free Key"),
     done: false,
     icon: <CheckCircle2 className="h-4 w-4" />,
-    render: () => (
+    render: () => cpaAvailable && directLinkDone ? renderCpaChoice() : (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
         <p className="text-base font-semibold mb-2">
           {`Complete ${verifySteps} quick Linkvertise ${verifySteps === 1 ? "step" : "steps"} to get your key`}
@@ -229,7 +282,11 @@ export default function VerifyProviderSelect() {
             ? "You'll complete two short Linkvertise checkpoints (Step 1 → 2), then your HWID key unlocks."
             : "You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks."}
         </p>
-        {directLinkDone ? (
+        {directLinkDone && cpa.status === "loading" ? (
+          <div className="flex items-center justify-center gap-2 text-primary font-medium">
+            <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading...")}
+          </div>
+        ) : directLinkDone ? (
           <div className="flex items-center justify-center gap-2 text-primary font-medium">
             <Loader2 className="h-4 w-4 animate-spin" /> {t("Starting verification...")}
           </div>

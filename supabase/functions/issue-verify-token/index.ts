@@ -36,6 +36,23 @@ function randomToken(): string {
   return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+// CPA offer-wall path: the key shop only issues a token once the CPA backend confirms this
+// offer-wall session either got a CPALead postback or opened an offer >=40s ago (and burns it).
+const CPA_VERIFY_URL = "https://hkspkqbnjdkwyyvxqglv.supabase.co/functions/v1/cpa-verify";
+const CPA_VERIFY_SECRET = Deno.env.get("CPA_VERIFY_SECRET") || "";
+
+async function cpaCheck(subid: string): Promise<{ ok: boolean; reason?: string }> {
+  if (!CPA_VERIFY_SECRET) return { ok: false, reason: "not_configured" };
+  try {
+    const u = `${CPA_VERIFY_URL}?subid=${encodeURIComponent(subid)}&consume=1&secret=${encodeURIComponent(CPA_VERIFY_SECRET)}`;
+    const r = await fetch(u);
+    const j = await r.json().catch(() => ({}));
+    return j?.ok ? { ok: true } : { ok: false, reason: j?.reason || `http_${r.status}` };
+  } catch {
+    return { ok: false, reason: "cpa_unreachable" };
+  }
+}
+
 async function sha256(input: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -53,6 +70,18 @@ Deno.serve(async (req) => {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    const body = await req.json().catch(() => ({} as any));
+    if (body?.method === "cpa") {
+      const subid = String(body?.subid || "").replace(/[^A-Za-z0-9_]/g, "").slice(0, 40);
+      const chk = subid ? await cpaCheck(subid) : { ok: false, reason: "missing_subid" };
+      if (!chk.ok) {
+        return new Response(JSON.stringify({ success: false, error: "offer_not_done", reason: chk.reason }), {
+          status: 403,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const ip = getIp(req);

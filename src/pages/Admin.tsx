@@ -2037,12 +2037,13 @@ function VerifyStepsControl() {
   const [lv2, setLv2] = useState<string>("");
   const [lv3, setLv3] = useState<string>("");
   const [steps, setSteps] = useState<number>(3); // 2 or 3 Linkvertise steps
+  const [cpaEnabled, setCpaEnabled] = useState<boolean>(true); // offer-wall choice on provider-select
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     supabase.from("verify_settings")
-      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps")
+      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps, cpa_enabled")
       .eq("id", 1).maybeSingle()
       .then(({ data }) => {
         const d = data as any;
@@ -2053,6 +2054,7 @@ function VerifyStepsControl() {
         if (d?.linkvertise_link_2) setLv2(d.linkvertise_link_2);
         if (d?.linkvertise_link_3) setLv3(d.linkvertise_link_3);
         if (d?.verify_steps === 2 || d?.verify_steps === 3) setSteps(d.verify_steps);
+        if (typeof d?.cpa_enabled === "boolean") setCpaEnabled(d.cpa_enabled);
         setLoading(false);
       });
   }, []);
@@ -2075,12 +2077,13 @@ function VerifyStepsControl() {
         linkvertise_link_2: lv2.trim(),
         linkvertise_link_3: lv3.trim(),
         verify_steps: steps,
+        cpa_enabled: cpaEnabled,
         updated_at: new Date().toISOString(),
       } as any)
       .eq("id", 1);
     setSaving(false);
     if (error) { toast({ variant: "destructive", title: "Failed to save", description: error.message }); return; }
-    toast({ title: "Saved", description: `${steps}-step verify • Provider-Select: ${clicks} • Access Key: ${accessClicks} • Extension: +${extHours}h.` });
+    toast({ title: "Saved", description: `${steps}-step verify • Offer wall ${cpaEnabled ? "ON" : "OFF"} • Provider-Select: ${clicks} • Access Key: ${accessClicks} • Extension: +${extHours}h.` });
   };
 
   const numCls = "w-24 rounded-lg border border-border bg-secondary/50 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50";
@@ -2121,6 +2124,20 @@ function VerifyStepsControl() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-1">{steps === 2 ? "Step 1 → Step 2 → key (less friction, more completions)." : "Step 1 → Step 2 → Step 3 → key (more ad revenue per key)."}</p>
+        </div>
+        <div className="rounded-lg border border-border/60 bg-secondary/30 p-3">
+          <label className="flex items-center justify-between gap-3 text-sm font-medium">
+            <span>CPA offer wall (CPALead)</span>
+            <button type="button" disabled={loading} onClick={() => setCpaEnabled((v) => !v)}
+              className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${cpaEnabled ? "bg-primary" : "bg-muted"}`} aria-pressed={cpaEnabled}>
+              <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${cpaEnabled ? "left-[22px]" : "left-0.5"}`} />
+            </button>
+          </label>
+          <p className="text-xs text-muted-foreground mt-1">
+            {cpaEnabled
+              ? "ON — after the ad clicks, users choose: complete 1 offer OR do the Linkvertise steps. Countries with no offers go straight to Linkvertise."
+              : "OFF — everyone goes straight to the Linkvertise steps (old flow)."}
+          </p>
         </div>
         <div>
           <label className="text-sm font-medium mb-1 block">Linkvertise Link — Step 1</label>
