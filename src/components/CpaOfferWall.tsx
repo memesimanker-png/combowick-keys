@@ -313,6 +313,11 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           </div>
           {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
           <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
+          {stuck && openedThisVisit && !cpcReady && current?.offer_id === "locker" && !alternateOnly && (
+            <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
+              <p className="text-muted-foreground"><b className="text-foreground">{t("No payment yet?")}</b> {t("Some offers only count once per person. Try one of the main offers above instead.")}</p>
+            </div>
+          )}
           {stuck && openedThisVisit && !cpcReady && (allowLinkvertise || (lockerEligible && current?.offer_id !== "locker")) && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
               {lockerEligible && current?.offer_id !== "locker" && (

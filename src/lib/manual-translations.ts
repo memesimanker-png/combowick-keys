@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "No payment yet?": "Toujours rien ?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Certaines offres ne comptent qu'une fois par personne. Essayez plutôt une des offres principales ci-dessus.",
     "Unlock Script Code": "Débloquer le code du script",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Terminez 1 offre rapide pour afficher le script. Le déblocage dure 24 h sur cet appareil.",
     "Script unlocked!": "Script débloqué !",
@@ -587,6 +589,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "No payment yet?": "¿Aún no se confirma?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Algunas ofertas solo cuentan una vez por persona. Prueba una de las ofertas principales de arriba.",
     "Unlock Script Code": "Desbloquear el código del script",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Completa 1 oferta rápida para ver el script. El desbloqueo dura 24 h en este dispositivo.",
     "Script unlocked!": "¡Script desbloqueado!",
@@ -1170,6 +1174,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "No payment yet?": "Noch nichts?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Manche Angebote zählen nur einmal pro Person. Probier stattdessen eins der Hauptangebote oben.",
     "Unlock Script Code": "Skript-Code freischalten",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Schließ 1 kurzes Angebot ab, um das Skript anzuzeigen. Die Freischaltung gilt 24 Std. auf diesem Gerät.",
     "Script unlocked!": "Skript freigeschaltet!",
@@ -1753,6 +1759,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "No payment yet?": "Ainda nada?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Algumas ofertas só contam uma vez por pessoa. Tente uma das ofertas principais acima.",
     "Unlock Script Code": "Desbloquear o código do script",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Complete 1 oferta rápida para ver o script. O desbloqueio dura 24 h neste dispositivo.",
     "Script unlocked!": "Script desbloqueado!",
@@ -2336,6 +2344,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "No payment yet?": "Пока не засчитано?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Некоторые предложения засчитываются только один раз на человека. Попробуйте одно из основных предложений выше.",
     "Unlock Script Code": "Разблокировать код скрипта",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Выполните 1 быстрое предложение, чтобы открыть скрипт. Доступ действует 24 ч на этом устройстве.",
     "Script unlocked!": "Скрипт разблокирован!",
@@ -2919,6 +2929,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "No payment yet?": "还没确认？",
+    "Some offers only count once per person. Try one of the main offers above instead.": "有些任务每人只能计一次。请改试上面的主要任务。",
     "Unlock Script Code": "解锁脚本代码",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "完成 1 个快速任务即可查看脚本。在此设备上解锁 24 小时。",
     "Script unlocked!": "脚本已解锁！",
@@ -3502,6 +3514,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "No payment yet?": "아직 확인되지 않았나요?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "일부 오퍼는 1인당 한 번만 인정됩니다. 위의 주요 오퍼 중 하나를 시도해 보세요.",
     "Unlock Script Code": "스크립트 코드 잠금 해제",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "간단한 오퍼 1개를 완료하면 스크립트가 보입니다. 이 기기에서 24시간 동안 유지됩니다.",
     "Script unlocked!": "스크립트 잠금 해제!",
@@ -4085,6 +4099,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "No payment yet?": "ยังไม่ผ่านใช่ไหม?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "บางข้อเสนอนับได้ครั้งเดียวต่อคน ลองข้อเสนอหลักด้านบนแทน",
     "Unlock Script Code": "ปลดล็อกโค้ดสคริปต์",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "ทำข้อเสนอสั้นๆ 1 อย่างเพื่อดูสคริปต์ ปลดล็อกนาน 24 ชม. บนอุปกรณ์นี้",
     "Script unlocked!": "ปลดล็อกสคริปต์แล้ว!",
@@ -4668,6 +4684,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "No payment yet?": "Belum terhitung?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Beberapa offer hanya dihitung sekali per orang. Coba salah satu offer utama di atas.",
     "Unlock Script Code": "Buka kode script",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Selesaikan 1 offer singkat untuk melihat script. Terbuka 24 jam di perangkat ini.",
     "Script unlocked!": "Script terbuka!",
@@ -5251,6 +5269,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "No payment yet?": "Wala pa rin?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "May mga offer na isang beses lang bibilang bawat tao. Subukan ang isa sa mga pangunahing offer sa itaas.",
     "Unlock Script Code": "I-unlock ang script code",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Tapusin ang 1 mabilis na offer para makita ang script. Tatagal ang unlock ng 24 oras sa device na ito.",
     "Script unlocked!": "Na-unlock ang script!",
@@ -5834,6 +5854,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "No payment yet?": "Vẫn chưa được tính?",
+    "Some offers only count once per person. Try one of the main offers above instead.": "Một số ưu đãi chỉ tính một lần mỗi người. Hãy thử một ưu đãi chính ở trên.",
     "Unlock Script Code": "Mở khóa mã script",
     "Complete 1 quick offer to reveal the script. Unlock lasts 24 hours on this device.": "Hoàn thành 1 ưu đãi nhanh để xem script. Mở khóa 24 giờ trên thiết bị này.",
     "Script unlocked!": "Đã mở khóa script!",
