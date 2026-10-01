@@ -15,6 +15,7 @@ import { ExternalLinkMonetag } from "@/components/ExternalLinkMonetag";
 import { EngagementTracker } from "@/components/EngagementTracker";
 
 // Store + key system.
+const Index = lazy(() => import("./pages/Index"));
 const PremiumKeys = lazy(() => import("./pages/PremiumKeys"));
 const Keys = lazy(() => import("./pages/Keys"));
 const AccessKey = lazy(() => import("./pages/AccessKey"));
@@ -83,7 +84,7 @@ const App = () => (
               <ExternalLinkMonetag />
               <Suspense fallback={<RouteFallback />}>
                 <Routes>
-                  <Route path="/" element={<Navigate to="/keys" replace />} />
+                  <Route path="/" element={<Index />} />
 
                   {/* Store + key system */}
                   <Route path="/premium-keys" element={<PremiumKeys />} />
