@@ -61,13 +61,10 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     return m;
   }, [offers]);
 
-  // Offers arrive best-earner first (server sorts by EPC, then payout). Sections follow that order,
-  // so the section holding the best offer comes first and opens by default.
-  const kindsWithOffers = useMemo(() => {
-    const order: CpaKind[] = [];
-    for (const o of offers) if (CPA_KINDS.includes(o.kind) && !order.includes(o.kind)) order.push(o.kind);
-    return order;
-  }, [offers]);
+  // Fixed section order — Apps first, Email last (owner: email sign-ups often bounce people to
+  // "sorry" pages and many visitors won't give an email). Inside each section offers keep the
+  // server order: best earners first (EPC, then payout). The first available section opens by default.
+  const kindsWithOffers = useMemo(() => CPA_KINDS.filter((k) => byKind[k].length > 0), [byKind]);
   const [tab, setTab] = useState<CpaKind | null>(() => kindsWithOffers[0] ?? null);
   const [current, setCurrent] = useState<CpaOffer | null>(() => cpaSession.getCurrent());
   // Away time / "stuck" is per visit — a returning visitor starts fresh (their offer is still remembered
