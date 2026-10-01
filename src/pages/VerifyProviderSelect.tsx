@@ -254,7 +254,8 @@ export default function VerifyProviderSelect() {
           className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-left transition-colors hover:from-primary/25">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary"><Zap className="h-5 w-5" /></span>
           <span className="min-w-0 flex-1">
-            <span className="flex items-center gap-2 font-semibold">{t("Complete 1 offer")}
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
+              <span className="whitespace-nowrap">{t("Complete 1 offer")}</span>
               <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("Fastest")}</span>
             </span>
             <span className="block text-xs font-medium text-foreground/80">{t("Do one quick task and your key unlocks.")}</span>
@@ -333,10 +334,10 @@ export default function VerifyProviderSelect() {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <Card className="border-primary/30 w-full max-w-3xl relative animate-in fade-in zoom-in duration-300">
             <CardHeader className="border-b border-primary/20">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-2xl">{t("FREE KEY TUTORIAL")}</CardTitle>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="sm" onClick={handleNeverShowAgain} className="text-muted-foreground hover:text-foreground">
+              <div className="flex items-start justify-between gap-2">
+                <CardTitle className="text-lg sm:text-2xl">{t("FREE KEY TUTORIAL")}</CardTitle>
+                <div className="flex shrink-0 items-center gap-1">
+                  <Button variant="ghost" size="sm" onClick={handleNeverShowAgain} className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground">
                     {t("Don't show again")}
                   </Button>
                   <Button variant="ghost" size="icon" aria-label={t("Close tutorial")} onClick={handleCloseTutorial} className="h-10 w-10">
@@ -364,13 +365,13 @@ export default function VerifyProviderSelect() {
 
       <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
 
-      <main className="flex-1 container flex flex-col items-center justify-center py-8">
+      <main className="flex-1 container flex flex-col items-center justify-start px-3 pt-4 pb-36 sm:justify-center sm:px-8 sm:py-8">
         <div className="max-w-xl w-full mx-auto space-y-4">
           <Card className="border-primary/30 overflow-hidden">
-            <CardHeader className="border-b border-border/40 bg-gradient-to-r from-primary/5 via-transparent to-primary/5">
+            <CardHeader className="border-b border-border/40 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 p-4 sm:p-6">
               <div className="flex items-center justify-between gap-2">
                 <div>
-                  <CardTitle className="text-2xl">{t("Verification")}</CardTitle>
+                  <CardTitle className="text-xl sm:text-2xl">{t("Verification")}</CardTitle>
                   <CardDescription>{t("Complete the steps to unlock your free key.")}</CardDescription>
                 </div>
                 <div className="text-right">
@@ -388,8 +389,8 @@ export default function VerifyProviderSelect() {
                   const isLocked = !step.optional && activeIdx !== -1 && idx > activeIdx;
                   const isDone = step.done;
                   return (
-                    <li key={step.key} className={`p-5 transition-colors ${isActive ? "bg-primary/5" : isDone ? "opacity-60" : isLocked ? "opacity-40" : ""}`}>
-                      <div className="flex items-start gap-3 mb-3">
+                    <li key={step.key} className={`p-4 sm:p-5 transition-colors ${isActive ? "bg-primary/5" : isDone ? "opacity-60" : isLocked ? "opacity-40" : ""}`}>
+                      <div className="flex items-center gap-3 mb-3">
                         <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                           isDone ? "bg-green-500/20 text-green-300" : isActive ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
                         }`}>
@@ -402,7 +403,7 @@ export default function VerifyProviderSelect() {
                           </h3>
                         </div>
                       </div>
-                      {isActive && <div className="pl-11">{step.render()}</div>}
+                      {isActive && <div className="sm:pl-11">{step.render()}</div>}
                     </li>
                   );
                 })}
