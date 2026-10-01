@@ -4,6 +4,14 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Ad blocker detected": "Bloqueur de pubs détecté",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Les clés gratuites sont financées par la pub. Désactivez votre bloqueur de pubs pour ce site, puis appuyez sur Réessayer.",
+    "How to turn it off:": "Comment le désactiver :",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave : appuyez sur l'icône du lion dans la barre d'adresse et désactivez les Shields pour ce site.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Extension de blocage (uBlock, AdBlock, AdGuard) : cliquez sur son icône et mettez-la en pause sur ce site.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave : appuyez sur l'icône du lion et désactivez les Shields pour ce site.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / autres navigateurs : appuyez sur l'icône du bouclier dans la barre d'adresse et désactivez le blocage des pubs.",
+    "Get a Premium Key (no ads)": "Obtenir une clé Premium (sans pub)",
     "After you finish, verifying can take a few minutes.": "Une fois terminé, la vérification peut prendre quelques minutes.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Terminez l'étape dans le nouvel onglet — la vérification peut prendre quelques minutes. Cette page se débloque automatiquement.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Certaines offres mettent jusqu'à 15 minutes à être confirmées. Vous pouvez partir et revenir sur cette page sur cet appareil — elle se débloque automatiquement.",
@@ -547,6 +555,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Ad blocker detected": "Bloqueador de anuncios detectado",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Las claves gratis se pagan con anuncios. Desactiva tu bloqueador de anuncios en este sitio y toca Intentar de nuevo.",
+    "How to turn it off:": "Cómo desactivarlo:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: toca el icono del león en la barra de direcciones y desactiva los Shields para este sitio.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Extensión bloqueadora (uBlock, AdBlock, AdGuard): haz clic en su icono y pausa en este sitio.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: toca el icono del león y desactiva los Shields para este sitio.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / otros navegadores: toca el icono del escudo en la barra de direcciones y desactiva el bloqueo de anuncios.",
+    "Get a Premium Key (no ads)": "Obtén una clave Premium (sin anuncios)",
     "After you finish, verifying can take a few minutes.": "Cuando termines, la verificación puede tardar unos minutos.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Termina el paso en la nueva pestaña: la verificación puede tardar unos minutos. Esta página se desbloquea automáticamente.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Algunas ofertas tardan hasta 15 minutos en confirmarse. Puedes salir y volver a esta página en este dispositivo: se desbloquea automáticamente.",
@@ -1090,6 +1106,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Ad blocker detected": "Werbeblocker erkannt",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Kostenlose Schlüssel werden durch Werbung bezahlt. Schalte deinen Werbeblocker für diese Seite aus und tippe dann auf Erneut versuchen.",
+    "How to turn it off:": "So schaltest du ihn aus:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: Tippe auf das Löwen-Symbol in der Adressleiste und schalte Shields für diese Seite AUS.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Werbeblocker-Erweiterung (uBlock, AdBlock, AdGuard): Klicke auf ihr Symbol und pausiere sie auf dieser Seite.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: Tippe auf das Löwen-Symbol und schalte Shields für diese Seite AUS.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / andere Browser: Tippe auf das Schild-Symbol in der Adressleiste und schalte das Blockieren von Werbung aus.",
+    "Get a Premium Key (no ads)": "Premium-Schlüssel holen (ohne Werbung)",
     "After you finish, verifying can take a few minutes.": "Nach dem Abschluss kann die Überprüfung ein paar Minuten dauern.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Schließ den Schritt im neuen Tab ab — die Überprüfung kann ein paar Minuten dauern. Diese Seite wird automatisch freigeschaltet.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Manche Angebote brauchen bis zu 15 Minuten zur Bestätigung. Du kannst gehen und auf diesem Gerät zu dieser Seite zurückkehren — sie wird automatisch freigeschaltet.",
@@ -1633,6 +1657,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Ad blocker detected": "Bloqueador de anúncios detectado",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "As chaves grátis são pagas por anúncios. Desative seu bloqueador de anúncios neste site e toque em Tentar novamente.",
+    "How to turn it off:": "Como desativar:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: toque no ícone do leão na barra de endereço e desative os Shields para este site.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Extensão bloqueadora (uBlock, AdBlock, AdGuard): clique no ícone e pause neste site.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: toque no ícone do leão e desative os Shields para este site.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / outros navegadores: toque no ícone do escudo na barra de endereço e desative o bloqueio de anúncios.",
+    "Get a Premium Key (no ads)": "Obter uma chave Premium (sem anúncios)",
     "After you finish, verifying can take a few minutes.": "Depois de terminar, a verificação pode levar alguns minutos.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Termine a etapa na nova aba — a verificação pode levar alguns minutos. Esta página desbloqueia automaticamente.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Algumas ofertas levam até 15 minutos para confirmar. Você pode sair e voltar a esta página neste dispositivo — ela desbloqueia automaticamente.",
@@ -2176,6 +2208,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Ad blocker detected": "Обнаружен блокировщик рекламы",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Бесплатные ключи оплачиваются рекламой. Отключите блокировщик рекламы для этого сайта и нажмите «Попробовать снова».",
+    "How to turn it off:": "Как отключить:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: нажмите на значок льва в адресной строке и отключите Shields для этого сайта.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Расширение-блокировщик (uBlock, AdBlock, AdGuard): нажмите на его значок и приостановите на этом сайте.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: нажмите на значок льва и отключите Shields для этого сайта.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / другие браузеры: нажмите на значок щита в адресной строке и отключите блокировку рекламы.",
+    "Get a Premium Key (no ads)": "Получить Premium-ключ (без рекламы)",
     "After you finish, verifying can take a few minutes.": "После выполнения проверка может занять несколько минут.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Завершите шаг в новой вкладке — проверка может занять несколько минут. Страница разблокируется автоматически.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Некоторые предложения подтверждаются до 15 минут. Можно уйти и вернуться на эту страницу с этого устройства — она разблокируется автоматически.",
@@ -2719,6 +2759,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Ad blocker detected": "检测到广告拦截器",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "免费密钥靠广告支持。请为本网站关闭广告拦截器，然后点击“重试”。",
+    "How to turn it off:": "如何关闭：",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave：点击地址栏中的狮子图标，为本网站关闭 Shields。",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "广告拦截扩展（uBlock、AdBlock、AdGuard）：点击它的图标，在本网站暂停。",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave：点击狮子图标，为本网站关闭 Shields。",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / 其他浏览器：点击地址栏中的盾牌图标，关闭广告拦截。",
+    "Get a Premium Key (no ads)": "获取高级密钥（无广告）",
     "After you finish, verifying can take a few minutes.": "完成后，验证可能需要几分钟。",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "在新标签页完成步骤 — 验证可能需要几分钟。本页面会自动解锁。",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "有些任务最多需要 15 分钟确认。你可以先离开，之后在这台设备上回到本页面 — 会自动解锁。",
@@ -3262,6 +3310,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Ad blocker detected": "광고 차단기가 감지되었습니다",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "무료 키는 광고로 운영됩니다. 이 사이트에서 광고 차단기를 끄고 '다시 시도'를 누르세요.",
+    "How to turn it off:": "끄는 방법:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: 주소창의 사자 아이콘을 누르고 이 사이트의 Shields를 끄세요.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "광고 차단 확장 프로그램(uBlock, AdBlock, AdGuard): 아이콘을 눌러 이 사이트에서 일시 중지하세요.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: 사자 아이콘을 누르고 이 사이트의 Shields를 끄세요.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / 기타 브라우저: 주소창의 방패 아이콘을 눌러 광고 차단을 끄세요.",
+    "Get a Premium Key (no ads)": "프리미엄 키 받기(광고 없음)",
     "After you finish, verifying can take a few minutes.": "완료 후 확인까지 몇 분이 걸릴 수 있습니다.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "새 탭에서 단계를 완료하세요 — 확인까지 몇 분이 걸릴 수 있습니다. 이 페이지는 자동으로 잠금 해제됩니다.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "일부 오퍼는 확인까지 최대 15분이 걸립니다. 나갔다가 이 기기에서 이 페이지로 다시 오면 자동으로 잠금 해제됩니다.",
@@ -3805,6 +3861,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Ad blocker detected": "ตรวจพบตัวบล็อกโฆษณา",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "คีย์ฟรีอยู่ได้ด้วยโฆษณา กรุณาปิดตัวบล็อกโฆษณาสำหรับเว็บนี้ แล้วแตะ ลองอีกครั้ง",
+    "How to turn it off:": "วิธีปิด:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: แตะไอคอนสิงโตในแถบที่อยู่ แล้วปิด Shields สำหรับเว็บนี้",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "ส่วนขยายบล็อกโฆษณา (uBlock, AdBlock, AdGuard): คลิกไอคอนแล้วหยุดการทำงานบนเว็บนี้",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: แตะไอคอนสิงโต แล้วปิด Shields สำหรับเว็บนี้",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / เบราว์เซอร์อื่น: แตะไอคอนโล่ในแถบที่อยู่ แล้วปิดการบล็อกโฆษณา",
+    "Get a Premium Key (no ads)": "รับคีย์พรีเมียม (ไม่มีโฆษณา)",
     "After you finish, verifying can take a few minutes.": "หลังทำเสร็จ การยืนยันอาจใช้เวลาสองสามนาที",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "ทำขั้นตอนในแท็บใหม่ให้เสร็จ — การยืนยันอาจใช้เวลาสองสามนาที หน้านี้จะปลดล็อกอัตโนมัติ",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "บางข้อเสนออาจใช้เวลายืนยันถึง 15 นาที คุณออกไปก่อนแล้วกลับมาที่หน้านี้บนอุปกรณ์เดิมได้ — จะปลดล็อกอัตโนมัติ",
@@ -4348,6 +4412,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Ad blocker detected": "Pemblokir iklan terdeteksi",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Key gratis dibiayai oleh iklan. Matikan pemblokir iklan untuk situs ini, lalu ketuk Coba lagi.",
+    "How to turn it off:": "Cara mematikannya:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: ketuk ikon singa di bilah alamat dan matikan Shields untuk situs ini.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Ekstensi pemblokir iklan (uBlock, AdBlock, AdGuard): klik ikonnya dan jeda di situs ini.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: ketuk ikon singa dan matikan Shields untuk situs ini.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / browser lain: ketuk ikon perisai di bilah alamat dan matikan pemblokiran iklan.",
+    "Get a Premium Key (no ads)": "Dapatkan Key Premium (tanpa iklan)",
     "After you finish, verifying can take a few minutes.": "Setelah selesai, verifikasi bisa memakan waktu beberapa menit.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Selesaikan langkah di tab baru — verifikasi bisa memakan waktu beberapa menit. Halaman ini terbuka otomatis.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Beberapa offer butuh hingga 15 menit untuk dikonfirmasi. Kamu boleh pergi lalu kembali ke halaman ini di perangkat yang sama — akan terbuka otomatis.",
@@ -4891,6 +4963,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Ad blocker detected": "May nakitang ad blocker",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Ang libreng key ay binabayaran ng ads. Paki-off ang ad blocker para sa site na ito, tapos i-tap ang Subukan ulit.",
+    "How to turn it off:": "Paano i-off:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: i-tap ang lion icon sa address bar at i-off ang Shields para sa site na ito.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Ad blocker extension (uBlock, AdBlock, AdGuard): i-click ang icon nito at i-pause sa site na ito.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: i-tap ang lion icon at i-off ang Shields para sa site na ito.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / ibang browser: i-tap ang shield icon sa address bar at i-off ang ad blocking.",
+    "Get a Premium Key (no ads)": "Kumuha ng Premium Key (walang ads)",
     "After you finish, verifying can take a few minutes.": "Pagkatapos mo, puwedeng umabot ng ilang minuto ang pag-verify.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Tapusin ang step sa bagong tab — puwedeng umabot ng ilang minuto ang pag-verify. Awtomatikong mag-a-unlock ang page na ito.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "May mga offer na umaabot ng hanggang 15 minuto bago makumpirma. Puwede kang umalis at bumalik sa page na ito sa device na ito — awtomatiko itong mag-a-unlock.",
@@ -5434,6 +5514,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Ad blocker detected": "Phát hiện trình chặn quảng cáo",
+    "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Key miễn phí được trả bằng quảng cáo. Vui lòng tắt trình chặn quảng cáo cho trang này rồi nhấn Thử lại.",
+    "How to turn it off:": "Cách tắt:",
+    "Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.": "Brave: nhấn biểu tượng con sư tử trên thanh địa chỉ và tắt Shields cho trang này.",
+    "Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.": "Tiện ích chặn quảng cáo (uBlock, AdBlock, AdGuard): nhấn vào biểu tượng và tạm dừng trên trang này.",
+    "Brave: tap the lion icon and turn Shields DOWN for this site.": "Brave: nhấn biểu tượng con sư tử và tắt Shields cho trang này.",
+    "Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.": "Opera / trình duyệt khác: nhấn biểu tượng chiếc khiên trên thanh địa chỉ và tắt chặn quảng cáo.",
+    "Get a Premium Key (no ads)": "Nhận Key Premium (không quảng cáo)",
     "After you finish, verifying can take a few minutes.": "Sau khi hoàn thành, việc xác minh có thể mất vài phút.",
     "Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.": "Hoàn thành bước ở tab mới — việc xác minh có thể mất vài phút. Trang này sẽ tự động mở khóa.",
     "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Một số ưu đãi mất tới 15 phút để xác nhận. Bạn có thể rời đi rồi quay lại trang này trên thiết bị này — trang sẽ tự động mở khóa.",

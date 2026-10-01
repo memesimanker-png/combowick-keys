@@ -2208,13 +2208,14 @@ function AdToggleControl() {
     skip_ads_banner: "Skip-Ads Banner",
     skip_ads_float: "Skip-Ads Float Button",
     script_promo: "Script Promo Popup",
+    adblock_wall: "Ad-Block Wall",
   };
   const PAGE_AD_TYPES: Record<string, string[]> = {
-    "verify-step1": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
-    "verify-step2": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
-    "verify-step3": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
-    "verify-provider-select": ["popunder", "direct_link"],
-    "access-key": ["popunder", "direct_link", "skip_ads_banner", "skip_ads_float", "script_promo"],
+    "verify-step1": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
+    "verify-step2": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
+    "verify-step3": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
+    "verify-provider-select": ["popunder", "direct_link", "adblock_wall"],
+    "access-key": ["popunder", "direct_link", "skip_ads_banner", "skip_ads_float", "script_promo", "adblock_wall"],
     keys: ["popunder", "script_promo"],
   };
 

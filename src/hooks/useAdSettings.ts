@@ -15,7 +15,8 @@ export type AdType =
   | "sliding_ad"
   | "skip_ads_banner"
   | "skip_ads_float"
-  | "script_promo";
+  | "script_promo"
+  | "adblock_wall";
 
 export interface AdSettingRow {
   id: string;
@@ -40,15 +41,16 @@ export const AD_TYPES: { id: AdType; label: string }[] = [
   { id: "skip_ads_banner", label: "Skip-Ads Banner" },
   { id: "skip_ads_float", label: "Skip-Ads Float Button" },
   { id: "script_promo", label: "Script Promo Popup" },
+  { id: "adblock_wall", label: "Ad-Block Wall" },
 ];
 
 // Which ad types each page actually renders (controls Admin matrix).
 export const PAGE_AD_TYPES: Record<AdPage, AdType[]> = {
-  "verify-step1": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
-  "verify-step2": ["popunder", "skip_ads_banner", "skip_ads_float"],
-  "verify-step3": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float"],
-  "verify-provider-select": ["direct_link"],
-  "access-key": ["direct_link", "skip_ads_banner", "skip_ads_float"],
+  "verify-step1": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
+  "verify-step2": ["popunder", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
+  "verify-step3": ["popunder", "sliding_ad", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
+  "verify-provider-select": ["direct_link", "adblock_wall"],
+  "access-key": ["direct_link", "skip_ads_banner", "skip_ads_float", "adblock_wall"],
   keys: ["popunder", "script_promo"],
 };
 

@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
+import { AdBlockGate } from "@/components/AdBlockGate";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { lovable } from "@/integrations/lovable/index";
 import { useTranslation } from "@/lib/translation-context";
@@ -328,6 +329,7 @@ export default function VerifyProviderSelect() {
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
+      <AdBlockGate page="verify-provider-select" />
       <DiscountNotification />
 
       {showTutorialPopup && (

@@ -13,6 +13,7 @@ import { FunnelHeader } from "@/components/FunnelHeader";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
+import { AdBlockGate } from "@/components/AdBlockGate";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
@@ -295,6 +296,7 @@ export default function AccessKey() {
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
+      <AdBlockGate page="access-key" />
       {isAdEnabled("access-key", "skip_ads_banner") && <SkipAdsBanner />}
       <FunnelHeader title="COMBO WICK" />
 

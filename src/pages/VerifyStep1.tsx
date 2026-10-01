@@ -11,6 +11,7 @@ import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { useTranslation } from "@/lib/translation-context";
 import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
 import { NoIndex } from "@/components/NoIndex";
+import { AdBlockGate } from "@/components/AdBlockGate";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
@@ -49,6 +50,7 @@ export default function VerifyStep1() {
     <>
       <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
+      <AdBlockGate page="verify-step1" />
       <DiscountNotification />
         {isAdEnabled("verify-step1", "skip_ads_banner") && <SkipAdsBanner />}
         <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
