@@ -54,6 +54,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
   const [phase, setPhase] = useState<Phase>("pick");
   const [finished, setFinished] = useState(false); // real postback seen
   const [stuck, setStuck] = useState(false); // spent CPA_AWAY_SECONDS on the offer, still no postback
+  // The Linkvertise way out only shows after an offer was actually opened during THIS visit
+  // (a remembered offer from an earlier visit is not enough).
+  const [openedThisVisit, setOpenedThisVisit] = useState(false);
 
   const awaySince = useRef<number | null>(null);
   const awayBase = useRef(awayMs);
@@ -144,6 +147,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
       return;
     }
     lastOpen.current[o.offer_id] = now;
+    setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
     cpaTrack(subid, "open_offer", { kind: o.kind, offer_id: o.offer_id });
@@ -194,7 +198,8 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
             )}
           </div>
           {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
-          {stuck && (
+          <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
+          {stuck && openedThisVisit && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
               <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
               <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
@@ -272,7 +277,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
       )}
 
       <p className="flex items-center justify-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-medium text-primary">
-        <ShieldCheck className="h-4 w-4 shrink-0" /> {t("Finish the step in the new tab — this page unlocks automatically.")}
+        <ShieldCheck className="h-4 w-4 shrink-0" /> {t("Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.")}
       </p>
     </div>
   );
