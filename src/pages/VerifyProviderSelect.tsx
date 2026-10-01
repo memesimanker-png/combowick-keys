@@ -52,6 +52,9 @@ export default function VerifyProviderSelect() {
   // Admin can pause the Linkvertise option (verify_settings.linkvertise_choice). Only affects the
   // choice screen — countries with no offers still go through Linkvertise so nobody gets stuck.
   const [lvChoice, setLvChoice] = useState(true);
+  // Master switch (verify_settings.linkvertise_enabled). OFF = no Linkvertise anywhere in the free-key
+  // flow: no auto-jump to Step 1, no Linkvertise card / stuck button; no-offer visitors get Alternate offers.
+  const [lvEnabled, setLvEnabled] = useState(true);
   // Key length per unlock type (verify_settings.key_hours_*) — shown on each option.
   const [keyHours, setKeyHours] = useState({ offer: 24, cpc: 6, lv: 6 });
   const cpaSubid = React.useMemo(getCpaSubid, []);
@@ -78,7 +81,7 @@ export default function VerifyProviderSelect() {
 
     supabase
       .from("verify_settings")
-      .select("direct_link_clicks, verify_steps, cpa_enabled, linkvertise_choice, key_hours_offer, key_hours_cpc, key_hours_linkvertise")
+      .select("direct_link_clicks, verify_steps, cpa_enabled, linkvertise_choice, linkvertise_enabled, key_hours_offer, key_hours_cpc, key_hours_linkvertise")
       .eq("id", 1)
       .maybeSingle()
       .then(({ data }) => {
@@ -86,7 +89,8 @@ export default function VerifyProviderSelect() {
         if (d?.direct_link_clicks) setRequiredClicks(d.direct_link_clicks);
         if (d?.verify_steps === 2 || d?.verify_steps === 3) setVerifySteps(d.verify_steps);
         setCpaEnabled(d?.cpa_enabled !== false);
-        setLvChoice(d?.linkvertise_choice !== false);
+        setLvChoice(d?.linkvertise_choice !== false && d?.linkvertise_enabled !== false);
+        setLvEnabled(d?.linkvertise_enabled !== false);
         setKeyHours({
           offer: Number(d?.key_hours_offer) || 24,
           cpc: Number(d?.key_hours_cpc) || 6,
@@ -168,13 +172,14 @@ export default function VerifyProviderSelect() {
     if (showTutorialPopup || starting || showSubscriptionGate) return;
     // Wait for the offer check; if there are offers the visitor CHOOSES (no auto-advance).
     if (cpa.status === "loading" || cpaAvailable) return;
+    if (!lvEnabled) return; // Linkvertise off: never auto-jump to it
     const dlEnabled = isAdEnabled("verify-provider-select", "direct_link");
     const directLinkDone = !dlEnabled || directLinkClicks >= requiredClicks;
     if (!directLinkDone) return;
     const tmr = setTimeout(() => handleStart(), 900);
     return () => clearTimeout(tmr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable]);
+  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled]);
 
   const handleCloseTutorial = () => setShowTutorialPopup(false);
   const handleNeverShowAgain = () => {
@@ -242,9 +247,10 @@ export default function VerifyProviderSelect() {
   const directLinkDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
 
   const renderCpaChoice = () => (
-    choice === "cpa" ? (
+    (choice === "cpa" || !lvEnabled) ? (
       <div className="space-y-3">
         <CpaOfferWall offers={cpa.offers} subid={cpaSubid} country={cpa.country} hours={keyHours} onDone={() => navigate("/access-key")}
+          allowLinkvertise={lvEnabled}
           onStuckFallback={() => { cpaSession.setChoice(null); handleStart(); }} />
         {lvChoice && (
           <button type="button" onClick={() => { cpaSession.setChoice(null); setChoice(null); }} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
@@ -291,12 +297,46 @@ export default function VerifyProviderSelect() {
     )
   );
 
+  // Linkvertise OFF and no main offers: VPN visitors are told to turn it off (CPALead blocks VPN
+  // clicks); everyone else gets the Alternate offers (locker), with Premium as the paid way out.
+  const renderNoLinkvertise = () => (
+    cpa.blocked === "vpn" ? (
+      <div className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-5 text-center">
+        <p className="font-semibold">{t("VPN or proxy detected")}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t("Offers don't work through a VPN. Turn it off, then tap Try again.")}</p>
+        <button type="button" onClick={() => window.location.reload()} className="mt-4 inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90">
+          {t("Try again")}
+        </button>
+        <p className="mt-3 text-[11px] text-muted-foreground">
+          {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
+        </p>
+      </div>
+    ) : (
+      <div className="space-y-3">
+        <CpaOfferWall offers={[]} subid={cpaSubid} country={cpa.country} hours={keyHours} onDone={() => navigate("/access-key")}
+          allowLinkvertise={false} alternateOnly onStuckFallback={() => {}} />
+        <p className="text-center text-[11px] text-muted-foreground">
+          {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
+        </p>
+      </div>
+    )
+  );
+
   steps.push({
     key: "unlock",
     title: cpaAvailable ? t("Choose How to Get Your Key") : t("Get Your Free Key"),
     done: false,
     icon: <CheckCircle2 className="h-4 w-4" />,
-    render: () => cpaAvailable && directLinkDone ? renderCpaChoice() : (
+    render: () => cpaAvailable && directLinkDone ? renderCpaChoice()
+      : !lvEnabled ? (
+        directLinkDone && cpa.status === "none" ? renderNoLinkvertise() : (
+          <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center text-sm text-muted-foreground">
+            {directLinkDone
+              ? <span className="inline-flex items-center gap-2 font-medium text-primary"><Loader2 className="h-4 w-4 animate-spin" /> {t("Loading...")}</span>
+              : t("Finish the step above to continue…")}
+          </div>
+        )
+      ) : (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
         <p className="text-base font-semibold mb-2">
           {`Complete ${verifySteps} quick Linkvertise ${verifySteps === 1 ? "step" : "steps"} to get your key`}

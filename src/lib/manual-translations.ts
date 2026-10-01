@@ -4,6 +4,11 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "No main offers for your country right now": "Pas d'offres principales pour votre pays pour le moment",
+    "Try the alternate offers below — finish any one to get your key.": "Essayez les offres alternatives ci-dessous — terminez-en une pour obtenir votre clé.",
+    "VPN or proxy detected": "VPN ou proxy détecté",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Les offres ne marchent pas avec un VPN. Désactivez-le puis appuyez sur Réessayer.",
+    "Finish the step above to continue…": "Terminez l'étape ci-dessus pour continuer…",
     "{n}-hour key unlocked!": "Clé de {n} h débloquée !",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Récupérez-la maintenant — ou terminez l'offre ouverte pour obtenir une clé de {n} h.",
     "Get my {n}-hour key": "Obtenir ma clé de {n} h",
@@ -572,6 +577,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "No main offers for your country right now": "No hay ofertas principales para tu país por ahora",
+    "Try the alternate offers below — finish any one to get your key.": "Prueba las ofertas alternativas de abajo: termina cualquiera para obtener tu clave.",
+    "VPN or proxy detected": "VPN o proxy detectado",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Las ofertas no funcionan con VPN. Desactívala y toca Intentar de nuevo.",
+    "Finish the step above to continue…": "Completa el paso de arriba para continuar…",
     "{n}-hour key unlocked!": "¡Clave de {n} h desbloqueada!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Obtenla ahora, o termina la oferta que abriste para conseguir una clave de {n} h.",
     "Get my {n}-hour key": "Obtener mi clave de {n} h",
@@ -1140,6 +1150,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "No main offers for your country right now": "Gerade keine Hauptangebote für dein Land",
+    "Try the alternate offers below — finish any one to get your key.": "Probier die alternativen Angebote unten — schließ eins ab und hol dir deinen Schlüssel.",
+    "VPN or proxy detected": "VPN oder Proxy erkannt",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Angebote funktionieren nicht über ein VPN. Schalte es aus und tippe auf Erneut versuchen.",
+    "Finish the step above to continue…": "Schließ den Schritt oben ab, um weiterzumachen…",
     "{n}-hour key unlocked!": "{n}-Std.-Schlüssel freigeschaltet!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Hol ihn dir jetzt — oder schließ das geöffnete Angebot ab und bekomm einen {n}-Std.-Schlüssel.",
     "Get my {n}-hour key": "Meinen {n}-Std.-Schlüssel holen",
@@ -1708,6 +1723,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "No main offers for your country right now": "Sem ofertas principais para o seu país no momento",
+    "Try the alternate offers below — finish any one to get your key.": "Tente as ofertas alternativas abaixo — termine qualquer uma para pegar sua chave.",
+    "VPN or proxy detected": "VPN ou proxy detectado",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "As ofertas não funcionam com VPN. Desligue e toque em Tentar novamente.",
+    "Finish the step above to continue…": "Termine a etapa acima para continuar…",
     "{n}-hour key unlocked!": "Chave de {n} h liberada!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Pegue agora — ou termine a oferta que você abriu para ganhar uma chave de {n} h.",
     "Get my {n}-hour key": "Pegar minha chave de {n} h",
@@ -2276,6 +2296,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "No main offers for your country right now": "Сейчас нет основных предложений для вашей страны",
+    "Try the alternate offers below — finish any one to get your key.": "Попробуйте другие предложения ниже — выполните любое, чтобы получить ключ.",
+    "VPN or proxy detected": "Обнаружен VPN или прокси",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Предложения не работают через VPN. Отключите его и нажмите «Попробовать снова».",
+    "Finish the step above to continue…": "Завершите шаг выше, чтобы продолжить…",
     "{n}-hour key unlocked!": "Ключ на {n} ч разблокирован!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Заберите сейчас — или завершите открытое предложение и получите ключ на {n} ч.",
     "Get my {n}-hour key": "Получить ключ на {n} ч",
@@ -2844,6 +2869,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "No main offers for your country right now": "你所在的国家暂时没有主要任务",
+    "Try the alternate offers below — finish any one to get your key.": "试试下面的备选任务 — 完成任意一个即可获得密钥。",
+    "VPN or proxy detected": "检测到 VPN 或代理",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "使用 VPN 时任务无法生效。请关闭后点击“重试”。",
+    "Finish the step above to continue…": "完成上面的步骤以继续…",
     "{n}-hour key unlocked!": "{n} 小时密钥已解锁！",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "现在领取 — 或完成你打开的任务，获得 {n} 小时密钥。",
     "Get my {n}-hour key": "领取我的 {n} 小时密钥",
@@ -3412,6 +3442,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "No main offers for your country right now": "지금은 귀하의 국가에 주요 오퍼가 없습니다",
+    "Try the alternate offers below — finish any one to get your key.": "아래 대체 오퍼를 시도하세요 — 하나만 완료하면 키를 받아요.",
+    "VPN or proxy detected": "VPN 또는 프록시가 감지되었습니다",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "VPN을 사용하면 오퍼가 작동하지 않습니다. 끄고 '다시 시도'를 누르세요.",
+    "Finish the step above to continue…": "위 단계를 완료하면 계속할 수 있어요…",
     "{n}-hour key unlocked!": "{n}시간 키 잠금 해제!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "지금 받으세요 — 또는 열어 둔 오퍼를 완료하고 {n}시간 키를 받으세요.",
     "Get my {n}-hour key": "{n}시간 키 받기",
@@ -3980,6 +4015,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "No main offers for your country right now": "ตอนนี้ยังไม่มีข้อเสนอหลักสำหรับประเทศของคุณ",
+    "Try the alternate offers below — finish any one to get your key.": "ลองข้อเสนอทางเลือกด้านล่าง — ทำอย่างใดอย่างหนึ่งให้เสร็จเพื่อรับคีย์",
+    "VPN or proxy detected": "ตรวจพบ VPN หรือพร็อกซี",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "ข้อเสนอใช้ผ่าน VPN ไม่ได้ ปิด VPN แล้วแตะ ลองอีกครั้ง",
+    "Finish the step above to continue…": "ทำขั้นตอนด้านบนให้เสร็จเพื่อไปต่อ…",
     "{n}-hour key unlocked!": "ปลดล็อกคีย์ {n} ชม. แล้ว!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "รับเลยตอนนี้ — หรือทำข้อเสนอที่เปิดไว้ให้เสร็จเพื่อรับคีย์ {n} ชม.",
     "Get my {n}-hour key": "รับคีย์ {n} ชม. ของฉัน",
@@ -4548,6 +4588,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "No main offers for your country right now": "Belum ada offer utama untuk negaramu saat ini",
+    "Try the alternate offers below — finish any one to get your key.": "Coba offer alternatif di bawah — selesaikan salah satu untuk dapat key.",
+    "VPN or proxy detected": "VPN atau proxy terdeteksi",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Offer tidak bisa lewat VPN. Matikan, lalu ketuk Coba lagi.",
+    "Finish the step above to continue…": "Selesaikan langkah di atas untuk lanjut…",
     "{n}-hour key unlocked!": "Key {n} jam terbuka!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Ambil sekarang — atau selesaikan offer yang kamu buka untuk dapat key {n} jam.",
     "Get my {n}-hour key": "Ambil key {n} jam saya",
@@ -5116,6 +5161,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "No main offers for your country right now": "Wala pang pangunahing offer para sa bansa mo ngayon",
+    "Try the alternate offers below — finish any one to get your key.": "Subukan ang alternatibong offer sa ibaba — tapusin ang kahit isa para makuha ang key.",
+    "VPN or proxy detected": "May nakitang VPN o proxy",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Hindi gumagana ang offer kapag naka-VPN. I-off ito, tapos i-tap ang Subukan ulit.",
+    "Finish the step above to continue…": "Tapusin ang step sa itaas para magpatuloy…",
     "{n}-hour key unlocked!": "Na-unlock ang {n}-oras na key!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Kunin na ngayon — o tapusin ang offer na binuksan mo para makakuha ng {n}-oras na key.",
     "Get my {n}-hour key": "Kunin ang {n}-oras na key ko",
@@ -5684,6 +5734,11 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "No main offers for your country right now": "Hiện chưa có ưu đãi chính cho quốc gia của bạn",
+    "Try the alternate offers below — finish any one to get your key.": "Hãy thử các ưu đãi thay thế bên dưới — hoàn thành bất kỳ một cái để nhận key.",
+    "VPN or proxy detected": "Phát hiện VPN hoặc proxy",
+    "Offers don't work through a VPN. Turn it off, then tap Try again.": "Ưu đãi không hoạt động khi dùng VPN. Hãy tắt nó rồi nhấn Thử lại.",
+    "Finish the step above to continue…": "Hoàn thành bước ở trên để tiếp tục…",
     "{n}-hour key unlocked!": "Đã mở khóa key {n} giờ!",
     "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Nhận ngay — hoặc hoàn thành ưu đãi bạn đã mở để nhận key {n} giờ.",
     "Get my {n}-hour key": "Nhận key {n} giờ của tôi",

@@ -12,6 +12,7 @@ import { useTranslation } from "@/lib/translation-context";
 import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
 import { NoIndex } from "@/components/NoIndex";
 import { AdBlockGate } from "@/components/AdBlockGate";
+import { useLinkvertiseGuard } from "@/hooks/useLinkvertiseGuard";
 import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
@@ -21,6 +22,7 @@ import { FunnelHeader } from "@/components/FunnelHeader";
 
 
 export default function VerifyStep1() {
+  useLinkvertiseGuard();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();

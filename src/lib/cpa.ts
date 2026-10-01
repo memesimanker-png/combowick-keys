@@ -126,7 +126,8 @@ function deviceType() {
 
 /** Loads the visitor's offers once `enabled` is true. status "none" = no offers / disabled / failed. */
 export function useCpaOffers(enabled: boolean | null) {
-  const [state, setState] = useState<{ status: "loading" | "ready" | "none"; offers: CpaOffer[]; country: string }>(
+  // blocked = "vpn" when the visitor is on a VPN/proxy/datacenter IP (CPALead blocks those clicks)
+  const [state, setState] = useState<{ status: "loading" | "ready" | "none"; offers: CpaOffer[]; country: string; blocked?: string }>(
     { status: "loading", offers: [], country: "" },
   );
   useEffect(() => {
@@ -146,7 +147,7 @@ export function useCpaOffers(enabled: boolean | null) {
         const alreadyDone = doneOffers();
         const offers: CpaOffer[] = (Array.isArray(d?.offers) ? d.offers : [])
           .filter((o: CpaOffer) => CPA_KINDS.includes(o.kind) && !alreadyDone.has(o.offer_id));
-        setState({ status: offers.length ? "ready" : "none", offers, country });
+        setState({ status: offers.length ? "ready" : "none", offers, country, blocked: d?.blocked || undefined });
         cpaTrack(subid, offers.length ? "view" : "no_offers");
       })
       .catch(() => {

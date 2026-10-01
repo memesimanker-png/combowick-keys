@@ -41,9 +41,11 @@ type Phase = "pick" | "confirming" | "done" | "error";
 // lockers. Clicks and completions inside it postback with our subid like any other offer.
 const LOCKER = { toolId: "66967", slug: "GkKQSbW", publisherId: 3363958, hash: "#cw-locker" };
 
-export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 } }: {
+export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 }, allowLinkvertise = true, alternateOnly = false }: {
   offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void; country?: string;
   hours?: { offer: number; cpc: number; lv: number };
+  allowLinkvertise?: boolean; // admin master switch verify_settings.linkvertise_enabled
+  alternateOnly?: boolean;    // no main offers for this visitor -> only the Alternate offers (locker)
 }) {
   const hoursLabel = (n: number) => t("{n}-hour key").replace("{n}", String(n));
   const { t } = useTranslation();
@@ -290,7 +292,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           </div>
           {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
           <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
-          {stuck && openedThisVisit && !cpcReady && (
+          {stuck && openedThisVisit && !cpcReady && (allowLinkvertise || (lockerEligible && current?.offer_id !== "locker")) && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
               {lockerEligible && current?.offer_id !== "locker" && (
                 <div className="mb-2.5">
@@ -301,16 +303,25 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                   </button>
                 </div>
               )}
+              {allowLinkvertise && (<>
               <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
               <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
                 className="mt-2 inline-flex items-center gap-1 rounded-md border border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10">
                 {t("Use Linkvertise instead")} · {hoursLabel(hours.lv)} <ArrowRight className="h-3 w-3" />
               </button>
+              </>)}
             </div>
           )}
         </div>
       )}
 
+      {alternateOnly && (
+        <div className="rounded-lg border border-border bg-secondary/20 p-3 text-center text-sm">
+          <p className="font-semibold">{t("No main offers for your country right now")}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{t("Try the alternate offers below — finish any one to get your key.")}</p>
+        </div>
+      )}
+      {!alternateOnly && (<>
       <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Sparkles className="h-4 w-4 shrink-0 text-primary" />
         <span>{t("Pick the kind of step you like best, then do one.")}</span>
@@ -378,9 +389,11 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
         </section>
       )}
 
+      </>)}
+
       {lockerEligible && (
-        <div className="space-y-1.5 border-t border-border/50 pt-4">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</p>
+        <div className={`space-y-1.5 ${alternateOnly ? "" : "border-t border-border/50 pt-4"}`}>
+          {!alternateOnly && <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</p>}
           <a
             ref={lockerRef}
             href={`${window.location.origin}${window.location.pathname}${LOCKER.hash}`}

@@ -2039,6 +2039,7 @@ function VerifyStepsControl() {
   const [steps, setSteps] = useState<number>(3); // 2 or 3 Linkvertise steps
   const [cpaEnabled, setCpaEnabled] = useState<boolean>(true); // offer-wall choice on provider-select
   const [lvChoice, setLvChoice] = useState<boolean>(true); // Linkvertise option on the choice screen
+  const [lvEnabled, setLvEnabled] = useState<boolean>(true); // MASTER: Linkvertise anywhere in the free-key flow
   // Free-key length by how the visitor unlocked (what it paid you)
   const [hOffer, setHOffer] = useState<number>(24);
   const [hCpc, setHCpc] = useState<number>(6);
@@ -2048,7 +2049,7 @@ function VerifyStepsControl() {
 
   useEffect(() => {
     supabase.from("verify_settings")
-      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps, cpa_enabled, linkvertise_choice, key_hours_offer, key_hours_cpc, key_hours_linkvertise")
+      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps, cpa_enabled, linkvertise_choice, linkvertise_enabled, key_hours_offer, key_hours_cpc, key_hours_linkvertise")
       .eq("id", 1).maybeSingle()
       .then(({ data }) => {
         const d = data as any;
@@ -2061,6 +2062,7 @@ function VerifyStepsControl() {
         if (d?.verify_steps === 2 || d?.verify_steps === 3) setSteps(d.verify_steps);
         if (typeof d?.cpa_enabled === "boolean") setCpaEnabled(d.cpa_enabled);
         if (typeof d?.linkvertise_choice === "boolean") setLvChoice(d.linkvertise_choice);
+        if (typeof d?.linkvertise_enabled === "boolean") setLvEnabled(d.linkvertise_enabled);
         if (d?.key_hours_offer) setHOffer(d.key_hours_offer);
         if (d?.key_hours_cpc) setHCpc(d.key_hours_cpc);
         if (d?.key_hours_linkvertise) setHLv(d.key_hours_linkvertise);
@@ -2071,6 +2073,7 @@ function VerifyStepsControl() {
   const save = async () => {
     if (clicks < 1 || clicks > 10) { toast({ variant: "destructive", title: "Provider-Select clicks must be 1–10" }); return; }
     if (accessClicks < 0 || accessClicks > 10) { toast({ variant: "destructive", title: "Access Key clicks must be 0–10" }); return; }
+    if (!lvEnabled && !cpaEnabled) { toast({ variant: "destructive", title: "Turn on the offer wall or Linkvertise", description: "With both off there is no free way to get a key." }); return; }
     if ([hOffer, hCpc, hLv].some((h) => !(h >= 1 && h <= 720))) { toast({ variant: "destructive", title: "Key hours must be 1–720" }); return; }
     if (hCpc < hLv) { toast({ variant: "destructive", title: "Quick-click key must be at least as long as the Linkvertise key", description: "Otherwise people pick Linkvertise (~0.7¢) over a ~9¢ click." }); return; }
     if (extHours < 1 || extHours > 876000) { toast({ variant: "destructive", title: "Extension hours must be 1–876000" }); return; }
@@ -2090,6 +2093,7 @@ function VerifyStepsControl() {
         verify_steps: steps,
         cpa_enabled: cpaEnabled,
         linkvertise_choice: lvChoice,
+        linkvertise_enabled: lvEnabled,
         key_hours_offer: hOffer,
         key_hours_cpc: hCpc,
         key_hours_linkvertise: hLv,
@@ -2139,6 +2143,20 @@ function VerifyStepsControl() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-1">{steps === 2 ? "Step 1 → Step 2 → key (less friction, more completions)." : "Step 1 → Step 2 → Step 3 → key (more ad revenue per key)."}</p>
+        </div>
+        <div className="rounded-lg border border-red-500/40 bg-red-500/5 p-3">
+          <label className="flex items-center justify-between gap-3 text-sm font-medium">
+            <span>Linkvertise (master switch)</span>
+            <button type="button" disabled={loading} onClick={() => setLvEnabled((v) => !v)}
+              className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${lvEnabled ? "bg-primary" : "bg-muted"}`} aria-pressed={lvEnabled}>
+              <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${lvEnabled ? "left-[22px]" : "left-0.5"}`} />
+            </button>
+          </label>
+          <p className="text-xs text-muted-foreground mt-1">
+            {lvEnabled
+              ? "ON — Linkvertise is used as the fallback (no offers, VPN, stuck) and on the choice screen if that toggle is on."
+              : "OFF — no Linkvertise anywhere in the free-key flow. No-offer visitors get Alternate offers, VPN visitors are told to turn it off, old /verify/step links bounce back."}
+          </p>
         </div>
         <div className="rounded-lg border border-border/60 bg-secondary/30 p-3">
           <label className="flex items-center justify-between gap-3 text-sm font-medium">
