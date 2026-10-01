@@ -25,6 +25,7 @@ const SS = {
   away: "cpa_away_ms",
   current: "cpa_current_offer",
   choice: "cpa_choice",
+  links: "cpa_links",
 };
 
 // Kept in localStorage (not sessionStorage): CPALead postbacks can land 10–15 min after the
@@ -38,7 +39,7 @@ function ssDel(k: string) { try { localStorage.removeItem(k); } catch {} }
 (function expireOld() {
   try {
     const at = Number(localStorage.getItem(STARTED)) || 0;
-    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", STARTED].forEach(ssDel); }
+    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", "cpa_links", STARTED].forEach(ssDel); }
   } catch {}
 })();
 
@@ -61,6 +62,22 @@ export const cpaSession = {
   getChoice: () => ssGet(SS.choice),
   setChoice: (c: string | null) => (c ? ssSet(SS.choice, c) : ssDel(SS.choice)),
   /** after a key token is issued — next verify run starts a fresh offer-wall session */
+  // The FIRST tracking link a visitor opened for each offer is kept and reused. The offers API
+  // rotates tracking domains on every call, and each open is a new CPALead click — advertisers
+  // (e.g. Surveoo) flag a registration started on one click and finished on another as fraud.
+  linkFor: (o: CpaOffer): string => {
+    try { return (JSON.parse(ssGet(SS.links) || "{}")[o.offer_id]?.link) || o.offerlink; } catch { return o.offerlink; }
+  },
+  lastOpenAt: (offerId: string): number => {
+    try { return Number(JSON.parse(ssGet(SS.links) || "{}")[offerId]?.at) || 0; } catch { return 0; }
+  },
+  rememberOpen: (o: CpaOffer, link: string) => {
+    try {
+      const m = JSON.parse(ssGet(SS.links) || "{}");
+      m[o.offer_id] = { link: m[o.offer_id]?.link || link, at: Date.now() };
+      ssSet(SS.links, JSON.stringify(m));
+    } catch {}
+  },
   reset: () => { Object.values(SS).forEach(ssDel); ssDel(STARTED); },
 };
 

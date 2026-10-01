@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Utilisez vos vraies infos et terminez d'un seul coup — ne le rouvrez pas et n'utilisez pas de VPN, sinon ça ne comptera pas.",
     "Ad blocker detected": "Bloqueur de pubs détecté",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Les clés gratuites sont financées par la pub. Désactivez votre bloqueur de pubs pour ce site, puis appuyez sur Réessayer.",
     "How to turn it off:": "Comment le désactiver :",
@@ -555,6 +556,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Usa tus datos reales y termínalo de una vez — no lo vuelvas a abrir ni uses VPN, o no contará.",
     "Ad blocker detected": "Bloqueador de anuncios detectado",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Las claves gratis se pagan con anuncios. Desactiva tu bloqueador de anuncios en este sitio y toca Intentar de nuevo.",
     "How to turn it off:": "Cómo desactivarlo:",
@@ -1106,6 +1108,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Nutze deine echten Daten und mach es in einem Durchgang fertig — nicht erneut öffnen und kein VPN, sonst zählt es nicht.",
     "Ad blocker detected": "Werbeblocker erkannt",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Kostenlose Schlüssel werden durch Werbung bezahlt. Schalte deinen Werbeblocker für diese Seite aus und tippe dann auf Erneut versuchen.",
     "How to turn it off:": "So schaltest du ihn aus:",
@@ -1657,6 +1660,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Use seus dados reais e termine de uma vez — não reabra nem use VPN, ou não vai contar.",
     "Ad blocker detected": "Bloqueador de anúncios detectado",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "As chaves grátis são pagas por anúncios. Desative seu bloqueador de anúncios neste site e toque em Tentar novamente.",
     "How to turn it off:": "Como desativar:",
@@ -2208,6 +2212,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Используйте настоящие данные и пройдите всё за один раз — не открывайте заново и не используйте VPN, иначе не засчитается.",
     "Ad blocker detected": "Обнаружен блокировщик рекламы",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Бесплатные ключи оплачиваются рекламой. Отключите блокировщик рекламы для этого сайта и нажмите «Попробовать снова».",
     "How to turn it off:": "Как отключить:",
@@ -2759,6 +2764,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "请使用真实信息并一次完成 — 不要重新打开或使用 VPN，否则不会计入。",
     "Ad blocker detected": "检测到广告拦截器",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "免费密钥靠广告支持。请为本网站关闭广告拦截器，然后点击“重试”。",
     "How to turn it off:": "如何关闭：",
@@ -3310,6 +3316,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "실제 정보를 사용하고 한 번에 끝내세요 — 다시 열거나 VPN을 쓰면 인정되지 않습니다.",
     "Ad blocker detected": "광고 차단기가 감지되었습니다",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "무료 키는 광고로 운영됩니다. 이 사이트에서 광고 차단기를 끄고 '다시 시도'를 누르세요.",
     "How to turn it off:": "끄는 방법:",
@@ -3861,6 +3868,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "ใช้ข้อมูลจริงและทำให้เสร็จในครั้งเดียว — อย่าเปิดใหม่หรือใช้ VPN ไม่อย่างนั้นจะไม่นับ",
     "Ad blocker detected": "ตรวจพบตัวบล็อกโฆษณา",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "คีย์ฟรีอยู่ได้ด้วยโฆษณา กรุณาปิดตัวบล็อกโฆษณาสำหรับเว็บนี้ แล้วแตะ ลองอีกครั้ง",
     "How to turn it off:": "วิธีปิด:",
@@ -4412,6 +4420,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Pakai data asli dan selesaikan sekaligus — jangan dibuka ulang atau pakai VPN, kalau tidak tidak akan dihitung.",
     "Ad blocker detected": "Pemblokir iklan terdeteksi",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Key gratis dibiayai oleh iklan. Matikan pemblokir iklan untuk situs ini, lalu ketuk Coba lagi.",
     "How to turn it off:": "Cara mematikannya:",
@@ -4963,6 +4972,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Gamitin ang totoong detalye at tapusin nang tuloy-tuloy — huwag buksan ulit o gumamit ng VPN, kundi hindi ito mabibilang.",
     "Ad blocker detected": "May nakitang ad blocker",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Ang libreng key ay binabayaran ng ads. Paki-off ang ad blocker para sa site na ito, tapos i-tap ang Subukan ulit.",
     "How to turn it off:": "Paano i-off:",
@@ -5514,6 +5524,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.": "Dùng thông tin thật và làm xong một lần — đừng mở lại hoặc dùng VPN, nếu không sẽ không được tính.",
     "Ad blocker detected": "Phát hiện trình chặn quảng cáo",
     "Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.": "Key miễn phí được trả bằng quảng cáo. Vui lòng tắt trình chặn quảng cáo cho trang này rồi nhấn Thử lại.",
     "How to turn it off:": "Cách tắt:",

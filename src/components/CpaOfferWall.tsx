@@ -134,13 +134,14 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
 
   // Offers open through real <a target="_blank"> links (popup blockers stop window.open on
   // some phones — people then spam-tapped one offer ~60x, which looks like click fraud to
-  // CPALead). Re-tapping the same offer within REOPEN_MS doesn't fire another click.
-  const REOPEN_MS = 15000;
+  // CPALead). Re-opening the same offer within REOPEN_MS doesn't fire another click — every
+  // extra click restarts the advertiser's session and gets the visitor flagged as fraud.
+  const REOPEN_MS = 3 * 60 * 1000;
   const lastOpen = useRef<Record<string, number>>({});
   const [hint, setHint] = useState("");
   const onOfferClick = (e: React.MouseEvent, o: CpaOffer) => {
     const now = Date.now();
-    if (now - (lastOpen.current[o.offer_id] || 0) < REOPEN_MS) {
+    if (now - Math.max(lastOpen.current[o.offer_id] || 0, cpaSession.lastOpenAt(o.offer_id)) < REOPEN_MS) {
       e.preventDefault();
       setHint(o.offer_id);
       window.setTimeout(() => setHint(""), 4000);
@@ -150,6 +151,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
     setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
+    cpaSession.rememberOpen(o, (e.currentTarget as HTMLAnchorElement).href || o.offerlink);
     cpaTrack(subid, "open_offer", { kind: o.kind, offer_id: o.offer_id });
   };
 
@@ -192,7 +194,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}
             </span>
             {!isAway && (
-              <a href={current.offerlink} target="_blank" rel="noopener noreferrer" onClick={(e) => onOfferClick(e, current)} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
+              <a href={cpaSession.linkFor(current)} target="_blank" rel="noopener noreferrer" onClick={(e) => onOfferClick(e, current)} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
                 {t("Finish offer")}
               </a>
             )}
@@ -243,12 +245,13 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
             <sec.icon className={`h-4 w-4 ${sec.text}`} />
             <h4 className="text-sm font-bold">{t(sec.title)}</h4>
           </div>
-          <p className={`mb-3 text-xs font-medium ${sec.text}`}>{t(sec.note)}</p>
+          <p className={`mb-1 text-xs font-medium ${sec.text}`}>{t(sec.note)}</p>
+          <p className="mb-3 text-[11px] text-muted-foreground">{t("Use your real details and finish it in one go — don't reopen it or use a VPN, or it won't count.")}</p>
           <div className="space-y-2.5">
             {byKind[tab].map((o) => (
               <div key={o.offer_id} className="cw-glow">
               <a
-                href={o.offerlink}
+                href={cpaSession.linkFor(o)}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => onOfferClick(e, o)}
