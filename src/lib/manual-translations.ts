@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Paused for now": "En pause pour le moment",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Nous testons un moyen plus rapide d'obtenir des clés. Utilisez l'offre ci-dessus pour le moment — Linkvertise reviendra bientôt.",
     "Completed": "Terminé",
     "Confirming…": "Confirmation…",
     "You're all set — getting your key…": "C'est bon — récupération de votre clé…",
@@ -536,6 +538,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Paused for now": "En pausa por ahora",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Estamos probando una forma más rápida de obtener claves. Usa la oferta de arriba por ahora — Linkvertise volverá pronto.",
     "Completed": "Completado",
     "Confirming…": "Confirmando…",
     "You're all set — getting your key…": "¡Listo! Obteniendo tu clave…",
@@ -1068,6 +1072,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Paused for now": "Vorerst pausiert",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Wir testen einen schnelleren Weg, Schlüssel zu bekommen. Nutze vorerst das Angebot oben — Linkvertise ist bald zurück.",
     "Completed": "Abgeschlossen",
     "Confirming…": "Wird bestätigt…",
     "You're all set — getting your key…": "Alles erledigt — dein Schlüssel wird geholt…",
@@ -1600,6 +1606,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Paused for now": "Pausado por enquanto",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Estamos testando um jeito mais rápido de obter chaves. Use a oferta acima por enquanto — o Linkvertise volta em breve.",
     "Completed": "Concluído",
     "Confirming…": "Confirmando…",
     "You're all set — getting your key…": "Tudo pronto — pegando sua chave…",
@@ -2132,6 +2140,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Paused for now": "Временно приостановлено",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Мы тестируем более быстрый способ получить ключ. Пока используйте предложение выше — Linkvertise скоро вернётся.",
     "Completed": "Готово",
     "Confirming…": "Подтверждаем…",
     "You're all set — getting your key…": "Всё готово — получаем ваш ключ…",
@@ -2664,6 +2674,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Paused for now": "暂时停用",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "我们正在测试一种更快获取密钥的方式。请先使用上面的任务 — Linkvertise 很快回来。",
     "Completed": "已完成",
     "Confirming…": "正在确认…",
     "You're all set — getting your key…": "全部完成 — 正在获取你的密钥…",
@@ -3196,6 +3208,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Paused for now": "잠시 중단됨",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "더 빠르게 키를 받는 방법을 테스트 중입니다. 지금은 위의 오퍼를 이용하세요 — Linkvertise는 곧 돌아옵니다.",
     "Completed": "완료",
     "Confirming…": "확인 중…",
     "You're all set — getting your key…": "완료되었습니다 — 키를 받는 중…",
@@ -3728,6 +3742,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Paused for now": "หยุดชั่วคราว",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "เรากำลังทดสอบวิธีรับคีย์ที่เร็วกว่า ตอนนี้ใช้ข้อเสนอด้านบนไปก่อน — Linkvertise จะกลับมาเร็วๆ นี้",
     "Completed": "เสร็จสิ้น",
     "Confirming…": "กำลังยืนยัน…",
     "You're all set — getting your key…": "เรียบร้อย — กำลังรับคีย์ของคุณ…",
@@ -4260,6 +4276,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Paused for now": "Dijeda sementara",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Kami sedang menguji cara lebih cepat untuk dapat key. Pakai offer di atas dulu — Linkvertise segera kembali.",
     "Completed": "Selesai",
     "Confirming…": "Mengonfirmasi…",
     "You're all set — getting your key…": "Beres — sedang mengambil key kamu…",
@@ -4792,6 +4810,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Paused for now": "Naka-pause muna",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Sinusubukan namin ang mas mabilis na paraan para makakuha ng key. Gamitin muna ang offer sa itaas — babalik din agad ang Linkvertise.",
     "Completed": "Tapos na",
     "Confirming…": "Kinukumpirma…",
     "You're all set — getting your key…": "Ayos na — kinukuha ang key mo…",
@@ -5324,6 +5344,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Paused for now": "Tạm dừng",
+    "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Chúng tôi đang thử một cách nhận key nhanh hơn. Tạm thời hãy dùng ưu đãi ở trên — Linkvertise sẽ sớm quay lại.",
     "Completed": "Hoàn thành",
     "Confirming…": "Đang xác nhận…",
     "You're all set — getting your key…": "Xong rồi — đang lấy key của bạn…",
