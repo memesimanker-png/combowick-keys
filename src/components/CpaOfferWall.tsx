@@ -60,6 +60,12 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   const [phase, setPhase] = useState<Phase>("pick");
   const [finished, setFinished] = useState(false); // real postback seen
   const [stuck, setStuck] = useState(false); // spent CPA_AWAY_SECONDS on the offer, still no postback
+  // A click-sized payout (pay-per-click, < OFFER_MIN_PAYOUT) arrived: the short key is ready, but the
+  // visitor may still finish a bigger offer (e.g. $1.52 install that ALSO paid a click) for the long key.
+  const OFFER_MIN_PAYOUT = 0.2;
+  const [cpcReady, setCpcReady] = useState(false);
+  const [cpcDismissed, setCpcDismissed] = useState(false);
+  const cpcReadyRef = useRef(false); // the 4s poll closure would otherwise see a stale cpcReady
   // The Linkvertise way out only shows after an offer was actually opened during THIS visit
   // (a remembered offer from an earlier visit is not enough).
   const [openedThisVisit, setOpenedThisVisit] = useState(false);
@@ -109,7 +115,13 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           const j = await r.json();
           if (j?.completed) {
             if (j.offer_id) markOfferDone(String(j.offer_id));
-            setFinished(true);
+            if (Number(j.payout) >= OFFER_MIN_PAYOUT) setFinished(true); // real offer -> long key, auto
+            else if (!cpcReadyRef.current) {
+              cpcReadyRef.current = true;
+              setCpcReady(true); // click only -> let them choose: short key now, or finish for the long one
+              document.getElementById("interact-form-overlay")?.remove();
+              document.body.style.overflow = "";
+            }
           }
         }
       } catch {}
@@ -231,6 +243,34 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
         </div>
       )}
 
+      {cpcReady && phase === "pick" && !cpcDismissed && (
+        <div className="rounded-lg border border-green-500/40 bg-green-500/10 p-4 text-center">
+          <CheckCircle2 className="mx-auto mb-1.5 h-8 w-8 text-green-400" />
+          <p className="text-base font-bold">{t("{n}-hour key unlocked!").replace("{n}", String(hours.cpc))}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {t("Get it now — or finish the offer you opened to get a {n}-hour key instead.").replace("{n}", String(hours.offer))}
+          </p>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:justify-center">
+            <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "cpc_take" }); confirm(); }}
+              className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90">
+              {t("Get my {n}-hour key").replace("{n}", String(hours.cpc))} <ArrowRight className="h-4 w-4" />
+            </button>
+            <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "cpc_keepgoing" }); setCpcDismissed(true); }}
+              className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-secondary/60">
+              {t("Keep going for a {n}-hour key").replace("{n}", String(hours.offer))}
+            </button>
+          </div>
+        </div>
+      )}
+      {cpcReady && phase === "pick" && cpcDismissed && (
+        <div className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/5 p-2.5 text-xs">
+          <CheckCircle2 className="h-4 w-4 shrink-0 text-green-400" />
+          <span className="min-w-0 flex-1">{t("{n}-hour key ready.").replace("{n}", String(hours.cpc))} {t("Finish an offer to upgrade it to {n} hours.").replace("{n}", String(hours.offer))}</span>
+          <button type="button" onClick={() => confirm()} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
+            {t("Get it now")}
+          </button>
+        </div>
+      )}
       {current && phase === "pick" && (
         <div className="rounded-lg border border-primary/30 bg-primary/10 p-3">
           <div className="flex items-center gap-2 text-xs">
@@ -250,7 +290,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           </div>
           {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
           <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
-          {stuck && openedThisVisit && (
+          {stuck && openedThisVisit && !cpcReady && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
               {lockerEligible && current?.offer_id !== "locker" && (
                 <div className="mb-2.5">

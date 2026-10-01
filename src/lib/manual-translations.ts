@@ -4,6 +4,13 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "{n}-hour key unlocked!": "Clé de {n} h débloquée !",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Récupérez-la maintenant — ou terminez l'offre ouverte pour obtenir une clé de {n} h.",
+    "Get my {n}-hour key": "Obtenir ma clé de {n} h",
+    "Keep going for a {n}-hour key": "Continuer pour une clé de {n} h",
+    "{n}-hour key ready.": "Clé de {n} h prête.",
+    "Finish an offer to upgrade it to {n} hours.": "Terminez une offre pour passer à {n} h.",
+    "Get it now": "Obtenir maintenant",
     "{n}-hour key": "clé de {n} h",
     "Alternate offers": "Offres alternatives",
     "Stuck? Try the alternate offers instead.": "Bloqué ? Essayez plutôt les offres alternatives.",
@@ -565,6 +572,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "{n}-hour key unlocked!": "¡Clave de {n} h desbloqueada!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Obtenla ahora, o termina la oferta que abriste para conseguir una clave de {n} h.",
+    "Get my {n}-hour key": "Obtener mi clave de {n} h",
+    "Keep going for a {n}-hour key": "Seguir para una clave de {n} h",
+    "{n}-hour key ready.": "Clave de {n} h lista.",
+    "Finish an offer to upgrade it to {n} hours.": "Termina una oferta para subirla a {n} h.",
+    "Get it now": "Obtener ahora",
     "{n}-hour key": "clave de {n} h",
     "Alternate offers": "Ofertas alternativas",
     "Stuck? Try the alternate offers instead.": "¿Atascado? Prueba las ofertas alternativas.",
@@ -1126,6 +1140,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "{n}-hour key unlocked!": "{n}-Std.-Schlüssel freigeschaltet!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Hol ihn dir jetzt — oder schließ das geöffnete Angebot ab und bekomm einen {n}-Std.-Schlüssel.",
+    "Get my {n}-hour key": "Meinen {n}-Std.-Schlüssel holen",
+    "Keep going for a {n}-hour key": "Weitermachen für {n} Std.",
+    "{n}-hour key ready.": "{n}-Std.-Schlüssel bereit.",
+    "Finish an offer to upgrade it to {n} hours.": "Schließ ein Angebot ab, um auf {n} Std. zu erhöhen.",
+    "Get it now": "Jetzt holen",
     "{n}-hour key": "{n}-Std.-Schlüssel",
     "Alternate offers": "Alternative Angebote",
     "Stuck? Try the alternate offers instead.": "Hängst du fest? Probier stattdessen die alternativen Angebote.",
@@ -1687,6 +1708,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "{n}-hour key unlocked!": "Chave de {n} h liberada!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Pegue agora — ou termine a oferta que você abriu para ganhar uma chave de {n} h.",
+    "Get my {n}-hour key": "Pegar minha chave de {n} h",
+    "Keep going for a {n}-hour key": "Continuar por uma chave de {n} h",
+    "{n}-hour key ready.": "Chave de {n} h pronta.",
+    "Finish an offer to upgrade it to {n} hours.": "Termine uma oferta para subir para {n} h.",
+    "Get it now": "Pegar agora",
     "{n}-hour key": "chave de {n} h",
     "Alternate offers": "Ofertas alternativas",
     "Stuck? Try the alternate offers instead.": "Travou? Tente as ofertas alternativas.",
@@ -2248,6 +2276,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "{n}-hour key unlocked!": "Ключ на {n} ч разблокирован!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Заберите сейчас — или завершите открытое предложение и получите ключ на {n} ч.",
+    "Get my {n}-hour key": "Получить ключ на {n} ч",
+    "Keep going for a {n}-hour key": "Продолжить ради ключа на {n} ч",
+    "{n}-hour key ready.": "Ключ на {n} ч готов.",
+    "Finish an offer to upgrade it to {n} hours.": "Выполните предложение, чтобы продлить до {n} ч.",
+    "Get it now": "Получить сейчас",
     "{n}-hour key": "ключ на {n} ч",
     "Alternate offers": "Другие предложения",
     "Stuck? Try the alternate offers instead.": "Застряли? Попробуйте другие предложения.",
@@ -2809,6 +2844,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "{n}-hour key unlocked!": "{n} 小时密钥已解锁！",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "现在领取 — 或完成你打开的任务，获得 {n} 小时密钥。",
+    "Get my {n}-hour key": "领取我的 {n} 小时密钥",
+    "Keep going for a {n}-hour key": "继续，拿 {n} 小时密钥",
+    "{n}-hour key ready.": "{n} 小时密钥已就绪。",
+    "Finish an offer to upgrade it to {n} hours.": "完成一个任务即可升级到 {n} 小时。",
+    "Get it now": "立即领取",
     "{n}-hour key": "{n} 小时密钥",
     "Alternate offers": "备选任务",
     "Stuck? Try the alternate offers instead.": "卡住了？试试备选任务。",
@@ -3370,6 +3412,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "{n}-hour key unlocked!": "{n}시간 키 잠금 해제!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "지금 받으세요 — 또는 열어 둔 오퍼를 완료하고 {n}시간 키를 받으세요.",
+    "Get my {n}-hour key": "{n}시간 키 받기",
+    "Keep going for a {n}-hour key": "계속해서 {n}시간 키 받기",
+    "{n}-hour key ready.": "{n}시간 키 준비됨.",
+    "Finish an offer to upgrade it to {n} hours.": "오퍼를 완료하면 {n}시간으로 업그레이드됩니다.",
+    "Get it now": "지금 받기",
     "{n}-hour key": "{n}시간 키",
     "Alternate offers": "대체 오퍼",
     "Stuck? Try the alternate offers instead.": "막혔나요? 대체 오퍼를 시도해 보세요.",
@@ -3931,6 +3980,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "{n}-hour key unlocked!": "ปลดล็อกคีย์ {n} ชม. แล้ว!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "รับเลยตอนนี้ — หรือทำข้อเสนอที่เปิดไว้ให้เสร็จเพื่อรับคีย์ {n} ชม.",
+    "Get my {n}-hour key": "รับคีย์ {n} ชม. ของฉัน",
+    "Keep going for a {n}-hour key": "ทำต่อเพื่อรับคีย์ {n} ชม.",
+    "{n}-hour key ready.": "คีย์ {n} ชม. พร้อมแล้ว",
+    "Finish an offer to upgrade it to {n} hours.": "ทำข้อเสนอให้เสร็จเพื่ออัปเกรดเป็น {n} ชม.",
+    "Get it now": "รับเลย",
     "{n}-hour key": "คีย์ {n} ชม.",
     "Alternate offers": "ข้อเสนอทางเลือก",
     "Stuck? Try the alternate offers instead.": "ติดอยู่ใช่ไหม? ลองข้อเสนอทางเลือกแทน",
@@ -4492,6 +4548,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "{n}-hour key unlocked!": "Key {n} jam terbuka!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Ambil sekarang — atau selesaikan offer yang kamu buka untuk dapat key {n} jam.",
+    "Get my {n}-hour key": "Ambil key {n} jam saya",
+    "Keep going for a {n}-hour key": "Lanjut untuk key {n} jam",
+    "{n}-hour key ready.": "Key {n} jam siap.",
+    "Finish an offer to upgrade it to {n} hours.": "Selesaikan offer untuk naik ke {n} jam.",
+    "Get it now": "Ambil sekarang",
     "{n}-hour key": "key {n} jam",
     "Alternate offers": "Offer alternatif",
     "Stuck? Try the alternate offers instead.": "Macet? Coba offer alternatif saja.",
@@ -5053,6 +5116,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "{n}-hour key unlocked!": "Na-unlock ang {n}-oras na key!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Kunin na ngayon — o tapusin ang offer na binuksan mo para makakuha ng {n}-oras na key.",
+    "Get my {n}-hour key": "Kunin ang {n}-oras na key ko",
+    "Keep going for a {n}-hour key": "Ituloy para sa {n}-oras na key",
+    "{n}-hour key ready.": "Handa na ang {n}-oras na key.",
+    "Finish an offer to upgrade it to {n} hours.": "Tapusin ang isang offer para gawing {n} oras.",
+    "Get it now": "Kunin na",
     "{n}-hour key": "{n}-oras na key",
     "Alternate offers": "Alternatibong offer",
     "Stuck? Try the alternate offers instead.": "Na-stuck? Subukan ang alternatibong offer.",
@@ -5614,6 +5684,13 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "{n}-hour key unlocked!": "Đã mở khóa key {n} giờ!",
+    "Get it now — or finish the offer you opened to get a {n}-hour key instead.": "Nhận ngay — hoặc hoàn thành ưu đãi bạn đã mở để nhận key {n} giờ.",
+    "Get my {n}-hour key": "Nhận key {n} giờ của tôi",
+    "Keep going for a {n}-hour key": "Tiếp tục để nhận key {n} giờ",
+    "{n}-hour key ready.": "Key {n} giờ đã sẵn sàng.",
+    "Finish an offer to upgrade it to {n} hours.": "Hoàn thành một ưu đãi để nâng lên {n} giờ.",
+    "Get it now": "Nhận ngay",
     "{n}-hour key": "key {n} giờ",
     "Alternate offers": "Ưu đãi thay thế",
     "Stuck? Try the alternate offers instead.": "Bị kẹt? Hãy thử các ưu đãi thay thế.",
