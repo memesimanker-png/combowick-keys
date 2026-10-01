@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Pick an offer below": "Choisissez une offre ci-dessous",
     "No payment yet?": "Toujours rien ?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Certaines offres ne comptent qu'une fois par personne. Essayez plutôt une des offres principales ci-dessus.",
     "Unlock Script Code": "Débloquer le code du script",
@@ -589,6 +590,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Pick an offer below": "Elige una oferta abajo",
     "No payment yet?": "¿Aún no se confirma?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Algunas ofertas solo cuentan una vez por persona. Prueba una de las ofertas principales de arriba.",
     "Unlock Script Code": "Desbloquear el código del script",
@@ -1174,6 +1176,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Pick an offer below": "Wähle unten ein Angebot",
     "No payment yet?": "Noch nichts?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Manche Angebote zählen nur einmal pro Person. Probier stattdessen eins der Hauptangebote oben.",
     "Unlock Script Code": "Skript-Code freischalten",
@@ -1759,6 +1762,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Pick an offer below": "Escolha uma oferta abaixo",
     "No payment yet?": "Ainda nada?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Algumas ofertas só contam uma vez por pessoa. Tente uma das ofertas principais acima.",
     "Unlock Script Code": "Desbloquear o código do script",
@@ -2344,6 +2348,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Pick an offer below": "Выберите предложение ниже",
     "No payment yet?": "Пока не засчитано?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Некоторые предложения засчитываются только один раз на человека. Попробуйте одно из основных предложений выше.",
     "Unlock Script Code": "Разблокировать код скрипта",
@@ -2929,6 +2934,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Pick an offer below": "在下方选择一个任务",
     "No payment yet?": "还没确认？",
     "Some offers only count once per person. Try one of the main offers above instead.": "有些任务每人只能计一次。请改试上面的主要任务。",
     "Unlock Script Code": "解锁脚本代码",
@@ -3514,6 +3520,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Pick an offer below": "아래에서 오퍼를 고르세요",
     "No payment yet?": "아직 확인되지 않았나요?",
     "Some offers only count once per person. Try one of the main offers above instead.": "일부 오퍼는 1인당 한 번만 인정됩니다. 위의 주요 오퍼 중 하나를 시도해 보세요.",
     "Unlock Script Code": "스크립트 코드 잠금 해제",
@@ -4099,6 +4106,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Pick an offer below": "เลือกข้อเสนอด้านล่าง",
     "No payment yet?": "ยังไม่ผ่านใช่ไหม?",
     "Some offers only count once per person. Try one of the main offers above instead.": "บางข้อเสนอนับได้ครั้งเดียวต่อคน ลองข้อเสนอหลักด้านบนแทน",
     "Unlock Script Code": "ปลดล็อกโค้ดสคริปต์",
@@ -4684,6 +4692,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Pick an offer below": "Pilih offer di bawah",
     "No payment yet?": "Belum terhitung?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Beberapa offer hanya dihitung sekali per orang. Coba salah satu offer utama di atas.",
     "Unlock Script Code": "Buka kode script",
@@ -5269,6 +5278,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Pick an offer below": "Pumili ng offer sa ibaba",
     "No payment yet?": "Wala pa rin?",
     "Some offers only count once per person. Try one of the main offers above instead.": "May mga offer na isang beses lang bibilang bawat tao. Subukan ang isa sa mga pangunahing offer sa itaas.",
     "Unlock Script Code": "I-unlock ang script code",
@@ -5854,6 +5864,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Pick an offer below": "Chọn một ưu đãi bên dưới",
     "No payment yet?": "Vẫn chưa được tính?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Một số ưu đãi chỉ tính một lần mỗi người. Hãy thử một ưu đãi chính ở trên.",
     "Unlock Script Code": "Mở khóa mã script",

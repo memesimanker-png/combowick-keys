@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, PauseCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, PauseCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import {
@@ -61,6 +61,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     return m;
   }, [offers]);
 
+  const kindsWithOffers = useMemo(() => CPA_KINDS.filter((k) => byKind[k].length > 0), [byKind]);
   const [tab, setTab] = useState<CpaKind | null>(() => CPA_KINDS.find((k) => byKind[k].length) ?? null);
   const [current, setCurrent] = useState<CpaOffer | null>(() => cpaSession.getCurrent());
   const [awayMs, setAwayMs] = useState(() => cpaSession.getAway());
@@ -127,8 +128,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
             else if (!cpcReadyRef.current) {
               cpcReadyRef.current = true;
               setCpcReady(true); // click only -> let them choose: short key now, or finish for the long one
-              document.getElementById("interact-form-overlay")?.remove();
-              document.body.style.overflow = "";
+              setLockerOpen(false);
             }
           }
         }
@@ -145,8 +145,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     if (onConfirm) {
       const ok = await onConfirm(subid).catch(() => false);
       if (ok) {
-        document.getElementById("interact-form-overlay")?.remove();
-        document.body.style.overflow = "";
+        setLockerOpen(false);
         cpaTrack(subid, "verified_unlock", current ? { kind: current.kind, offer_id: current.offer_id } : {});
         cpaSession.reset();
         setPhase("done");
@@ -160,8 +159,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     const { data, error } = await supabase.functions.invoke("issue-verify-token", { body: { method: "cpa", subid } });
     if (!error && data?.success && data?.token) {
       localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at, hours: data.hours }));
-      document.getElementById("interact-form-overlay")?.remove(); // locker pop-up must not cover "Completed"
-      document.body.style.overflow = "";
+      setLockerOpen(false); // locker panel must not cover "Completed"
       ["step1_completed", "step2_completed", "step3_completed"].forEach((k) => localStorage.setItem(k, "true"));
       localStorage.removeItem("verification_step");
       cpaTrack(subid, "verified_unlock", current ? { kind: current.kind, offer_id: current.offer_id } : {});
@@ -185,30 +183,34 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // Pay-per-click offers exist in many countries and on phones (ES, BD, Gulf, TH, US iOS…), and the
   // locker picks offers for the visitor's own country/device, so it is offered to everyone.
   const lockerEligible = true;
+  // The locker is embedded INSIDE our own card (iframe) instead of CPALead's pop-up. Its unlock /
+  // close messages just collapse the panel — the key itself still comes from our postback poll.
+  const [lockerOpen, setLockerOpen] = useState(false);
+  const lockerSrc = useMemo(() => {
+    // Same URL CPALead's overlay script builds (values are encoded twice, like theirs).
+    const u = new URL(`https://www.fastsvr.com/unlock/${encodeURIComponent(LOCKER.slug)}`);
+    u.searchParams.set("mode", "overlay");
+    u.searchParams.set("title", encodeURIComponent(t("Complete 1 offer below")));
+    u.searchParams.set("lockedUrl", encodeURIComponent(`${window.location.origin}${window.location.pathname}`));
+    u.searchParams.set("publisherUserId", String(LOCKER.publisherId));
+    u.searchParams.set("subid", encodeURIComponent(subid));
+    return u.toString();
+  }, [subid, t]);
   useEffect(() => {
-    if (!lockerEligible) return;
-    (window as any).CPAlead_PublisherUserId = LOCKER.publisherId;
-    if (!document.getElementById("cpalead-interact")) {
-      const sc = document.createElement("script");
-      sc.id = "cpalead-interact";
-      sc.src = "https://cdnflair.com/js/interact-form.js";
-      sc.async = true;
-      document.body.appendChild(sc);
-    }
-    // On unlock the locker navigates to the link's href — ours is this page + #cw-locker, so it is only
-    // a hash change (no reload). Close its overlay; our postback poll hands out the key.
-    const onHash = () => {
-      if (window.location.hash !== LOCKER.hash) return;
-      document.getElementById("interact-form-overlay")?.remove();
-      document.body.style.overflow = "";
-      history.replaceState(null, "", window.location.pathname + window.location.search);
+    if (!lockerOpen) return;
+    const onMsg = (e: MessageEvent) => {
+      if (!["https://www.fastsvr.com", "https://www.cpalead.com"].includes(e.origin)) return;
+      const type = (e.data as any)?.type;
+      if (type === "cpalead-unlocked" || type === "cpalead-close-request") setLockerOpen(false);
     };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, [lockerEligible]);
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, [lockerOpen]);
+  const lockerBoxRef = useRef<HTMLDivElement | null>(null);
 
-  const lockerRef = useRef<HTMLAnchorElement | null>(null);
   const openLocker = () => {
+    setLockerOpen(true);
+    window.setTimeout(() => lockerBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
     const o: CpaOffer = { offer_id: "locker", title: t("Alternate offers"), description: "", kind: "app", offerlink: "", offerphoto: "" };
     setOpenedThisVisit(true);
     setCurrent(o);
@@ -323,7 +325,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               {lockerEligible && current?.offer_id !== "locker" && (
                 <div className="mb-2.5">
                   <p className="text-muted-foreground">{t("Stuck? Try the alternate offers instead.")}</p>
-                  <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "stuck_alt" }); lockerRef.current?.click(); }}
+                  <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "stuck_alt" }); openLocker(); }}
                     className="mt-2 inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground hover:opacity-90">
                     {t("Alternate offers")}{showHours ? ` · ${hoursLabel(hours.cpc)}` : ""} <ArrowRight className="h-3 w-3" />
                   </button>
@@ -350,12 +352,14 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       {!alternateOnly && (<>
       <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Sparkles className="h-4 w-4 shrink-0 text-primary" />
-        <span>{t("Pick the kind of step you like best, then do one.")}</span>
+        <span>{kindsWithOffers.length > 1 ? t("Pick the kind of step you like best, then do one.") : t("Pick an offer below")}</span>
         {showHours && <span className="ml-auto shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{hoursLabel(hours.offer)}</span>}
       </p>
 
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {CPA_KINDS.map((k) => {
+      {/* Only kinds that actually have offers; no tile row at all when there is just one kind. */}
+      {kindsWithOffers.length > 1 && (
+      <div className={`grid gap-2 ${kindsWithOffers.length === 3 ? "grid-cols-3" : kindsWithOffers.length === 4 ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2"}`}>
+        {kindsWithOffers.map((k) => {
           const s = SECTIONS[k], n = byKind[k].length, on = tab === k;
           return (
             <button
@@ -368,12 +372,13 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <s.icon className={`h-5 w-5 ${s.text}`} />
               <span>{t(s.label)}</span>
               <span className="text-[10px] font-normal text-muted-foreground">
-                {n === 0 ? t("none") : n === 1 ? t("1 option") : t("{n} options").replace("{n}", String(n))}
+                {n === 1 ? t("1 option") : t("{n} options").replace("{n}", String(n))}
               </span>
             </button>
           );
         })}
       </div>
+      )}
 
       {tab && sec && (
         <section>
@@ -420,14 +425,25 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       {lockerEligible && (
         <div className={`space-y-1.5 ${alternateOnly ? "" : "border-t border-border/50 pt-4"}`}>
           {!alternateOnly && <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</p>}
-          <a
-            ref={lockerRef}
-            href={`${window.location.origin}${window.location.pathname}${LOCKER.hash}`}
-            data-interact-trigger=""
-            data-tool-id={LOCKER.toolId}
-            data-tool-slug={LOCKER.slug}
-            data-subid={subid}
-            data-static-title={t("Complete 1 offer below")}
+          {lockerOpen ? (
+            <div ref={lockerBoxRef} className="scroll-mt-20 overflow-hidden rounded-lg border border-primary/40 bg-card">
+              <div className="flex items-center gap-2 border-b border-border/60 px-3 py-2">
+                <span className="text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
+                {showHours && <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>}
+                <button type="button" onClick={() => setLockerOpen(false)} aria-label={t("Close")} className="ml-auto rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground">
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <iframe
+                src={lockerSrc}
+                title={t("Alternate offers")}
+                className="block h-[460px] w-full border-0 bg-[#111] sm:h-[520px]"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms"
+              />
+            </div>
+          ) : (
+          <button
+            type="button"
             onClick={openLocker}
             className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/40 hover:bg-secondary/40"
           >
@@ -437,13 +453,17 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <span className="block text-xs text-muted-foreground">{t("A different list of offers. Finish any one.")}</span>
             </span>
             {showHours && <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>}
-          </a>
+          </button>
+          )}
         </div>
       )}
 
-      <p className="flex items-center justify-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-medium text-primary">
-        <ShieldCheck className="h-4 w-4 shrink-0" /> {t("Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.")}
-      </p>
+      {/* Before an offer is opened only — afterwards the status box at the top says the same. */}
+      {!current && (
+        <p className="flex items-center justify-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-medium text-primary">
+          <ShieldCheck className="h-4 w-4 shrink-0" /> {t("Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.")}
+        </p>
+      )}
     </div>
   );
 }
