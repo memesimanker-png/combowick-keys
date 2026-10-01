@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, Timer } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, PauseCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import {
@@ -159,7 +159,6 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
     );
   }
 
-  const pct = Math.min(100, (awayMs / (CPA_AWAY_SECONDS * 1000)) * 100);
   const sec = tab ? SECTIONS[tab] : null;
 
   return (
@@ -176,7 +175,7 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
       {current && phase === "pick" && (
         <div className="rounded-lg border border-primary/30 bg-primary/10 p-3">
           <div className="flex items-center gap-2 text-xs">
-            {isAway ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <Timer className="h-4 w-4 shrink-0 text-primary" />}
+            {isAway ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <PauseCircle className="h-4 w-4 shrink-0 text-amber-400" />}
             <span className="min-w-0 flex-1">
               {isAway
                 ? <><b className="block truncate">{current.title}</b>{t("Checking… finish the offer in the other tab.")}</>
@@ -189,9 +188,6 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
             )}
           </div>
           {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
-            <div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${pct}%` }} />
-          </div>
         </div>
       )}
 
