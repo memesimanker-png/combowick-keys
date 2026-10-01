@@ -125,11 +125,24 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
 
   useEffect(() => { if (finished && phase === "pick") confirm(); }, [finished, phase, confirm]);
 
-  const openOffer = (o: CpaOffer) => {
+  // Offers open through real <a target="_blank"> links (popup blockers stop window.open on
+  // some phones — people then spam-tapped one offer ~60x, which looks like click fraud to
+  // CPALead). Re-tapping the same offer within REOPEN_MS doesn't fire another click.
+  const REOPEN_MS = 15000;
+  const lastOpen = useRef<Record<string, number>>({});
+  const [hint, setHint] = useState("");
+  const onOfferClick = (e: React.MouseEvent, o: CpaOffer) => {
+    const now = Date.now();
+    if (now - (lastOpen.current[o.offer_id] || 0) < REOPEN_MS) {
+      e.preventDefault();
+      setHint(o.offer_id);
+      window.setTimeout(() => setHint(""), 4000);
+      return;
+    }
+    lastOpen.current[o.offer_id] = now;
     setCurrent(o);
     cpaSession.setCurrent(o);
     cpaTrack(subid, "open_offer", { kind: o.kind, offer_id: o.offer_id });
-    window.open(o.offerlink, "_blank", "noopener,noreferrer");
   };
 
   const pickTab = (k: CpaKind) => { setTab(k); cpaTrack(subid, "tab", { kind: k }); };
@@ -170,11 +183,12 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}
             </span>
             {!isAway && (
-              <button type="button" onClick={() => openOffer(current)} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
+              <a href={current.offerlink} target="_blank" rel="noopener noreferrer" onClick={(e) => onOfferClick(e, current)} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
                 {t("Finish offer")}
-              </button>
+              </a>
             )}
           </div>
+          {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
             <div className="h-full rounded-full bg-primary transition-[width] duration-500" style={{ width: `${pct}%` }} />
           </div>
@@ -217,9 +231,11 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
           <div className="space-y-2.5">
             {byKind[tab].map((o) => (
               <div key={o.offer_id} className="cw-glow">
-              <button
-                type="button"
-                onClick={() => openOffer(o)}
+              <a
+                href={o.offerlink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => onOfferClick(e, o)}
                 className="group flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] p-3 text-left transition-colors hover:bg-primary/5"
               >
                 <img
@@ -236,7 +252,8 @@ export function CpaOfferWall({ offers, subid, onDone }: { offers: CpaOffer[]; su
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
                   {current?.offer_id === o.offer_id ? t("Continue") : t("Start")} <ArrowRight className="h-3.5 w-3.5" />
                 </span>
-              </button>
+              </a>
+              {hint === o.offer_id && !current && <p className="px-3 pb-2 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
               </div>
             ))}
           </div>

@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Already opened — check your other tab.": "Déjà ouvert — vérifiez votre autre onglet.",
     "Start": "Commencer",
     "Paused for now": "En pause pour le moment",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Nous testons un moyen plus rapide d'obtenir des clés. Utilisez l'offre ci-dessus pour le moment — Linkvertise reviendra bientôt.",
@@ -539,6 +540,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Already opened — check your other tab.": "Ya está abierto — revisa tu otra pestaña.",
     "Start": "Empezar",
     "Paused for now": "En pausa por ahora",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Estamos probando una forma más rápida de obtener claves. Usa la oferta de arriba por ahora — Linkvertise volverá pronto.",
@@ -1074,6 +1076,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Already opened — check your other tab.": "Schon geöffnet — schau in deinen anderen Tab.",
     "Start": "Starten",
     "Paused for now": "Vorerst pausiert",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Wir testen einen schnelleren Weg, Schlüssel zu bekommen. Nutze vorerst das Angebot oben — Linkvertise ist bald zurück.",
@@ -1609,6 +1612,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Already opened — check your other tab.": "Já aberto — confira sua outra aba.",
     "Start": "Começar",
     "Paused for now": "Pausado por enquanto",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Estamos testando um jeito mais rápido de obter chaves. Use a oferta acima por enquanto — o Linkvertise volta em breve.",
@@ -2144,6 +2148,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Already opened — check your other tab.": "Уже открыто — проверьте другую вкладку.",
     "Start": "Начать",
     "Paused for now": "Временно приостановлено",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Мы тестируем более быстрый способ получить ключ. Пока используйте предложение выше — Linkvertise скоро вернётся.",
@@ -2679,6 +2684,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Already opened — check your other tab.": "已打开 — 请查看另一个标签页。",
     "Start": "开始",
     "Paused for now": "暂时停用",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "我们正在测试一种更快获取密钥的方式。请先使用上面的任务 — Linkvertise 很快回来。",
@@ -3214,6 +3220,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Already opened — check your other tab.": "이미 열렸습니다 — 다른 탭을 확인하세요.",
     "Start": "시작",
     "Paused for now": "잠시 중단됨",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "더 빠르게 키를 받는 방법을 테스트 중입니다. 지금은 위의 오퍼를 이용하세요 — Linkvertise는 곧 돌아옵니다.",
@@ -3749,6 +3756,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Already opened — check your other tab.": "เปิดแล้ว — ดูที่แท็บอื่นของคุณ",
     "Start": "เริ่ม",
     "Paused for now": "หยุดชั่วคราว",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "เรากำลังทดสอบวิธีรับคีย์ที่เร็วกว่า ตอนนี้ใช้ข้อเสนอด้านบนไปก่อน — Linkvertise จะกลับมาเร็วๆ นี้",
@@ -4284,6 +4292,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Already opened — check your other tab.": "Sudah dibuka — cek tab kamu yang lain.",
     "Start": "Mulai",
     "Paused for now": "Dijeda sementara",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Kami sedang menguji cara lebih cepat untuk dapat key. Pakai offer di atas dulu — Linkvertise segera kembali.",
@@ -4819,6 +4828,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Already opened — check your other tab.": "Nabuksan na — tingnan ang isa mong tab.",
     "Start": "Simulan",
     "Paused for now": "Naka-pause muna",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Sinusubukan namin ang mas mabilis na paraan para makakuha ng key. Gamitin muna ang offer sa itaas — babalik din agad ang Linkvertise.",
@@ -5354,6 +5364,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Already opened — check your other tab.": "Đã mở — hãy xem tab còn lại của bạn.",
     "Start": "Bắt đầu",
     "Paused for now": "Tạm dừng",
     "We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.": "Chúng tôi đang thử một cách nhận key nhanh hơn. Tạm thời hãy dùng ưu đãi ở trên — Linkvertise sẽ sớm quay lại.",
