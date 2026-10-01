@@ -64,7 +64,10 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   const kindsWithOffers = useMemo(() => CPA_KINDS.filter((k) => byKind[k].length > 0), [byKind]);
   const [tab, setTab] = useState<CpaKind | null>(() => CPA_KINDS.find((k) => byKind[k].length) ?? null);
   const [current, setCurrent] = useState<CpaOffer | null>(() => cpaSession.getCurrent());
-  const [awayMs, setAwayMs] = useState(() => cpaSession.getAway());
+  // Away time / "stuck" is per visit — a returning visitor starts fresh (their offer is still remembered
+  // and polled quietly, so a late postback still unlocks them).
+  const [awayMs, setAwayMs] = useState(0);
+  const [hideReturning, setHideReturning] = useState(false);
   const [isAway, setIsAway] = useState(false);
   const [phase, setPhase] = useState<Phase>("pick");
   const [finished, setFinished] = useState(false); // real postback seen
@@ -296,7 +299,16 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           </button>
         </div>
       )}
-      {current && phase === "pick" && (
+      {current && phase === "pick" && !openedThisVisit && !cpcReady && !hideReturning && (
+        <div className="flex items-start gap-2 rounded-lg border border-border/60 bg-secondary/20 px-3 py-2 text-xs text-muted-foreground">
+          <Loader2 className="mt-0.5 h-3.5 w-3.5 shrink-0 animate-spin text-primary/70" />
+          <span className="min-w-0 flex-1">{t("Waiting for your earlier offer to confirm — this page unlocks automatically if it does.")}</span>
+          <button type="button" onClick={() => setHideReturning(true)} aria-label={t("Close")} className="shrink-0 rounded p-0.5 hover:bg-secondary hover:text-foreground">
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+      {current && phase === "pick" && openedThisVisit && (
         <div className="rounded-lg border border-primary/30 bg-primary/10 p-3">
           <div className="flex items-center gap-2 text-xs">
             {isAway ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <PauseCircle className="h-4 w-4 shrink-0 text-amber-400" />}

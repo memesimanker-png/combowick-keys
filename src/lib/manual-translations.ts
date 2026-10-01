@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "En attente de la confirmation de votre offre précédente — cette page se débloquera automatiquement si elle est confirmée.",
     "Pick an offer below": "Choisissez une offre ci-dessous",
     "No payment yet?": "Toujours rien ?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Certaines offres ne comptent qu'une fois par personne. Essayez plutôt une des offres principales ci-dessus.",
@@ -590,6 +591,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Esperando la confirmación de tu oferta anterior: esta página se desbloqueará sola si se confirma.",
     "Pick an offer below": "Elige una oferta abajo",
     "No payment yet?": "¿Aún no se confirma?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Algunas ofertas solo cuentan una vez por persona. Prueba una de las ofertas principales de arriba.",
@@ -1176,6 +1178,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Warte auf die Bestätigung deines früheren Angebots — die Seite wird automatisch freigeschaltet, wenn es bestätigt wird.",
     "Pick an offer below": "Wähle unten ein Angebot",
     "No payment yet?": "Noch nichts?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Manche Angebote zählen nur einmal pro Person. Probier stattdessen eins der Hauptangebote oben.",
@@ -1762,6 +1765,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Aguardando a confirmação da sua oferta anterior — esta página desbloqueia sozinha se for confirmada.",
     "Pick an offer below": "Escolha uma oferta abaixo",
     "No payment yet?": "Ainda nada?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Algumas ofertas só contam uma vez por pessoa. Tente uma das ofertas principais acima.",
@@ -2348,6 +2352,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Ждём подтверждения вашего прошлого предложения — страница разблокируется автоматически, если оно засчитается.",
     "Pick an offer below": "Выберите предложение ниже",
     "No payment yet?": "Пока не засчитано?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Некоторые предложения засчитываются только один раз на человека. Попробуйте одно из основных предложений выше.",
@@ -2934,6 +2939,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "正在等待你之前的任务确认 — 一旦确认，本页面会自动解锁。",
     "Pick an offer below": "在下方选择一个任务",
     "No payment yet?": "还没确认？",
     "Some offers only count once per person. Try one of the main offers above instead.": "有些任务每人只能计一次。请改试上面的主要任务。",
@@ -3520,6 +3526,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "이전 오퍼 확인을 기다리는 중 — 확인되면 이 페이지가 자동으로 잠금 해제됩니다.",
     "Pick an offer below": "아래에서 오퍼를 고르세요",
     "No payment yet?": "아직 확인되지 않았나요?",
     "Some offers only count once per person. Try one of the main offers above instead.": "일부 오퍼는 1인당 한 번만 인정됩니다. 위의 주요 오퍼 중 하나를 시도해 보세요.",
@@ -4106,6 +4113,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "กำลังรอการยืนยันข้อเสนอก่อนหน้า — ถ้ายืนยันแล้ว หน้านี้จะปลดล็อกอัตโนมัติ",
     "Pick an offer below": "เลือกข้อเสนอด้านล่าง",
     "No payment yet?": "ยังไม่ผ่านใช่ไหม?",
     "Some offers only count once per person. Try one of the main offers above instead.": "บางข้อเสนอนับได้ครั้งเดียวต่อคน ลองข้อเสนอหลักด้านบนแทน",
@@ -4692,6 +4700,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Menunggu konfirmasi offer sebelumnya — halaman ini akan terbuka otomatis jika terkonfirmasi.",
     "Pick an offer below": "Pilih offer di bawah",
     "No payment yet?": "Belum terhitung?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Beberapa offer hanya dihitung sekali per orang. Coba salah satu offer utama di atas.",
@@ -5278,6 +5287,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Hinihintay ang kumpirmasyon ng naunang offer mo — awtomatikong mag-a-unlock ang page na ito kapag nakumpirma.",
     "Pick an offer below": "Pumili ng offer sa ibaba",
     "No payment yet?": "Wala pa rin?",
     "Some offers only count once per person. Try one of the main offers above instead.": "May mga offer na isang beses lang bibilang bawat tao. Subukan ang isa sa mga pangunahing offer sa itaas.",
@@ -5864,6 +5874,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Đang chờ xác nhận ưu đãi trước đó của bạn — trang này sẽ tự mở khóa nếu được xác nhận.",
     "Pick an offer below": "Chọn một ưu đãi bên dưới",
     "No payment yet?": "Vẫn chưa được tính?",
     "Some offers only count once per person. Try one of the main offers above instead.": "Một số ưu đãi chỉ tính một lần mỗi người. Hãy thử một ưu đãi chính ở trên.",
