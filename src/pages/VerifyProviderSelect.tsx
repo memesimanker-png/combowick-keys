@@ -130,15 +130,12 @@ export default function VerifyProviderSelect() {
 
   const handleDirectLinkClick = () => {
     window.open(DIRECT_LINK_URL, "_blank", "noopener,noreferrer");
+    // No toasts here: the button already shows the progress (n/N → ✓), and the toast lingered on
+    // top of the page (it showed up again for users after a refresh).
     setDirectLinkClicks((prev) => {
       const next = Math.min(prev + 1, requiredClicks);
       localStorage.setItem("direct_link_clicks", String(next));
-      if (next >= requiredClicks) {
-        localStorage.setItem("direct_link_completed", "true");
-        toast({ title: t("Processing Complete"), description: t("You can continue to unlock your key now.") });
-      } else {
-        toast({ title: t("One More Click"), description: t("Click the button one more time to process.") });
-      }
+      if (next >= requiredClicks) localStorage.setItem("direct_link_completed", "true");
       return next;
     });
   };
