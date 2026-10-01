@@ -1,6 +1,24 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { keyInfo, extendKey } from "../_shared/shop-key-api.ts";
 
+// CPALead path: the extension is only applied once the CPA backend confirms a real postback for the
+// visitor's offer-wall session (cpa_subid). Hours follow the payout like free keys:
+//   real offer (>= $0.20) -> verify_settings.extension_hours · pay-per-click -> key_hours_cpc.
+// With Linkvertise switched off (verify_settings.linkvertise_enabled=false) a cpa_subid is REQUIRED.
+const CPA_VERIFY_URL = "https://hkspkqbnjdkwyyvxqglv.supabase.co/functions/v1/cpa-verify";
+const CPA_VERIFY_SECRET = Deno.env.get("CPA_VERIFY_SECRET") || "";
+const OFFER_MIN_PAYOUT = 0.2;
+async function cpaCheck(subid: string, consume: boolean): Promise<{ ok: boolean; payout: number; reason?: string }> {
+  if (!CPA_VERIFY_SECRET) return { ok: false, payout: 0, reason: "not_configured" };
+  try {
+    const u = `${CPA_VERIFY_URL}?subid=${encodeURIComponent(subid)}${consume ? "&consume=1" : ""}&secret=${encodeURIComponent(CPA_VERIFY_SECRET)}`;
+    const j = await (await fetch(u)).json().catch(() => ({}));
+    return j?.ok ? { ok: true, payout: Number(j.payout) || 0 } : { ok: false, payout: 0, reason: j?.reason || "offer_not_done" };
+  } catch {
+    return { ok: false, payout: 0, reason: "cpa_unreachable" };
+  }
+}
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -54,7 +72,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { token, hwid } = body as { token?: string; hwid?: string };
+    const { token, hwid, cpa_subid } = body as { token?: string; hwid?: string; cpa_subid?: string };
 
     if (!token || typeof token !== "string") {
       return json({ success: false, error: "Missing completion token." }, 400);
@@ -92,6 +110,23 @@ Deno.serve(async (req) => {
       return json({ success: false, error: "This extension session expired. Please start again." }, 410);
     }
 
+    // CPALead check (before claiming the row, so a not-yet-arrived postback can simply be retried).
+    const cleanSubid = typeof cpa_subid === "string" ? cpa_subid.replace(/[^A-Za-z0-9_]/g, "").slice(0, 40) : "";
+    let addHours = row.hours;
+    if (cleanSubid) {
+      const chk = await cpaCheck(cleanSubid, false);
+      if (!chk.ok) return json({ success: false, error: "offer_not_done", reason: chk.reason }, 403);
+      if (chk.payout < OFFER_MIN_PAYOUT) {
+        const { data: vs } = await service.from("verify_settings").select("key_hours_cpc").eq("id", 1).maybeSingle();
+        addHours = Number((vs as any)?.key_hours_cpc) > 0 ? Number((vs as any).key_hours_cpc) : 6;
+      }
+    } else {
+      const { data: vs } = await service.from("verify_settings").select("linkvertise_enabled").eq("id", 1).maybeSingle();
+      if ((vs as any)?.linkvertise_enabled === false) {
+        return json({ success: false, error: "Complete an offer to add hours." }, 403);
+      }
+    }
+
     // Atomically claim the row (pending -> processing). If another request already
     // claimed it, `claimed` will be empty and we abort — prevents double extension.
     const { data: claimed, error: claimErr } = await service
@@ -111,7 +146,7 @@ Deno.serve(async (req) => {
     const beforeExpires = beforeInfo.data?.expires_at ?? null;
 
     // Apply the +hours on the external key server.
-    const ext = await extendKey(row.key_value, row.hours);
+    const ext = await extendKey(row.key_value, addHours);
     if (!ext.ok) {
       // Roll back the claim so the user can retry the same completion.
       await service.from("key_extensions").update({ status: "pending" }).eq("id", row.id);
@@ -132,8 +167,12 @@ Deno.serve(async (req) => {
         completed_at: new Date().toISOString(),
         before_expires_at: beforeExpires,
         after_expires_at: afterExpires,
+        hours: addHours,
       })
       .eq("id", row.id);
+
+    // Burn the offer-wall session only after the hours were really added (one extension per payment).
+    if (cleanSubid) await cpaCheck(cleanSubid, true);
 
     // Keep local purchase record (if any) in sync.
     if (afterExpires) {
@@ -145,7 +184,7 @@ Deno.serve(async (req) => {
 
     return json({
       success: true,
-      hours: row.hours,
+      hours: addHours,
       key: row.key_value,
       before_expires_at: beforeExpires,
       after_expires_at: afterExpires,

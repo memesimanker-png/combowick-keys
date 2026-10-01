@@ -74,15 +74,13 @@ export default function ScriptUnlockStart() {
     }
   };
 
-  // Auto-fire once slug is resolved AND the Linkvertise config has loaded (same-tab nav).
+  // Once the slug is resolved, open the script page with the offer wall already open (?unlock=1).
+  // The gate there uses CPALead offers; Linkvertise only if switched on and the visitor has no offers.
   useEffect(() => {
     if (fired.current || resolving || !slug) return;
-    if (links.every((l) => l === null)) return; // wait for config
     fired.current = true;
-    const t = setTimeout(launch, 400);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [links, slug, resolving]);
+    navigate(`/scripts/${encodeURIComponent(slug)}?unlock=1`, { replace: true });
+  }, [slug, resolving, navigate]);
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">

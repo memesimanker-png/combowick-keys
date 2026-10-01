@@ -12,6 +12,17 @@ import { NoIndex } from "@/components/NoIndex";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { getDeviceId } from "@/lib/device-id";
+import { CpaGate } from "@/components/CpaGate";
+
+// Extension in progress with the CPALead offer wall (kept for a reload / returning visitor).
+type ExtPending = { token: string; hwid: string; key: string; mode?: "cpa"; step?: number; ts: number };
+const PENDING_MAX_MS = 2 * 3600 * 1000;
+function readPending(): ExtPending | null {
+  try {
+    const p = JSON.parse(localStorage.getItem("ext_pending") || "null") as ExtPending | null;
+    return p && p.mode === "cpa" && p.token && Date.now() - p.ts < PENDING_MAX_MS ? p : null;
+  } catch { return null; }
+}
 
 export default function ExtendKey() {
   const navigate = useNavigate();
@@ -21,6 +32,10 @@ export default function ExtendKey() {
   const [key, setKey] = useState("");
   const [hours, setHours] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  // Started extension waiting for an offer (CPALead postback) — shows the offer wall.
+  const [pending, setPending] = useState<ExtPending | null>(() => readPending());
+  const [result, setResult] = useState<{ hours?: number; after?: number | null } | null>(null);
+  const [extError, setExtError] = useState("");
 
   useEffect(() => {
     // Prefill the key the user most recently generated on this device.
@@ -62,17 +77,40 @@ export default function ExtendKey() {
         return;
       }
 
-      // Store the pending extension for the return trip (token + hwid + key).
-      localStorage.setItem("ext_pending", JSON.stringify({
-        token: data.token, hwid, key: cleanKey, step: 1, ts: Date.now(),
-      }));
-
-      const returnUrl = `${window.location.origin}/ad-return/ext/step1`;
-      window.location.href = buildLinkvertiseUrl(links[0], returnUrl);
+      // Next: one offer on the CPALead wall (Linkvertise only if switched on and no offers).
+      const p: ExtPending = { token: data.token, hwid, key: cleanKey, mode: "cpa", ts: Date.now() };
+      localStorage.setItem("ext_pending", JSON.stringify(p));
+      setPending(p);
+      setLoading(false);
     } catch {
       toast({ variant: "destructive", title: "Network error", description: "Please try again." });
       setLoading(false);
     }
+  };
+
+  // Old Linkvertise path for this extension (only when Linkvertise is on and the visitor has no offers).
+  const linkvertiseFallback = () => {
+    if (!pending) return;
+    localStorage.setItem("ext_pending", JSON.stringify({ ...pending, mode: undefined, step: 1, ts: Date.now() }));
+    window.location.href = buildLinkvertiseUrl(links[0], `${window.location.origin}/ad-return/ext/step1`);
+  };
+
+  // Called once a CPALead postback exists; the server re-checks it and decides the hours.
+  const completeExtension = async (subid: string): Promise<boolean> => {
+    if (!pending) return false;
+    const { data, error } = await supabase.functions.invoke("complete-key-extension", {
+      body: { token: pending.token, hwid: pending.hwid, cpa_subid: subid },
+    });
+    if (!error && data?.success) {
+      localStorage.removeItem("ext_pending");
+      setResult({ hours: data.hours, after: data.after_hours_left });
+      return true;
+    }
+    let serverErr = "";
+    try { const ctx = (error as any)?.context; if (ctx?.json) { const j = await ctx.json(); serverErr = j?.error || ""; } } catch { /* noop */ }
+    if (!serverErr && data?.success === false) serverErr = data.error || "";
+    if (serverErr && serverErr !== "offer_not_done") setExtError(serverErr); // real failure, not just a slow postback
+    return false;
   };
 
   return (
@@ -86,10 +124,37 @@ export default function ExtendKey() {
             <Clock className="h-12 w-12 text-primary mx-auto" />
             <h1 className="text-3xl font-bold">{t("Add More Hours")}</h1>
             <p className="text-muted-foreground">
-              {t("Complete 3 quick Linkvertise steps to stack more hours onto your key's remaining time.")}
+              {t("Complete 1 quick offer to stack more hours onto your key's remaining time.")}
             </p>
           </div>
 
+          {pending ? (
+            <Card>
+              <CardContent className="space-y-3 pt-6">
+                {result ? (
+                  <div className="text-center">
+                    <p className="text-lg font-bold">+{result.hours}h ✅</p>
+                    {result.after != null && <p className="text-sm text-muted-foreground">{t("Time left on your key:")} {result.after}h</p>}
+                    <Button className="mt-4 w-full" onClick={() => navigate("/access-key")}>{t("Back")}</Button>
+                  </div>
+                ) : (
+                  <>
+                    {extError && <p className="rounded-md border border-destructive/40 bg-destructive/10 p-2 text-center text-xs">{extError}</p>}
+                    <CpaGate
+                      onConfirm={completeExtension}
+                      onDone={() => {}}
+                      doneTitle={`${t("Hours added!")} ✅`}
+                      doneText={t("Your key has more time now.")}
+                      lvFallback={linkvertiseFallback}
+                    />
+                    <Button variant="ghost" className="w-full" onClick={() => { localStorage.removeItem("ext_pending"); setPending(null); }}>
+                      {t("Cancel")}
+                    </Button>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          ) : (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2"><KeyRound className="h-4 w-4 text-primary" /> {t("Your HWID Key")}</CardTitle>
@@ -106,6 +171,7 @@ export default function ExtendKey() {
               </Button>
             </CardContent>
           </Card>
+          )}
         </div>
       </main>
     </div>

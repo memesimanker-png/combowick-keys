@@ -41,13 +41,19 @@ type Phase = "pick" | "confirming" | "done" | "error";
 // lockers. Clicks and completions inside it postback with our subid like any other offer.
 const LOCKER = { toolId: "66967", slug: "GkKQSbW", publisherId: 3363958, hash: "#cw-locker" };
 
-export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 }, allowLinkvertise = true, alternateOnly = false }: {
+export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 }, allowLinkvertise = true, alternateOnly = false, onConfirm, doneTitle, doneText, showHours = true }: {
   offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void; country?: string;
   hours?: { offer: number; cpc: number; lv: number };
   allowLinkvertise?: boolean; // admin master switch verify_settings.linkvertise_enabled
   alternateOnly?: boolean;    // no main offers for this visitor -> only the Alternate offers (locker)
+  // Reuse outside the free-key flow (script unlock, key extension): called once a real CPALead
+  // postback exists for this subid — any payout, no 6h/24h choice. Return true when it succeeded.
+  onConfirm?: (subid: string) => Promise<boolean>;
+  doneTitle?: string;
+  doneText?: string;
+  showHours?: boolean;
 }) {
-  const hoursLabel = (n: number) => t("{n}-hour key").replace("{n}", String(n));
+  const hoursLabel = (n: number) => (showHours ? t("{n}-hour key").replace("{n}", String(n)) : "");
   const { t } = useTranslation();
   const byKind = useMemo(() => {
     const m: Record<CpaKind, CpaOffer[]> = { app: [], survey: [], phone: [], email: [] };
@@ -117,7 +123,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           const j = await r.json();
           if (j?.completed) {
             if (j.offer_id) markOfferDone(String(j.offer_id));
-            if (Number(j.payout) >= OFFER_MIN_PAYOUT) setFinished(true); // real offer -> long key, auto
+            if (onConfirm || Number(j.payout) >= OFFER_MIN_PAYOUT) setFinished(true); // real offer (or custom flow) -> auto
             else if (!cpcReadyRef.current) {
               cpcReadyRef.current = true;
               setCpcReady(true); // click only -> let them choose: short key now, or finish for the long one
@@ -136,6 +142,21 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // ---- finished -> ask our server for the key token ----
   const confirm = useCallback(async () => {
     setPhase("confirming");
+    if (onConfirm) {
+      const ok = await onConfirm(subid).catch(() => false);
+      if (ok) {
+        document.getElementById("interact-form-overlay")?.remove();
+        document.body.style.overflow = "";
+        cpaTrack(subid, "verified_unlock", current ? { kind: current.kind, offer_id: current.offer_id } : {});
+        cpaSession.reset();
+        setPhase("done");
+        window.setTimeout(onDone, 1200);
+        return;
+      }
+      if (retries.current < 5) { retries.current += 1; window.setTimeout(confirm, 3000); return; }
+      setPhase("error");
+      return;
+    }
     const { data, error } = await supabase.functions.invoke("issue-verify-token", { body: { method: "cpa", subid } });
     if (!error && data?.success && data?.token) {
       localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at, hours: data.hours }));
@@ -156,7 +177,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       return;
     }
     setPhase("error");
-  }, [subid, current, onDone]);
+  }, [subid, current, onDone, onConfirm]);
 
   useEffect(() => { if (finished && phase === "pick") confirm(); }, [finished, phase, confirm]);
 
@@ -226,8 +247,8 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
         {phase === "done"
           ? <CheckCircle2 className="mx-auto mb-2 h-10 w-10 text-green-400" />
           : <Loader2 className="mx-auto mb-2 h-8 w-8 animate-spin text-primary" />}
-        <p className="text-lg font-bold">{phase === "done" ? `${t("Completed")} ✅` : t("Confirming…")}</p>
-        {phase === "done" && <p className="mt-1 text-sm text-muted-foreground">{t("You're all set — getting your key…")}</p>}
+        <p className="text-lg font-bold">{phase === "done" ? (doneTitle || `${t("Completed")} ✅`) : t("Confirming…")}</p>
+        {phase === "done" && <p className="mt-1 text-sm text-muted-foreground">{doneText || t("You're all set — getting your key…")}</p>}
       </div>
     );
   }
@@ -299,7 +320,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                   <p className="text-muted-foreground">{t("Stuck? Try the alternate offers instead.")}</p>
                   <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "stuck_alt" }); lockerRef.current?.click(); }}
                     className="mt-2 inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground hover:opacity-90">
-                    {t("Alternate offers")} · {hoursLabel(hours.cpc)} <ArrowRight className="h-3 w-3" />
+                    {t("Alternate offers")}{showHours ? ` · ${hoursLabel(hours.cpc)}` : ""} <ArrowRight className="h-3 w-3" />
                   </button>
                 </div>
               )}
@@ -307,7 +328,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
               <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
                 className="mt-2 inline-flex items-center gap-1 rounded-md border border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10">
-                {t("Use Linkvertise instead")} · {hoursLabel(hours.lv)} <ArrowRight className="h-3 w-3" />
+                {t("Use Linkvertise instead")}{showHours ? ` · ${hoursLabel(hours.lv)}` : ""} <ArrowRight className="h-3 w-3" />
               </button>
               </>)}
             </div>
@@ -325,7 +346,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Sparkles className="h-4 w-4 shrink-0 text-primary" />
         <span>{t("Pick the kind of step you like best, then do one.")}</span>
-        <span className="ml-auto shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{hoursLabel(hours.offer)}</span>
+        {showHours && <span className="ml-auto shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{hoursLabel(hours.offer)}</span>}
       </p>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -410,7 +431,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <span className="block text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
               <span className="block text-xs text-muted-foreground">{t("A different list of offers. Finish any one.")}</span>
             </span>
-            <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>
+            {showHours && <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>}
           </a>
         </div>
       )}
