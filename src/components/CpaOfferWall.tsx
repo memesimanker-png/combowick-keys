@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowRight, CheckCircle2, ClipboardList, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, PauseCircle, X } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardList, Link2, Loader2, Mail, Phone, ShieldCheck, Smartphone, Sparkles, PauseCircle, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import {
@@ -41,7 +41,7 @@ type Phase = "pick" | "confirming" | "done" | "error";
 // lockers. Clicks and completions inside it postback with our subid like any other offer.
 const LOCKER = { toolId: "66967", slug: "GkKQSbW", publisherId: 3363958, hash: "#cw-locker" };
 
-export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 }, allowLinkvertise = true, alternateOnly = false, onConfirm, doneTitle, doneText, showHours = true }: {
+export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 }, allowLinkvertise = true, alternateOnly = false, lockerOk = true, linkvertiseOption, onConfirm, doneTitle, doneText, showHours = true }: {
   offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void; country?: string;
   hours?: { offer: number; cpc: number; lv: number };
   allowLinkvertise?: boolean; // admin master switch verify_settings.linkvertise_enabled
@@ -49,6 +49,11 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // Reuse outside the free-key flow (script unlock, key extension): called once a real CPALead
   // postback exists for this subid — any payout, no 6h/24h choice. Return true when it succeeded.
   onConfirm?: (subid: string) => Promise<boolean>;
+  lockerOk?: boolean;         // false = Alternate offers is known to be empty for this country
+  // Thin-country fallback: when given, a "Linkvertise" option is shown in the 6-hour panel next to
+  // Alternate offers (the caller decides when: few main offers, or Alternate offers known empty).
+  linkvertiseOption?: () => void;
+
   doneTitle?: string;
   doneText?: string;
   showHours?: boolean;
@@ -188,7 +193,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // ---- Link Locker ("Alternate offers") for every visitor ----
   // Pay-per-click offers exist in many countries and on phones (ES, BD, Gulf, TH, US iOS…), and the
   // locker picks offers for the visitor's own country/device, so it is offered to everyone.
-  const lockerEligible = true;
+  const lockerEligible = lockerOk !== false;
   // The locker is embedded INSIDE our own card (iframe) instead of CPALead's pop-up. Its unlock /
   // close messages just collapse the panel — the key itself still comes from our postback poll.
   const [lockerOpen, setLockerOpen] = useState(false);
@@ -449,7 +454,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       </div>
       )}
 
-      {lockerEligible && !alternateOnly && (
+      {(lockerEligible || linkvertiseOption) && !alternateOnly && (
         <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground" aria-hidden>
           <span className="h-px flex-1 bg-border" />
           {t("or")}
@@ -457,7 +462,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
         </div>
       )}
 
-      {lockerEligible && (
+      {(lockerEligible || linkvertiseOption) && (
         <div className={`space-y-2 ${alternateOnly ? "" : "rounded-xl border border-border bg-secondary/10 p-3 sm:p-4"}`}>
           {!alternateOnly && (
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -465,7 +470,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</span>
             </div>
           )}
-          {lockerOpen ? (
+          {!lockerEligible ? null : lockerOpen ? (
             <div ref={lockerBoxRef} className="scroll-mt-20 overflow-hidden rounded-lg border border-primary/40 bg-card">
               <div className="flex items-center gap-2 border-b border-border/60 px-3 py-2">
                 <span className="text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
@@ -494,6 +499,20 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
             </span>
             <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
           </button>
+          )}
+          {linkvertiseOption && (
+            <button
+              type="button"
+              onClick={() => { cpaTrack(subid, "tab", { kind: "lv_option" }); linkvertiseOption(); }}
+              className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/40 hover:bg-secondary/40"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-muted-foreground"><Link2 className="h-5 w-5" /></span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold text-foreground">Linkvertise</span>
+                <span className="block text-xs text-muted-foreground">{t("A few short ad steps instead.")}</span>
+              </span>
+              <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+            </button>
           )}
         </div>
       )}

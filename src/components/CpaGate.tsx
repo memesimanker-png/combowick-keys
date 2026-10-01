@@ -9,7 +9,8 @@ import { getCpaSubid, useCpaOffers } from "@/lib/cpa";
  * The CPALead offer wall for flows outside the free-key page (script unlock, key extension).
  * Loads the same admin switches as the key page (verify_settings.cpa_enabled / linkvertise_enabled):
  *  - offers for this visitor  -> offer wall (main offers first, Alternate offers below)
- *  - no offers + Linkvertise on -> the flow's old Linkvertise path (lvFallback)
+ *  - Linkvertise on: only thin countries (<=1 main offer / Alternate offers known empty) get a
+ *    Linkvertise option; with nothing at all to show it goes straight to the flow's Linkvertise path
  *  - no offers + Linkvertise off -> VPN notice, or Alternate offers only
  * `onConfirm` runs once a real CPALead postback exists for this visitor (server re-checks it).
  */
@@ -37,13 +38,16 @@ export function CpaGate({ onConfirm, onDone, doneTitle, doneText, lvFallback }: 
   const cpa = useCpaOffers(cpaEnabled);
   const canUseLv = lvEnabled && !!lvFallback;
 
-  // No offers and Linkvertise allowed -> the flow's original Linkvertise path.
+  // Nothing at all left (VPN, or no main offers + Alternate offers known empty) and Linkvertise
+  // allowed -> straight to the flow's Linkvertise path. Otherwise Linkvertise is just an option.
+  const lvOnly = cpa.status === "none" && canUseLv && (cpa.blocked === "vpn" || cpa.lockerOk === false);
   useEffect(() => {
-    if (cpa.status === "none" && canUseLv) lvFallback!();
+    if (lvOnly) lvFallback!();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cpa.status, canUseLv]);
+  }, [lvOnly]);
+  const thinCountry = cpa.offers.length <= 1 || cpa.lockerOk === false;
 
-  if (cpaEnabled === null || cpa.status === "loading" || (cpa.status === "none" && canUseLv)) {
+  if (cpaEnabled === null || cpa.status === "loading" || lvOnly) {
     return (
       <div className="flex items-center justify-center gap-2 py-8 text-sm text-primary">
         <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading...")}
@@ -69,8 +73,10 @@ export function CpaGate({ onConfirm, onDone, doneTitle, doneText, lvFallback }: 
       alternateOnly={cpa.status !== "ready"}
       subid={subid}
       country={cpa.country}
+      lockerOk={cpa.lockerOk}
+      linkvertiseOption={canUseLv && thinCountry ? () => lvFallback?.() : undefined}
       showHours={false}
-      allowLinkvertise={canUseLv}
+      allowLinkvertise={canUseLv && thinCountry}
       onStuckFallback={() => lvFallback?.()}
       onConfirm={onConfirm}
       onDone={onDone}

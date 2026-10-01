@@ -173,13 +173,16 @@ export default function VerifyProviderSelect() {
     // Wait for the offer check; if there are offers the visitor CHOOSES (no auto-advance).
     if (cpa.status === "loading" || cpaAvailable) return;
     if (!lvEnabled) return; // Linkvertise off: never auto-jump to it
+    // No main offers but Alternate offers may work here -> show it with a Linkvertise option instead
+    // of jumping. Auto-jump only when nothing else is left (VPN, or Alternate offers known empty).
+    if (cpa.status === "none" && !cpa.blocked && cpa.lockerOk !== false) return;
     const dlEnabled = isAdEnabled("verify-provider-select", "direct_link");
     const directLinkDone = !dlEnabled || directLinkClicks >= requiredClicks;
     if (!directLinkDone) return;
     const tmr = setTimeout(() => handleStart(), 900);
     return () => clearTimeout(tmr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled]);
+  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled, cpa.blocked, cpa.lockerOk]);
 
   const handleCloseTutorial = () => setShowTutorialPopup(false);
   const handleNeverShowAgain = () => {
@@ -246,11 +249,17 @@ export default function VerifyProviderSelect() {
 
   const directLinkDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
 
+  // Thin country: 1 main offer or fewer, or Alternate offers known empty. Only these visitors ever
+  // see Linkvertise (6h panel card + "stuck" way out) — everywhere else it stays CPALead only.
+  const thinCountry = cpa.offers.length <= 1 || cpa.lockerOk === false;
+  const lvHere = lvEnabled && thinCountry;
+
   const renderCpaChoice = () => (
-    (choice === "cpa" || !lvEnabled) ? (
+    (choice === "cpa" || !lvChoice) ? (
       <div className="space-y-3">
         <CpaOfferWall offers={cpa.offers} subid={cpaSubid} country={cpa.country} hours={keyHours} onDone={() => navigate("/access-key")}
-          allowLinkvertise={lvEnabled}
+          allowLinkvertise={lvHere} lockerOk={cpa.lockerOk}
+          linkvertiseOption={lvHere ? () => { cpaSession.setChoice(null); handleStart(); } : undefined}
           onStuckFallback={() => { cpaSession.setChoice(null); handleStart(); }} />
         {lvChoice && (
           <button type="button" onClick={() => { cpaSession.setChoice(null); setChoice(null); }} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
@@ -297,6 +306,19 @@ export default function VerifyProviderSelect() {
     )
   );
 
+  // No main offers but Alternate offers may work: Alternate offers + the Linkvertise option.
+  const renderAlternatePlusLinkvertise = () => (
+    <div className="space-y-3">
+      <CpaOfferWall offers={[]} subid={cpaSubid} country={cpa.country} hours={keyHours} onDone={() => navigate("/access-key")}
+        allowLinkvertise={lvEnabled} alternateOnly lockerOk={cpa.lockerOk}
+        linkvertiseOption={() => { cpaSession.setChoice(null); handleStart(); }}
+        onStuckFallback={() => { cpaSession.setChoice(null); handleStart(); }} />
+      <p className="text-center text-[11px] text-muted-foreground">
+        {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
+      </p>
+    </div>
+  );
+
   // Linkvertise OFF and no main offers: VPN visitors are told to turn it off (CPALead blocks VPN
   // clicks); everyone else gets the Alternate offers (locker), with Premium as the paid way out.
   const renderNoLinkvertise = () => (
@@ -328,6 +350,7 @@ export default function VerifyProviderSelect() {
     done: false,
     icon: <CheckCircle2 className="h-4 w-4" />,
     render: () => cpaAvailable && directLinkDone ? renderCpaChoice()
+      : (lvEnabled && directLinkDone && cpa.status === "none" && !cpa.blocked && cpa.lockerOk !== false) ? renderAlternatePlusLinkvertise()
       : !lvEnabled ? (
         directLinkDone && cpa.status === "none" ? renderNoLinkvertise() : (
           <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center text-sm text-muted-foreground">

@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "A few short ad steps instead.": "Quelques courtes étapes publicitaires à la place.",
     "Main offers": "Offres principales",
     "or": "ou",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "En attente de la confirmation de votre offre précédente — cette page se débloquera automatiquement si elle est confirmée.",
@@ -593,6 +594,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "A few short ad steps instead.": "Unos pocos pasos cortos con anuncios en su lugar.",
     "Main offers": "Ofertas principales",
     "or": "o",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Esperando la confirmación de tu oferta anterior: esta página se desbloqueará sola si se confirma.",
@@ -1182,6 +1184,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "A few short ad steps instead.": "Stattdessen ein paar kurze Werbeschritte.",
     "Main offers": "Hauptangebote",
     "or": "oder",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Warte auf die Bestätigung deines früheren Angebots — die Seite wird automatisch freigeschaltet, wenn es bestätigt wird.",
@@ -1771,6 +1774,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "A few short ad steps instead.": "Alguns passos curtos com anúncios no lugar.",
     "Main offers": "Ofertas principais",
     "or": "ou",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Aguardando a confirmação da sua oferta anterior — esta página desbloqueia sozinha se for confirmada.",
@@ -2360,6 +2364,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "A few short ad steps instead.": "Вместо этого — несколько коротких шагов с рекламой.",
     "Main offers": "Основные предложения",
     "or": "или",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Ждём подтверждения вашего прошлого предложения — страница разблокируется автоматически, если оно засчитается.",
@@ -2949,6 +2954,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "A few short ad steps instead.": "改为完成几个简短的广告步骤。",
     "Main offers": "主要任务",
     "or": "或",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "正在等待你之前的任务确认 — 一旦确认，本页面会自动解锁。",
@@ -3538,6 +3544,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "A few short ad steps instead.": "대신 짧은 광고 단계 몇 개를 거치세요.",
     "Main offers": "주요 오퍼",
     "or": "또는",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "이전 오퍼 확인을 기다리는 중 — 확인되면 이 페이지가 자동으로 잠금 해제됩니다.",
@@ -4127,6 +4134,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "A few short ad steps instead.": "ทำขั้นตอนโฆษณาสั้น ๆ ไม่กี่ขั้นแทน",
     "Main offers": "ข้อเสนอหลัก",
     "or": "หรือ",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "กำลังรอการยืนยันข้อเสนอก่อนหน้า — ถ้ายืนยันแล้ว หน้านี้จะปลดล็อกอัตโนมัติ",
@@ -4716,6 +4724,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "A few short ad steps instead.": "Beberapa langkah iklan singkat sebagai gantinya.",
     "Main offers": "Offer utama",
     "or": "atau",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Menunggu konfirmasi offer sebelumnya — halaman ini akan terbuka otomatis jika terkonfirmasi.",
@@ -5305,6 +5314,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "A few short ad steps instead.": "Ilang maikling ad step na lang sa halip.",
     "Main offers": "Pangunahing offer",
     "or": "o",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Hinihintay ang kumpirmasyon ng naunang offer mo — awtomatikong mag-a-unlock ang page na ito kapag nakumpirma.",
@@ -5894,6 +5904,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "A few short ad steps instead.": "Thay vào đó, qua vài bước quảng cáo ngắn.",
     "Main offers": "Ưu đãi chính",
     "or": "hoặc",
     "Waiting for your earlier offer to confirm — this page unlocks automatically if it does.": "Đang chờ xác nhận ưu đãi trước đó của bạn — trang này sẽ tự mở khóa nếu được xác nhận.",
