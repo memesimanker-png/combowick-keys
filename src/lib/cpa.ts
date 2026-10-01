@@ -81,17 +81,29 @@ export const cpaSession = {
   reset: () => { Object.values(SS).forEach(ssDel); ssDel(STARTED); },
 };
 
-// Offers this device already completed. Most offers are "new users only", so they can never pay
-// twice — hide them for good (the server also hides offers completed from the same IP).
+// Offers this device already completed. Most offers are "new users only", so the same person can't
+// be paid twice — hide them on this device for DONE_TTL_MS (30 days, so a shared family device or an
+// advertiser that allows a repeat later never loses money for good). The server separately hides
+// offers completed from the same IP, but only until midnight US Central (shared Wi-Fi).
 const DONE_KEY = "cpa_done_offers";
+const DONE_TTL_MS = 30 * 24 * 3600 * 1000;
+function readDone(): Record<string, number> {
+  try {
+    const raw = JSON.parse(localStorage.getItem(DONE_KEY) || "{}");
+    if (Array.isArray(raw)) return Object.fromEntries(raw.map((id: string) => [id, Date.now()])); // old format
+    return raw && typeof raw === "object" ? raw : {};
+  } catch { return {}; }
+}
 export function doneOffers(): Set<string> {
-  try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch { return new Set(); }
+  const now = Date.now();
+  return new Set(Object.entries(readDone()).filter(([, at]) => now - Number(at) < DONE_TTL_MS).map(([id]) => id));
 }
 export function markOfferDone(offerId: string) {
   try {
-    const d = doneOffers();
-    d.add(offerId);
-    localStorage.setItem(DONE_KEY, JSON.stringify([...d].slice(-100)));
+    const now = Date.now();
+    const d = Object.fromEntries(Object.entries(readDone()).filter(([, at]) => now - Number(at) < DONE_TTL_MS));
+    d[offerId] = now;
+    localStorage.setItem(DONE_KEY, JSON.stringify(d));
   } catch {}
 }
 
