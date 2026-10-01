@@ -370,11 +370,16 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           <p className="mt-0.5 text-xs text-muted-foreground">{t("Try the alternate offers below — finish any one to get your key.")}</p>
         </div>
       )}
-      {!alternateOnly && (<>
+      {!alternateOnly && (
+      <div className="space-y-4 rounded-xl border border-green-500/25 bg-green-500/[0.03] p-3 sm:p-4">
+      {/* Panel header: which key this part gives */}
+      <div className="flex items-center gap-2">
+        {showHours && <span className="shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{hoursLabel(hours.offer)}</span>}
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("Main offers")}</span>
+      </div>
       <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Sparkles className="h-4 w-4 shrink-0 text-primary" />
         <span>{kindsWithOffers.length > 1 ? t("Pick the kind of step you like best, then do one.") : t("Pick an offer below")}</span>
-        {showHours && <span className="ml-auto shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{hoursLabel(hours.offer)}</span>}
       </p>
 
       {/* Only kinds that actually have offers; no tile row at all when there is just one kind. */}
@@ -441,11 +446,25 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
         </section>
       )}
 
-      </>)}
+      </div>
+      )}
+
+      {lockerEligible && !alternateOnly && (
+        <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground" aria-hidden>
+          <span className="h-px flex-1 bg-border" />
+          {t("or")}
+          <span className="h-px flex-1 bg-border" />
+        </div>
+      )}
 
       {lockerEligible && (
-        <div className={`space-y-1.5 ${alternateOnly ? "" : "border-t border-border/50 pt-4"}`}>
-          {!alternateOnly && <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</p>}
+        <div className={`space-y-2 ${alternateOnly ? "" : "rounded-xl border border-border bg-secondary/10 p-3 sm:p-4"}`}>
+          {!alternateOnly && (
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              {showHours && <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>}
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</span>
+            </div>
+          )}
           {lockerOpen ? (
             <div ref={lockerBoxRef} className="scroll-mt-20 overflow-hidden rounded-lg border border-primary/40 bg-card">
               <div className="flex items-center gap-2 border-b border-border/60 px-3 py-2">
@@ -473,7 +492,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <span className="block text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
               <span className="block text-xs text-muted-foreground">{t("A different list of offers. Finish any one.")}</span>
             </span>
-            {showHours && <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>}
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
           </button>
           )}
         </div>
