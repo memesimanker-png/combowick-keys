@@ -38,9 +38,8 @@ const SECTIONS: Record<CpaKind, { label: string; title: string; note: string; ic
 type Phase = "pick" | "confirming" | "done" | "error";
 
 // CPALead Link Locker (overlay mode) — extra offers incl. pay-per-click ones that only exist inside
-// lockers (US desktop). Completions inside it postback with our subid like any other offer.
+// lockers. Clicks and completions inside it postback with our subid like any other offer.
 const LOCKER = { toolId: "66967", slug: "GkKQSbW", publisherId: 3363958, hash: "#cw-locker" };
-const isDesktop = () => !/android|iphone|ipad|ipod|mobi/i.test(navigator.userAgent || "");
 
 export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 } }: {
   offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void; country?: string;
@@ -147,8 +146,10 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
 
   useEffect(() => { if (finished && phase === "pick") confirm(); }, [finished, phase, confirm]);
 
-  // ---- Link Locker for US desktop visitors ----
-  const lockerEligible = country === "US" && isDesktop();
+  // ---- Link Locker ("Alternate offers") for every visitor ----
+  // Pay-per-click offers exist in many countries and on phones (ES, BD, Gulf, TH, US iOS…), and the
+  // locker picks offers for the visitor's own country/device, so it is offered to everyone.
+  const lockerEligible = true;
   useEffect(() => {
     if (!lockerEligible) return;
     (window as any).CPAlead_PublisherUserId = LOCKER.publisherId;
