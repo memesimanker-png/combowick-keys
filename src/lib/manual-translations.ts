@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Certaines offres mettent jusqu'à 15 minutes à être confirmées. Vous pouvez partir et revenir sur cette page sur cet appareil — elle se débloque automatiquement.",
     "Still waiting for the offer to confirm…": "En attente de la confirmation de l'offre…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Assurez-vous de l'avoir entièrement terminée. Certaines offres mettent quelques minutes à être confirmées.",
     "Stuck? You can unlock with Linkvertise instead.": "Bloqué ? Vous pouvez débloquer avec Linkvertise à la place.",
@@ -544,6 +545,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Algunas ofertas tardan hasta 15 minutos en confirmarse. Puedes salir y volver a esta página en este dispositivo: se desbloquea automáticamente.",
     "Still waiting for the offer to confirm…": "Esperando la confirmación de la oferta…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Asegúrate de haberla terminado por completo. Algunas ofertas tardan unos minutos en confirmarse.",
     "Stuck? You can unlock with Linkvertise instead.": "¿Atascado? Puedes desbloquear con Linkvertise en su lugar.",
@@ -1084,6 +1086,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Manche Angebote brauchen bis zu 15 Minuten zur Bestätigung. Du kannst gehen und auf diesem Gerät zu dieser Seite zurückkehren — sie wird automatisch freigeschaltet.",
     "Still waiting for the offer to confirm…": "Warte auf die Bestätigung des Angebots…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Stell sicher, dass du es komplett abgeschlossen hast. Manche Angebote brauchen ein paar Minuten zur Bestätigung.",
     "Stuck? You can unlock with Linkvertise instead.": "Hängst du fest? Du kannst stattdessen mit Linkvertise freischalten.",
@@ -1624,6 +1627,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Algumas ofertas levam até 15 minutos para confirmar. Você pode sair e voltar a esta página neste dispositivo — ela desbloqueia automaticamente.",
     "Still waiting for the offer to confirm…": "Aguardando a confirmação da oferta…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Verifique se você terminou tudo. Algumas ofertas levam alguns minutos para confirmar.",
     "Stuck? You can unlock with Linkvertise instead.": "Travou? Você pode desbloquear com o Linkvertise no lugar.",
@@ -2164,6 +2168,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Некоторые предложения подтверждаются до 15 минут. Можно уйти и вернуться на эту страницу с этого устройства — она разблокируется автоматически.",
     "Still waiting for the offer to confirm…": "Ждём подтверждения предложения…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Убедитесь, что вы полностью его выполнили. Некоторые предложения подтверждаются несколько минут.",
     "Stuck? You can unlock with Linkvertise instead.": "Застряли? Можно разблокировать через Linkvertise.",
@@ -2704,6 +2709,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "有些任务最多需要 15 分钟确认。你可以先离开，之后在这台设备上回到本页面 — 会自动解锁。",
     "Still waiting for the offer to confirm…": "正在等待任务确认…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "请确保你已完整完成。有些任务需要几分钟才能确认。",
     "Stuck? You can unlock with Linkvertise instead.": "卡住了？你可以改用 Linkvertise 解锁。",
@@ -3244,6 +3250,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "일부 오퍼는 확인까지 최대 15분이 걸립니다. 나갔다가 이 기기에서 이 페이지로 다시 오면 자동으로 잠금 해제됩니다.",
     "Still waiting for the offer to confirm…": "오퍼 확인을 기다리는 중…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "오퍼를 완전히 끝냈는지 확인하세요. 일부 오퍼는 확인까지 몇 분이 걸립니다.",
     "Stuck? You can unlock with Linkvertise instead.": "막혔나요? 대신 Linkvertise로 잠금 해제할 수 있어요.",
@@ -3784,6 +3791,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "บางข้อเสนออาจใช้เวลายืนยันถึง 15 นาที คุณออกไปก่อนแล้วกลับมาที่หน้านี้บนอุปกรณ์เดิมได้ — จะปลดล็อกอัตโนมัติ",
     "Still waiting for the offer to confirm…": "กำลังรอการยืนยันข้อเสนอ…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "ตรวจสอบให้แน่ใจว่าทำเสร็จครบแล้ว บางข้อเสนอใช้เวลาสองสามนาทีในการยืนยัน",
     "Stuck? You can unlock with Linkvertise instead.": "ติดอยู่ใช่ไหม? คุณสามารถปลดล็อกด้วย Linkvertise แทนได้",
@@ -4324,6 +4332,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Beberapa offer butuh hingga 15 menit untuk dikonfirmasi. Kamu boleh pergi lalu kembali ke halaman ini di perangkat yang sama — akan terbuka otomatis.",
     "Still waiting for the offer to confirm…": "Menunggu konfirmasi offer…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Pastikan kamu benar-benar menyelesaikannya. Beberapa offer butuh beberapa menit untuk dikonfirmasi.",
     "Stuck? You can unlock with Linkvertise instead.": "Macet? Kamu bisa membuka pakai Linkvertise saja.",
@@ -4864,6 +4873,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "May mga offer na umaabot ng hanggang 15 minuto bago makumpirma. Puwede kang umalis at bumalik sa page na ito sa device na ito — awtomatiko itong mag-a-unlock.",
     "Still waiting for the offer to confirm…": "Hinihintay pa ang kumpirmasyon ng offer…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Siguraduhing natapos mo talaga ito. May mga offer na ilang minuto bago makumpirma.",
     "Stuck? You can unlock with Linkvertise instead.": "Na-stuck? Puwede kang mag-unlock gamit ang Linkvertise.",
@@ -5404,6 +5414,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.": "Một số ưu đãi mất tới 15 phút để xác nhận. Bạn có thể rời đi rồi quay lại trang này trên thiết bị này — trang sẽ tự động mở khóa.",
     "Still waiting for the offer to confirm…": "Đang chờ xác nhận ưu đãi…",
     "Make sure you fully finished it. Some offers take a few minutes to confirm.": "Hãy chắc chắn bạn đã hoàn thành hết. Một số ưu đãi mất vài phút để xác nhận.",
     "Stuck? You can unlock with Linkvertise instead.": "Bị kẹt? Bạn có thể mở khóa bằng Linkvertise thay thế.",

@@ -182,7 +182,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback }: {
             {isAway ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <PauseCircle className="h-4 w-4 shrink-0 text-amber-400" />}
             <span className="min-w-0 flex-1">
               {stuck && !isAway
-                ? <><b>{t("Still waiting for the offer to confirm…")}</b> {t("Make sure you fully finished it. Some offers take a few minutes to confirm.")}</>
+                ? <><b>{t("Still waiting for the offer to confirm…")}</b> {t("Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.")}</>
                 : isAway
                 ? <><b className="block truncate">{current.title}</b>{t("Checking… finish the offer in the other tab.")}</>
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}

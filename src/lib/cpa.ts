@@ -27,9 +27,20 @@ const SS = {
   choice: "cpa_choice",
 };
 
-function ssGet(k: string) { try { return sessionStorage.getItem(k); } catch { return null; } }
-function ssSet(k: string, v: string) { try { sessionStorage.setItem(k, v); } catch {} }
-function ssDel(k: string) { try { sessionStorage.removeItem(k); } catch {} }
+// Kept in localStorage (not sessionStorage): CPALead postbacks can land 10–15 min after the
+// offer is finished, often after the visitor closed the tab. Keeping the same subid on the
+// device means they get unlocked automatically when they come back. Expires after 48h.
+const TTL_MS = 48 * 3600 * 1000;
+const STARTED = "cpa_started_at";
+function ssGet(k: string) { try { return localStorage.getItem(k); } catch { return null; } }
+function ssSet(k: string, v: string) { try { localStorage.setItem(k, v); } catch {} }
+function ssDel(k: string) { try { localStorage.removeItem(k); } catch {} }
+(function expireOld() {
+  try {
+    const at = Number(localStorage.getItem(STARTED)) || 0;
+    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", STARTED].forEach(ssDel); }
+  } catch {}
+})();
 
 export function getCpaSubid(): string {
   const e = ssGet(SS.subid);
@@ -38,6 +49,7 @@ export function getCpaSubid(): string {
     Math.random().toString(36).slice(2) + Date.now().toString(36);
   const subid = `cw_${rnd}`.slice(0, 40);
   ssSet(SS.subid, subid);
+  ssSet(STARTED, String(Date.now()));
   return subid;
 }
 
@@ -49,7 +61,7 @@ export const cpaSession = {
   getChoice: () => ssGet(SS.choice),
   setChoice: (c: string | null) => (c ? ssSet(SS.choice, c) : ssDel(SS.choice)),
   /** after a key token is issued — next verify run starts a fresh offer-wall session */
-  reset: () => Object.values(SS).forEach(ssDel),
+  reset: () => { Object.values(SS).forEach(ssDel); ssDel(STARTED); },
 };
 
 let country = "";
