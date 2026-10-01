@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Crown, Key, Code2 } from "lucide-react";
+import { Shield, Crown, Key, Code2, Home } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
 
@@ -8,26 +8,25 @@ import { useTranslation } from "@/lib/translation-context";
  * (clickable brand + Get Key / Premium) so they're never stranded — especially
  * on mobile, where the sticky bottom bar is hidden on these pages.
  */
-export function FunnelHeader({ title, short }: { title?: string; short?: string }) {
+export function FunnelHeader({ title }: { title?: string; short?: string }) {
   const { t } = useTranslation();
   return (
     <header className="border-b border-border/40 bg-black/40 backdrop-blur-md">
       <div className="container flex items-center justify-between gap-2 py-4">
-        <Link to="/premium-keys" className="flex items-center gap-2 min-w-0">
+        <Link to="/" aria-label={t("Home")} className="flex items-center gap-2 min-w-0">
           <Shield className="h-5 w-5 sm:h-6 sm:w-6 text-primary shrink-0" />
           {/* Compact brand on mobile (short), full brand on sm+ where there's room. */}
-          <span className="text-sm sm:text-lg font-bold truncate">
-            {short ? (
-              <>
-                <span className="sm:hidden">{short}</span>
-                <span className="hidden sm:inline">{title || "ComboWick"}</span>
-              </>
-            ) : (
-              title || "ComboWick"
-            )}
-          </span>
+          {/* Phones: logo only (it links home) — the brand text got cut to "CW…" next to 5 buttons. */}
+          <span className="hidden sm:inline text-lg font-bold truncate">{title || "ComboWick"}</span>
         </Link>
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <Link
+            to="/"
+            aria-label={t("Home")}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary"
+          >
+            <Home className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Home")}</span>
+          </Link>
           <Link
             to="/keys"
             aria-label={t("Get Key")}

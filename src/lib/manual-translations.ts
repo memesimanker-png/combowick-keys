@@ -4,6 +4,12 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "{n}-hour key": "clé de {n} h",
+    "Alternate offers": "Offres alternatives",
+    "Stuck? Try the alternate offers instead.": "Bloqué ? Essayez plutôt les offres alternatives.",
+    "If the main offers don't work for you": "Si les offres principales ne marchent pas pour vous",
+    "A different list of offers. Finish any one.": "Une autre liste d'offres. Terminez-en une.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Entrez un pseudo (facultatif) et générez votre clé HWID de {n} h.",
     "More offers": "Plus d'offres",
     "Complete 1 offer below": "Terminez 1 offre ci-dessous",
     "Opens a box with extra offers. Finish any one.": "Ouvre une fenêtre avec d'autres offres. Terminez-en une.",
@@ -559,6 +565,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "{n}-hour key": "clave de {n} h",
+    "Alternate offers": "Ofertas alternativas",
+    "Stuck? Try the alternate offers instead.": "¿Atascado? Prueba las ofertas alternativas.",
+    "If the main offers don't work for you": "Si las ofertas principales no te funcionan",
+    "A different list of offers. Finish any one.": "Otra lista de ofertas. Termina cualquiera.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Ingresa un usuario (opcional) y genera tu clave HWID de {n} h.",
     "More offers": "Más ofertas",
     "Complete 1 offer below": "Completa 1 oferta abajo",
     "Opens a box with extra offers. Finish any one.": "Abre una ventana con más ofertas. Termina cualquiera.",
@@ -1114,6 +1126,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "{n}-hour key": "{n}-Std.-Schlüssel",
+    "Alternate offers": "Alternative Angebote",
+    "Stuck? Try the alternate offers instead.": "Hängst du fest? Probier stattdessen die alternativen Angebote.",
+    "If the main offers don't work for you": "Falls die Hauptangebote bei dir nicht klappen",
+    "A different list of offers. Finish any one.": "Eine andere Angebotsliste. Schließ eins ab.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Gib einen Benutzernamen ein (optional) und erstelle deinen {n}-Std.-HWID-Schlüssel.",
     "More offers": "Mehr Angebote",
     "Complete 1 offer below": "Schließ unten 1 Angebot ab",
     "Opens a box with extra offers. Finish any one.": "Öffnet ein Fenster mit weiteren Angeboten. Schließ eins davon ab.",
@@ -1669,6 +1687,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "{n}-hour key": "chave de {n} h",
+    "Alternate offers": "Ofertas alternativas",
+    "Stuck? Try the alternate offers instead.": "Travou? Tente as ofertas alternativas.",
+    "If the main offers don't work for you": "Se as ofertas principais não funcionarem para você",
+    "A different list of offers. Finish any one.": "Outra lista de ofertas. Termine qualquer uma.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Digite um usuário (opcional) e gere sua chave HWID de {n} h.",
     "More offers": "Mais ofertas",
     "Complete 1 offer below": "Complete 1 oferta abaixo",
     "Opens a box with extra offers. Finish any one.": "Abre uma janela com mais ofertas. Termine qualquer uma.",
@@ -2224,6 +2248,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "{n}-hour key": "ключ на {n} ч",
+    "Alternate offers": "Другие предложения",
+    "Stuck? Try the alternate offers instead.": "Застряли? Попробуйте другие предложения.",
+    "If the main offers don't work for you": "Если основные предложения вам не подходят",
+    "A different list of offers. Finish any one.": "Другой список предложений. Выполните любое.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Введите имя (необязательно) и создайте HWID-ключ на {n} ч.",
     "More offers": "Больше предложений",
     "Complete 1 offer below": "Выполните 1 предложение ниже",
     "Opens a box with extra offers. Finish any one.": "Открывает окно с дополнительными предложениями. Выполните любое.",
@@ -2779,6 +2809,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "{n}-hour key": "{n} 小时密钥",
+    "Alternate offers": "备选任务",
+    "Stuck? Try the alternate offers instead.": "卡住了？试试备选任务。",
+    "If the main offers don't work for you": "如果主要任务不适合你",
+    "A different list of offers. Finish any one.": "另一组任务，完成任意一个即可。",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "输入用户名（可选）并生成你的 {n} 小时 HWID 密钥。",
     "More offers": "更多任务",
     "Complete 1 offer below": "完成下方 1 个任务",
     "Opens a box with extra offers. Finish any one.": "打开一个包含更多任务的窗口，完成任意一个即可。",
@@ -3334,6 +3370,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "{n}-hour key": "{n}시간 키",
+    "Alternate offers": "대체 오퍼",
+    "Stuck? Try the alternate offers instead.": "막혔나요? 대체 오퍼를 시도해 보세요.",
+    "If the main offers don't work for you": "주요 오퍼가 안 맞는다면",
+    "A different list of offers. Finish any one.": "다른 오퍼 목록입니다. 아무거나 하나 완료하세요.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "사용자 이름(선택)을 입력하고 {n}시간 HWID 키를 생성하세요.",
     "More offers": "더 많은 오퍼",
     "Complete 1 offer below": "아래 오퍼 1개를 완료하세요",
     "Opens a box with extra offers. Finish any one.": "추가 오퍼 창이 열립니다. 아무거나 하나 완료하세요.",
@@ -3889,6 +3931,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "{n}-hour key": "คีย์ {n} ชม.",
+    "Alternate offers": "ข้อเสนอทางเลือก",
+    "Stuck? Try the alternate offers instead.": "ติดอยู่ใช่ไหม? ลองข้อเสนอทางเลือกแทน",
+    "If the main offers don't work for you": "ถ้าข้อเสนอหลักใช้ไม่ได้กับคุณ",
+    "A different list of offers. Finish any one.": "รายการข้อเสนออีกชุด ทำอย่างใดอย่างหนึ่งให้เสร็จ",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "ใส่ชื่อผู้ใช้ (ไม่บังคับ) แล้วสร้างคีย์ HWID {n} ชม. ของคุณ",
     "More offers": "ข้อเสนอเพิ่มเติม",
     "Complete 1 offer below": "ทำข้อเสนอด้านล่าง 1 อย่าง",
     "Opens a box with extra offers. Finish any one.": "เปิดหน้าต่างที่มีข้อเสนอเพิ่ม ทำอย่างใดอย่างหนึ่งให้เสร็จ",
@@ -4444,6 +4492,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "{n}-hour key": "key {n} jam",
+    "Alternate offers": "Offer alternatif",
+    "Stuck? Try the alternate offers instead.": "Macet? Coba offer alternatif saja.",
+    "If the main offers don't work for you": "Kalau offer utama tidak cocok untukmu",
+    "A different list of offers. Finish any one.": "Daftar offer lain. Selesaikan salah satu.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Masukkan username (opsional) dan buat key HWID {n} jam kamu.",
     "More offers": "Offer lainnya",
     "Complete 1 offer below": "Selesaikan 1 offer di bawah",
     "Opens a box with extra offers. Finish any one.": "Membuka kotak berisi offer tambahan. Selesaikan salah satu.",
@@ -4999,6 +5053,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "{n}-hour key": "{n}-oras na key",
+    "Alternate offers": "Alternatibong offer",
+    "Stuck? Try the alternate offers instead.": "Na-stuck? Subukan ang alternatibong offer.",
+    "If the main offers don't work for you": "Kung hindi gumana sa iyo ang mga pangunahing offer",
+    "A different list of offers. Finish any one.": "Ibang listahan ng offer. Tapusin ang kahit isa.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Maglagay ng username (opsyonal) at gumawa ng {n}-oras na HWID key mo.",
     "More offers": "Iba pang offer",
     "Complete 1 offer below": "Tapusin ang 1 offer sa ibaba",
     "Opens a box with extra offers. Finish any one.": "Magbubukas ng box na may dagdag na offer. Tapusin ang kahit isa.",
@@ -5554,6 +5614,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "{n}-hour key": "key {n} giờ",
+    "Alternate offers": "Ưu đãi thay thế",
+    "Stuck? Try the alternate offers instead.": "Bị kẹt? Hãy thử các ưu đãi thay thế.",
+    "If the main offers don't work for you": "Nếu các ưu đãi chính không phù hợp với bạn",
+    "A different list of offers. Finish any one.": "Một danh sách ưu đãi khác. Hoàn thành bất kỳ một cái.",
+    "Enter a username (optional) and generate your {n}-hour HWID key.": "Nhập tên người dùng (tùy chọn) và tạo key HWID {n} giờ của bạn.",
     "More offers": "Thêm ưu đãi",
     "Complete 1 offer below": "Hoàn thành 1 ưu đãi bên dưới",
     "Opens a box with extra offers. Finish any one.": "Mở hộp với thêm ưu đãi. Hoàn thành bất kỳ một cái.",

@@ -52,6 +52,8 @@ export default function VerifyProviderSelect() {
   // Admin can pause the Linkvertise option (verify_settings.linkvertise_choice). Only affects the
   // choice screen — countries with no offers still go through Linkvertise so nobody gets stuck.
   const [lvChoice, setLvChoice] = useState(true);
+  // Key length per unlock type (verify_settings.key_hours_*) — shown on each option.
+  const [keyHours, setKeyHours] = useState({ offer: 24, cpc: 6, lv: 6 });
   const cpaSubid = React.useMemo(getCpaSubid, []);
 
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function VerifyProviderSelect() {
 
     supabase
       .from("verify_settings")
-      .select("direct_link_clicks, verify_steps, cpa_enabled, linkvertise_choice")
+      .select("direct_link_clicks, verify_steps, cpa_enabled, linkvertise_choice, key_hours_offer, key_hours_cpc, key_hours_linkvertise")
       .eq("id", 1)
       .maybeSingle()
       .then(({ data }) => {
@@ -85,6 +87,11 @@ export default function VerifyProviderSelect() {
         if (d?.verify_steps === 2 || d?.verify_steps === 3) setVerifySteps(d.verify_steps);
         setCpaEnabled(d?.cpa_enabled !== false);
         setLvChoice(d?.linkvertise_choice !== false);
+        setKeyHours({
+          offer: Number(d?.key_hours_offer) || 24,
+          cpc: Number(d?.key_hours_cpc) || 6,
+          lv: Number(d?.key_hours_linkvertise) || 6,
+        });
       }, () => setCpaEnabled(false));
   }, []);
 
@@ -237,7 +244,7 @@ export default function VerifyProviderSelect() {
   const renderCpaChoice = () => (
     choice === "cpa" ? (
       <div className="space-y-3">
-        <CpaOfferWall offers={cpa.offers} subid={cpaSubid} country={cpa.country} onDone={() => navigate("/access-key")}
+        <CpaOfferWall offers={cpa.offers} subid={cpaSubid} country={cpa.country} hours={keyHours} onDone={() => navigate("/access-key")}
           onStuckFallback={() => { cpaSession.setChoice(null); handleStart(); }} />
         {lvChoice && (
           <button type="button" onClick={() => { cpaSession.setChoice(null); setChoice(null); }} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
@@ -254,7 +261,7 @@ export default function VerifyProviderSelect() {
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
               <span className="whitespace-nowrap">{t("Complete 1 offer")}</span>
-              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("Fastest")}</span>
+              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("{n}-hour key").replace("{n}", String(keyHours.offer))}</span>
             </span>
             <span className="block text-xs font-medium text-foreground/80">{t("Do one quick task and your key unlocks.")}</span>
           </span>
@@ -267,6 +274,7 @@ export default function VerifyProviderSelect() {
           <span className="min-w-0 flex-1">
             <span className={`flex flex-wrap items-center gap-2 font-semibold ${lvChoice ? "" : "text-muted-foreground"}`}>
               <span className={lvChoice ? "" : "line-through decoration-muted-foreground/60"}>{t("Linkvertise steps")}</span>
+              {lvChoice && <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{t("{n}-hour key").replace("{n}", String(keyHours.lv))}</span>}
               {!lvChoice && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-400 no-underline">{t("Paused for now")}</span>}
             </span>
             <span className="block text-xs text-muted-foreground">

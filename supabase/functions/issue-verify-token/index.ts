@@ -41,13 +41,13 @@ function randomToken(): string {
 const CPA_VERIFY_URL = "https://hkspkqbnjdkwyyvxqglv.supabase.co/functions/v1/cpa-verify";
 const CPA_VERIFY_SECRET = Deno.env.get("CPA_VERIFY_SECRET") || "";
 
-async function cpaCheck(subid: string): Promise<{ ok: boolean; reason?: string }> {
+async function cpaCheck(subid: string): Promise<{ ok: boolean; reason?: string; payout?: number }> {
   if (!CPA_VERIFY_SECRET) return { ok: false, reason: "not_configured" };
   try {
     const u = `${CPA_VERIFY_URL}?subid=${encodeURIComponent(subid)}&consume=1&secret=${encodeURIComponent(CPA_VERIFY_SECRET)}`;
     const r = await fetch(u);
     const j = await r.json().catch(() => ({}));
-    return j?.ok ? { ok: true } : { ok: false, reason: j?.reason || `http_${r.status}` };
+    return j?.ok ? { ok: true, payout: Number(j.payout) || 0 } : { ok: false, reason: j?.reason || `http_${r.status}` };
   } catch {
     return { ok: false, reason: "cpa_unreachable" };
   }
@@ -73,9 +73,16 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({} as any));
+    // Key length follows what the unlock paid (admin: verify_settings.key_hours_*):
+    //   CPA offer paying >= OFFER_MIN_PAYOUT -> key_hours_offer (24) · cheaper / CPC click -> key_hours_cpc (6)
+    //   Linkvertise (no method) -> key_hours_linkvertise (6)
+    const OFFER_MIN_PAYOUT = 0.2;
+    let method = "linkvertise";
+    let payout = 0;
     if (body?.method === "cpa") {
       const subid = String(body?.subid || "").replace(/[^A-Za-z0-9_]/g, "").slice(0, 40);
       const chk = subid ? await cpaCheck(subid) : { ok: false, reason: "missing_subid" };
+      if (chk.ok) { payout = chk.payout || 0; method = payout >= OFFER_MIN_PAYOUT ? "offer" : "cpc"; }
       if (!chk.ok) {
         return new Response(JSON.stringify({ success: false, error: "offer_not_done", reason: chk.reason }), {
           status: 403,
@@ -92,10 +99,21 @@ Deno.serve(async (req) => {
     // Offloaded to EXTERNAL Supabase.
     const supabase = getExternalSupabase();
 
+    let hours = method === "offer" ? 24 : method === "cpc" ? 6 : 6;
+    try {
+      const { data: vs } = await supabase.from("verify_settings")
+        .select("key_hours_offer, key_hours_cpc, key_hours_linkvertise").eq("id", 1).maybeSingle();
+      const v: any = vs || {};
+      const pick = method === "offer" ? v.key_hours_offer : method === "cpc" ? v.key_hours_cpc : v.key_hours_linkvertise;
+      if (Number(pick) > 0) hours = Number(pick);
+    } catch { /* keep defaults */ }
+
     const { error } = await supabase.from("verify_tokens").insert({
       token_hash: tokenHash,
       ip,
       expires_at: expiresAt,
+      hours,
+      method,
     });
     if (error) {
       console.error("[issue-verify-token] db error:", error);
@@ -105,7 +123,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    return new Response(JSON.stringify({ success: true, token, expires_at: expiresAt }), {
+    return new Response(JSON.stringify({ success: true, token, expires_at: expiresAt, hours, method }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {

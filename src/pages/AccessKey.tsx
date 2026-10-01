@@ -28,7 +28,13 @@ interface StoredKeyData {
   generated_at: number;
 }
 
+// Hours of the key this visitor earned (stored with the verify token: offer 24 / quick click 6 / Linkvertise 6).
+function readPendingKeyHours(): number {
+  try { const h = Number(JSON.parse(localStorage.getItem("verify_token") || "{}").hours); return h > 0 ? h : 11; } catch { return 11; }
+}
+
 export default function AccessKey() {
+  const pendingKeyHours = readPendingKeyHours();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -314,7 +320,7 @@ export default function AccessKey() {
           <Card className="border-primary/30">
             <CardHeader>
               <CardTitle>{t("Generate Your Key")}</CardTitle>
-              <CardDescription>{t("Enter a username (optional) and generate your 11-hour HWID key.")}</CardDescription>
+              <CardDescription>{t("Enter a username (optional) and generate your {n}-hour HWID key.").replace("{n}", String(pendingKeyHours))}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">

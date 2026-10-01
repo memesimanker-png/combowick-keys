@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
     const tokenHash = await sha256(verify_token);
     const { data: tokenRow, error: tokErr } = await supabase
       .from("verify_tokens")
-      .select("id, ip, used, expires_at")
+      .select("id, ip, used, expires_at, hours")
       .eq("token_hash", tokenHash)
       .maybeSingle();
 
@@ -121,7 +121,9 @@ Deno.serve(async (req) => {
       .update({ used: true, used_at: new Date().toISOString() })
       .eq("id", tokenRow.id);
 
-    const requestBody: { username?: string; hours: number } = { hours: 11 };
+    // Hours were decided when the verify token was issued (offer 24 / CPC 8 / Linkvertise 6, admin-set).
+    const keyHours = Number((tokenRow as any).hours) > 0 ? Number((tokenRow as any).hours) : 11;
+    const requestBody: { username?: string; hours: number } = { hours: keyHours };
     if (username && typeof username === "string" && username.trim().length > 0) {
       requestBody.username = username.trim();
     }
@@ -155,7 +157,7 @@ Deno.serve(async (req) => {
         success: true,
         key: responseData.key,
         expiresAt: responseData.expiresAt,
-        hours: 11,
+        hours: keyHours,
         username: responseData.username,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

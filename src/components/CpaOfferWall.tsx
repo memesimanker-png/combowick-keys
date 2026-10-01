@@ -42,9 +42,11 @@ type Phase = "pick" | "confirming" | "done" | "error";
 const LOCKER = { toolId: "66967", slug: "GkKQSbW", publisherId: 3363958, hash: "#cw-locker" };
 const isDesktop = () => !/android|iphone|ipad|ipod|mobi/i.test(navigator.userAgent || "");
 
-export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "" }: {
+export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country = "", hours = { offer: 24, cpc: 6, lv: 6 } }: {
   offers: CpaOffer[]; subid: string; onDone: () => void; onStuckFallback: () => void; country?: string;
+  hours?: { offer: number; cpc: number; lv: number };
 }) {
+  const hoursLabel = (n: number) => t("{n}-hour key").replace("{n}", String(n));
   const { t } = useTranslation();
   const byKind = useMemo(() => {
     const m: Record<CpaKind, CpaOffer[]> = { app: [], survey: [], phone: [], email: [] };
@@ -123,7 +125,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     setPhase("confirming");
     const { data, error } = await supabase.functions.invoke("issue-verify-token", { body: { method: "cpa", subid } });
     if (!error && data?.success && data?.token) {
-      localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at }));
+      localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at, hours: data.hours }));
+      document.getElementById("interact-form-overlay")?.remove(); // locker pop-up must not cover "Completed"
+      document.body.style.overflow = "";
       ["step1_completed", "step2_completed", "step3_completed"].forEach((k) => localStorage.setItem(k, "true"));
       localStorage.removeItem("verification_step");
       cpaTrack(subid, "verified_unlock", current ? { kind: current.kind, offer_id: current.offer_id } : {});
@@ -167,8 +171,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     return () => window.removeEventListener("hashchange", onHash);
   }, [lockerEligible]);
 
+  const lockerRef = useRef<HTMLAnchorElement | null>(null);
   const openLocker = () => {
-    const o: CpaOffer = { offer_id: "locker", title: t("More offers"), description: "", kind: "app", offerlink: "", offerphoto: "" };
+    const o: CpaOffer = { offer_id: "locker", title: t("Alternate offers"), description: "", kind: "app", offerlink: "", offerphoto: "" };
     setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
@@ -246,43 +251,29 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
           {stuck && openedThisVisit && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
+              {lockerEligible && current?.offer_id !== "locker" && (
+                <div className="mb-2.5">
+                  <p className="text-muted-foreground">{t("Stuck? Try the alternate offers instead.")}</p>
+                  <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "stuck_alt" }); lockerRef.current?.click(); }}
+                    className="mt-2 inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground hover:opacity-90">
+                    {t("Alternate offers")} · {hoursLabel(hours.cpc)} <ArrowRight className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
               <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
               <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
                 className="mt-2 inline-flex items-center gap-1 rounded-md border border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10">
-                {t("Use Linkvertise instead")} <ArrowRight className="h-3 w-3" />
+                {t("Use Linkvertise instead")} · {hoursLabel(hours.lv)} <ArrowRight className="h-3 w-3" />
               </button>
             </div>
           )}
         </div>
       )}
 
-      {lockerEligible && (
-        <div className="cw-glow">
-          <a
-            href={`${window.location.origin}${window.location.pathname}${LOCKER.hash}`}
-            data-interact-trigger=""
-            data-tool-id={LOCKER.toolId}
-            data-tool-slug={LOCKER.slug}
-            data-subid={subid}
-            data-static-title={t("Complete 1 offer below")}
-            onClick={openLocker}
-            className="group flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] p-3 text-left transition-colors hover:bg-primary/5"
-          >
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-primary/15 text-xl">💻</span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[15px] font-bold text-foreground">{t("More offers")}</span>
-              <span className="block text-xs text-muted-foreground">{t("Opens a box with extra offers. Finish any one.")}</span>
-            </span>
-            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
-              {t("Start")} <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </a>
-        </div>
-      )}
-
       <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Sparkles className="h-4 w-4 shrink-0 text-primary" />
         <span>{t("Pick the kind of step you like best, then do one.")}</span>
+        <span className="ml-auto shrink-0 rounded-full bg-green-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{hoursLabel(hours.offer)}</span>
       </p>
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -344,6 +335,30 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
             ))}
           </div>
         </section>
+      )}
+
+      {lockerEligible && (
+        <div className="space-y-1.5 border-t border-border/50 pt-4">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{t("If the main offers don't work for you")}</p>
+          <a
+            ref={lockerRef}
+            href={`${window.location.origin}${window.location.pathname}${LOCKER.hash}`}
+            data-interact-trigger=""
+            data-tool-id={LOCKER.toolId}
+            data-tool-slug={LOCKER.slug}
+            data-subid={subid}
+            data-static-title={t("Complete 1 offer below")}
+            onClick={openLocker}
+            className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/40 hover:bg-secondary/40"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-lg">💻</span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
+              <span className="block text-xs text-muted-foreground">{t("A different list of offers. Finish any one.")}</span>
+            </span>
+            <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>
+          </a>
+        </div>
       )}
 
       <p className="flex items-center justify-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-medium text-primary">

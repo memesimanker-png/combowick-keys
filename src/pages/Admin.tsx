@@ -2039,12 +2039,16 @@ function VerifyStepsControl() {
   const [steps, setSteps] = useState<number>(3); // 2 or 3 Linkvertise steps
   const [cpaEnabled, setCpaEnabled] = useState<boolean>(true); // offer-wall choice on provider-select
   const [lvChoice, setLvChoice] = useState<boolean>(true); // Linkvertise option on the choice screen
+  // Free-key length by how the visitor unlocked (what it paid you)
+  const [hOffer, setHOffer] = useState<number>(24);
+  const [hCpc, setHCpc] = useState<number>(6);
+  const [hLv, setHLv] = useState<number>(6);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     supabase.from("verify_settings")
-      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps, cpa_enabled, linkvertise_choice")
+      .select("direct_link_clicks, access_key_clicks, extension_hours, linkvertise_link_1, linkvertise_link_2, linkvertise_link_3, verify_steps, cpa_enabled, linkvertise_choice, key_hours_offer, key_hours_cpc, key_hours_linkvertise")
       .eq("id", 1).maybeSingle()
       .then(({ data }) => {
         const d = data as any;
@@ -2057,6 +2061,9 @@ function VerifyStepsControl() {
         if (d?.verify_steps === 2 || d?.verify_steps === 3) setSteps(d.verify_steps);
         if (typeof d?.cpa_enabled === "boolean") setCpaEnabled(d.cpa_enabled);
         if (typeof d?.linkvertise_choice === "boolean") setLvChoice(d.linkvertise_choice);
+        if (d?.key_hours_offer) setHOffer(d.key_hours_offer);
+        if (d?.key_hours_cpc) setHCpc(d.key_hours_cpc);
+        if (d?.key_hours_linkvertise) setHLv(d.key_hours_linkvertise);
         setLoading(false);
       });
   }, []);
@@ -2064,6 +2071,8 @@ function VerifyStepsControl() {
   const save = async () => {
     if (clicks < 1 || clicks > 10) { toast({ variant: "destructive", title: "Provider-Select clicks must be 1–10" }); return; }
     if (accessClicks < 0 || accessClicks > 10) { toast({ variant: "destructive", title: "Access Key clicks must be 0–10" }); return; }
+    if ([hOffer, hCpc, hLv].some((h) => !(h >= 1 && h <= 720))) { toast({ variant: "destructive", title: "Key hours must be 1–720" }); return; }
+    if (hCpc < hLv) { toast({ variant: "destructive", title: "Quick-click key must be at least as long as the Linkvertise key", description: "Otherwise people pick Linkvertise (~0.7¢) over a ~9¢ click." }); return; }
     if (extHours < 1 || extHours > 876000) { toast({ variant: "destructive", title: "Extension hours must be 1–876000" }); return; }
     if (!lv1.trim() || !lv2.trim() || (steps === 3 && !lv3.trim())) {
       toast({ variant: "destructive", title: steps === 3 ? "All 3 Linkvertise links are required" : "Both Linkvertise links are required" });
@@ -2081,6 +2090,9 @@ function VerifyStepsControl() {
         verify_steps: steps,
         cpa_enabled: cpaEnabled,
         linkvertise_choice: lvChoice,
+        key_hours_offer: hOffer,
+        key_hours_cpc: hCpc,
+        key_hours_linkvertise: hLv,
         updated_at: new Date().toISOString(),
       } as any)
       .eq("id", 1);
@@ -2157,6 +2169,15 @@ function VerifyStepsControl() {
               </p>
             </div>
           )}
+        </div>
+        <div className="rounded-lg border border-border/60 bg-secondary/30 p-3">
+          <p className="text-sm font-medium">Free key length (hours) — by how they unlocked</p>
+          <p className="text-xs text-muted-foreground mt-1 mb-2">Bigger payout → longer key. Keep Quick click ≥ Linkvertise.</p>
+          <div className="grid grid-cols-3 gap-3">
+            <label className="text-xs">Offer (≥ $0.20)<input type="number" min="1" max="720" disabled={loading} value={hOffer} onChange={(e) => setHOffer(Number(e.target.value))} className={numCls + " mt-1 w-full"} /></label>
+            <label className="text-xs">Quick click (CPC)<input type="number" min="1" max="720" disabled={loading} value={hCpc} onChange={(e) => setHCpc(Number(e.target.value))} className={numCls + " mt-1 w-full"} /></label>
+            <label className="text-xs">Linkvertise<input type="number" min="1" max="720" disabled={loading} value={hLv} onChange={(e) => setHLv(Number(e.target.value))} className={numCls + " mt-1 w-full"} /></label>
+          </div>
         </div>
         <div>
           <label className="text-sm font-medium mb-1 block">Linkvertise Link — Step 1</label>

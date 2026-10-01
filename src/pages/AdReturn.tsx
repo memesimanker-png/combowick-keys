@@ -152,7 +152,7 @@ export default function AdReturn() {
         .invoke("issue-verify-token", { body: {} })
         .then(({ data, error }) => {
           if (!error && data?.success && data?.token) {
-            localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at }));
+            localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at, hours: data.hours }));
           } else {
             console.warn("[AdReturn] issue-verify-token failed", error || data);
           }
