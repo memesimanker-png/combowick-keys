@@ -53,7 +53,7 @@ export default function VerifyStep1() {
       <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
       <AdBlockGate page="verify-step1" />
-      <DiscountNotification />
+      <DiscountNotification startMinimized />
         {isAdEnabled("verify-step1", "skip_ads_banner") && <SkipAdsBanner />}
         <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
         <main className="flex-1 container flex flex-col items-center justify-center py-12">

@@ -39,13 +39,15 @@ function fmtCountdown(ms: number): string {
  * Shows the single biggest active discount, at most once per deal window per browser
  * (closing it keeps it closed until the next sale — it no longer re-pops every visit).
  */
-export function DiscountNotification() {
+// startMinimized: open as the small pill (key pages — the full card covered the offers on phones).
+// The visitor can still expand it; the Premium page keeps the full card.
+export function DiscountNotification({ startMinimized = false }: { startMinimized?: boolean } = {}) {
   const { data: discounts } = useKeyDiscounts();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const [collapsed, setCollapsed] = useState<boolean>(() => readJSON<boolean>(COLLAPSE_KEY) ?? false);
+  const [collapsed, setCollapsed] = useState<boolean>(() => startMinimized || (readJSON<boolean>(COLLAPSE_KEY) ?? false));
   const [remaining, setRemaining] = useState<number>(0);
 
   const constraintsRef = useRef<HTMLDivElement>(null);

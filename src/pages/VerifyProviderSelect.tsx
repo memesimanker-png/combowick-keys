@@ -411,7 +411,7 @@ export default function VerifyProviderSelect() {
     <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
       <AdBlockGate page="verify-provider-select" />
-      <DiscountNotification />
+      <DiscountNotification startMinimized />
 
       {showTutorialPopup && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
