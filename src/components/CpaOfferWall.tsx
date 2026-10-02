@@ -8,7 +8,7 @@ import {
 } from "@/lib/cpa";
 
 // Offer wall for the free key. Visitors pick a section (Apps / Surveys / Phone / Email) and do
-// one offer. Unlocks ONLY on a real CPALead postback (server re-checks in issue-verify-token).
+// one offer. Unlocks ONLY on a real CPALead or CPAGrip postback (server re-checks in issue-verify-token).
 // After CPA_AWAY_SECONDS spent away on the offer without a postback, the visitor is offered a
 // "stuck? use Linkvertise instead" way out (onStuckFallback) — the timer never unlocks anything.
 

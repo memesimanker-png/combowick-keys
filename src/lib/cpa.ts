@@ -1,4 +1,4 @@
-// CPALead offer wall — shared helpers for the free-key flow.
+// Offer wall (CPALead + CPAGrip, merged server-side by cpa-offers?network=all) — shared helpers.
 // Offers + tracking live on the CPA backend (yotuube Supabase); the key token is only
 // issued by our own `issue-verify-token` after that backend confirms the offer step.
 import { useEffect, useState } from "react";
@@ -18,7 +18,8 @@ export type CpaOffer = {
   kind: CpaKind;
   offerlink: string;
   offerphoto: string;
-  payout?: string; // CPALead payout (USD) — used only to order offers, never shown
+  payout?: string; // network payout (USD) — used only to order offers, never shown
+  network?: "cpalead" | "cpagrip"; // CPAGrip links already carry tracking_id=<subid> (set server-side)
 };
 
 const SS = {
@@ -142,7 +143,7 @@ export function useCpaOffers(enabled: boolean | null) {
     const subid = getCpaSubid();
     const ctl = new AbortController();
     const timer = window.setTimeout(() => { if (!done) { done = true; ctl.abort(); setState({ status: "none", offers: [], country: "" }); } }, LOAD_TIMEOUT_MS);
-    fetch(`${OFFERS_URL}?network=cpalead&device=${deviceType()}&subid=${encodeURIComponent(subid)}`, { signal: ctl.signal })
+    fetch(`${OFFERS_URL}?network=all&device=${deviceType()}&subid=${encodeURIComponent(subid)}`, { signal: ctl.signal })
       .then((r) => r.json())
       .then((d) => {
         if (done) return;

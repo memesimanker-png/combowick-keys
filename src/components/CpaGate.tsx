@@ -6,13 +6,13 @@ import { CpaOfferWall } from "@/components/CpaOfferWall";
 import { getCpaSubid, useCpaOffers } from "@/lib/cpa";
 
 /**
- * The CPALead offer wall for flows outside the free-key page (script unlock, key extension).
+ * The offer wall (CPALead + CPAGrip) for flows outside the free-key page (script unlock, key extension).
  * Loads the same admin switches as the key page (verify_settings.cpa_enabled / linkvertise_enabled):
  *  - offers for this visitor  -> offer wall (main offers first, Alternate offers below)
  *  - Linkvertise on: a Linkvertise option for everyone, unlocked by the wall after an offer was tried;
  *    with nothing at all to show it goes straight to the flow's Linkvertise path
  *  - no offers + Linkvertise off -> VPN notice, or Alternate offers only
- * `onConfirm` runs once a real CPALead postback exists for this visitor (server re-checks it).
+ * `onConfirm` runs once a real CPALead / CPAGrip postback exists for this visitor (server re-checks it).
  */
 export function CpaGate({ onConfirm, onDone, doneTitle, doneText, lvFallback }: {
   onConfirm: (subid: string) => Promise<boolean>;
