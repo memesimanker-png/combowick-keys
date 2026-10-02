@@ -198,7 +198,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // an offer (main or Alternate), and unlocks LV_UNLOCK_MS after that first open — long enough that
   // tapping an offer for a second doesn't skip it, short enough for "sorry" / no-offer pages.
   // triedAt persists with the session (48h); visitors from before this have `current` -> unlocked.
-  const LV_UNLOCK_MS = 30 * 1000;
+  const LV_UNLOCK_MS = 50 * 1000;
   const [triedAt, setTriedAt] = useState(() => cpaSession.triedAt() || (current ? 1 : 0));
   const [lvNow, setLvNow] = useState(() => Date.now());
   const markTried = () => { cpaSession.markTried(); setTriedAt(cpaSession.triedAt()); setLvNow(Date.now()); };
