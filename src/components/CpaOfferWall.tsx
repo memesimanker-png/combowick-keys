@@ -104,7 +104,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
 
   // ---- timer: only counts while the visitor is away on the offer ----
   useEffect(() => {
-    if (!current || finished || stuck) return;
+    // Only for an offer opened THIS visit — a remembered offer from an earlier visit must not count
+    // tab-switching as "away" (it made the stuck box appear the instant they opened a new offer).
+    if (!current || finished || stuck || !openedThisVisit) return;
     const away = () => document.visibilityState === "hidden" || !document.hasFocus();
     const sync = () => {
       const now = Date.now();
@@ -131,7 +133,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       window.removeEventListener("blur", sync);
       window.removeEventListener("focus", sync);
     };
-  }, [current, finished, stuck, subid]);
+  }, [current, finished, stuck, subid, openedThisVisit]);
+  // Opening a DIFFERENT offer starts its away time from zero.
+  const resetAway = () => { awayBase.current = 0; awaySince.current = null; setAwayMs(0); setStuck(false); };
 
   // ---- postback: a real completion unlocks right away ----
   useEffect(() => {
@@ -248,6 +252,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     setLockerOpen(true);
     window.setTimeout(() => lockerBoxRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 150);
     const o: CpaOffer = { offer_id: "locker", title: t("Alternate offers"), description: "", kind: "app", offerlink: "", offerphoto: "" };
+    if (current?.offer_id !== "locker") resetAway();
     setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
@@ -278,6 +283,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       return;
     }
     lastOpen.current[o.offer_id] = now;
+    if (current?.offer_id !== o.offer_id) resetAway();
     setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
@@ -374,7 +380,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <p className="text-muted-foreground"><b className="text-foreground">{t("No payment yet?")}</b> {t("Some offers only count once per person. Try one of the main offers above instead.")}</p>
             </div>
           )}
-          {stuck && openedThisVisit && !cpcReady && (allowLinkvertise || (lockerEligible && current?.offer_id !== "locker")) && (
+          {stuck && openedThisVisit && !cpcReady && ((allowLinkvertise && (!linkvertiseOption || lvReady)) || (lockerEligible && current?.offer_id !== "locker")) && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
               {lockerEligible && current?.offer_id !== "locker" && (
                 <div className="mb-2.5">
@@ -385,7 +391,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                   </button>
                 </div>
               )}
-              {allowLinkvertise && (<>
+              {allowLinkvertise && (!linkvertiseOption || lvReady) && (<>
               <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
               <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
                 className="mt-2 inline-flex items-center gap-1 rounded-md border border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10">
@@ -554,7 +560,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       )}
 
       {/* Before an offer is opened only — afterwards the status box at the top says the same. */}
-      {!current && (
+      {!(current && (openedThisVisit || (earlierRecent && !hideReturning))) && (
         <p className="flex items-center justify-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-3 py-2 text-center text-xs font-medium text-primary">
           <ShieldCheck className="h-4 w-4 shrink-0" /> {t("Finish the step in the new tab — it can take a few minutes to verify. This page unlocks automatically.")}
         </p>

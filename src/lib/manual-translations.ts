@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Not redirecting?": "Pas de redirection ?",
     "This key will ONLY work in:": "Cette clé fonctionnera UNIQUEMENT dans :",
     "Wrong game? Tap the box above to change it.": "Mauvais jeu ? Touchez la case ci-dessus pour le changer.",
     "Works only in:": "Fonctionne uniquement dans :",
@@ -600,6 +601,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Not redirecting?": "¿No te redirige?",
     "This key will ONLY work in:": "Esta clave SOLO funcionará en:",
     "Wrong game? Tap the box above to change it.": "¿Juego equivocado? Toca la casilla de arriba para cambiarlo.",
     "Works only in:": "Solo funciona en:",
@@ -1196,6 +1198,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Not redirecting?": "Keine Weiterleitung?",
     "This key will ONLY work in:": "Dieser Schlüssel funktioniert NUR in:",
     "Wrong game? Tap the box above to change it.": "Falsches Spiel? Tippe oben auf das Feld, um es zu ändern.",
     "Works only in:": "Funktioniert nur in:",
@@ -1792,6 +1795,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Not redirecting?": "Não redirecionou?",
     "This key will ONLY work in:": "Esta chave SÓ vai funcionar em:",
     "Wrong game? Tap the box above to change it.": "Jogo errado? Toque na caixa acima para mudar.",
     "Works only in:": "Funciona só em:",
@@ -2388,6 +2392,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Not redirecting?": "Не перенаправляет?",
     "This key will ONLY work in:": "Этот ключ будет работать ТОЛЬКО в:",
     "Wrong game? Tap the box above to change it.": "Не та игра? Нажмите на поле выше, чтобы изменить.",
     "Works only in:": "Работает только в:",
@@ -2984,6 +2989,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Not redirecting?": "没有跳转？",
     "This key will ONLY work in:": "此密钥只能用于：",
     "Wrong game? Tap the box above to change it.": "选错游戏了？点击上方的框来更改。",
     "Works only in:": "仅适用于：",
@@ -3580,6 +3586,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Not redirecting?": "이동되지 않나요?",
     "This key will ONLY work in:": "이 키는 다음 게임에서만 작동합니다:",
     "Wrong game? Tap the box above to change it.": "게임을 잘못 골랐나요? 위의 칸을 눌러 바꾸세요.",
     "Works only in:": "사용 가능 게임:",
@@ -4176,6 +4183,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Not redirecting?": "ไม่เปลี่ยนหน้าใช่ไหม",
     "This key will ONLY work in:": "คีย์นี้ใช้ได้เฉพาะใน:",
     "Wrong game? Tap the box above to change it.": "เลือกเกมผิดใช่ไหม แตะช่องด้านบนเพื่อเปลี่ยน",
     "Works only in:": "ใช้ได้เฉพาะใน:",
@@ -4772,6 +4780,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Not redirecting?": "Tidak diarahkan?",
     "This key will ONLY work in:": "Kunci ini HANYA berfungsi di:",
     "Wrong game? Tap the box above to change it.": "Salah game? Ketuk kotak di atas untuk menggantinya.",
     "Works only in:": "Hanya berfungsi di:",
@@ -5368,6 +5377,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Not redirecting?": "Hindi nagre-redirect?",
     "This key will ONLY work in:": "Gagana LANG ang key na ito sa:",
     "Wrong game? Tap the box above to change it.": "Maling laro? I-tap ang kahon sa itaas para palitan ito.",
     "Works only in:": "Gumagana lang sa:",
@@ -5964,6 +5974,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Not redirecting?": "Không chuyển trang?",
     "This key will ONLY work in:": "Key này CHỈ hoạt động trong:",
     "Wrong game? Tap the box above to change it.": "Chọn sai game? Chạm vào ô phía trên để đổi.",
     "Works only in:": "Chỉ dùng được trong:",

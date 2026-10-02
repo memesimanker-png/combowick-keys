@@ -7,7 +7,8 @@ const FN = "https://hkspkqbnjdkwyyvxqglv.supabase.co/functions/v1";
 const OFFERS_URL = `${FN}/cpa-offers`;
 export const CPA_STATUS_URL = `${FN}/cpa-status`;
 export const CPA_AWAY_SECONDS = 40;
-const LOAD_TIMEOUT_MS = 7000;
+// Server: ip lookup (<=2.5s) + CPALead/CPAGrip in parallel (each capped ~4.5s) -> worst case ~7s.
+const LOAD_TIMEOUT_MS = 9000;
 
 export type CpaKind = "app" | "survey" | "phone" | "email";
 export const CPA_KINDS: CpaKind[] = ["app", "survey", "phone", "email"];
@@ -144,7 +145,7 @@ export function useCpaOffers(enabled: boolean | null) {
   );
   useEffect(() => {
     if (enabled === null) return; // settings not loaded yet
-    if (!enabled) { setState({ status: "none", offers: [], country: "" }); return; }
+    if (!enabled) { setState({ status: "none", offers: [], country: "", lockerOk: false }); return; } // wall off -> Linkvertise path
     let done = false;
     const subid = getCpaSubid();
     const ctl = new AbortController();

@@ -348,17 +348,23 @@ export default function VerifyProviderSelect() {
     title: cpaAvailable ? t("Choose How to Get Your Key") : t("Get Your Free Key"),
     done: false,
     icon: <CheckCircle2 className="h-4 w-4" />,
-    render: () => cpaAvailable && directLinkDone ? renderCpaChoice()
-      : (lvEnabled && directLinkDone && cpa.status === "none" && !cpa.blocked && cpa.lockerOk !== false) ? renderAlternatePlusLinkvertise()
-      : !lvEnabled ? (
-        directLinkDone && cpa.status === "none" ? renderNoLinkvertise() : (
-          <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center text-sm text-muted-foreground">
-            {directLinkDone
-              ? <span className="inline-flex items-center gap-2 font-medium text-primary"><Loader2 className="h-4 w-4 animate-spin" /> {t("Loading...")}</span>
-              : t("Finish the step above to continue…")}
-          </div>
-        )
-      ) : (
+    // Order matters: the ad-click step first, then offers; the Linkvertise box below only shows when the
+    // page is really sending this visitor to Linkvertise (VPN / nothing else available). It used to show
+    // "Complete N Linkvertise steps" to EVERYONE while they were still clicking the ad button.
+    render: () => !directLinkDone ? (
+        <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center text-sm text-muted-foreground">
+          {t("Finish the step above to continue…")}
+        </div>
+      )
+      : cpa.status === "loading" ? (
+        <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center text-sm">
+          <span className="inline-flex items-center gap-2 font-medium text-primary"><Loader2 className="h-4 w-4 animate-spin" /> {t("Loading...")}</span>
+        </div>
+      )
+      : cpaAvailable ? renderCpaChoice()
+      : (lvEnabled && !cpa.blocked && cpa.lockerOk !== false) ? renderAlternatePlusLinkvertise()
+      : !lvEnabled ? renderNoLinkvertise()
+      : (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
         <p className="text-base font-semibold mb-2">
           {`Complete ${verifySteps} quick Linkvertise ${verifySteps === 1 ? "step" : "steps"} to get your key`}
@@ -368,19 +374,11 @@ export default function VerifyProviderSelect() {
             ? "You'll complete two short Linkvertise checkpoints (Step 1 → 2), then your HWID key unlocks."
             : "You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks."}
         </p>
-        {directLinkDone && cpa.status === "loading" ? (
-          <div className="flex items-center justify-center gap-2 text-primary font-medium">
-            <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading...")}
-          </div>
-        ) : directLinkDone ? (
-          <div className="flex items-center justify-center gap-2 text-primary font-medium">
-            <Loader2 className="h-4 w-4 animate-spin" /> {t("Starting verification...")}
-          </div>
-        ) : (
-          <p className="text-sm text-muted-foreground">Finish the step above to continue…</p>
-        )}
+        <div className="flex items-center justify-center gap-2 text-primary font-medium">
+          <Loader2 className="h-4 w-4 animate-spin" /> {t("Starting verification...")}
+        </div>
         <p className="mt-4 text-[11px] text-muted-foreground">
-          {directLinkDone && <>Not redirecting? <button type="button" onClick={handleStart} className="text-primary underline">Continue</button> · </>}
+          <>{t("Not redirecting?")} <button type="button" onClick={handleStart} className="text-primary underline">{t("Continue")}</button> · </>
           {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
         </p>
       </div>
