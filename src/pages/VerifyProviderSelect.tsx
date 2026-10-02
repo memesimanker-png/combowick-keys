@@ -24,6 +24,13 @@ const SUBSCRIPTION_GATE_DURATION_DAYS = 7;
 const WAIT_TIME_SECONDS = 3;
 const DIRECT_LINK_URL = "https://omg10.com/4/11703894";
 const DEFAULT_DIRECT_LINK_CLICKS = 2;
+// After the ad-button clicks are done, this browser skips the step for DL_COOLDOWN_MS (owner: repeat
+// clicks within a short time likely don't pay, so don't make returning visitors click again).
+const DL_COOLDOWN_MS = 10 * 60 * 1000;
+const DL_DONE_AT = "direct_link_done_at";
+const dlRecentlyDone = () => {
+  try { const at = Number(localStorage.getItem(DL_DONE_AT)) || 0; return at > 0 && Date.now() - at < DL_COOLDOWN_MS; } catch { return false; }
+};
 
 export default function VerifyProviderSelect() {
   const navigate = useNavigate();
@@ -42,6 +49,8 @@ export default function VerifyProviderSelect() {
 
   const [directLinkClicks, setDirectLinkClicks] = useState(0);
   const [requiredClicks, setRequiredClicks] = useState(DEFAULT_DIRECT_LINK_CLICKS);
+  const [dlSkip] = useState(dlRecentlyDone); // done within the last 10 min -> step counts as done
+  useEffect(() => { if (dlSkip) setDirectLinkClicks(requiredClicks); }, [dlSkip, requiredClicks]);
   const [starting, setStarting] = useState(false);
   const [verifySteps, setVerifySteps] = useState(3); // 2 or 3, admin-configured
   // CPA offer wall — offered as a choice next to Linkvertise (admin toggle verify_settings.cpa_enabled).
@@ -146,7 +155,10 @@ export default function VerifyProviderSelect() {
     setDirectLinkClicks((prev) => {
       const next = Math.min(prev + 1, requiredClicks);
       localStorage.setItem("direct_link_clicks", String(next));
-      if (next >= requiredClicks) localStorage.setItem("direct_link_completed", "true");
+      if (next >= requiredClicks) {
+        localStorage.setItem("direct_link_completed", "true");
+        localStorage.setItem(DL_DONE_AT, String(Date.now())); // starts the 10-min skip
+      }
       return next;
     });
   };
