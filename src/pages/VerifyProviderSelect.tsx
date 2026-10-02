@@ -249,10 +249,9 @@ export default function VerifyProviderSelect() {
 
   const directLinkDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
 
-  // Thin country: 1 main offer or fewer, or Alternate offers known empty. Only these visitors ever
-  // see Linkvertise (6h panel card + "stuck" way out) — everywhere else it stays CPALead only.
-  const thinCountry = cpa.offers.length <= 1 || cpa.lockerOk === false;
-  const lvHere = lvEnabled && thinCountry;
+  // Linkvertise is offered to everyone as the third option, but the wall only shows/unlocks it after
+  // the visitor actually tried an offer (see CpaOfferWall LV_UNLOCK_MS).
+  const lvHere = lvEnabled;
 
   const renderCpaChoice = () => (
     (choice === "cpa" || !lvChoice) ? (

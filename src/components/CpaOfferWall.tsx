@@ -194,9 +194,22 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // Pay-per-click offers exist in many countries and on phones (ES, BD, Gulf, TH, US iOS…), and the
   // locker picks offers for the visitor's own country/device, so it is offered to everyone.
   const lockerEligible = lockerOk !== false;
-  // Linkvertise (thin countries) only appears once the visitor has opened an offer — main or
-  // Alternate — so the better-paying offers always get tried first. `current` persists 48h.
-  const showLv = !!linkvertiseOption && !!current;
+  // Linkvertise is the "offer didn't work" way out: the card only appears once the visitor opened
+  // an offer (main or Alternate), and unlocks LV_UNLOCK_MS after that first open — long enough that
+  // tapping an offer for a second doesn't skip it, short enough for "sorry" / no-offer pages.
+  // triedAt persists with the session (48h); visitors from before this have `current` -> unlocked.
+  const LV_UNLOCK_MS = 30 * 1000;
+  const [triedAt, setTriedAt] = useState(() => cpaSession.triedAt() || (current ? 1 : 0));
+  const [lvNow, setLvNow] = useState(() => Date.now());
+  const markTried = () => { cpaSession.markTried(); setTriedAt(cpaSession.triedAt()); setLvNow(Date.now()); };
+  const lvLeft = triedAt ? Math.max(0, Math.ceil((triedAt + LV_UNLOCK_MS - lvNow) / 1000)) : 0;
+  useEffect(() => {
+    if (!linkvertiseOption || !triedAt || lvLeft === 0) return;
+    const id = window.setInterval(() => setLvNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, [linkvertiseOption, triedAt, lvLeft === 0]);
+  const showLv = !!linkvertiseOption && !!triedAt;
+  const lvReady = showLv && lvLeft === 0;
   // The locker is embedded INSIDE our own card (iframe) instead of CPALead's pop-up. Its unlock /
   // close messages just collapse the panel — the key itself still comes from our postback poll.
   const [lockerOpen, setLockerOpen] = useState(false);
@@ -230,6 +243,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     setOpenedThisVisit(true);
     setCurrent(o);
     cpaSession.setCurrent(o);
+    markTried();
     // One open per 10s at most — double taps were logging 5-6 opens per second.
     const now = Date.now();
     if (now - lockerTrackedAt.current > 10000) {
@@ -260,6 +274,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
     setCurrent(o);
     cpaSession.setCurrent(o);
     cpaSession.rememberOpen(o, (e.currentTarget as HTMLAnchorElement).href || o.offerlink);
+    markTried();
     cpaTrack(subid, "open_offer", { kind: o.kind, offer_id: o.offer_id });
   };
 
@@ -505,7 +520,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
             <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
           </button>
           )}
-          {showLv && (
+          {showLv && (lvReady ? (
             <button
               type="button"
               onClick={() => { cpaTrack(subid, "tab", { kind: "lv_option" }); linkvertiseOption!(); }}
@@ -514,11 +529,19 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-muted-foreground"><Link2 className="h-5 w-5" /></span>
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-semibold text-foreground">Linkvertise</span>
-                <span className="block text-xs text-muted-foreground">{t("A few short ad steps instead.")}</span>
+                <span className="block text-xs text-muted-foreground">{t("Offer didn't work? A few short ad steps instead.")}</span>
               </span>
               <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
             </button>
-          )}
+          ) : (
+            <div className="flex w-full items-center gap-3 rounded-lg border border-dashed border-border/70 bg-secondary/10 p-3 text-left" aria-disabled>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary/60 text-muted-foreground/60"><Link2 className="h-5 w-5" /></span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold text-muted-foreground">Linkvertise</span>
+                <span className="block text-xs text-muted-foreground">{t("Offer didn't work? Available in {time}").replace("{time}", `0:${String(lvLeft).padStart(2, "0")}`)}</span>
+              </span>
+            </div>
+          ))}
         </div>
       )}
 

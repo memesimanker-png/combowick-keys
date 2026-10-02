@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Offer didn't work? A few short ad steps instead.": "L'offre n'a pas marché ? Quelques courtes étapes publicitaires à la place.",
+    "Offer didn't work? Available in {time}": "L'offre n'a pas marché ? Disponible dans {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Déjà ouvert — vérifiez votre autre onglet. Si rien ne s'est ouvert, touchez à nouveau dans quelques secondes.",
     "A few short ad steps instead.": "Quelques courtes étapes publicitaires à la place.",
     "Main offers": "Offres principales",
@@ -595,6 +597,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Offer didn't work? A few short ad steps instead.": "¿La oferta no funcionó? Unos pocos pasos cortos con anuncios en su lugar.",
+    "Offer didn't work? Available in {time}": "¿La oferta no funcionó? Disponible en {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Recién abierto — revisa tu otra pestaña. Si no se abrió nada, toca de nuevo en unos segundos.",
     "A few short ad steps instead.": "Unos pocos pasos cortos con anuncios en su lugar.",
     "Main offers": "Ofertas principales",
@@ -1186,6 +1190,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Offer didn't work? A few short ad steps instead.": "Angebot hat nicht geklappt? Stattdessen ein paar kurze Werbeschritte.",
+    "Offer didn't work? Available in {time}": "Angebot hat nicht geklappt? Verfügbar in {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Gerade geöffnet — sieh in deinem anderen Tab nach. Wenn sich nichts geöffnet hat, tippe in ein paar Sekunden erneut.",
     "A few short ad steps instead.": "Stattdessen ein paar kurze Werbeschritte.",
     "Main offers": "Hauptangebote",
@@ -1777,6 +1783,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Offer didn't work? A few short ad steps instead.": "A oferta não funcionou? Alguns passos curtos com anúncios no lugar.",
+    "Offer didn't work? Available in {time}": "A oferta não funcionou? Disponível em {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Acabou de abrir — veja sua outra aba. Se nada abriu, toque de novo em alguns segundos.",
     "A few short ad steps instead.": "Alguns passos curtos com anúncios no lugar.",
     "Main offers": "Ofertas principais",
@@ -2368,6 +2376,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Offer didn't work? A few short ad steps instead.": "Предложение не сработало? Вместо этого — несколько коротких шагов с рекламой.",
+    "Offer didn't work? Available in {time}": "Предложение не сработало? Будет доступно через {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Уже открыто — проверьте другую вкладку. Если ничего не открылось, нажмите ещё раз через несколько секунд.",
     "A few short ad steps instead.": "Вместо этого — несколько коротких шагов с рекламой.",
     "Main offers": "Основные предложения",
@@ -2959,6 +2969,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Offer didn't work? A few short ad steps instead.": "任务没成功？改为完成几个简短的广告步骤。",
+    "Offer didn't work? Available in {time}": "任务没成功？{time} 后可用",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "刚刚已打开 — 请查看你的另一个标签页。如果没有打开，请过几秒再点一次。",
     "A few short ad steps instead.": "改为完成几个简短的广告步骤。",
     "Main offers": "主要任务",
@@ -3550,6 +3562,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Offer didn't work? A few short ad steps instead.": "오퍼가 안 됐나요? 대신 짧은 광고 단계 몇 개를 거치세요.",
+    "Offer didn't work? Available in {time}": "오퍼가 안 됐나요? {time} 후 이용 가능",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "방금 열렸어요 — 다른 탭을 확인하세요. 아무것도 열리지 않았다면 몇 초 후에 다시 눌러 주세요.",
     "A few short ad steps instead.": "대신 짧은 광고 단계 몇 개를 거치세요.",
     "Main offers": "주요 오퍼",
@@ -4141,6 +4155,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Offer didn't work? A few short ad steps instead.": "ข้อเสนอใช้ไม่ได้ใช่ไหม ทำขั้นตอนโฆษณาสั้น ๆ ไม่กี่ขั้นแทน",
+    "Offer didn't work? Available in {time}": "ข้อเสนอใช้ไม่ได้ใช่ไหม ใช้ได้ในอีก {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "เพิ่งเปิดไปแล้ว — ดูที่แท็บอื่นของคุณ ถ้าไม่มีอะไรเปิดขึ้นมา ให้แตะอีกครั้งในอีกไม่กี่วินาที",
     "A few short ad steps instead.": "ทำขั้นตอนโฆษณาสั้น ๆ ไม่กี่ขั้นแทน",
     "Main offers": "ข้อเสนอหลัก",
@@ -4732,6 +4748,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Offer didn't work? A few short ad steps instead.": "Offer tidak berhasil? Beberapa langkah iklan singkat sebagai gantinya.",
+    "Offer didn't work? Available in {time}": "Offer tidak berhasil? Tersedia dalam {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Baru saja dibuka — cek tab lainmu. Kalau tidak ada yang terbuka, ketuk lagi dalam beberapa detik.",
     "A few short ad steps instead.": "Beberapa langkah iklan singkat sebagai gantinya.",
     "Main offers": "Offer utama",
@@ -5323,6 +5341,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Offer didn't work? A few short ad steps instead.": "Hindi gumana ang offer? Ilang maikling ad step na lang sa halip.",
+    "Offer didn't work? Available in {time}": "Hindi gumana ang offer? Magagamit sa loob ng {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Kabubukas lang — tingnan ang iyong ibang tab. Kung walang nagbukas, i-tap ulit makalipas ang ilang segundo.",
     "A few short ad steps instead.": "Ilang maikling ad step na lang sa halip.",
     "Main offers": "Pangunahing offer",
@@ -5914,6 +5934,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Offer didn't work? A few short ad steps instead.": "Ưu đãi không được? Thay vào đó, qua vài bước quảng cáo ngắn.",
+    "Offer didn't work? Available in {time}": "Ưu đãi không được? Có thể dùng sau {time}",
     "Just opened — check your other tab. If nothing opened, tap again in a few seconds.": "Vừa mở rồi — hãy xem tab khác của bạn. Nếu không có gì mở ra, hãy chạm lại sau vài giây.",
     "A few short ad steps instead.": "Thay vào đó, qua vài bước quảng cáo ngắn.",
     "Main offers": "Ưu đãi chính",

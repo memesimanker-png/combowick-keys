@@ -27,6 +27,7 @@ const SS = {
   current: "cpa_current_offer",
   choice: "cpa_choice",
   links: "cpa_links",
+  tried: "cpa_tried_at", // first time this visitor opened ANY offer (gates the Linkvertise option)
 };
 
 // Kept in localStorage (not sessionStorage): CPALead postbacks can land 10–15 min after the
@@ -40,7 +41,7 @@ function ssDel(k: string) { try { localStorage.removeItem(k); } catch {} }
 (function expireOld() {
   try {
     const at = Number(localStorage.getItem(STARTED)) || 0;
-    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", "cpa_links", STARTED].forEach(ssDel); }
+    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", "cpa_links", "cpa_tried_at", STARTED].forEach(ssDel); }
   } catch {}
 })();
 
@@ -61,6 +62,8 @@ export const cpaSession = {
   getCurrent: (): CpaOffer | null => { try { return JSON.parse(ssGet(SS.current) || "null"); } catch { return null; } },
   setCurrent: (o: CpaOffer) => ssSet(SS.current, JSON.stringify(o)),
   getChoice: () => ssGet(SS.choice),
+  triedAt: () => Number(ssGet(SS.tried)) || 0,
+  markTried: () => { if (!Number(ssGet(SS.tried))) ssSet(SS.tried, String(Date.now())); },
   setChoice: (c: string | null) => (c ? ssSet(SS.choice, c) : ssDel(SS.choice)),
   /** after a key token is issued — next verify run starts a fresh offer-wall session */
   // The FIRST tracking link a visitor opened for each offer is kept and reused. The offers API
