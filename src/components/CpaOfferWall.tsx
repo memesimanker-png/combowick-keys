@@ -194,6 +194,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // Pay-per-click offers exist in many countries and on phones (ES, BD, Gulf, TH, US iOS…), and the
   // locker picks offers for the visitor's own country/device, so it is offered to everyone.
   const lockerEligible = lockerOk !== false;
+  // Linkvertise (thin countries) only appears once the visitor has opened an offer — main or
+  // Alternate — so the better-paying offers always get tried first. `current` persists 48h.
+  const showLv = !!linkvertiseOption && !!current;
   // The locker is embedded INSIDE our own card (iframe) instead of CPALead's pop-up. Its unlock /
   // close messages just collapse the panel — the key itself still comes from our postback poll.
   const [lockerOpen, setLockerOpen] = useState(false);
@@ -454,7 +457,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       </div>
       )}
 
-      {(lockerEligible || linkvertiseOption) && !alternateOnly && (
+      {(lockerEligible || showLv) && !alternateOnly && (
         <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground" aria-hidden>
           <span className="h-px flex-1 bg-border" />
           {t("or")}
@@ -462,7 +465,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
         </div>
       )}
 
-      {(lockerEligible || linkvertiseOption) && (
+      {(lockerEligible || showLv) && (
         <div className={`space-y-2 ${alternateOnly ? "" : "rounded-xl border border-border bg-secondary/10 p-3 sm:p-4"}`}>
           {!alternateOnly && (
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -500,10 +503,10 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
             <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
           </button>
           )}
-          {linkvertiseOption && (
+          {showLv && (
             <button
               type="button"
-              onClick={() => { cpaTrack(subid, "tab", { kind: "lv_option" }); linkvertiseOption(); }}
+              onClick={() => { cpaTrack(subid, "tab", { kind: "lv_option" }); linkvertiseOption!(); }}
               className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/40 hover:bg-secondary/40"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-muted-foreground"><Link2 className="h-5 w-5" /></span>
