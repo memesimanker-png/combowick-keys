@@ -240,17 +240,19 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
 
   // Offers open through real <a target="_blank"> links (popup blockers stop window.open on
   // some phones — people then spam-tapped one offer ~60x, which looks like click fraud to
-  // CPALead). Re-opening the same offer within REOPEN_MS doesn't fire another click — every
-  // extra click restarts the advertiser's session and gets the visitor flagged as fraud.
-  const REOPEN_MS = 3 * 60 * 1000;
+  // CPALead). Re-opening the same offer within REOPEN_MS is ignored (spam taps); after that,
+  // "Continue" reopens the FIRST link we gave them (cpaSession.linkFor), which is what
+  // advertisers ask for ("return through the original link"). It was 3 min, but a blocked
+  // "Continue" with no message looked broken to people who had closed the offer tab.
+  const REOPEN_MS = 15 * 1000;
   const lastOpen = useRef<Record<string, number>>({});
   const [hint, setHint] = useState("");
-  const onOfferClick = (e: React.MouseEvent, o: CpaOffer) => {
+  const onOfferClick = (e: React.MouseEvent, o: CpaOffer, from: "tile" | "box" = "tile") => {
     const now = Date.now();
     if (now - Math.max(lastOpen.current[o.offer_id] || 0, cpaSession.lastOpenAt(o.offer_id)) < REOPEN_MS) {
       e.preventDefault();
-      setHint(o.offer_id);
-      window.setTimeout(() => setHint(""), 4000);
+      setHint(from + ":" + o.offer_id); // message shows next to the button that was tapped
+      window.setTimeout(() => setHint(""), 6000);
       return;
     }
     lastOpen.current[o.offer_id] = now;
@@ -337,12 +339,12 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}
             </span>
             {!isAway && current.offer_id !== "locker" && (
-              <a href={cpaSession.linkFor(current)} target="_blank" rel="noopener noreferrer" onClick={(e) => onOfferClick(e, current)} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
+              <a href={cpaSession.linkFor(current)} target="_blank" rel="noopener noreferrer" onClick={(e) => onOfferClick(e, current, "box")} className="shrink-0 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground">
                 {t("Finish offer")}
               </a>
             )}
           </div>
-          {hint && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
+          {hint.startsWith("box:") && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Just opened — check your other tab. If nothing opened, tap again in a few seconds.")}</p>}
           <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
           {stuck && openedThisVisit && !cpcReady && current?.offer_id === "locker" && !alternateOnly && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
@@ -447,7 +449,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                   {current?.offer_id === o.offer_id ? t("Continue") : t("Start")} <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </a>
-              {hint === o.offer_id && !current && <p className="px-3 pb-2 text-[11px] font-medium text-amber-400">{t("Already opened — check your other tab.")}</p>}
+              {hint === "tile:" + o.offer_id && <p className="px-3 pb-2 text-[11px] font-medium text-amber-400">{t("Just opened — check your other tab. If nothing opened, tap again in a few seconds.")}</p>}
               </div>
             ))}
           </div>
