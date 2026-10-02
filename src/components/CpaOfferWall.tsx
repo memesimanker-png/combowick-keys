@@ -99,6 +99,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   const [openedThisVisit, setOpenedThisVisit] = useState(false);
 
   const awaySince = useRef<number | null>(null);
+  const stuckRef = useRef(false); // "stuck" event fires once per offer
   const awayBase = useRef(awayMs);
   const retries = useRef(0);
 
@@ -106,7 +107,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   useEffect(() => {
     // Only for an offer opened THIS visit — a remembered offer from an earlier visit must not count
     // tab-switching as "away" (it made the stuck box appear the instant they opened a new offer).
-    if (!current || finished || stuck || !openedThisVisit) return;
+    // Keeps running after "stuck" so isAway stays current — it used to stop at the stuck point, leaving
+    // "Checking… finish the offer in the other tab" on screen after they came back.
+    if (!current || finished || !openedThisVisit) return;
     const away = () => document.visibilityState === "hidden" || !document.hasFocus();
     const sync = () => {
       const now = Date.now();
@@ -120,7 +123,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       const total = awayBase.current + (awaySince.current !== null ? now - awaySince.current : 0);
       setAwayMs(total);
       cpaSession.setAway(total);
-      if (total >= CPA_AWAY_SECONDS * 1000) { setStuck(true); cpaTrack(subid, "stuck", current ? { kind: current.kind, offer_id: current.offer_id } : {}); }
+      if (total >= CPA_AWAY_SECONDS * 1000 && !stuckRef.current) { stuckRef.current = true; setStuck(true); cpaTrack(subid, "stuck", current ? { kind: current.kind, offer_id: current.offer_id } : {}); }
     };
     sync();
     const id = window.setInterval(sync, 500);
@@ -133,9 +136,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
       window.removeEventListener("blur", sync);
       window.removeEventListener("focus", sync);
     };
-  }, [current, finished, stuck, subid, openedThisVisit]);
+  }, [current, finished, subid, openedThisVisit]);
   // Opening a DIFFERENT offer starts its away time from zero.
-  const resetAway = () => { awayBase.current = 0; awaySince.current = null; setAwayMs(0); setStuck(false); };
+  const resetAway = () => { awayBase.current = 0; awaySince.current = null; stuckRef.current = false; setAwayMs(0); setStuck(false); };
 
   // ---- postback: a real completion unlocks right away ----
   useEffect(() => {
@@ -362,7 +365,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
             {isAway ? <Loader2 className="h-4 w-4 shrink-0 animate-spin text-primary" /> : <PauseCircle className="h-4 w-4 shrink-0 text-amber-400" />}
             <span className="min-w-0 flex-1">
               {stuck && !isAway
-                ? <><b>{t("Still waiting for the offer to confirm…")}</b> {t("Some offers take up to 15 minutes to confirm. You can leave and come back to this page on this device — it unlocks automatically.")}</>
+                ? <><b>{t("Still waiting for the offer to confirm…")}</b> {t("Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.")}</>
                 : isAway
                 ? <><b className="block truncate">{current.title}</b>{t("Checking… finish the offer in the other tab.")}</>
                 : <><b>{t("Paused")}</b> — {t("you haven't finished the offer yet. Go back and finish it to unlock.")}</>}
@@ -375,6 +378,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           </div>
           {hint.startsWith("box:") && <p className="mt-1.5 text-[11px] font-medium text-amber-400">{t("Just opened — check your other tab. If nothing opened, tap again in a few seconds.")}</p>}
           <p className="mt-1.5 text-[11px] text-muted-foreground">{t("After you finish, verifying can take a few minutes.")}</p>
+          <p className="mt-1 text-[11px] text-muted-foreground">{t("Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.")}</p>
           {stuck && openedThisVisit && !cpcReady && current?.offer_id === "locker" && !alternateOnly && (
             <div className="mt-3 rounded-md border border-border/60 bg-background/40 p-2.5 text-xs">
               <p className="text-muted-foreground"><b className="text-foreground">{t("No payment yet?")}</b> {t("Some offers only count once per person. Try one of the main offers above instead.")}</p>
