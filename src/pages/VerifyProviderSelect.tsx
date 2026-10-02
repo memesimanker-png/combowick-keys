@@ -15,6 +15,7 @@ import { useTranslation } from "@/lib/translation-context";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 import { CpaOfferWall } from "@/components/CpaOfferWall";
+import { useKeyQuota, KeyLimitNotice } from "@/lib/key-quota";
 import { useCpaOffers, getCpaSubid, cpaSession, cpaTrack } from "@/lib/cpa";
 
 
@@ -67,6 +68,9 @@ export default function VerifyProviderSelect() {
   // Key length per unlock type (verify_settings.key_hours_*) — shown on each option.
   const [keyHours, setKeyHours] = useState({ offer: 24, cpc: 6, lv: 6 });
   const cpaSubid = React.useMemo(getCpaSubid, []);
+  // Free-key limit (5 per 10h per IP) is checked up front — nobody should do an offer just to be refused.
+  const keyQuota = useKeyQuota();
+  const keyLimited = !!keyQuota?.limited;
 
   useEffect(() => {
     setMounted(true);
@@ -462,6 +466,9 @@ export default function VerifyProviderSelect() {
             </CardHeader>
 
             <CardContent className="p-0">
+              {keyLimited ? (
+                <div className="p-4"><KeyLimitNotice resetsAt={keyQuota?.resets_at} limit={keyQuota?.limit} /></div>
+              ) : (
               <ol className="divide-y divide-border/40">
                 {steps.map((step, idx) => {
                   const isActive = idx === activeIdx || (!!step.optional && !step.done && (activeIdx === -1 || idx < activeIdx));
@@ -487,6 +494,7 @@ export default function VerifyProviderSelect() {
                   );
                 })}
               </ol>
+              )}
             </CardContent>
           </Card>
         </div>

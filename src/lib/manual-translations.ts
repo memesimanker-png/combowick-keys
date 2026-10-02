@@ -4,6 +4,9 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "You've reached the free key limit": "Vous avez atteint la limite de clés gratuites",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Vous pouvez obtenir {n} clés gratuites toutes les 10 heures. Votre prochaine clé gratuite sera disponible dans {time}.",
+    "Your last key still works until it expires.": "Votre dernière clé fonctionne toujours jusqu'à son expiration.",
     "Not redirecting?": "Pas de redirection ?",
     "This key will ONLY work in:": "Cette clé fonctionnera UNIQUEMENT dans :",
     "Wrong game? Tap the box above to change it.": "Mauvais jeu ? Touchez la case ci-dessus pour le changer.",
@@ -601,6 +604,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "You've reached the free key limit": "Has alcanzado el límite de claves gratis",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Puedes obtener {n} claves gratis cada 10 horas. Tu próxima clave gratis estará disponible en {time}.",
+    "Your last key still works until it expires.": "Tu última clave sigue funcionando hasta que caduque.",
     "Not redirecting?": "¿No te redirige?",
     "This key will ONLY work in:": "Esta clave SOLO funcionará en:",
     "Wrong game? Tap the box above to change it.": "¿Juego equivocado? Toca la casilla de arriba para cambiarlo.",
@@ -1198,6 +1204,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "You've reached the free key limit": "Du hast das Limit für kostenlose Schlüssel erreicht",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Du kannst alle 10 Stunden {n} kostenlose Schlüssel erhalten. Dein nächster kostenloser Schlüssel ist in {time} verfügbar.",
+    "Your last key still works until it expires.": "Dein letzter Schlüssel funktioniert weiter, bis er abläuft.",
     "Not redirecting?": "Keine Weiterleitung?",
     "This key will ONLY work in:": "Dieser Schlüssel funktioniert NUR in:",
     "Wrong game? Tap the box above to change it.": "Falsches Spiel? Tippe oben auf das Feld, um es zu ändern.",
@@ -1795,6 +1804,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "You've reached the free key limit": "Você atingiu o limite de chaves grátis",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Você pode pegar {n} chaves grátis a cada 10 horas. Sua próxima chave grátis fica disponível em {time}.",
+    "Your last key still works until it expires.": "Sua última chave continua funcionando até expirar.",
     "Not redirecting?": "Não redirecionou?",
     "This key will ONLY work in:": "Esta chave SÓ vai funcionar em:",
     "Wrong game? Tap the box above to change it.": "Jogo errado? Toque na caixa acima para mudar.",
@@ -2392,6 +2404,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "You've reached the free key limit": "Вы достигли лимита бесплатных ключей",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Можно получить {n} бесплатных ключей каждые 10 часов. Следующий бесплатный ключ будет доступен через {time}.",
+    "Your last key still works until it expires.": "Ваш последний ключ работает до окончания срока.",
     "Not redirecting?": "Не перенаправляет?",
     "This key will ONLY work in:": "Этот ключ будет работать ТОЛЬКО в:",
     "Wrong game? Tap the box above to change it.": "Не та игра? Нажмите на поле выше, чтобы изменить.",
@@ -2989,6 +3004,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "You've reached the free key limit": "你已达到免费密钥上限",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "每 10 小时可获取 {n} 个免费密钥。你的下一个免费密钥将在 {time} 后可用。",
+    "Your last key still works until it expires.": "你的上一个密钥在过期前仍然可用。",
     "Not redirecting?": "没有跳转？",
     "This key will ONLY work in:": "此密钥只能用于：",
     "Wrong game? Tap the box above to change it.": "选错游戏了？点击上方的框来更改。",
@@ -3586,6 +3604,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "You've reached the free key limit": "무료 키 한도에 도달했어요",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "10시간마다 무료 키를 {n}개 받을 수 있어요. 다음 무료 키는 {time} 후에 받을 수 있어요.",
+    "Your last key still works until it expires.": "마지막으로 받은 키는 만료될 때까지 계속 사용할 수 있어요.",
     "Not redirecting?": "이동되지 않나요?",
     "This key will ONLY work in:": "이 키는 다음 게임에서만 작동합니다:",
     "Wrong game? Tap the box above to change it.": "게임을 잘못 골랐나요? 위의 칸을 눌러 바꾸세요.",
@@ -4183,6 +4204,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "You've reached the free key limit": "คุณรับคีย์ฟรีครบจำนวนแล้ว",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "คุณรับคีย์ฟรีได้ {n} ครั้งทุก 10 ชั่วโมง คีย์ฟรีครั้งถัดไปจะรับได้ในอีก {time}",
+    "Your last key still works until it expires.": "คีย์ล่าสุดของคุณยังใช้ได้จนกว่าจะหมดอายุ",
     "Not redirecting?": "ไม่เปลี่ยนหน้าใช่ไหม",
     "This key will ONLY work in:": "คีย์นี้ใช้ได้เฉพาะใน:",
     "Wrong game? Tap the box above to change it.": "เลือกเกมผิดใช่ไหม แตะช่องด้านบนเพื่อเปลี่ยน",
@@ -4780,6 +4804,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "You've reached the free key limit": "Kamu sudah mencapai batas kunci gratis",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Kamu bisa dapat {n} kunci gratis setiap 10 jam. Kunci gratis berikutnya tersedia dalam {time}.",
+    "Your last key still works until it expires.": "Kunci terakhirmu tetap berfungsi sampai kedaluwarsa.",
     "Not redirecting?": "Tidak diarahkan?",
     "This key will ONLY work in:": "Kunci ini HANYA berfungsi di:",
     "Wrong game? Tap the box above to change it.": "Salah game? Ketuk kotak di atas untuk menggantinya.",
@@ -5377,6 +5404,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "You've reached the free key limit": "Naabot mo na ang limit ng libreng key",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Makakakuha ka ng {n} libreng key kada 10 oras. Magagamit ang susunod mong libreng key sa loob ng {time}.",
+    "Your last key still works until it expires.": "Gumagana pa rin ang huli mong key hanggang mag-expire ito.",
     "Not redirecting?": "Hindi nagre-redirect?",
     "This key will ONLY work in:": "Gagana LANG ang key na ito sa:",
     "Wrong game? Tap the box above to change it.": "Maling laro? I-tap ang kahon sa itaas para palitan ito.",
@@ -5974,6 +6004,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "You've reached the free key limit": "Bạn đã đạt giới hạn key miễn phí",
+    "You can get {n} free keys every 10 hours. Your next free key is available in {time}.": "Bạn có thể nhận {n} key miễn phí mỗi 10 giờ. Key miễn phí tiếp theo có sau {time}.",
+    "Your last key still works until it expires.": "Key gần nhất của bạn vẫn dùng được cho đến khi hết hạn.",
     "Not redirecting?": "Không chuyển trang?",
     "This key will ONLY work in:": "Key này CHỈ hoạt động trong:",
     "Wrong game? Tap the box above to change it.": "Chọn sai game? Chạm vào ô phía trên để đổi.",

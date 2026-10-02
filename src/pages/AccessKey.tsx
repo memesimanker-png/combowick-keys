@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Copy, User, Clock, Shield, Key, Loader2, Code2, ExternalLink, Gamepad2 } from "lucide-react";
 import { GamePicker } from "@/components/GamePicker";
+import { waitLabel } from "@/lib/key-quota";
 import type { GameItem } from "@/hooks/useGamesList";
 import { useIsAdmin } from "@/hooks/useAuth";
 import { LanguageSelector } from "@/components/LanguageSelector";
@@ -207,7 +208,8 @@ export default function AccessKey() {
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke("generate-hwid-key", {
-        body: { username: username.trim() || undefined, verify_token: verifyToken, game_id: selectedGame.game_id },
+        // universe id = the whole game (all its places); the key is locked to it at creation
+        body: { username: username.trim() || undefined, verify_token: verifyToken, game_id: selectedGame.universe_id || selectedGame.game_id },
       });
 
       // Extract real server error message (supabase wraps non-2xx in FunctionsHttpError)
@@ -218,6 +220,7 @@ export default function AccessKey() {
           if (ctx && typeof ctx.json === "function") {
             const j = await ctx.json();
             serverErr = j?.error || j?.message || "";
+            if (j?.code === "rate_limited") serverErr = t("You can get {n} free keys every 10 hours. Your next free key is available in {time}.").replace("{n}", "5").replace("{time}", waitLabel(j?.resets_at));
           }
         } catch { /* noop */ }
       }
