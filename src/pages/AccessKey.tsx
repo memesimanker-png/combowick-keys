@@ -26,11 +26,13 @@ interface StoredKeyData {
   expires_at: string;
   username?: string;
   generated_at: number;
+  game_name?: string; // the ONE game this key works in — shown with the key so nobody mixes them up
 }
 
 // Hours of the key this visitor earned (stored with the verify token: offer 24 / quick click 6 / Linkvertise 6).
+// Fallback 6 = the shortest current key (click / Linkvertise); the old 11h default no longer exists.
 function readPendingKeyHours(): number {
-  try { const h = Number(JSON.parse(localStorage.getItem("verify_token") || "{}").hours); return h > 0 ? h : 11; } catch { return 11; }
+  try { const h = Number(JSON.parse(localStorage.getItem("verify_token") || "{}").hours); return h > 0 ? h : 6; } catch { return 6; }
 }
 
 export default function AccessKey() {
@@ -40,6 +42,7 @@ export default function AccessKey() {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [selectedGame, setSelectedGame] = useState<GameItem | null>(null);
+  const [keyGameName, setKeyGameName] = useState("");
   const [generatedKey, setGeneratedKey] = useState("");
   const [keyExpiresAt, setKeyExpiresAt] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -99,6 +102,7 @@ export default function AccessKey() {
           setGeneratedKey(keyData.key);
           setKeyExpiresAt(expiryDate.toISOString());
           setUsername(keyData.username || "");
+          setKeyGameName(keyData.game_name || "");
           setCanGenerate(false);
         } else {
           localStorage.removeItem("hwid_key_data");
@@ -246,14 +250,16 @@ export default function AccessKey() {
           expires_at: expiryDate.toISOString(),
           username: data.username || username.trim(),
           generated_at: now,
+          game_name: selectedGame?.name,
         };
 
         localStorage.setItem("hwid_key_data", JSON.stringify(keyData));
         setGeneratedKey(data.key);
+        setKeyGameName(selectedGame?.name || "");
         setKeyExpiresAt(expiryDate.toISOString());
         setCanGenerate(false);
 
-        toast({ title: "Key Generated!", description: `Your ${data.hours || 11}-hour HWID key has been generated.` });
+        toast({ title: "Key Generated!", description: `Your ${data.hours || readPendingKeyHours()}-hour HWID key has been generated.` });
       } else {
         setError(data?.error || "Failed to generate key");
         toast({ variant: "destructive", title: "Error", description: data?.error || "Failed to generate key." });
@@ -284,6 +290,7 @@ export default function AccessKey() {
     setGeneratedKey("");
     setKeyExpiresAt(null);
     setSelectedGame(null);
+    setKeyGameName("");
     setUsername("");
     setCanGenerate(true);
     setError("");
@@ -300,7 +307,7 @@ export default function AccessKey() {
   };
 
   return (
-    <div className="min-h-screen bg-black/70 flex flex-col">
+    <div className="min-h-screen bg-black/70 flex flex-col pb-40 sm:pb-0">{/* room for the floating Back / Skip Ads buttons on phones */}
       <NoIndex />
       <AdBlockGate page="access-key" />
       {isAdEnabled("access-key", "skip_ads_banner") && <SkipAdsBanner />}
@@ -342,7 +349,15 @@ export default function AccessKey() {
                   <label className="text-sm font-medium">{t("Game")} <span className="text-primary">*</span></label>
                 </div>
                 <GamePicker value={selectedGame} onChange={setSelectedGame} disabled={!canGenerate || isLoading} />
-                <p className="text-xs text-muted-foreground">{t("Your key will only work in the game you pick.")}</p>
+                {selectedGame && !generatedKey ? (
+                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs">
+                    <p className="font-semibold text-amber-300">{t("This key will ONLY work in:")}</p>
+                    <p className="mt-0.5 break-words text-sm font-bold text-foreground">{selectedGame.name}</p>
+                    <p className="mt-1 text-muted-foreground">{t("Wrong game? Tap the box above to change it.")}</p>
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">{t("Your key will only work in the game you pick.")}</p>
+                )}
               </div>
 
               {error && (
@@ -366,6 +381,11 @@ export default function AccessKey() {
                     <pre className="text-xs font-mono text-green-400 break-all whitespace-pre-wrap select-all leading-relaxed">
                       {generatedKey}
                     </pre>
+                    {keyGameName && (
+                      <p className="mt-2 border-t border-green-500/20 pt-2 text-xs text-muted-foreground">
+                        {t("Works only in:")} <b className="text-foreground">{keyGameName}</b>
+                      </p>
+                    )}
                   </div>
                   {keyExpiresAt && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">

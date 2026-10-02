@@ -156,7 +156,7 @@ export default function GameLanding() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { n: "01", t: "Get an Executor", d: "Hydrogen, Delta, Wave or Solara — all supported. Mobile and PC." },
-              { n: "02", t: "Claim a Free Key", d: "30-second HWID verification. Key lasts 11 hours per device." },
+              { n: "02", t: "Claim a Free Key", d: "30-second HWID verification. Key lasts 6–24 hours per device." },
               { n: "03", t: "Paste & Execute", d: "Copy the loadstring from the script page, paste into your executor, hit Execute." },
             ].map((s) => (
               <div key={s.n} className="p-6 rounded-xl bg-card/40 border border-border/40">
@@ -174,7 +174,7 @@ export default function GameLanding() {
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
           <Crown className="w-8 h-8 text-bronze-light mx-auto mb-4" />
           <h2 className="font-heading text-2xl sm:text-3xl font-bold mb-3 tracking-tight">
-            Tired of the 11-Hour Key Refresh?
+            Tired of the 6–24 Hour Key Refresh?
           </h2>
           <p className="text-muted-foreground mb-6 max-w-xl mx-auto">
             Premium keys skip the verification entirely. $5 for 7 days, $9.99 monthly, $49.99 lifetime.

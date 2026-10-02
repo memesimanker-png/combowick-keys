@@ -124,7 +124,7 @@ export default function About() {
               <ul className="space-y-3">
                 {[
                   { bold: "Transparent Pricing", text: "$5 / 3-day trial, $9.99 / month (~$0.33/day, our best value), $49.99 / lifetime. The price you see is the price you pay — no hidden renewals, no upsells at checkout." },
-                  { bold: "Real Free Tier", text: "Most scripts on the hub are free with a short 11-hour HWID key earned through a quick verification step. You don't have to pay to use Combo_WICK." },
+                  { bold: "Real Free Tier", text: "Most scripts on the hub are free with a short 6–24 hour HWID key earned through a quick verification step. You don't have to pay to use Combo_WICK." },
                   { bold: "Original Written Content", text: "Tutorials, anti-cheat guides, executor reviews, and Lua walkthroughs are written from scratch by our team — never scraped, never AI-spam." },
                   { bold: "Multi-Language", text: "The site auto-translates into 10 languages (English, Spanish, French, German, Portuguese, Russian, Chinese, Japanese, Korean, Arabic) including full RTL support for Arabic readers." },
                   { bold: "Active Roadmap", text: "Public changelog, weekly script updates, and a Discord channel dedicated to user requests for new game support." },

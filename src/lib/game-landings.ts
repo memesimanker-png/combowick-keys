@@ -36,7 +36,7 @@ export const GAME_LANDINGS: Record<string, GameLanding> = {
       "Kill All Goat",
       "Kill Players",
       "Anti-AFK + Auto-Reconnect",
-      "HWID Key System (free 11-hour keys)",
+      "HWID Key System (free 6–24 hour keys)",
       "Works on all major executors",
     ],
     status: "live",

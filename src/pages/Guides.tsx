@@ -8,7 +8,7 @@ import { SEOHead } from "@/components/SEOHead";
 const guides = [
   {
     title: "Getting Started with Combo_WICK",
-    description: "The absolute beginner's path. Generate your first free 11-hour key in under two minutes, install a compatible executor for your platform, attach to Roblox, and run your first script. Includes screenshots for both Windows and mobile workflows.",
+    description: "The absolute beginner's path. Generate your first free 6–24 hour key in under two minutes, install a compatible executor for your platform, attach to Roblox, and run your first script. Includes screenshots for both Windows and mobile workflows.",
     icon: Key,
     link: "/keys",
     readTime: "5 min read",
