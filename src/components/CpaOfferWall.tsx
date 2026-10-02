@@ -76,6 +76,14 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // and polled quietly, so a late postback still unlocks them).
   const [awayMs, setAwayMs] = useState(0);
   const [hideReturning, setHideReturning] = useState(false);
+  // Postbacks land within ~15 min, so the "waiting for your earlier offer" line only shows for
+  // RETURNING_MS after that offer was opened. Polling keeps going, so a later postback still unlocks.
+  const RETURNING_MS = 30 * 60 * 1000;
+  const [earlierRecent] = useState(() => {
+    const c = cpaSession.getCurrent();
+    const at = (c && c.opened_at) || (c ? cpaSession.lastOpenAt(c.offer_id) : 0);
+    return !!at && Date.now() - at < RETURNING_MS;
+  });
   const [isAway, setIsAway] = useState(false);
   const [phase, setPhase] = useState<Phase>("pick");
   const [finished, setFinished] = useState(false); // real postback seen
@@ -197,9 +205,9 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
   // Linkvertise is the "offer didn't work" way out: the card only appears once the visitor opened
   // an offer (main or Alternate), and unlocks LV_UNLOCK_MS after that first open — long enough that
   // tapping an offer for a second doesn't skip it, short enough for "sorry" / no-offer pages.
-  // triedAt persists with the session (48h); visitors from before this have `current` -> unlocked.
+  // triedAt is per VISIT (sessionStorage): an offer opened in an earlier visit doesn't unlock it.
   const LV_UNLOCK_MS = 50 * 1000;
-  const [triedAt, setTriedAt] = useState(() => cpaSession.triedAt() || (current ? 1 : 0));
+  const [triedAt, setTriedAt] = useState(() => cpaSession.triedAt());
   const [lvNow, setLvNow] = useState(() => Date.now());
   const markTried = () => { cpaSession.markTried(); setTriedAt(cpaSession.triedAt()); setLvNow(Date.now()); };
   const lvLeft = triedAt ? Math.max(0, Math.ceil((triedAt + LV_UNLOCK_MS - lvNow) / 1000)) : 0;
@@ -333,7 +341,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           </button>
         </div>
       )}
-      {current && phase === "pick" && !openedThisVisit && !cpcReady && !hideReturning && (
+      {current && phase === "pick" && !openedThisVisit && !cpcReady && !hideReturning && earlierRecent && (
         <div className="flex items-start gap-2 rounded-lg border border-border/60 bg-secondary/20 px-3 py-2 text-xs text-muted-foreground">
           <Loader2 className="mt-0.5 h-3.5 w-3.5 shrink-0 animate-spin text-primary/70" />
           <span className="min-w-0 flex-1">{t("Waiting for your earlier offer to confirm — this page unlocks automatically if it does.")}</span>

@@ -20,6 +20,7 @@ export type CpaOffer = {
   offerphoto: string;
   payout?: string; // network payout (USD) — used only to order offers, never shown
   network?: "cpalead" | "cpagrip"; // CPAGrip links already carry tracking_id=<subid> (set server-side)
+  opened_at?: number; // set when saved as the current offer (main or Alternate)
 };
 
 const SS = {
@@ -28,7 +29,6 @@ const SS = {
   current: "cpa_current_offer",
   choice: "cpa_choice",
   links: "cpa_links",
-  tried: "cpa_tried_at", // first time this visitor opened ANY offer (gates the Linkvertise option)
 };
 
 // Kept in localStorage (not sessionStorage): CPALead postbacks can land 10–15 min after the
@@ -42,7 +42,8 @@ function ssDel(k: string) { try { localStorage.removeItem(k); } catch {} }
 (function expireOld() {
   try {
     const at = Number(localStorage.getItem(STARTED)) || 0;
-    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", "cpa_links", "cpa_tried_at", STARTED].forEach(ssDel); }
+    if (at && Date.now() - at > TTL_MS) { ["cpa_subid", "cpa_away_ms", "cpa_current_offer", "cpa_choice", "cpa_links", STARTED].forEach(ssDel); }
+    localStorage.removeItem("cpa_tried_at"); // old device-wide copy — the Linkvertise gate is per visit now
   } catch {}
 })();
 
@@ -57,14 +58,19 @@ export function getCpaSubid(): string {
   return subid;
 }
 
+const TRIED_KEY = "cpa_tried_at";
+
 export const cpaSession = {
   getAway: () => Number(ssGet(SS.away)) || 0,
   setAway: (ms: number) => ssSet(SS.away, String(ms)),
   getCurrent: (): CpaOffer | null => { try { return JSON.parse(ssGet(SS.current) || "null"); } catch { return null; } },
-  setCurrent: (o: CpaOffer) => ssSet(SS.current, JSON.stringify(o)),
+  setCurrent: (o: CpaOffer) => ssSet(SS.current, JSON.stringify({ ...o, opened_at: Date.now() })),
   getChoice: () => ssGet(SS.choice),
-  triedAt: () => Number(ssGet(SS.tried)) || 0,
-  markTried: () => { if (!Number(ssGet(SS.tried))) ssSet(SS.tried, String(Date.now())); },
+  // When the visitor first opened an offer IN THIS VISIT (sessionStorage = this tab; survives a
+  // refresh, not a new visit). Gates the Linkvertise option: an offer tried in an earlier visit
+  // does not count — they have to try one now before Linkvertise unlocks.
+  triedAt: () => { try { return Number(sessionStorage.getItem(TRIED_KEY)) || 0; } catch { return 0; } },
+  markTried: () => { try { if (!Number(sessionStorage.getItem(TRIED_KEY))) sessionStorage.setItem(TRIED_KEY, String(Date.now())); } catch {} },
   setChoice: (c: string | null) => (c ? ssSet(SS.choice, c) : ssDel(SS.choice)),
   /** after a key token is issued — next verify run starts a fresh offer-wall session */
   // The FIRST tracking link a visitor opened for each offer is kept and reused. The offers API
