@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Optional": "Facultatif",
+    "Want a longer key? Do one quick task instead.": "Envie d'une clé plus longue ? Faites plutôt une tâche rapide.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Certaines offres mettent jusqu'à quelques heures à être confirmées. Quittez cette page — quand vous reviendrez sur cet appareil, elle se débloquera automatiquement.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Chaque offre ne compte qu'une fois par personne. Si vous ou quelqu'un sur votre Wi-Fi l'avez déjà faite, choisissez-en une autre.",
     "You've reached the free key limit": "Vous avez atteint la limite de clés gratuites",
@@ -606,6 +608,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Optional": "Opcional",
+    "Want a longer key? Do one quick task instead.": "¿Quieres una clave más larga? Haz una tarea rápida en su lugar.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Algunas ofertas tardan hasta unas horas en confirmarse. Sal de esta página: cuando vuelvas en este dispositivo, se desbloqueará automáticamente.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Cada oferta solo cuenta una vez por persona. Si tú o alguien en tu Wi-Fi ya la hizo, elige otra.",
     "You've reached the free key limit": "Has alcanzado el límite de claves gratis",
@@ -1208,6 +1212,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Optional": "Optional",
+    "Want a longer key? Do one quick task instead.": "Lieber einen längeren Schlüssel? Erledige stattdessen eine schnelle Aufgabe.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Manche Angebote brauchen bis zu ein paar Stunden zur Bestätigung. Verlass diese Seite — wenn du auf diesem Gerät zurückkommst, wird sie automatisch freigeschaltet.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Jedes Angebot zählt nur einmal pro Person. Wenn du oder jemand in deinem WLAN es schon gemacht hat, wähl ein anderes.",
     "You've reached the free key limit": "Du hast das Limit für kostenlose Schlüssel erreicht",
@@ -1810,6 +1816,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Optional": "Opcional",
+    "Want a longer key? Do one quick task instead.": "Quer uma chave mais longa? Faça uma tarefa rápida no lugar.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Algumas ofertas levam até algumas horas para confirmar. Saia desta página — quando você voltar neste dispositivo, ela desbloqueia automaticamente.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Cada oferta só conta uma vez por pessoa. Se você ou alguém no seu Wi-Fi já fez, escolha outra.",
     "You've reached the free key limit": "Você atingiu o limite de chaves grátis",
@@ -2412,6 +2420,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Optional": "По желанию",
+    "Want a longer key? Do one quick task instead.": "Хотите ключ подольше? Выполните одно быстрое задание.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Некоторые предложения подтверждаются до нескольких часов. Можете закрыть страницу — когда вернётесь на этом устройстве, она разблокируется автоматически.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Каждое предложение засчитывается только один раз на человека. Если вы или кто-то в вашей Wi-Fi-сети уже выполнял его, выберите другое.",
     "You've reached the free key limit": "Вы достигли лимита бесплатных ключей",
@@ -3014,6 +3024,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Optional": "可选",
+    "Want a longer key? Do one quick task instead.": "想要更长时间的密钥？改为完成一个快速任务。",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "有些任务需要几个小时才能确认。你可以先离开此页面——之后在这台设备上回来时会自动解锁。",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "每个任务每人只算一次。如果你或同一 Wi-Fi 下的人以前做过，请换一个。",
     "You've reached the free key limit": "你已达到免费密钥上限",
@@ -3616,6 +3628,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Optional": "선택",
+    "Want a longer key? Do one quick task instead.": "더 긴 키를 원하나요? 대신 간단한 작업 하나를 해 주세요.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "일부 오퍼는 확인까지 몇 시간이 걸릴 수 있어요. 이 페이지를 나가도 괜찮아요 — 이 기기로 다시 오면 자동으로 잠금 해제돼요.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "각 오퍼는 한 사람당 한 번만 인정돼요. 본인이나 같은 와이파이를 쓰는 사람이 이미 했다면 다른 오퍼를 골라 주세요.",
     "You've reached the free key limit": "무료 키 한도에 도달했어요",
@@ -4218,6 +4232,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Optional": "ไม่บังคับ",
+    "Want a longer key? Do one quick task instead.": "อยากได้คีย์ที่ใช้ได้นานขึ้นไหม ทำภารกิจสั้น ๆ หนึ่งอย่างแทน",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "บางข้อเสนออาจใช้เวลายืนยันนานถึงหลายชั่วโมง ออกจากหน้านี้ได้เลย เมื่อกลับมาด้วยอุปกรณ์เครื่องนี้ ระบบจะปลดล็อกให้อัตโนมัติ",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "แต่ละข้อเสนอนับได้แค่ครั้งเดียวต่อคน ถ้าคุณหรือคนที่ใช้ Wi-Fi เดียวกันเคยทำแล้ว ให้เลือกข้อเสนออื่น",
     "You've reached the free key limit": "คุณรับคีย์ฟรีครบจำนวนแล้ว",
@@ -4820,6 +4836,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Optional": "Opsional",
+    "Want a longer key? Do one quick task instead.": "Mau kunci yang lebih lama? Kerjakan satu tugas singkat saja.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Beberapa offer butuh hingga beberapa jam untuk dikonfirmasi. Tinggalkan halaman ini — saat kamu kembali di perangkat ini, akan terbuka otomatis.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Setiap offer hanya dihitung sekali per orang. Kalau kamu atau orang lain di Wi-Fi-mu pernah mengerjakannya, pilih yang lain.",
     "You've reached the free key limit": "Kamu sudah mencapai batas kunci gratis",
@@ -5422,6 +5440,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Optional": "Opsyonal",
+    "Want a longer key? Do one quick task instead.": "Gusto mo ng mas matagal na key? Gumawa na lang ng isang mabilis na task.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "May mga offer na umaabot nang ilang oras bago makumpirma. Puwede mong iwan ang page na ito — pagbalik mo sa device na ito, kusa itong mag-a-unlock.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Isang beses lang bibilang ang bawat offer kada tao. Kung ikaw o may kasama sa Wi-Fi mo na nakagawa na nito, pumili ng iba.",
     "You've reached the free key limit": "Naabot mo na ang limit ng libreng key",
@@ -6024,6 +6044,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Optional": "Tùy chọn",
+    "Want a longer key? Do one quick task instead.": "Muốn key dùng lâu hơn? Làm một nhiệm vụ ngắn thay vào đó.",
     "Some offers take up to a few hours to confirm. Leave this page — when you come back on this device, it unlocks automatically.": "Một số ưu đãi mất đến vài giờ để xác nhận. Cứ rời trang này — khi bạn quay lại trên thiết bị này, nó sẽ tự động mở khóa.",
     "Each offer only counts once per person. If you or someone on your Wi-Fi did it before, pick a different one.": "Mỗi ưu đãi chỉ được tính một lần cho mỗi người. Nếu bạn hoặc ai đó dùng chung Wi-Fi đã làm rồi, hãy chọn cái khác.",
     "You've reached the free key limit": "Bạn đã đạt giới hạn key miễn phí",

@@ -191,14 +191,14 @@ export default function VerifyProviderSelect() {
     if (!lvEnabled) return; // Linkvertise off: never auto-jump to it
     // No main offers but Alternate offers may work here -> show it with a Linkvertise option instead
     // of jumping. Auto-jump only when nothing else is left (VPN, or Alternate offers known empty).
-    if (cpa.status === "none" && !cpa.blocked && cpa.lockerOk !== false) return;
+    if (cpa.status === "none" && !cpa.blocked && cpa.lockerOk !== false && !lvChoice) return;
     const dlEnabled = isAdEnabled("verify-provider-select", "direct_link");
     const directLinkDone = !dlEnabled || directLinkClicks >= requiredClicks;
     if (!directLinkDone) return;
     const tmr = setTimeout(() => handleStart(), 900);
     return () => clearTimeout(tmr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled, cpa.blocked, cpa.lockerOk]);
+  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled, cpa.blocked, cpa.lockerOk, lvChoice]);
 
   const handleCloseTutorial = () => setShowTutorialPopup(false);
   const handleNeverShowAgain = () => {
@@ -283,35 +283,33 @@ export default function VerifyProviderSelect() {
         )}
       </div>
     ) : (
+      // Linkvertise is the main path (owner 2026-10-03: CPA networks earned far less); the offer is an
+      // optional upgrade for a longer key.
       <div className="space-y-3">
         <div className="cw-glow">
-        <button type="button" onClick={() => pickChoice("cpa")}
+        <button type="button" onClick={() => pickChoice("linkvertise")}
           className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-left transition-colors hover:from-primary/25">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary"><Zap className="h-5 w-5" /></span>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary"><Link2 className="h-5 w-5" /></span>
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
-              <span className="whitespace-nowrap">{t("Complete 1 offer")}</span>
-              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("{n}-hour key").replace("{n}", String(keyHours.offer))}</span>
+              <span className="whitespace-nowrap">{t("Linkvertise steps")}</span>
+              <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold uppercase text-primary">{t("{n}-hour key").replace("{n}", String(keyHours.lv))}</span>
             </span>
-            <span className="block text-xs font-medium text-foreground/80">{t("Do one quick task and your key unlocks.")}</span>
+            <span className="block text-xs font-medium text-foreground/80">{t("Complete {n} short Linkvertise checkpoints.").replace("{n}", String(verifySteps))}</span>
           </span>
           <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
         </button>
         </div>
-        <button type="button" onClick={() => pickChoice("linkvertise")} disabled={!lvChoice} aria-disabled={!lvChoice}
-          className={`flex w-full items-center gap-3 rounded-lg border p-4 text-left transition-colors ${lvChoice ? "border-border bg-secondary/30 hover:border-primary/50" : "cursor-not-allowed border-dashed border-border/70 bg-secondary/10"}`}>
-          <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground ${lvChoice ? "" : "opacity-50"}`}><Link2 className="h-5 w-5" /></span>
+        <button type="button" onClick={() => pickChoice("cpa")}
+          className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground"><Zap className="h-5 w-5" /></span>
           <span className="min-w-0 flex-1">
-            <span className={`flex flex-wrap items-center gap-2 font-semibold ${lvChoice ? "" : "text-muted-foreground"}`}>
-              <span className={lvChoice ? "" : "line-through decoration-muted-foreground/60"}>{t("Linkvertise steps")}</span>
-              {lvChoice && <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{t("{n}-hour key").replace("{n}", String(keyHours.lv))}</span>}
-              {!lvChoice && <span className="rounded-full bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold uppercase text-amber-400 no-underline">{t("Paused for now")}</span>}
+            <span className="flex flex-wrap items-center gap-2 font-semibold">
+              <span>{t("Complete 1 offer")}</span>
+              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("{n}-hour key").replace("{n}", String(keyHours.offer))}</span>
+              <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{t("Optional")}</span>
             </span>
-            <span className="block text-xs text-muted-foreground">
-              {lvChoice
-                ? t("Complete {n} short Linkvertise checkpoints.").replace("{n}", String(verifySteps))
-                : t("We're testing a faster way to get keys. Use the offer above for now — Linkvertise will be back soon.")}
-            </span>
+            <span className="block text-xs text-muted-foreground">{t("Want a longer key? Do one quick task instead.")}</span>
           </span>
         </button>
         <p className="text-center text-[11px] text-muted-foreground">
@@ -378,7 +376,7 @@ export default function VerifyProviderSelect() {
         </div>
       )
       : cpaAvailable ? renderCpaChoice()
-      : (lvEnabled && !cpa.blocked && cpa.lockerOk !== false) ? renderAlternatePlusLinkvertise()
+      : (lvEnabled && !lvChoice && !cpa.blocked && cpa.lockerOk !== false) ? renderAlternatePlusLinkvertise()
       : !lvEnabled ? renderNoLinkvertise()
       : (
       <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
