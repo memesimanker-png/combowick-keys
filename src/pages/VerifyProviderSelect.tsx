@@ -19,6 +19,8 @@ import { useKeyQuota, KeyLimitNotice } from "@/lib/key-quota";
 import { useCpaOffers, getCpaSubid, cpaSession, cpaTrack } from "@/lib/cpa";
 
 
+// "How to get a key" tutorial popup — off until the new video is recorded. Set true + swap the embed id to re-enable.
+const SHOW_KEY_TUTORIAL = false;
 const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
 const DISCORD_URL = "https://discord.com/invite/9FWBQnVXCy";
 const SUBSCRIPTION_GATE_DURATION_DAYS = 7;
@@ -76,7 +78,7 @@ export default function VerifyProviderSelect() {
     setMounted(true);
 
     const hideTutorial = localStorage.getItem("hide_tutorial_popup");
-    if (!hideTutorial) setShowTutorialPopup(true);
+    if (SHOW_KEY_TUTORIAL && !hideTutorial) setShowTutorialPopup(true);
 
     // Subscribe-to-YouTube / Join-Discord gate REMOVED per owner — never enable it.
     // (State + handlers left inert below; the step never renders and never blocks
