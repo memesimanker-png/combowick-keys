@@ -13,7 +13,7 @@ export function SkipAdsBanner() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex-1 text-center">
           <Link to="/premium-keys" className="text-sm md:text-base font-semibold hover:underline">
-            {t("Skip Ads — Instant Premium Keys | Click Here")}
+            {t("💎 No ads at all? Get a Premium Key | Click here")}
           </Link>
         </div>
         <button

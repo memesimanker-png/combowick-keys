@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "No Ads: Premium": "Sans pub : Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Aucune pub ? Prends une clé Premium | Clique ici",
     "Don't press Skip Ad": "N'appuie pas sur Passer l'annonce",
     "Skip Ad": "Passer",
     "Watch each ad until it finishes": "Regarde chaque pub jusqu'à la fin",
@@ -672,6 +674,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "No Ads: Premium": "Sin anuncios: Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 ¿Sin anuncios? Consigue una Key Premium | Haz clic",
     "Don't press Skip Ad": "No pulses Saltar anuncio",
     "Skip Ad": "Saltar",
     "Watch each ad until it finishes": "Mira cada anuncio hasta que termine",
@@ -1340,6 +1344,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "No Ads: Premium": "Ohne Werbung: Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Gar keine Werbung? Hol dir einen Premium-Key | Hier klicken",
     "Don't press Skip Ad": "Drück nicht auf Werbung überspringen",
     "Skip Ad": "Überspringen",
     "Watch each ad until it finishes": "Schau jede Werbung bis zum Ende",
@@ -2008,6 +2014,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "No Ads: Premium": "Sem anúncios: Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Zero anúncios? Pegue uma Key Premium | Clique aqui",
     "Don't press Skip Ad": "Não aperte Pular anúncio",
     "Skip Ad": "Pular",
     "Watch each ad until it finishes": "Assista cada anúncio até o fim",
@@ -2676,6 +2684,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "No Ads: Premium": "Без рекламы: Премиум",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Совсем без рекламы? Возьми премиум-ключ | Нажми здесь",
     "Don't press Skip Ad": "Не нажимай «Пропустить рекламу»",
     "Skip Ad": "Пропустить",
     "Watch each ad until it finishes": "Смотри каждую рекламу до конца",
@@ -3344,6 +3354,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "No Ads: Premium": "无广告：高级版",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 完全不想看广告？获取高级密钥 | 点击这里",
     "Don't press Skip Ad": "不要点击跳过广告",
     "Skip Ad": "跳过",
     "Watch each ad until it finishes": "每个广告都看到结束",
@@ -4012,6 +4024,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "No Ads: Premium": "광고 없이: 프리미엄",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 광고가 싫다면? 프리미엄 키 받기 | 여기를 클릭",
     "Don't press Skip Ad": "광고 건너뛰기를 누르지 마세요",
     "Skip Ad": "건너뛰기",
     "Watch each ad until it finishes": "광고가 끝날 때까지 보세요",
@@ -4680,6 +4694,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "No Ads: Premium": "ไม่มีโฆษณา: พรีเมียม",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 ไม่อยากดูโฆษณาเลย? รับคีย์พรีเมียม | คลิกที่นี่",
     "Don't press Skip Ad": "อย่ากดข้ามโฆษณา",
     "Skip Ad": "ข้าม",
     "Watch each ad until it finishes": "ดูโฆษณาแต่ละอันจนจบ",
@@ -5348,6 +5364,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "No Ads: Premium": "Tanpa Iklan: Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Mau tanpa iklan sama sekali? Ambil Key Premium | Klik di sini",
     "Don't press Skip Ad": "Jangan tekan Lewati Iklan",
     "Skip Ad": "Lewati",
     "Watch each ad until it finishes": "Tonton setiap iklan sampai selesai",
@@ -6016,6 +6034,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "No Ads: Premium": "Walang Ads: Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Ayaw ng ads? Kumuha ng Premium Key | I-click dito",
     "Don't press Skip Ad": "Huwag pindutin ang Skip Ad",
     "Skip Ad": "Skip",
     "Watch each ad until it finishes": "Panoorin ang bawat ad hanggang matapos",
@@ -6684,6 +6704,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "No Ads: Premium": "Không quảng cáo: Premium",
+    "💎 No ads at all? Get a Premium Key | Click here": "💎 Không muốn quảng cáo? Mua Key Premium | Bấm vào đây",
     "Don't press Skip Ad": "Đừng bấm Bỏ qua quảng cáo",
     "Skip Ad": "Bỏ qua",
     "Watch each ad until it finishes": "Xem từng quảng cáo đến hết",
