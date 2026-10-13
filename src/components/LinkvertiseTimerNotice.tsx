@@ -12,13 +12,7 @@ export function LinkvertiseTimerNotice() {
     <div className="space-y-2">
       {/* Big, high-contrast on purpose: kids skip the ads and that earns us $0 (owner 2026-10-13). */}
       <div className="rounded-xl border-2 border-red-500 bg-red-950/60 p-4 shadow-[0_0_24px_rgba(239,68,68,0.35)]">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-base font-extrabold uppercase tracking-wide text-red-400 sm:text-lg">⛔ {t("Don't press Skip Ad")}</p>
-          <span className="relative inline-flex items-center gap-1 rounded-md bg-neutral-800 px-2.5 py-1 text-xs font-semibold text-neutral-200" aria-hidden="true">
-            {t("Skip Ad")} ⏭
-            <span className="absolute left-1 right-1 top-1/2 h-0.5 -rotate-12 bg-red-500" />
-          </span>
-        </div>
+        <p className="text-base font-extrabold uppercase tracking-wide text-red-400 sm:text-lg">⛔ {t("Don't press Skip Ad")}</p>
         <ul className="mt-3 space-y-1.5 text-sm font-medium text-white">
           <li>✅ {t("Watch each ad until it finishes")}</li>
           <li>✅ {t("Do what the ad asks (open, view or install)")}</li>
