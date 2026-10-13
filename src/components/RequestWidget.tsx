@@ -61,19 +61,26 @@ export function RequestWidget() {
   const thumb = (src: string | null) => (src ? <img src={src} alt="" className="h-9 w-9 shrink-0 rounded-md object-cover" loading="lazy" /> : <div className="h-9 w-9 shrink-0 rounded-md bg-secondary" />);
 
   return (
-    <Card className="border-primary/20 bg-black/40">
-      <CardContent className="space-y-3 p-4">
-        <div className="flex items-start gap-3">
-          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+    <div className="cw-glow" style={{ "--glow": "268 85% 66%", "--glow-radius": "0.75rem", "--glow-speed": "2.6s" } as React.CSSProperties}>
+    <Card className="relative rounded-[calc(0.75rem-1.5px)] border-0 bg-gradient-to-br from-violet-500/15 via-card to-card">
+      <CardContent className="space-y-3 p-4 sm:p-5">
+        <div className="flex items-center gap-3">
+          <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-500/20">
+            <span className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
+            <Lightbulb className="relative h-6 w-6 text-violet-300" />
+          </span>
           <div className="min-w-0 flex-1">
-            <p className="font-semibold text-sm">{t("Don't see your game? Request a script")}</p>
-            <p className="text-xs text-muted-foreground">{t("Request any Roblox game or vote for one. The most-voted games get made first.")}</p>
+            <p className="flex flex-wrap items-center gap-2 text-base font-bold leading-tight sm:text-lg">
+              <span>{t("Don't see your game? Request a script")}</span>
+              <span className="rounded-full bg-violet-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white">{t("New")}</span>
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">{t("Request any Roblox game or vote for one. The most-voted games get made first.")}</p>
           </div>
         </div>
 
         <form onSubmit={search} className="flex gap-2">
-          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("Game name or Roblox link")} maxLength={200} className="h-9" />
-          <Button type="submit" size="sm" disabled={searching || query.trim().length < 2} className="h-9 shrink-0 gap-1.5">
+          <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("Game name or Roblox link")} maxLength={200} className="h-11 min-w-0 border-violet-400/50 bg-black/50 text-base placeholder:text-muted-foreground/80 focus-visible:ring-violet-400 sm:text-sm" />
+          <Button type="submit" disabled={searching || query.trim().length < 2} className="h-11 shrink-0 gap-1.5 bg-violet-600 px-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-60">
             {searching ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
             <span className="hidden sm:inline">{t("Search")}</span>
           </Button>
@@ -123,6 +130,10 @@ export function RequestWidget() {
           </div>
         )}
 
+        {!found && top.length === 0 && (
+          <p className="text-center text-xs font-medium text-violet-200/90">🏆 {t("No requests yet. Be the first!")}</p>
+        )}
+
         {needLogin && !user && (
           <div className="space-y-2 rounded-lg border border-primary/30 bg-primary/5 p-3">
             <p className="text-xs font-medium">{t("Sign in to request & vote (one click, no password):")}</p>
@@ -131,10 +142,11 @@ export function RequestWidget() {
           </div>
         )}
 
-        <Link to="/request" className="flex items-center justify-center gap-1 text-xs font-medium text-primary hover:underline">
+        <Link to="/request" className="flex items-center justify-center gap-1 text-xs font-semibold text-violet-300 hover:underline">
           <Key className="h-3 w-3" /> {t("See all requests")} <ChevronRight className="h-3 w-3" />
         </Link>
       </CardContent>
     </Card>
+    </div>
   );
 }

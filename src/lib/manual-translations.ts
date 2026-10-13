@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "New": "Nouveau",
     "No ads": "Sans pub",
     "Skip every step. One key for every game.": "Passe toutes les étapes. Une clé pour tous les jeux.",
     "Don't see your game? Request a script": "Ton jeu n'est pas là ? Demande un script",
@@ -661,6 +662,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "New": "Nuevo",
     "No ads": "Sin anuncios",
     "Skip every step. One key for every game.": "Sáltate todos los pasos. Una key para todos los juegos.",
     "Don't see your game? Request a script": "¿No ves tu juego? Pide un script",
@@ -1318,6 +1320,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "New": "Neu",
     "No ads": "Keine Werbung",
     "Skip every step. One key for every game.": "Überspring alle Schritte. Ein Key für alle Spiele.",
     "Don't see your game? Request a script": "Dein Spiel fehlt? Fordere ein Script an",
@@ -1975,6 +1978,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "New": "Novo",
     "No ads": "Sem anúncios",
     "Skip every step. One key for every game.": "Pule todas as etapas. Uma key para todos os jogos.",
     "Don't see your game? Request a script": "Não achou seu jogo? Peça um script",
@@ -2632,6 +2636,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "New": "Новое",
     "No ads": "Без рекламы",
     "Skip every step. One key for every game.": "Пропусти все шаги. Один ключ для всех игр.",
     "Don't see your game? Request a script": "Нет твоей игры? Запроси скрипт",
@@ -3289,6 +3294,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "New": "新",
     "No ads": "无广告",
     "Skip every step. One key for every game.": "跳过所有步骤。一个密钥通用所有游戏。",
     "Don't see your game? Request a script": "找不到你的游戏？申请脚本",
@@ -3946,6 +3952,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "New": "신규",
     "No ads": "광고 없음",
     "Skip every step. One key for every game.": "모든 단계를 건너뛰세요. 모든 게임에 키 하나.",
     "Don't see your game? Request a script": "게임이 없나요? 스크립트를 요청하세요",
@@ -4603,6 +4610,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "New": "ใหม่",
     "No ads": "ไม่มีโฆษณา",
     "Skip every step. One key for every game.": "ข้ามทุกขั้นตอน คีย์เดียวใช้ได้ทุกเกม",
     "Don't see your game? Request a script": "ไม่เจอเกมของคุณ? ขอสคริปต์เลย",
@@ -5260,6 +5268,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "New": "Baru",
     "No ads": "Tanpa iklan",
     "Skip every step. One key for every game.": "Lewati semua langkah. Satu key untuk semua game.",
     "Don't see your game? Request a script": "Game kamu belum ada? Minta script",
@@ -5917,6 +5926,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "New": "Bago",
     "No ads": "Walang ads",
     "Skip every step. One key for every game.": "Laktawan ang lahat ng hakbang. Isang key para sa lahat ng game.",
     "Don't see your game? Request a script": "Wala ang game mo? Mag-request ng script",
@@ -6574,6 +6584,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "New": "Mới",
     "No ads": "Không quảng cáo",
     "Skip every step. One key for every game.": "Bỏ qua mọi bước. Một key cho mọi game.",
     "Don't see your game? Request a script": "Không thấy game của bạn? Yêu cầu script",
