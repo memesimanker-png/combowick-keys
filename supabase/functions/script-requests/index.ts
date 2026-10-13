@@ -170,6 +170,8 @@ Deno.serve(async (req) => {
     }
 
     if (!user) return fail("Please sign in first.", 401);
+    const hasDiscord = (user.identities ?? []).some((i: any) => i.provider === "discord") || user.app_metadata?.provider === "discord";
+    if (!hasDiscord && (action === "request" || action === "vote")) return fail("Please sign in with Discord to request and vote.", 401);
 
     if (action === "discord_join") {
       const discordId = user.user_metadata?.provider_id ?? user.user_metadata?.sub ?? user.identities?.find((i: any) => i.provider === "discord")?.id;

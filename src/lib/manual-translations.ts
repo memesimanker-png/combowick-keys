@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Sign in with Discord to request & vote": "Connecte-toi avec Discord pour demander et voter",
+    "Sign in with Discord to request & vote:": "Connecte-toi avec Discord pour demander et voter :",
     "New": "Nouveau",
     "No ads": "Sans pub",
     "Skip every step. One key for every game.": "Passe toutes les étapes. Une clé pour tous les jeux.",
@@ -662,6 +664,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Sign in with Discord to request & vote": "Inicia sesión con Discord para pedir y votar",
+    "Sign in with Discord to request & vote:": "Inicia sesión con Discord para pedir y votar:",
     "New": "Nuevo",
     "No ads": "Sin anuncios",
     "Skip every step. One key for every game.": "Sáltate todos los pasos. Una key para todos los juegos.",
@@ -1320,6 +1324,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Sign in with Discord to request & vote": "Melde dich mit Discord an, um anzufordern und abzustimmen",
+    "Sign in with Discord to request & vote:": "Melde dich mit Discord an, um anzufordern und abzustimmen:",
     "New": "Neu",
     "No ads": "Keine Werbung",
     "Skip every step. One key for every game.": "Überspring alle Schritte. Ein Key für alle Spiele.",
@@ -1978,6 +1984,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Sign in with Discord to request & vote": "Entre com o Discord para pedir e votar",
+    "Sign in with Discord to request & vote:": "Entre com o Discord para pedir e votar:",
     "New": "Novo",
     "No ads": "Sem anúncios",
     "Skip every step. One key for every game.": "Pule todas as etapas. Uma key para todos os jogos.",
@@ -2636,6 +2644,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Sign in with Discord to request & vote": "Войди через Discord, чтобы запрашивать и голосовать",
+    "Sign in with Discord to request & vote:": "Войди через Discord, чтобы запрашивать и голосовать:",
     "New": "Новое",
     "No ads": "Без рекламы",
     "Skip every step. One key for every game.": "Пропусти все шаги. Один ключ для всех игр.",
@@ -3294,6 +3304,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Sign in with Discord to request & vote": "使用 Discord 登录以申请和投票",
+    "Sign in with Discord to request & vote:": "使用 Discord 登录以申请和投票：",
     "New": "新",
     "No ads": "无广告",
     "Skip every step. One key for every game.": "跳过所有步骤。一个密钥通用所有游戏。",
@@ -3952,6 +3964,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Sign in with Discord to request & vote": "Discord로 로그인하고 요청·투표하기",
+    "Sign in with Discord to request & vote:": "Discord로 로그인하고 요청·투표하세요:",
     "New": "신규",
     "No ads": "광고 없음",
     "Skip every step. One key for every game.": "모든 단계를 건너뛰세요. 모든 게임에 키 하나.",
@@ -4610,6 +4624,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Sign in with Discord to request & vote": "เข้าสู่ระบบด้วย Discord เพื่อขอและโหวต",
+    "Sign in with Discord to request & vote:": "เข้าสู่ระบบด้วย Discord เพื่อขอและโหวต:",
     "New": "ใหม่",
     "No ads": "ไม่มีโฆษณา",
     "Skip every step. One key for every game.": "ข้ามทุกขั้นตอน คีย์เดียวใช้ได้ทุกเกม",
@@ -5268,6 +5284,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Sign in with Discord to request & vote": "Masuk dengan Discord untuk minta & vote",
+    "Sign in with Discord to request & vote:": "Masuk dengan Discord untuk minta & vote:",
     "New": "Baru",
     "No ads": "Tanpa iklan",
     "Skip every step. One key for every game.": "Lewati semua langkah. Satu key untuk semua game.",
@@ -5926,6 +5944,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Sign in with Discord to request & vote": "Mag-sign in gamit ang Discord para mag-request at mag-vote",
+    "Sign in with Discord to request & vote:": "Mag-sign in gamit ang Discord para mag-request at mag-vote:",
     "New": "Bago",
     "No ads": "Walang ads",
     "Skip every step. One key for every game.": "Laktawan ang lahat ng hakbang. Isang key para sa lahat ng game.",
@@ -6584,6 +6604,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Sign in with Discord to request & vote": "Đăng nhập bằng Discord để yêu cầu và bình chọn",
+    "Sign in with Discord to request & vote:": "Đăng nhập bằng Discord để yêu cầu và bình chọn:",
     "New": "Mới",
     "No ads": "Không quảng cáo",
     "Skip every step. One key for every game.": "Bỏ qua mọi bước. Một key cho mọi game.",

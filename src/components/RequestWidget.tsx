@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { DiscordSignInButton } from "@/components/DiscordSignInButton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +16,7 @@ export function RequestWidget() {
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
   const location = useLocation();
+  const discordUser = !!user && ((user.app_metadata as any)?.providers ?? [user.app_metadata?.provider]).includes("discord");
   const [top, setTop] = useState<ScriptRequest[]>([]);
   const [myVotes, setMyVotes] = useState<number[]>([]);
   const [query, setQuery] = useState("");
@@ -40,7 +40,7 @@ export function RequestWidget() {
     setSearching(false);
   };
   const request = async (g: FoundGame) => {
-    if (!user) { setNeedLogin(true); return; }
+    if (!discordUser) { setNeedLogin(true); return; }
     setBusy(g.place_id);
     const j = await callRequests({ action: "request", place_id: g.place_id });
     setBusy(null);
@@ -48,7 +48,7 @@ export function RequestWidget() {
     else toast({ variant: j?.covered ? "default" : "destructive", title: j?.covered ? t("Already supported ✅") : t("Couldn't send the request"), description: j?.error });
   };
   const vote = async (r: ScriptRequest) => {
-    if (!user) { setNeedLogin(true); return; }
+    if (!discordUser) { setNeedLogin(true); return; }
     setBusy(r.id);
     const j = await callRequests({ action: "vote", id: r.id });
     setBusy(null);
@@ -134,11 +134,10 @@ export function RequestWidget() {
           <p className="text-center text-xs font-medium text-violet-200/90">🏆 {t("No requests yet. Be the first!")}</p>
         )}
 
-        {needLogin && !user && (
+        {needLogin && !discordUser && (
           <div className="space-y-2 rounded-lg border border-primary/30 bg-primary/5 p-3">
-            <p className="text-xs font-medium">{t("Sign in to request & vote (one click, no password):")}</p>
+            <p className="text-xs font-medium">{t("Sign in with Discord to request & vote:")}</p>
             <DiscordSignInButton label={t("Continue with Discord")} redirectPath={location.pathname} />
-            <GoogleSignInButton label={t("Continue with Google")} redirectPath={location.pathname} />
           </div>
         )}
 

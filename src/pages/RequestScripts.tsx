@@ -5,7 +5,6 @@ import { SEOHead } from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GoogleSignInButton } from "@/components/GoogleSignInButton";
 import { DiscordSignInButton } from "@/components/DiscordSignInButton";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, useIsAdmin } from "@/hooks/useAuth";
@@ -34,6 +33,7 @@ export default function RequestScripts() {
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin } = useIsAdmin();
+  const discordUser = !!user && ((user.app_metadata as any)?.providers ?? [user.app_metadata?.provider]).includes("discord");
   const [params] = useSearchParams();
 
   const [reqs, setReqs] = useState<Req[]>([]);
@@ -75,7 +75,7 @@ export default function RequestScripts() {
   };
 
   const vote = async (r: Req) => {
-    if (!user) { document.getElementById("signin")?.scrollIntoView({ behavior: "smooth" }); toast({ title: t("Sign in to vote") }); return; }
+    if (!discordUser) { document.getElementById("signin")?.scrollIntoView({ behavior: "smooth" }); toast({ title: t("Sign in to vote") }); return; }
     setBusy(r.id);
     const j = await call({ action: "vote", id: r.id });
     setBusy(null);
@@ -141,15 +141,14 @@ export default function RequestScripts() {
           </div>
 
           {/* sign in OR search */}
-          {!user ? (
+          {!discordUser ? (
             <Card id="signin" className="border-primary/30">
               <CardHeader className="text-center">
-                <CardTitle>{t("Sign in to request & vote")}</CardTitle>
+                <CardTitle>{t("Sign in with Discord to request & vote")}</CardTitle>
                 <CardDescription>{t("One click, no password. Signing in with Discord also adds you to our server.")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3 max-w-sm mx-auto">
                 <DiscordSignInButton label={t("Continue with Discord")} redirectPath="/request" />
-                <GoogleSignInButton label={t("Continue with Google")} redirectPath="/request" />
               </CardContent>
             </Card>
           ) : (
