@@ -4,6 +4,14 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Don't press Skip Ad": "N'appuie pas sur Passer l'annonce",
+    "Skip Ad": "Passer",
+    "Watch each ad until it finishes": "Regarde chaque pub jusqu'à la fin",
+    "Do what the ad asks (open, view or install)": "Fais ce que la pub demande (ouvrir, voir ou installer)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "N'appuie pas sur « Passer ». Une pub passée nous rapporte 0 $",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Les pubs terminées gardent les clés gratuites pour tous. Merci !",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Attention : le minuteur est défini par Linkvertise, pas par nous.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (le service de pub) contrôle le compte à rebours de chaque étape. On ne peut pas le raccourcir. Pour éviter toutes les pubs, prends une",
     "Sign in with Discord to request & vote": "Connecte-toi avec Discord pour demander et voter",
     "Sign in with Discord to request & vote:": "Connecte-toi avec Discord pour demander et voter :",
     "New": "Nouveau",
@@ -664,6 +672,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Don't press Skip Ad": "No pulses Saltar anuncio",
+    "Skip Ad": "Saltar",
+    "Watch each ad until it finishes": "Mira cada anuncio hasta que termine",
+    "Do what the ad asks (open, view or install)": "Haz lo que pide el anuncio (abrir, ver o instalar)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "No pulses «Saltar». Los anuncios saltados nos dan $0",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Los anuncios completos mantienen las keys gratis para todos. ¡Gracias!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Ojo: el temporizador lo pone Linkvertise, no nosotros.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (el servicio de anuncios) controla la cuenta atrás de cada paso. No podemos acortarla. Si quieres saltarte los anuncios, consigue una",
     "Sign in with Discord to request & vote": "Inicia sesión con Discord para pedir y votar",
     "Sign in with Discord to request & vote:": "Inicia sesión con Discord para pedir y votar:",
     "New": "Nuevo",
@@ -1324,6 +1340,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Don't press Skip Ad": "Drück nicht auf Werbung überspringen",
+    "Skip Ad": "Überspringen",
+    "Watch each ad until it finishes": "Schau jede Werbung bis zum Ende",
+    "Do what the ad asks (open, view or install)": "Mach, was die Werbung verlangt (öffnen, ansehen oder installieren)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "Drück nicht auf „Überspringen“. Übersprungene Werbung bringt uns 0 $",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Fertig angeschaute Werbung hält die Keys für alle kostenlos. Danke!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Hinweis: Der Timer kommt von Linkvertise, nicht von uns.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (der Werbedienst) steuert den Countdown jedes Schritts. Wir können ihn nicht verkürzen. Ohne Werbung geht's mit einem",
     "Sign in with Discord to request & vote": "Melde dich mit Discord an, um anzufordern und abzustimmen",
     "Sign in with Discord to request & vote:": "Melde dich mit Discord an, um anzufordern und abzustimmen:",
     "New": "Neu",
@@ -1984,6 +2008,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Don't press Skip Ad": "Não aperte Pular anúncio",
+    "Skip Ad": "Pular",
+    "Watch each ad until it finishes": "Assista cada anúncio até o fim",
+    "Do what the ad asks (open, view or install)": "Faça o que o anúncio pede (abrir, ver ou instalar)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "Não aperte \"Pular\". Anúncio pulado nos dá $0",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Anúncios completos mantêm as keys grátis pra todo mundo. Valeu!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Atenção: o timer é do Linkvertise, não nosso.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "O Linkvertise (serviço de anúncios) controla a contagem de cada etapa. Não podemos encurtar. Se quiser pular os anúncios, pegue uma",
     "Sign in with Discord to request & vote": "Entre com o Discord para pedir e votar",
     "Sign in with Discord to request & vote:": "Entre com o Discord para pedir e votar:",
     "New": "Novo",
@@ -2644,6 +2676,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Don't press Skip Ad": "Не нажимай «Пропустить рекламу»",
+    "Skip Ad": "Пропустить",
+    "Watch each ad until it finishes": "Смотри каждую рекламу до конца",
+    "Do what the ad asks (open, view or install)": "Сделай, что просит реклама (открыть, посмотреть или установить)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "Не нажимай «Пропустить». Пропущенная реклама приносит нам $0",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Досмотренная реклама держит ключи бесплатными для всех. Спасибо!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Внимание: таймер ставит Linkvertise, а не мы.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (рекламный сервис) управляет отсчётом на каждом шаге. Мы не можем его сократить. Чтобы обойтись без рекламы, возьми",
     "Sign in with Discord to request & vote": "Войди через Discord, чтобы запрашивать и голосовать",
     "Sign in with Discord to request & vote:": "Войди через Discord, чтобы запрашивать и голосовать:",
     "New": "Новое",
@@ -3304,6 +3344,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Don't press Skip Ad": "不要点击跳过广告",
+    "Skip Ad": "跳过",
+    "Watch each ad until it finishes": "每个广告都看到结束",
+    "Do what the ad asks (open, view or install)": "按广告要求操作（打开、查看或安装）",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "不要点「跳过」。跳过的广告我们一分钱都拿不到",
+    "Finished ads are what keep keys free for everyone. Thank you!": "看完广告才能让大家继续免费用密钥。谢谢！",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "注意：等待计时由 Linkvertise 设置，不是我们。",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise（广告服务）控制每一步的倒计时，我们无法缩短。想完全跳过广告，可以购买",
     "Sign in with Discord to request & vote": "使用 Discord 登录以申请和投票",
     "Sign in with Discord to request & vote:": "使用 Discord 登录以申请和投票：",
     "New": "新",
@@ -3964,6 +4012,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Don't press Skip Ad": "광고 건너뛰기를 누르지 마세요",
+    "Skip Ad": "건너뛰기",
+    "Watch each ad until it finishes": "광고가 끝날 때까지 보세요",
+    "Do what the ad asks (open, view or install)": "광고가 요청하는 걸 하세요 (열기, 보기, 설치)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "\"건너뛰기\"를 누르지 마세요. 건너뛴 광고는 수익이 $0이에요",
+    "Finished ads are what keep keys free for everyone. Thank you!": "광고를 끝까지 봐야 모두가 키를 무료로 쓸 수 있어요. 감사해요!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "참고: 대기 타이머는 저희가 아니라 Linkvertise가 정해요.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise(광고 서비스)가 각 단계의 카운트다운을 정해요. 저희가 줄일 수 없어요. 광고 없이 쓰려면",
     "Sign in with Discord to request & vote": "Discord로 로그인하고 요청·투표하기",
     "Sign in with Discord to request & vote:": "Discord로 로그인하고 요청·투표하세요:",
     "New": "신규",
@@ -4624,6 +4680,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Don't press Skip Ad": "อย่ากดข้ามโฆษณา",
+    "Skip Ad": "ข้าม",
+    "Watch each ad until it finishes": "ดูโฆษณาแต่ละอันจนจบ",
+    "Do what the ad asks (open, view or install)": "ทำตามที่โฆษณาบอก (เปิด ดู หรือติดตั้ง)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "อย่ากด \"ข้าม\" โฆษณาที่ข้ามไม่ได้เงินเลย",
+    "Finished ads are what keep keys free for everyone. Thank you!": "การดูโฆษณาจนจบทำให้คีย์ฟรีสำหรับทุกคน ขอบคุณ!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "หมายเหตุ: ตัวจับเวลาเป็นของ Linkvertise ไม่ใช่ของเรา",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (บริการโฆษณา) เป็นผู้ควบคุมการนับถอยหลังในแต่ละขั้น เราย่อไม่ได้ ถ้าอยากข้ามโฆษณาทั้งหมด ซื้อ",
     "Sign in with Discord to request & vote": "เข้าสู่ระบบด้วย Discord เพื่อขอและโหวต",
     "Sign in with Discord to request & vote:": "เข้าสู่ระบบด้วย Discord เพื่อขอและโหวต:",
     "New": "ใหม่",
@@ -5284,6 +5348,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Don't press Skip Ad": "Jangan tekan Lewati Iklan",
+    "Skip Ad": "Lewati",
+    "Watch each ad until it finishes": "Tonton setiap iklan sampai selesai",
+    "Do what the ad asks (open, view or install)": "Lakukan yang diminta iklan (buka, lihat, atau instal)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "Jangan tekan \"Lewati\". Iklan yang dilewati menghasilkan $0",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Iklan yang selesai membuat key tetap gratis untuk semua. Terima kasih!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Catatan: timer tunggu diatur oleh Linkvertise, bukan kami.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (layanan iklan) mengatur hitung mundur tiap langkah. Kami tidak bisa mempercepatnya. Kalau mau tanpa iklan, ambil",
     "Sign in with Discord to request & vote": "Masuk dengan Discord untuk minta & vote",
     "Sign in with Discord to request & vote:": "Masuk dengan Discord untuk minta & vote:",
     "New": "Baru",
@@ -5944,6 +6016,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Don't press Skip Ad": "Huwag pindutin ang Skip Ad",
+    "Skip Ad": "Skip",
+    "Watch each ad until it finishes": "Panoorin ang bawat ad hanggang matapos",
+    "Do what the ad asks (open, view or install)": "Gawin ang hinihingi ng ad (buksan, tingnan, o i-install)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "Huwag pindutin ang \"Skip\". $0 ang kita namin sa na-skip na ad",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Ang mga tapos na ad ang nagpapanatiling libre ng keys para sa lahat. Salamat!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Paalala: ang timer ay itinakda ng Linkvertise, hindi namin.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Ang Linkvertise (ang ad service) ang may hawak ng countdown sa bawat hakbang. Hindi namin ito mapaikli. Para walang ads, kumuha ng",
     "Sign in with Discord to request & vote": "Mag-sign in gamit ang Discord para mag-request at mag-vote",
     "Sign in with Discord to request & vote:": "Mag-sign in gamit ang Discord para mag-request at mag-vote:",
     "New": "Bago",
@@ -6604,6 +6684,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Don't press Skip Ad": "Đừng bấm Bỏ qua quảng cáo",
+    "Skip Ad": "Bỏ qua",
+    "Watch each ad until it finishes": "Xem từng quảng cáo đến hết",
+    "Do what the ad asks (open, view or install)": "Làm theo yêu cầu của quảng cáo (mở, xem hoặc cài đặt)",
+    "Don't press \"Skip Ad\". Skipped ads earn us $0": "Đừng bấm \"Bỏ qua\". Quảng cáo bị bỏ qua không mang lại đồng nào",
+    "Finished ads are what keep keys free for everyone. Thank you!": "Xem hết quảng cáo giúp key luôn miễn phí cho mọi người. Cảm ơn!",
+    "Heads up — the wait timer is set by Linkvertise, not us.": "Lưu ý: bộ đếm giờ do Linkvertise đặt, không phải chúng tôi.",
+    "Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a": "Linkvertise (dịch vụ quảng cáo) điều khiển bộ đếm ở mỗi bước. Chúng tôi không rút ngắn được. Muốn bỏ hết quảng cáo, hãy mua",
     "Sign in with Discord to request & vote": "Đăng nhập bằng Discord để yêu cầu và bình chọn",
     "Sign in with Discord to request & vote:": "Đăng nhập bằng Discord để yêu cầu và bình chọn:",
     "New": "Mới",
