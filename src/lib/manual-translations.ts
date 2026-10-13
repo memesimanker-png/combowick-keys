@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "No ads": "Sans pub",
+    "Skip every step. One key for every game.": "Passe toutes les étapes. Une clé pour tous les jeux.",
     "Don't see your game? Request a script": "Ton jeu n'est pas là ? Demande un script",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Demande n'importe quel jeu Roblox ou vote pour un jeu. Les plus votés sont faits en premier.",
     "Game name or Roblox link": "Nom du jeu ou lien Roblox",
@@ -659,6 +661,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "No ads": "Sin anuncios",
+    "Skip every step. One key for every game.": "Sáltate todos los pasos. Una key para todos los juegos.",
     "Don't see your game? Request a script": "¿No ves tu juego? Pide un script",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Pide cualquier juego de Roblox o vota por uno. Los más votados se hacen primero.",
     "Game name or Roblox link": "Nombre del juego o enlace de Roblox",
@@ -1314,6 +1318,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "No ads": "Keine Werbung",
+    "Skip every step. One key for every game.": "Überspring alle Schritte. Ein Key für alle Spiele.",
     "Don't see your game? Request a script": "Dein Spiel fehlt? Fordere ein Script an",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Fordere jedes Roblox-Spiel an oder stimme für eins ab. Die meistgewählten kommen zuerst.",
     "Game name or Roblox link": "Spielname oder Roblox-Link",
@@ -1969,6 +1975,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "No ads": "Sem anúncios",
+    "Skip every step. One key for every game.": "Pule todas as etapas. Uma key para todos os jogos.",
     "Don't see your game? Request a script": "Não achou seu jogo? Peça um script",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Peça qualquer jogo do Roblox ou vote em um. Os mais votados são feitos primeiro.",
     "Game name or Roblox link": "Nome do jogo ou link do Roblox",
@@ -2624,6 +2632,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "No ads": "Без рекламы",
+    "Skip every step. One key for every game.": "Пропусти все шаги. Один ключ для всех игр.",
     "Don't see your game? Request a script": "Нет твоей игры? Запроси скрипт",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Запроси любую игру Roblox или проголосуй за неё. Самые популярные делаем первыми.",
     "Game name or Roblox link": "Название игры или ссылка Roblox",
@@ -3279,6 +3289,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "No ads": "无广告",
+    "Skip every step. One key for every game.": "跳过所有步骤。一个密钥通用所有游戏。",
     "Don't see your game? Request a script": "找不到你的游戏？申请脚本",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "申请任意 Roblox 游戏或为其投票。票数最多的游戏优先制作。",
     "Game name or Roblox link": "游戏名称或 Roblox 链接",
@@ -3934,6 +3946,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "No ads": "광고 없음",
+    "Skip every step. One key for every game.": "모든 단계를 건너뛰세요. 모든 게임에 키 하나.",
     "Don't see your game? Request a script": "게임이 없나요? 스크립트를 요청하세요",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "원하는 Roblox 게임을 요청하거나 투표하세요. 투표가 많은 게임부터 만듭니다.",
     "Game name or Roblox link": "게임 이름 또는 Roblox 링크",
@@ -4589,6 +4603,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "No ads": "ไม่มีโฆษณา",
+    "Skip every step. One key for every game.": "ข้ามทุกขั้นตอน คีย์เดียวใช้ได้ทุกเกม",
     "Don't see your game? Request a script": "ไม่เจอเกมของคุณ? ขอสคริปต์เลย",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "ขอเกม Roblox ไหนก็ได้ หรือโหวตให้เกมที่มีคนขอแล้ว เกมที่โหวตเยอะสุดจะทำก่อน",
     "Game name or Roblox link": "ชื่อเกมหรือลิงก์ Roblox",
@@ -5244,6 +5260,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "No ads": "Tanpa iklan",
+    "Skip every step. One key for every game.": "Lewati semua langkah. Satu key untuk semua game.",
     "Don't see your game? Request a script": "Game kamu belum ada? Minta script",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Minta game Roblox apa pun atau vote. Game dengan vote terbanyak dibuat duluan.",
     "Game name or Roblox link": "Nama game atau link Roblox",
@@ -5899,6 +5917,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "No ads": "Walang ads",
+    "Skip every step. One key for every game.": "Laktawan ang lahat ng hakbang. Isang key para sa lahat ng game.",
     "Don't see your game? Request a script": "Wala ang game mo? Mag-request ng script",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Mag-request ng kahit anong Roblox game o i-vote ito. Ang pinakamaraming boto ang uunahin.",
     "Game name or Roblox link": "Pangalan ng game o Roblox link",
@@ -6554,6 +6574,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "No ads": "Không quảng cáo",
+    "Skip every step. One key for every game.": "Bỏ qua mọi bước. Một key cho mọi game.",
     "Don't see your game? Request a script": "Không thấy game của bạn? Yêu cầu script",
     "Request any Roblox game or vote for one. The most-voted games get made first.": "Yêu cầu bất kỳ game Roblox nào hoặc bình chọn. Game nhiều phiếu nhất sẽ được làm trước.",
     "Game name or Roblox link": "Tên game hoặc link Roblox",

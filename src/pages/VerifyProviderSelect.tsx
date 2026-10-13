@@ -186,8 +186,11 @@ export default function VerifyProviderSelect() {
     window.location.href = "/verify/step1";
   };
 
-  // Auto-advance to Step 1 once the Monetag direct-link clicks are done — no manual button.
+  // Owner 2026-10-13: never auto-jump to Linkvertise — after the ad clicks the visitor picks
+  // Linkvertise or Premium themselves (renderLinkvertiseChoice). Kept off on purpose.
+  const AUTO_ADVANCE = false;
   useEffect(() => {
+    if (!AUTO_ADVANCE) return;
     if (showTutorialPopup || starting || showSubscriptionGate) return;
     // Wait for the offer check; if there are offers the visitor CHOOSES (no auto-advance).
     if (cpa.status === "loading" || cpaAvailable) return;
@@ -322,6 +325,41 @@ export default function VerifyProviderSelect() {
     )
   );
 
+  // Offer wall off: Linkvertise (main) or Premium. Nothing happens until the visitor taps.
+  const renderLinkvertiseChoice = () => (
+    <div className="space-y-3">
+      <div className="cw-glow">
+        <button type="button" onClick={handleStart} disabled={starting}
+          className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-left transition-colors hover:from-primary/25 disabled:opacity-70">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
+            {starting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Link2 className="h-5 w-5" />}
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
+              <span className="whitespace-nowrap">{t("Linkvertise steps")}</span>
+              <span className="rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold uppercase text-primary">{t("{n}-hour key").replace("{n}", String(keyHours.lv))}</span>
+              <span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold uppercase text-green-300">{t("Free")}</span>
+            </span>
+            <span className="block text-xs font-medium text-foreground/80">{t("Complete {n} short Linkvertise checkpoints.").replace("{n}", String(verifySteps))}</span>
+          </span>
+          <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
+        </button>
+      </div>
+      <a href="/premium-keys"
+        className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-primary"><Zap className="h-5 w-5" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="flex flex-wrap items-center gap-2 font-semibold">
+            <span>{t("Premium Keys")}</span>
+            <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{t("No ads")}</span>
+          </span>
+          <span className="block text-xs text-muted-foreground">{t("Skip every step. One key for every game.")}</span>
+        </span>
+        <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
+      </a>
+    </div>
+  );
+
   // No main offers but Alternate offers may work: Alternate offers + the Linkvertise option.
   const renderAlternatePlusLinkvertise = () => (
     <div className="space-y-3">
@@ -362,7 +400,7 @@ export default function VerifyProviderSelect() {
 
   steps.push({
     key: "unlock",
-    title: cpaAvailable ? t("Choose How to Get Your Key") : t("Get Your Free Key"),
+    title: t("Choose How to Get Your Key"),
     done: false,
     icon: <CheckCircle2 className="h-4 w-4" />,
     // Order matters: the ad-click step first, then offers; the Linkvertise box below only shows when the
@@ -381,25 +419,7 @@ export default function VerifyProviderSelect() {
       : cpaAvailable ? renderCpaChoice()
       : (lvEnabled && !lvChoice && !cpa.blocked && cpa.lockerOk !== false) ? renderAlternatePlusLinkvertise()
       : !lvEnabled ? renderNoLinkvertise()
-      : (
-      <div className="rounded-lg border border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 text-center">
-        <p className="text-base font-semibold mb-2">
-          {`Complete ${verifySteps} quick Linkvertise ${verifySteps === 1 ? "step" : "steps"} to get your key`}
-        </p>
-        <p className="text-sm text-muted-foreground mb-5 max-w-md mx-auto">
-          {verifySteps === 2
-            ? "You'll complete two short Linkvertise checkpoints (Step 1 → 2), then your HWID key unlocks."
-            : "You'll complete three short Linkvertise checkpoints (Step 1 → 2 → 3), then your HWID key unlocks."}
-        </p>
-        <div className="flex items-center justify-center gap-2 text-primary font-medium">
-          <Loader2 className="h-4 w-4 animate-spin" /> {t("Starting verification...")}
-        </div>
-        <p className="mt-4 text-[11px] text-muted-foreground">
-          <>{t("Not redirecting?")} <button type="button" onClick={handleStart} className="text-primary underline">{t("Continue")}</button> · </>
-          {t("Want to skip the tasks entirely?")} <a href="/premium-keys" className="text-primary underline">{t("Premium Keys")}</a>.
-        </p>
-      </div>
-    ),
+      : renderLinkvertiseChoice()
   });
 
   const activeIdx = steps.findIndex((s) => !s.done && !s.optional);
