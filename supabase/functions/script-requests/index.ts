@@ -90,16 +90,20 @@ async function recount(id: number) {
 }
 
 const MILESTONES = [10, 25, 50, 100, 250, 500];
+const discordIdOf = (u: any): string | null => {
+  const ident = (u?.identities ?? []).find((i: any) => i.provider === "discord");
+  return ident?.identity_data?.provider_id ?? ident?.identity_data?.sub ?? ident?.id ?? (u?.app_metadata?.provider === "discord" ? u?.user_metadata?.provider_id ?? null : null);
+};
+const REWARD_TEXT = "🎥 **Get a free week:** record **3-5 minutes** using the script with **Streamer Mode ON**, then tap **Submit video**. Once staff approve it, you get a **1-week key** for this game.";
 const CRON_SECRET = Deno.env.get("DISCORD_CRON_SECRET") ?? "";
 
 // DM everyone who voted (Discord sign-ins only) that their game is out.
 async function notifyVoters(row: any) {
-  const { data: votes } = await admin.from("script_request_votes").select("user_id").eq("request_id", row.id).limit(500);
+  const { data: votes } = await admin.from("script_request_votes").select("user_id, discord_id").eq("request_id", row.id).limit(500);
   let sent = 0;
   for (const v of votes ?? []) {
-    const { data } = await admin.auth.admin.getUserById(v.user_id);
-    const u: any = data?.user;
-    const discordId = u?.identities?.find((i: any) => i.provider === "discord")?.id ?? (u?.app_metadata?.provider === "discord" ? u?.user_metadata?.provider_id : null);
+    let discordId: string | null = v.discord_id;
+    if (!discordId) { const { data } = await admin.auth.admin.getUserById(v.user_id); discordId = discordIdOf(data?.user); }
     if (!discordId) continue;
     const dm = await discord("/users/@me/channels", "POST", { recipient_id: discordId });
     if (dm.status !== 200) continue;
@@ -107,8 +111,11 @@ async function notifyVoters(row: any) {
       flags: 1 << 15,
       components: [{ type: 17, accent_color: 0x2ecc71, components: [
         { type: 9, components: [{ type: 10, content: `### ✅ ${row.game_name} is out!\nThe script you voted for is ready. Grab a key and run it.` }],
-          accessory: { type: 11, media: { url: row.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/ddfa4b60e1faa75e652368c27a8792da.png?size=256" } } },
+          accessory: { type: 11, media: { url: row.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/a_3c6b0ba4deedbc36b995e33a02d0948c.png?size=256" } } },
+        { type: 14, divider: true, spacing: 1 },
+        { type: 10, content: REWARD_TEXT },
         { type: 1, components: [
+        { type: 2, style: 3, label: "Submit video", custom_id: `cw:v:open:${row.id}`, emoji: { name: "🎥" } },
         { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } },
         { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${row.place_id}`, emoji: { name: "🎮" } },
         ] },
@@ -129,7 +136,13 @@ async function applyStatus(id: number, status: string, note: string | null) {
     const msg = status === "in_progress" ? `🛠️ **We're working on ${row.game_name}!**`
       : status === "released" ? `✅ **${row.game_name} is out!** Get a key at ${SITE}/keys and run the script.`
       : status === "declined" ? `⛔ **${row.game_name} won't be made.**${note ? " " + note : ""}` : null;
-    if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
+    if (status === "released") await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { allowed_mentions: { parse: [] }, flags: 1 << 15, components: [{ type: 17, accent_color: 0x2ecc71, components: [
+      { type: 10, content: `### ✅ ${row.game_name} is out!\nGet a key at ${SITE}/keys and run the script.` },
+      { type: 14, divider: true, spacing: 1 },
+      { type: 10, content: REWARD_TEXT + "\n-# Only people who requested or voted for this game can claim it." },
+      { type: 1, components: [{ type: 2, style: 3, label: "Submit video", custom_id: `cw:v:open:${row.id}`, emoji: { name: "🎥" } }, { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } }] },
+    ] }] });
+    else if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
   }
   const notified = status === "released" ? await notifyVoters(row) : 0;
   return { row, notified };
@@ -192,7 +205,7 @@ Deno.serve(async (req) => {
       if (!g) return fail("That Roblox game doesn't exist.");
       if (g.covered) return json({ success: false, covered: true, error: `${g.name} is already supported. Get a key and use the script!` });
       if (g.request) {
-        await admin.from("script_request_votes").upsert({ request_id: g.request.id, user_id: user.id }, { onConflict: "request_id,user_id", ignoreDuplicates: true });
+        await admin.from("script_request_votes").upsert({ request_id: g.request.id, user_id: user.id, discord_id: discordIdOf(user) }, { onConflict: "request_id,user_id", ignoreDuplicates: true });
         const { n } = await recount(g.request.id);
         return json({ success: true, existed: true, id: g.request.id, vote_count: n });
       }
@@ -202,7 +215,7 @@ Deno.serve(async (req) => {
         universe_id: g.universe_id, place_id: g.place_id, game_name: g.name, icon_url: g.icon_url, players_at_request: g.playing, created_by: user.id, vote_count: 1,
       }).select().single();
       if (error) return fail(error.code === "23505" ? "Someone just requested this game. Refresh and vote!" : error.message, 409);
-      await admin.from("script_request_votes").insert({ request_id: row.id, user_id: user.id });
+      await admin.from("script_request_votes").insert({ request_id: row.id, user_id: user.id, discord_id: discordIdOf(user) });
       // mirror it in the Discord forum
       const t = await discord(`/channels/${FORUM}/threads`, "POST", {
         name: g.name.slice(0, 95), applied_tags: [TAGS.new_game],
@@ -211,7 +224,7 @@ Deno.serve(async (req) => {
           flags: 1 << 15,
           components: [{ type: 17, accent_color: 0xf5b700, components: [
             { type: 9, components: [{ type: 10, content: `### 🎮 ${g.name}\nRequested on the website · 👥 **${g.playing.toLocaleString("en-US")}** playing now` }],
-              accessory: { type: 11, media: { url: g.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/ddfa4b60e1faa75e652368c27a8792da.png?size=256" } } },
+              accessory: { type: 11, media: { url: g.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/a_3c6b0ba4deedbc36b995e33a02d0948c.png?size=256" } } },
             { type: 14, divider: true, spacing: 1 },
             { type: 10, content: "React 👍 here or vote on the website. The most-voted games get made first." },
             { type: 1, components: [{ type: 2, style: 5, label: "Vote on the website", url: `${SITE}/request`, emoji: { name: "👍" } }, { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${g.place_id}`, emoji: { name: "🎮" } }] },
@@ -229,7 +242,7 @@ Deno.serve(async (req) => {
       if (r.status === "released" || r.status === "declined") return fail("Voting is closed for this game.");
       const { data: mine } = await admin.from("script_request_votes").select("request_id").eq("request_id", id).eq("user_id", user.id).maybeSingle();
       if (mine) await admin.from("script_request_votes").delete().eq("request_id", id).eq("user_id", user.id);
-      else await admin.from("script_request_votes").insert({ request_id: id, user_id: user.id });
+      else await admin.from("script_request_votes").insert({ request_id: id, user_id: user.id, discord_id: discordIdOf(user) });
       const { n, row } = await recount(id);
       if (!mine && MILESTONES.includes(n) && row?.discord_thread_id) {
         await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: `🔥 **${row.game_name}** just hit **${n} votes** on the website!`, allowed_mentions: { parse: [] } });
