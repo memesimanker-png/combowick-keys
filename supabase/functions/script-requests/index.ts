@@ -90,6 +90,46 @@ async function recount(id: number) {
 }
 
 const MILESTONES = [10, 25, 50, 100, 250, 500];
+const CRON_SECRET = Deno.env.get("DISCORD_CRON_SECRET") ?? "";
+
+// DM everyone who voted (Discord sign-ins only) that their game is out.
+async function notifyVoters(row: any) {
+  const { data: votes } = await admin.from("script_request_votes").select("user_id").eq("request_id", row.id).limit(500);
+  let sent = 0;
+  for (const v of votes ?? []) {
+    const { data } = await admin.auth.admin.getUserById(v.user_id);
+    const u: any = data?.user;
+    const discordId = u?.identities?.find((i: any) => i.provider === "discord")?.id ?? (u?.app_metadata?.provider === "discord" ? u?.user_metadata?.provider_id : null);
+    if (!discordId) continue;
+    const dm = await discord("/users/@me/channels", "POST", { recipient_id: discordId });
+    if (dm.status !== 200) continue;
+    const r = await discord(`/channels/${dm.data.id}/messages`, "POST", {
+      embeds: [{ color: 0x2ecc71, title: `✅ ${row.game_name} is out!`, thumbnail: row.icon_url ? { url: row.icon_url } : undefined,
+        description: "The script you voted for is ready. Grab a key and run it.", footer: { text: "COMBO_WICK script requests" } }],
+      components: [{ type: 1, components: [
+        { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } },
+        { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${row.place_id}`, emoji: { name: "🎮" } },
+      ] }],
+    });
+    if (r.status === 200) sent++;
+  }
+  return sent;
+}
+
+async function applyStatus(id: number, status: string, note: string | null) {
+  const { data: row, error } = await admin.from("script_requests").update({ status, admin_note: note, updated_at: new Date().toISOString(), released_at: status === "released" ? new Date().toISOString() : null }).eq("id", id).select().single();
+  if (error) throw new Error(error.message);
+  if (row.discord_thread_id) {
+    const tag = status === "requested" ? TAGS.new_game : (TAGS as any)[status];
+    await discord(`/channels/${row.discord_thread_id}`, "PATCH", { applied_tags: [tag], archived: false });
+    const msg = status === "in_progress" ? `🛠️ **We're working on ${row.game_name}!**`
+      : status === "released" ? `✅ **${row.game_name} is out!** Get a key at ${SITE}/keys and run the script.`
+      : status === "declined" ? `⛔ **${row.game_name} won't be made.**${note ? " " + note : ""}` : null;
+    if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
+  }
+  const notified = status === "released" ? await notifyVoters(row) : 0;
+  return { row, notified };
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
@@ -120,6 +160,14 @@ Deno.serve(async (req) => {
     }
 
     if (action === "lookup") return json({ success: true, games: await lookup(String(b.query ?? "")) });
+
+    if (action === "auto_release") {
+      if (!CRON_SECRET || req.headers.get("x-cw-cron") !== CRON_SECRET) return fail("forbidden", 403);
+      const { data: r } = await admin.from("script_requests").select("id, game_name").eq("universe_id", String(b.universe_id ?? "")).in("status", ["requested", "in_progress"]).maybeSingle();
+      if (!r) return json({ success: true, released: false });
+      const { notified } = await applyStatus(r.id, "released", null);
+      return json({ success: true, released: true, game: r.game_name, notified });
+    }
 
     if (!user) return fail("Please sign in first.", 401);
 
@@ -184,17 +232,8 @@ Deno.serve(async (req) => {
       if (!isAdmin) return fail("Admins only.", 403);
       const id = Number(b.id), status = String(b.status), note = b.note ? String(b.note).slice(0, 300) : null;
       if (!["requested", "in_progress", "released", "declined"].includes(status)) return fail("Bad status.");
-      const { data: row, error } = await admin.from("script_requests").update({ status, admin_note: note, updated_at: new Date().toISOString(), released_at: status === "released" ? new Date().toISOString() : null }).eq("id", id).select().single();
-      if (error) return fail(error.message, 500);
-      if (row.discord_thread_id) {
-        const tag = status === "requested" ? TAGS.new_game : (TAGS as any)[status];
-        await discord(`/channels/${row.discord_thread_id}`, "PATCH", { applied_tags: [tag], archived: false });
-        const msg = status === "in_progress" ? `🛠️ **We're working on ${row.game_name}!**`
-          : status === "released" ? `✅ **${row.game_name} is out!** Get a key at ${SITE}/keys and run the script.`
-          : status === "declined" ? `⛔ **${row.game_name} won't be made.**${note ? " " + note : ""}` : null;
-        if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
-      }
-      return json({ success: true, request: row });
+      const { row, notified } = await applyStatus(id, status, note);
+      return json({ success: true, request: row, notified });
     }
 
     return fail("Unknown action.");
