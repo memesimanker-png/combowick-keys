@@ -16,6 +16,7 @@ import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 import { CpaOfferWall } from "@/components/CpaOfferWall";
 import { useKeyQuota, KeyLimitNotice } from "@/lib/key-quota";
+import { RequestWidget } from "@/components/RequestWidget";
 import { useCpaOffers, getCpaSubid, cpaSession, cpaTrack } from "@/lib/cpa";
 
 
@@ -497,6 +498,8 @@ export default function VerifyProviderSelect() {
               )}
             </CardContent>
           </Card>
+
+          <RequestWidget />
         </div>
       </main>
     </div>
