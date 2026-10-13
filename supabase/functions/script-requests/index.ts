@@ -104,11 +104,15 @@ async function notifyVoters(row: any) {
     const dm = await discord("/users/@me/channels", "POST", { recipient_id: discordId });
     if (dm.status !== 200) continue;
     const r = await discord(`/channels/${dm.data.id}/messages`, "POST", {
-      embeds: [{ color: 0x2ecc71, title: `✅ ${row.game_name} is out!`, thumbnail: row.icon_url ? { url: row.icon_url } : undefined,
-        description: "The script you voted for is ready. Grab a key and run it.", footer: { text: "COMBO_WICK script requests" } }],
-      components: [{ type: 1, components: [
+      flags: 1 << 15,
+      components: [{ type: 17, accent_color: 0x2ecc71, components: [
+        { type: 9, components: [{ type: 10, content: `### ✅ ${row.game_name} is out!\nThe script you voted for is ready. Grab a key and run it.` }],
+          accessory: { type: 11, media: { url: row.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/ddfa4b60e1faa75e652368c27a8792da.png?size=256" } } },
+        { type: 1, components: [
         { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } },
         { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${row.place_id}`, emoji: { name: "🎮" } },
+        ] },
+        { type: 10, content: "-# COMBO_WICK script requests" },
       ] }],
     });
     if (r.status === 200) sent++;
@@ -204,10 +208,14 @@ Deno.serve(async (req) => {
         name: g.name.slice(0, 95), applied_tags: [TAGS.new_game],
         message: {
           allowed_mentions: { parse: [] },
-          embeds: [{ color: 0xf5b700, title: `🎮 ${g.name}`, url: `https://www.roblox.com/games/${g.place_id}`, thumbnail: g.icon_url ? { url: g.icon_url } : undefined,
-            description: `Requested on the website.\n👥 **${g.playing.toLocaleString("en-US")}** playing right now\n\nReact 👍 here or vote on the website. The most-voted games get made first.`,
-            footer: { text: "COMBO_WICK script requests" } }],
-          components: [{ type: 1, components: [{ type: 2, style: 5, label: "Vote on the website", url: `${SITE}/request`, emoji: { name: "👍" } }, { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${g.place_id}`, emoji: { name: "🎮" } }] }],
+          flags: 1 << 15,
+          components: [{ type: 17, accent_color: 0xf5b700, components: [
+            { type: 9, components: [{ type: 10, content: `### 🎮 ${g.name}\nRequested on the website · 👥 **${g.playing.toLocaleString("en-US")}** playing now` }],
+              accessory: { type: 11, media: { url: g.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/ddfa4b60e1faa75e652368c27a8792da.png?size=256" } } },
+            { type: 14, divider: true, spacing: 1 },
+            { type: 10, content: "React 👍 here or vote on the website. The most-voted games get made first." },
+            { type: 1, components: [{ type: 2, style: 5, label: "Vote on the website", url: `${SITE}/request`, emoji: { name: "👍" } }, { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${g.place_id}`, emoji: { name: "🎮" } }] },
+          ] }],
         },
       });
       if (t.status === 201 || t.status === 200) await admin.from("script_requests").update({ discord_thread_id: t.data.id }).eq("id", row.id);
