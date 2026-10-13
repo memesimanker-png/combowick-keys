@@ -61,7 +61,7 @@ export function RequestWidget() {
   const thumb = (src: string | null) => (src ? <img src={src} alt="" className="h-9 w-9 shrink-0 rounded-md object-cover" loading="lazy" /> : <div className="h-9 w-9 shrink-0 rounded-md bg-secondary" />);
 
   return (
-    <div className="cw-glow" style={{ "--glow": "268 85% 66%", "--glow-radius": "0.75rem", "--glow-speed": "2.6s" } as React.CSSProperties}>
+    <div className="cw-glow" style={{ "--glow": "268 85% 66%", "--glow-radius": "0.75rem", "--glow-speed": "2.6s", overflow: "clip" } as React.CSSProperties}>
     <Card className="relative rounded-[calc(0.75rem-1.5px)] border-0 bg-gradient-to-br from-violet-500/15 via-card to-card">
       <CardContent className="space-y-3 p-4 sm:p-5">
         <div className="flex items-center gap-3">
