@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, LogIn } from "lucide-react";
 import { GoogleSignInButton } from "@/components/GoogleSignInButton";
+import { DiscordSignInButton } from "@/components/DiscordSignInButton";
 import { SEOHead } from "@/components/SEOHead";
 
 export default function Login() {
@@ -44,7 +45,10 @@ export default function Login() {
               <CardTitle className="font-heading text-2xl">Sign In</CardTitle>
             </CardHeader>
             <CardContent>
-              <GoogleSignInButton label="Sign in with Google" redirectPath="/dashboard" />
+              <div className="space-y-2">
+                <DiscordSignInButton label="Sign in with Discord" redirectPath="/dashboard" />
+                <GoogleSignInButton label="Sign in with Google" redirectPath="/dashboard" />
+              </div>
               <div className="relative my-5">
                 <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border/60" /></div>
                 <div className="relative flex justify-center text-[11px] uppercase tracking-wider"><span className="bg-card px-2 text-muted-foreground">or with email</span></div>

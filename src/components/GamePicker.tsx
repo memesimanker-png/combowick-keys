@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useGamesList, type GameItem } from "@/hooks/useGamesList";
 import { fetchGameThumbnailByUniverseId } from "@/lib/roblox-thumbnails";
 import { useTranslation } from "@/lib/translation-context";
+import { Link } from "react-router-dom";
 
 function GameThumb({ game, size = 32 }: { game: GameItem; size?: number }) {
   const [url, setUrl] = useState<string | null>(null);
@@ -106,7 +107,10 @@ export function GamePicker({
                 <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading games…")}
               </div>
             ) : filtered.length === 0 ? (
-              <div className="px-3 py-6 text-center text-sm text-muted-foreground">{t("No games found.")}</div>
+              <div className="px-3 py-5 text-center text-sm text-muted-foreground space-y-2">
+                <p>{t("No games found.")}</p>
+                <Link to={`/request${q.trim() ? `?q=${encodeURIComponent(q.trim())}` : ""}`} className="inline-flex items-center gap-1 rounded-md bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/25">💡 {t("Request this game")}</Link>
+              </div>
             ) : (
               filtered.map((g) => {
                 const active = value?.game_id === g.game_id;
@@ -131,6 +135,7 @@ export function GamePicker({
               })
             )}
           </div>
+          <Link to="/request" className="block border-t border-border px-3 py-2 text-center text-xs font-medium text-primary hover:bg-accent">💡 {t("Can't find your game? Request it")}</Link>
           {!loading && games.length > filtered.length && (
             <div className="border-t border-border px-3 py-1.5 text-center text-[11px] text-muted-foreground">
               {filtered.length} / {games.length}

@@ -15,6 +15,7 @@ const navLinks = [
   { to: "/", label: "Home" },
   { to: "/keys", label: "Get Key" },
   { to: "/premium-keys", label: "Premium" },
+  { to: "/request", label: "Request" },
 ];
 
 export function Navbar() {

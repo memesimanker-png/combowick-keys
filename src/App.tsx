@@ -9,6 +9,7 @@ import { TranslationProvider } from "@/lib/translation-context";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { BackToTop } from "@/components/BackToTop";
+import { DiscordAutoJoin } from "@/components/DiscordAutoJoin";
 import { BackButton } from "@/components/BackButton";
 import { RouteProgress } from "@/components/RouteProgress";
 import { ExternalLinkMonetag } from "@/components/ExternalLinkMonetag";
@@ -33,6 +34,7 @@ const ScriptUnlockReturn = lazy(() => import("./pages/ScriptUnlockReturn"));
 const ScriptUnlockStep2 = lazy(() => import("./pages/ScriptUnlockStep2"));
 const ScriptUnlockStart = lazy(() => import("./pages/ScriptUnlockStart"));
 const Scripts = lazy(() => import("./pages/Scripts"));
+const RequestScripts = lazy(() => import("./pages/RequestScripts"));
 const ScriptDetail = lazy(() => import("./pages/ScriptDetail"));
 
 // Auth + user.
@@ -100,6 +102,7 @@ const App = () => (
                   <Route path="/verify/step3" element={<VerifyStep3 />} />
                   <Route path="/ad-return" element={<AdReturn />} />
                   <Route path="/scripts" element={<Scripts />} />
+                  <Route path="/request" element={<RequestScripts />} />
                   <Route path="/scripts/:slug" element={<ScriptDetail />} />
                   <Route path="/unlock" element={<ScriptUnlockStart />} />
                   <Route path="/ad-return/script-step2" element={<ScriptUnlockStep2 />} />
@@ -128,6 +131,7 @@ const App = () => (
               </Suspense>
               <StickyMobileCTA />
               <BackToTop />
+              <DiscordAutoJoin />
               <BackButton />
             </BrowserRouter>
           </MotionConfig>
