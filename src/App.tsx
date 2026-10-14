@@ -35,6 +35,7 @@ const ScriptUnlockStep2 = lazy(() => import("./pages/ScriptUnlockStep2"));
 const ScriptUnlockStart = lazy(() => import("./pages/ScriptUnlockStart"));
 const Scripts = lazy(() => import("./pages/Scripts"));
 const RequestScripts = lazy(() => import("./pages/RequestScripts"));
+const HubPreview = lazy(() => import("./pages/HubPreview"));
 const ScriptDetail = lazy(() => import("./pages/ScriptDetail"));
 
 // Auth + user.
@@ -118,6 +119,7 @@ const App = () => (
 
                   {/* Admin */}
                   <Route path="/admin/scripts" element={<ScriptAdmin />} />
+                  <Route path="/admin/hub-preview" element={<HubPreview />} />
                   <Route path="/admin" element={<Admin />} />
 
                   {/* Legal + misc */}
