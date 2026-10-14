@@ -13,6 +13,7 @@ import { PaidGameCard } from "@/components/PaidGameCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import { SEOHead } from "@/components/SEOHead";
+import { HubDemo } from "@/components/HubDemo";
 import { PAID_GAMES } from "@/lib/paid-games";
 import { usePaidGameSettings } from "@/hooks/usePaidGames";
 import { useKeyDiscounts, applyDiscount } from "@/hooks/useKeyDiscounts";
@@ -287,6 +288,15 @@ export default function PremiumKeys() {
       <section className="pt-2 pb-10 sm:pb-14">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <DonateCard paypalClientId={paypalClientId} />
+        </div>
+      </section>
+
+      {/* See the hub — interactive lookalike of the in-game GUI (live games list) */}
+      <section className="py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h2 className="font-heading text-3xl font-bold text-center mb-2">{t("See the hub before you buy")}</h2>
+          <p className="text-center text-muted-foreground mb-6">{t("This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.")}</p>
+          <HubDemo />
         </div>
       </section>
 

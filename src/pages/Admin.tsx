@@ -80,6 +80,7 @@ export default function Admin() {
                 <ShieldCheck className="h-3 w-3" /> Super Admin
               </span>
             )}
+            <a href="/admin/hub-preview" className="text-xs px-2.5 py-1 rounded-md border border-primary/40 text-primary hover:bg-primary/10">🎮 Hub Preview</a>
             <span className="text-xs text-muted-foreground">{user.email}</span>
           </div>
         </div>
