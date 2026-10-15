@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Let each step finish on its own.": "Laisse chaque étape se terminer toute seule.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Terminer les étapes garde les clés gratuites pour tout le monde. Merci !",
     "Why {n} steps?": "Pourquoi {n} étapes ?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Les pubs nous permettent de garder COMBO_WICK gratuit. Elles paient les serveurs et les nouveaux scripts. Merci de nous soutenir !",
     "Don't want ads?": "Tu ne veux pas de pubs ?",
@@ -683,6 +685,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Let each step finish on its own.": "Deja que cada paso termine por sí solo.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Completar los pasos mantiene las claves gratis para todos. ¡Gracias!",
     "Why {n} steps?": "¿Por qué {n} pasos?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Los anuncios son lo que mantiene COMBO_WICK gratis. Pagan los servidores y los scripts nuevos. ¡Gracias por apoyarnos!",
     "Don't want ads?": "¿No quieres anuncios?",
@@ -1362,6 +1366,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Let each step finish on its own.": "Lass jeden Schritt von selbst zu Ende laufen.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Wenn du die Schritte abschließt, bleiben Keys für alle kostenlos. Danke!",
     "Why {n} steps?": "Warum {n} Schritte?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Die Werbung hält COMBO_WICK kostenlos. Sie bezahlt die Server und neue Scripts. Danke für deine Unterstützung!",
     "Don't want ads?": "Keine Lust auf Werbung?",
@@ -2041,6 +2047,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Let each step finish on its own.": "Deixe cada etapa terminar sozinha.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Concluir as etapas mantém as keys grátis para todos. Obrigado!",
     "Why {n} steps?": "Por que {n} etapas?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Os anúncios são o que mantém o COMBO_WICK grátis. Eles pagam os servidores e os novos scripts. Obrigado pelo apoio!",
     "Don't want ads?": "Não quer anúncios?",
@@ -2720,6 +2728,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Let each step finish on its own.": "Дай каждому шагу завершиться самому.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Прохождение шагов сохраняет ключи бесплатными для всех. Спасибо!",
     "Why {n} steps?": "Почему {n} шага?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Реклама помогает COMBO_WICK оставаться бесплатным. Она оплачивает серверы и новые скрипты. Спасибо за поддержку!",
     "Don't want ads?": "Не хочешь рекламу?",
@@ -3399,6 +3409,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Let each step finish on its own.": "让每一步自己完成。",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "完成这些步骤，大家的密钥就能一直免费。谢谢！",
     "Why {n} steps?": "为什么要 {n} 个步骤？",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "广告让 COMBO_WICK 保持免费。广告收入用来支付服务器和新脚本的费用。感谢你的支持！",
     "Don't want ads?": "不想看广告？",
@@ -4078,6 +4090,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Let each step finish on its own.": "각 단계가 끝날 때까지 기다려 주세요.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "단계를 끝까지 완료하면 모두가 키를 무료로 쓸 수 있어요. 고마워요!",
     "Why {n} steps?": "왜 {n}단계인가요?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "광고 덕분에 COMBO_WICK을 무료로 유지할 수 있어요. 서버 비용과 새 스크립트 제작에 쓰입니다. 응원해 줘서 고마워요!",
     "Don't want ads?": "광고가 싫다면?",
@@ -4757,6 +4771,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Let each step finish on its own.": "ปล่อยให้แต่ละขั้นตอนจบเอง",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "การทำขั้นตอนให้ครบช่วยให้ทุกคนได้คีย์ฟรี ขอบคุณ!",
     "Why {n} steps?": "ทำไมต้องมี {n} ขั้นตอน?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "โฆษณาคือสิ่งที่ทำให้ COMBO_WICK ใช้ฟรีได้ ช่วยจ่ายค่าเซิร์ฟเวอร์และสคริปต์ใหม่ ขอบคุณที่สนับสนุนเรา!",
     "Don't want ads?": "ไม่อยากดูโฆษณา?",
@@ -5436,6 +5452,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Let each step finish on its own.": "Biarkan setiap langkah selesai sendiri.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Menyelesaikan langkah-langkah ini membuat key tetap gratis untuk semua. Terima kasih!",
     "Why {n} steps?": "Kenapa {n} langkah?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Iklan inilah yang membuat COMBO_WICK tetap gratis. Iklan membayar server dan script baru. Terima kasih sudah mendukung kami!",
     "Don't want ads?": "Nggak mau iklan?",
@@ -6115,6 +6133,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Let each step finish on its own.": "Hayaang matapos ang bawat hakbang nang kusa.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Ang pagtapos sa mga hakbang ay nagpapanatiling libre ang keys para sa lahat. Salamat!",
     "Why {n} steps?": "Bakit {n} na hakbang?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Ang mga ads ang dahilan kung bakit libre ang COMBO_WICK. Sila ang nagbabayad sa servers at mga bagong script. Salamat sa suporta!",
     "Don't want ads?": "Ayaw mo ng ads?",
@@ -6794,6 +6814,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Let each step finish on its own.": "Hãy để mỗi bước tự hoàn thành.",
+    "Finishing the steps keeps keys free for everyone. Thank you!": "Hoàn thành các bước giúp key luôn miễn phí cho mọi người. Cảm ơn bạn!",
     "Why {n} steps?": "Tại sao cần {n} bước?",
     "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Quảng cáo giúp COMBO_WICK luôn miễn phí. Nó trả tiền máy chủ và các script mới. Cảm ơn bạn đã ủng hộ!",
     "Don't want ads?": "Không muốn xem quảng cáo?",
