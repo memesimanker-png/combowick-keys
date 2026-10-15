@@ -10,7 +10,6 @@ import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { useTranslation } from "@/lib/translation-context";
 import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
-import { WhyStepsNote } from "@/components/WhyStepsNote";
 import { NoIndex } from "@/components/NoIndex";
 import { AdBlockGate } from "@/components/AdBlockGate";
 import { useLinkvertiseGuard } from "@/hooks/useLinkvertiseGuard";
@@ -63,7 +62,6 @@ export default function VerifyStep1() {
               <h1 className="text-3xl font-bold">{t("Verification Step 1")}</h1>
               <p className="text-muted-foreground">{t("verify_step1_desc")}</p>
             </div>
-            <WhyStepsNote />
             <Card>
               <div className="p-6 pb-0">
                 <YouTubeVideoPlayer step="step1" timerSeconds={7} onTimerComplete={() => setButtonEnabled(true)} />
@@ -73,22 +71,6 @@ export default function VerifyStep1() {
                 <CardDescription>{t("verify_watch_desc")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {selectedProvider && (
-                  <div className="text-sm text-center">
-                    <p>{t("Using provider:")} <span className="font-medium">
-                      Linkvertise
-                    </span></p>
-                  </div>
-                )}
-                <div className="bg-black/50 border border-green-500/20 rounded p-3 text-xs text-green-400/70 space-y-2">
-                  <p className="font-semibold text-green-500">{t("Why Verification?")}</p>
-                  <ul className="space-y-1 list-disc list-inside">
-                    <li>{t("verify_reason_1")}</li>
-                    <li>{t("verify_reason_2")}</li>
-                    <li>{t("verify_reason_3")}</li>
-                    <li>{t("verify_reason_4")}</li>
-                  </ul>
-                </div>
                 <LinkvertiseTimerNotice />
               </CardContent>
               <CardFooter>

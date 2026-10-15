@@ -1,40 +1,45 @@
-import { Clock, ExternalLink, HeartHandshake } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { Clock, Heart } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 
 /**
- * Shown on every Linkvertise step, right above the button:
- * 1) a please-don't-skip ask (no telling users to click/install ads — networks treat that as incentivized traffic),
- * 2) the disclaimer that Linkvertise's wait timer is theirs, not ours (cuts support tickets).
+ * The one notice on every Linkvertise step, right above the button (owner 2026-10-15: merged the
+ * separate "Why N steps?", "Why Verification?", don't-skip and timer boxes — the page looked packed).
+ * No telling users to click/install ads — networks treat that as incentivized traffic.
  */
 export function LinkvertiseTimerNotice() {
   const { t } = useTranslation();
+  const [steps, setSteps] = useState(3);
+  useEffect(() => {
+    supabase.from("verify_settings").select("verify_steps").eq("id", 1).maybeSingle()
+      .then(({ data }) => { const v = (data as any)?.verify_steps; if (v === 2 || v === 3) setSteps(v); });
+  }, []);
   return (
-    <div className="space-y-2">
-      {/* Big, high-contrast on purpose: kids press Skip (owner 2026-10-13). Trimmed 2026-10-14: no click/install asks. */}
-      <div className="rounded-xl border-2 border-red-500 bg-red-950/60 p-4 shadow-[0_0_24px_rgba(239,68,68,0.35)]">
-        <p className="text-base font-extrabold uppercase tracking-wide text-red-400 sm:text-lg">⛔ {t("Don't press Skip Ad")}</p>
-        <p className="mt-3 text-sm font-medium text-white">✅ {t("Let each step finish on its own.")}</p>
-        <p className="mt-3 flex items-center gap-1.5 text-xs font-semibold text-red-200">
-          <HeartHandshake className="h-4 w-4 shrink-0" />
-          {t("Finishing the steps keeps keys free for everyone. Thank you!")}
+    <div className="rounded-xl border-2 border-red-500 bg-red-950/60 p-4 text-left shadow-[0_0_24px_rgba(239,68,68,0.35)]">
+      <p className="text-base font-extrabold uppercase tracking-wide text-red-400 sm:text-lg">⛔ {t("Don't press Skip Ad")}</p>
+      <p className="mt-1 text-sm font-medium text-white">✅ {t("Let each step finish on its own.")}</p>
+
+      <div className="mt-3 border-t border-red-500/30 pt-3">
+        <p className="flex items-center gap-1.5 text-sm font-bold text-amber-300">
+          <Heart className="h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
+          {t("Why {n} steps?").replace("{n}", String(steps))}
+        </p>
+        <p className="mt-1 text-sm leading-relaxed text-foreground/90">
+          {t("The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!")}
         </p>
       </div>
-      <div className="rounded-lg border border-warning/30 bg-warning/5 p-3 text-xs leading-relaxed">
-        <div className="flex items-start gap-2">
-          <Clock className="h-4 w-4 text-warning shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-semibold text-foreground">
-              {t("Heads up — the wait timer is set by Linkvertise, not us.")}
-            </p>
-            <p className="text-muted-foreground">
-              {t("Linkvertise (the ad service) controls the countdown on each step. We can't shorten or remove it. If you want to skip ads entirely, grab a")}{" "}
-              <a href="/premium-keys" className="text-primary underline-offset-2 hover:underline inline-flex items-center gap-0.5">
-                {t("Premium Key")} <ExternalLink className="h-3 w-3" />
-              </a>
-              .
-            </p>
-          </div>
-        </div>
+
+      <div className="mt-3 space-y-1 text-xs text-muted-foreground">
+        <p className="flex items-start gap-1.5">
+          <Clock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          {t("Heads up — the wait timer is set by Linkvertise, not us.")}
+        </p>
+        <p>
+          {t("Don't want ads?")}{" "}
+          <Link to="/premium-keys" className="font-semibold text-primary underline-offset-2 hover:underline">{t("Get Premium")} →</Link>
+        </p>
       </div>
     </div>
   );

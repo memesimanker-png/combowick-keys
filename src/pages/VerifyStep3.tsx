@@ -10,7 +10,6 @@ import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { useTranslation } from "@/lib/translation-context";
 import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
-import { WhyStepsNote } from "@/components/WhyStepsNote";
 import { NoIndex } from "@/components/NoIndex";
 import { AdBlockGate } from "@/components/AdBlockGate";
 import { useLinkvertiseGuard } from "@/hooks/useLinkvertiseGuard";
@@ -73,7 +72,6 @@ export default function VerifyStep3() {
               <h1 className="text-3xl font-bold">{t("Verification Step 3")}</h1>
               <p className="text-muted-foreground">{t("verify_step3_desc")}</p>
             </div>
-            <WhyStepsNote />
             <Card>
               <div className="p-6 pb-0">
                 <YouTubeVideoPlayer step="step3" timerSeconds={4} onTimerComplete={() => setButtonEnabled(true)} />
@@ -83,13 +81,6 @@ export default function VerifyStep3() {
                 <CardDescription>{t("verify_watch_desc")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {selectedProvider && (
-                  <div className="text-sm text-center">
-                    <p>{t("Using provider:")} <span className="font-medium">
-                      Linkvertise
-                    </span></p>
-                  </div>
-                )}
                 <LinkvertiseTimerNotice />
               </CardContent>
               <CardFooter>
