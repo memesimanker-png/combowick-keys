@@ -6,8 +6,9 @@ import { useTranslation } from "@/lib/translation-context";
 
 /**
  * The one notice on every Linkvertise step, right above the button (owner 2026-10-15: merged the
- * separate "Why N steps?", "Why Verification?", don't-skip and timer boxes — the page looked packed).
- * No telling users to click/install ads — networks treat that as incentivized traffic.
+ * separate "Why N steps?", "Why Verification?" and timer boxes — the page looked packed).
+ * No "don't press Skip Ad" ask: Linkvertise support confirmed (2026-10-15) skipping is part of the
+ * normal ad flow and still earns. Never tell users to click/install ads (incentivized traffic).
  */
 export function LinkvertiseTimerNotice() {
   const { t } = useTranslation();
@@ -17,19 +18,14 @@ export function LinkvertiseTimerNotice() {
       .then(({ data }) => { const v = (data as any)?.verify_steps; if (v === 2 || v === 3) setSteps(v); });
   }, []);
   return (
-    <div className="rounded-xl border-2 border-red-500 bg-red-950/60 p-4 text-left shadow-[0_0_24px_rgba(239,68,68,0.35)]">
-      <p className="text-base font-extrabold uppercase tracking-wide text-red-400 sm:text-lg">⛔ {t("Don't press Skip Ad")}</p>
-      <p className="mt-1 text-sm font-medium text-white">✅ {t("Let each step finish on its own.")}</p>
-
-      <div className="mt-3 border-t border-red-500/30 pt-3">
-        <p className="flex items-center gap-1.5 text-sm font-bold text-amber-300">
-          <Heart className="h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
-          {t("Why {n} steps?").replace("{n}", String(steps))}
-        </p>
-        <p className="mt-1 text-sm leading-relaxed text-foreground/90">
-          {t("The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!")}
-        </p>
-      </div>
+    <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4 text-left">
+      <p className="flex items-center gap-1.5 text-sm font-bold text-amber-300">
+        <Heart className="h-4 w-4 shrink-0 fill-amber-400 text-amber-400" />
+        {t("Why {n} steps?").replace("{n}", String(steps))}
+      </p>
+      <p className="mt-1 text-sm leading-relaxed text-foreground/90">
+        {t("The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!")}
+      </p>
 
       <div className="mt-3 space-y-1 text-xs text-muted-foreground">
         <p className="flex items-start gap-1.5">
