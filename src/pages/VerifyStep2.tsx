@@ -10,6 +10,7 @@ import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { useTranslation } from "@/lib/translation-context";
 import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
+import { WhyStepsNote } from "@/components/WhyStepsNote";
 import { NoIndex } from "@/components/NoIndex";
 import { AdBlockGate } from "@/components/AdBlockGate";
 import { useLinkvertiseGuard } from "@/hooks/useLinkvertiseGuard";
@@ -79,6 +80,7 @@ export default function VerifyStep2() {
               <h1 className="text-3xl font-bold">{t("Verification Step 2")}</h1>
               <p className="text-muted-foreground">{t("verify_step2_desc")}</p>
             </div>
+            <WhyStepsNote />
             <Card>
               <div className="p-6 pb-0">
                 <YouTubeVideoPlayer step="step2" />

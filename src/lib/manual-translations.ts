@@ -4,6 +4,10 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Why {n} steps?": "Pourquoi {n} étapes ?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Les pubs nous permettent de garder COMBO_WICK gratuit. Elles paient les serveurs et les nouveaux scripts. Merci de nous soutenir !",
+    "Don't want ads?": "Tu ne veux pas de pubs ?",
+    "Get Premium": "Prends Premium",
     "See the hub before you buy": "Découvre le hub avant d'acheter",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Voici ce que tu obtiens en jeu. Clique partout : onglets, jeux, thèmes. Premium débloque les thèmes en plus et évite toutes les étapes de clé.",
     "Free version": "Version gratuite",
@@ -679,6 +683,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Why {n} steps?": "¿Por qué {n} pasos?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Los anuncios son lo que mantiene COMBO_WICK gratis. Pagan los servidores y los scripts nuevos. ¡Gracias por apoyarnos!",
+    "Don't want ads?": "¿No quieres anuncios?",
+    "Get Premium": "Consigue Premium",
     "See the hub before you buy": "Mira el hub antes de comprar",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Esto es lo que tienes en el juego. Prueba las pestañas, juegos y temas. Premium desbloquea temas extra y se salta todos los pasos de la key.",
     "Free version": "Versión gratis",
@@ -1354,6 +1362,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Why {n} steps?": "Warum {n} Schritte?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Die Werbung hält COMBO_WICK kostenlos. Sie bezahlt die Server und neue Scripts. Danke für deine Unterstützung!",
+    "Don't want ads?": "Keine Lust auf Werbung?",
+    "Get Premium": "Hol dir Premium",
     "See the hub before you buy": "Sieh dir den Hub vor dem Kauf an",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Das bekommst du im Spiel. Klick dich durch: Tabs, Spiele, Themes. Premium schaltet extra Themes frei und überspringt alle Key-Schritte.",
     "Free version": "Gratis-Version",
@@ -2029,6 +2041,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Why {n} steps?": "Por que {n} etapas?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Os anúncios são o que mantém o COMBO_WICK grátis. Eles pagam os servidores e os novos scripts. Obrigado pelo apoio!",
+    "Don't want ads?": "Não quer anúncios?",
+    "Get Premium": "Pegue o Premium",
     "See the hub before you buy": "Veja o hub antes de comprar",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "É isso que você recebe no jogo. Explore: abas, jogos, temas. Premium libera temas extras e pula todas as etapas da key.",
     "Free version": "Versão grátis",
@@ -2704,6 +2720,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Why {n} steps?": "Почему {n} шага?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Реклама помогает COMBO_WICK оставаться бесплатным. Она оплачивает серверы и новые скрипты. Спасибо за поддержку!",
+    "Don't want ads?": "Не хочешь рекламу?",
+    "Get Premium": "Купи Premium",
     "See the hub before you buy": "Посмотри хаб перед покупкой",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Вот что ты получишь в игре. Покликай: вкладки, игры, темы. Премиум открывает доп. темы и убирает все шаги с ключом.",
     "Free version": "Бесплатная версия",
@@ -3379,6 +3399,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Why {n} steps?": "为什么要 {n} 个步骤？",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "广告让 COMBO_WICK 保持免费。广告收入用来支付服务器和新脚本的费用。感谢你的支持！",
+    "Don't want ads?": "不想看广告？",
+    "Get Premium": "获取 Premium",
     "See the hub before you buy": "购买前先看看脚本面板",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "这就是你在游戏里看到的界面。随便点点：标签、游戏、主题。高级版解锁额外主题，并跳过所有获取密钥的步骤。",
     "Free version": "免费版",
@@ -4054,6 +4078,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Why {n} steps?": "왜 {n}단계인가요?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "광고 덕분에 COMBO_WICK을 무료로 유지할 수 있어요. 서버 비용과 새 스크립트 제작에 쓰입니다. 응원해 줘서 고마워요!",
+    "Don't want ads?": "광고가 싫다면?",
+    "Get Premium": "Premium 받기",
     "See the hub before you buy": "구매 전에 허브를 확인하세요",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "게임에서 보게 될 화면이에요. 탭, 게임, 테마를 눌러보세요. 프리미엄은 추가 테마를 열고 키 단계를 모두 건너뛰어요.",
     "Free version": "무료 버전",
@@ -4729,6 +4757,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Why {n} steps?": "ทำไมต้องมี {n} ขั้นตอน?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "โฆษณาคือสิ่งที่ทำให้ COMBO_WICK ใช้ฟรีได้ ช่วยจ่ายค่าเซิร์ฟเวอร์และสคริปต์ใหม่ ขอบคุณที่สนับสนุนเรา!",
+    "Don't want ads?": "ไม่อยากดูโฆษณา?",
+    "Get Premium": "รับ Premium",
     "See the hub before you buy": "ดูฮับก่อนซื้อ",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "นี่คือสิ่งที่คุณจะได้ในเกม ลองกดดูได้เลย: แท็บ เกม ธีม พรีเมียมปลดล็อกธีมเพิ่มและข้ามทุกขั้นตอนรับคีย์",
     "Free version": "เวอร์ชันฟรี",
@@ -5404,6 +5436,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Why {n} steps?": "Kenapa {n} langkah?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Iklan inilah yang membuat COMBO_WICK tetap gratis. Iklan membayar server dan script baru. Terima kasih sudah mendukung kami!",
+    "Don't want ads?": "Nggak mau iklan?",
+    "Get Premium": "Ambil Premium",
     "See the hub before you buy": "Lihat hub sebelum membeli",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Ini yang kamu dapat di dalam game. Coba klik: tab, game, tema. Premium membuka tema tambahan dan melewati semua langkah key.",
     "Free version": "Versi gratis",
@@ -6079,6 +6115,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Why {n} steps?": "Bakit {n} na hakbang?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Ang mga ads ang dahilan kung bakit libre ang COMBO_WICK. Sila ang nagbabayad sa servers at mga bagong script. Salamat sa suporta!",
+    "Don't want ads?": "Ayaw mo ng ads?",
+    "Get Premium": "Kumuha ng Premium",
     "See the hub before you buy": "Tingnan ang hub bago bumili",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Ito ang makukuha mo sa loob ng game. I-click ang mga tab, laro, at tema. Binubuksan ng Premium ang dagdag na tema at nilalaktawan ang lahat ng key steps.",
     "Free version": "Libreng bersyon",
@@ -6754,6 +6794,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Why {n} steps?": "Tại sao cần {n} bước?",
+    "The ads are how we keep COMBO_WICK free. They pay for the servers and new scripts. Thanks for supporting us!": "Quảng cáo giúp COMBO_WICK luôn miễn phí. Nó trả tiền máy chủ và các script mới. Cảm ơn bạn đã ủng hộ!",
+    "Don't want ads?": "Không muốn xem quảng cáo?",
+    "Get Premium": "Lấy Premium",
     "See the hub before you buy": "Xem hub trước khi mua",
     "This is what you get in-game. Click around: tabs, games, themes. Premium unlocks the extra themes and skips every key step.": "Đây là những gì bạn nhận được trong game. Bấm thử: tab, game, giao diện. Premium mở thêm giao diện và bỏ qua mọi bước lấy key.",
     "Free version": "Bản miễn phí",
