@@ -2,7 +2,10 @@
 // Actions (POST JSON {action, ...}):
 //   list                      public board (+ my_votes when signed in)
 //   lookup {query}            Roblox link / place id / game name -> candidate games (+ covered / already requested)
-//   request {place_id}        signed in: create a request (or vote if it exists) + Discord forum post
+//   request {place_id,agreed} signed in: create a request (or vote if it exists) + Discord forum post.
+//                             New requests need agreed:true (video rule) and no missed-video ban.
+//   my_status                 signed in: {ban} message if blocked from new requests
+//   video_tick                cron (x-cw-cron): requester video deadlines -> reminders / done / missed
 //   vote {id}                 signed in: toggle my vote
 //   set_status {id,status,note} admin: requested | in_progress | released | declined (+ Discord tag/update)
 //   discord_join {provider_token} signed in with Discord: add the user to the COMBO_WICK server
@@ -94,7 +97,41 @@ const discordIdOf = (u: any): string | null => {
   const ident = (u?.identities ?? []).find((i: any) => i.provider === "discord");
   return ident?.identity_data?.provider_id ?? ident?.identity_data?.sub ?? ident?.id ?? (u?.app_metadata?.provider === "discord" ? u?.user_metadata?.provider_id ?? null : null);
 };
-const REWARD_TEXT = "🎥 **Get a free week:** record **3-5 minutes** using the script with **Streamer Mode ON**, then tap **Submit video**. Once staff approve it, you get a **1-week key** for this game.";
+// Video rule (owner 2026-10-16): the REQUESTER owes a video within VIDEO_HOURS of release; missing it blocks new
+// requests for BAN_DAYS (2nd miss = for good). Voters can still post one for the free week, optional.
+const VIDEO_HOURS = 48;
+const BAN_DAYS = 30;
+const HOW_TO = [
+  "**How to send it**",
+  "1. Record **3–5 minutes** of the script working in the game.",
+  "2. Upload it to **YouTube** or **TikTok**.",
+  "3. Press **Submit video** below and paste the link.",
+  "-# No Nitro needed. You send a link, not a file.",
+].join("\n");
+const REWARD_TEXT = "🎥 **Free week of Premium:** post a 3–5 min video of the script on YouTube or TikTok, then press **Submit video**. No Nitro needed.";
+const unix = (d: string | Date) => Math.floor(new Date(d).getTime() / 1000);
+const videoButtons = (row: any) => ({ type: 1, components: [
+  { type: 2, style: 3, label: "Submit video", custom_id: `cw:v:open:${row.id}`, emoji: { name: "🎥" } },
+  { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } },
+  { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${row.place_id}`, emoji: { name: "🎮" } },
+] });
+async function dm(discordId: string, body: any) {
+  const ch = await discord("/users/@me/channels", "POST", { recipient_id: discordId });
+  if (ch.status !== 200) return false;
+  const r = await discord(`/channels/${ch.data.id}/messages`, "POST", { allowed_mentions: { parse: [] }, ...body });
+  return r.status === 200;
+}
+// Can this user create NEW requests? (voting is always allowed)
+async function requestBan(userId: string) {
+  const { data } = await admin.from("script_requests").select("game_name, video_due_at").eq("created_by", userId).eq("video_state", "missed").order("video_due_at", { ascending: false });
+  const misses = data ?? [];
+  if (misses.length >= 2) return `You missed the video for ${misses[0].game_name} and ${misses[1].game_name}, so you can't request new games anymore. You can still vote.`;
+  if (misses.length === 1) {
+    const until = new Date(new Date(misses[0].video_due_at).getTime() + BAN_DAYS * 86400e3);
+    if (until > new Date()) return `You didn't post a video for ${misses[0].game_name}, so you can't request new games until ${until.toUTCString().slice(5, 16)}. You can still vote.`;
+  }
+  return null;
+}
 const CRON_SECRET = Deno.env.get("DISCORD_CRON_SECRET") ?? "";
 
 // Discord ids of everyone who requested/voted (Discord sign-ins only), deduped.
@@ -109,29 +146,33 @@ async function voterDiscordIds(row: any): Promise<string[]> {
   return [...ids];
 }
 
-// DM everyone who voted that their game is out.
+const ICON = "https://cdn.discordapp.com/icons/934631259861319733/a_3c6b0ba4deedbc36b995e33a02d0948c.png?size=256";
+const releaseHeader = (row: any, line: string) => ({ type: 9, components: [{ type: 10, content: `### ✅ ${row.game_name} is out!\n${line}` }], accessory: { type: 11, media: { url: row.icon_url ?? ICON } } });
+function requesterDM(row: any) {
+  const due = unix(row.video_due_at);
+  return { flags: 1 << 15, components: [{ type: 17, accent_color: 0xf5b700, components: [
+    releaseHeader(row, "The script you requested is live. Get a key and run it."),
+    { type: 14, divider: true, spacing: 1 },
+    { type: 10, content: `### 🎥 Your part: post a video\nYou requested this game, so you need to post a video of the script.\n⏰ **Due <t:${due}:R>** (<t:${due}:f>)` },
+    { type: 10, content: HOW_TO },
+    videoButtons(row),
+    { type: 14, divider: true, spacing: 1 },
+    { type: 10, content: `-# ✅ Approved video = free 1-week key for this game.\n-# ⛔ No video by the deadline = no new requests for ${BAN_DAYS} days.` },
+  ] }] };
+}
+function voterDM(row: any) {
+  return { flags: 1 << 15, components: [{ type: 17, accent_color: 0x2ecc71, components: [
+    releaseHeader(row, "A script you voted for is live. Get a key and run it."),
+    { type: 14, divider: true, spacing: 1 },
+    { type: 10, content: "### 🎥 Want a free week of Premium?\nPost a video of the script and get a free 1-week key for this game." },
+    { type: 10, content: HOW_TO },
+    videoButtons(row),
+  ] }] };
+}
+// DM everyone who voted that their game is out (the requester gets the deadline version).
 async function notifyVoters(row: any, ids: string[]) {
   let sent = 0;
-  for (const discordId of ids) {
-    const dm = await discord("/users/@me/channels", "POST", { recipient_id: discordId });
-    if (dm.status !== 200) continue;
-    const r = await discord(`/channels/${dm.data.id}/messages`, "POST", {
-      flags: 1 << 15,
-      components: [{ type: 17, accent_color: 0x2ecc71, components: [
-        { type: 9, components: [{ type: 10, content: `### ✅ ${row.game_name} is out!\nThe script you voted for is ready. Grab a key and run it.` }],
-          accessory: { type: 11, media: { url: row.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/a_3c6b0ba4deedbc36b995e33a02d0948c.png?size=256" } } },
-        { type: 14, divider: true, spacing: 1 },
-        { type: 10, content: REWARD_TEXT },
-        { type: 1, components: [
-        { type: 2, style: 3, label: "Submit video", custom_id: `cw:v:open:${row.id}`, emoji: { name: "🎥" } },
-        { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } },
-        { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${row.place_id}`, emoji: { name: "🎮" } },
-        ] },
-        { type: 10, content: "-# COMBO_WICK script requests" },
-      ] }],
-    });
-    if (r.status === 200) sent++;
-  }
+  for (const discordId of ids) if (await dm(discordId, discordId === row.requester_discord_id && row.video_due_at ? requesterDM(row) : voterDM(row))) sent++;
   return sent;
 }
 
@@ -139,6 +180,16 @@ async function applyStatus(id: number, status: string, note: string | null) {
   const { data: row, error } = await admin.from("script_requests").update({ status, admin_note: note, updated_at: new Date().toISOString(), released_at: status === "released" ? new Date().toISOString() : null }).eq("id", id).select().single();
   if (error) throw new Error(error.message);
   const voters = status === "released" ? await voterDiscordIds(row) : [];
+  if (status === "released" && row.created_by && !row.video_state) {
+    const { data: v } = await admin.from("script_request_votes").select("discord_id").eq("request_id", row.id).eq("user_id", row.created_by).maybeSingle();
+    let rid: string | null = v?.discord_id ?? null;
+    if (!rid) { const { data } = await admin.auth.admin.getUserById(row.created_by); rid = discordIdOf(data?.user); }
+    if (rid) {
+      const due = new Date(Date.now() + VIDEO_HOURS * 3600e3).toISOString();
+      await admin.from("script_requests").update({ requester_discord_id: rid, video_due_at: due, video_state: "due", video_reminded: 0 }).eq("id", row.id);
+      Object.assign(row, { requester_discord_id: rid, video_due_at: due, video_state: "due" });
+    }
+  }
   // ping the voters on the forum post too (owner 2026-10-16: it only posted, nobody got pinged); Discord caps a message at 100 user pings
   const pinged = voters.slice(0, 100);
   if (row.discord_thread_id) {
@@ -148,17 +199,51 @@ async function applyStatus(id: number, status: string, note: string | null) {
       : status === "released" ? `✅ **${row.game_name} is out!** Get a key at ${SITE}/keys and run the script.`
       : status === "declined" ? `⛔ **${row.game_name} won't be made.**${note ? " " + note : ""}` : null;
     if (status === "released") await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { allowed_mentions: { parse: [], users: pinged }, flags: 1 << 15, components: [
-    ...(pinged.length ? [{ type: 10, content: pinged.map((d) => `<@${d}>`).join(" ") + ` your requested script is out 🔥` }] : []),
+    ...(pinged.length ? [{ type: 10, content: pinged.map((d) => `<@${d}>`).join(" ") + " your requested script is out 🔥" }] : []),
     { type: 17, accent_color: 0x2ecc71, components: [
-      { type: 10, content: `### ✅ ${row.game_name} is out!\nGet a key at ${SITE}/keys and run the script.` },
+      releaseHeader(row, "Get a key and run the script."),
       { type: 14, divider: true, spacing: 1 },
-      { type: 10, content: REWARD_TEXT + "\n-# Only people who requested or voted for this game can claim it." },
-      { type: 1, components: [{ type: 2, style: 3, label: "Submit video", custom_id: `cw:v:open:${row.id}`, emoji: { name: "🎥" } }, { type: 2, style: 5, label: "Get key", url: `${SITE}/keys`, emoji: { name: "🔑" } }] },
+      ...(row.requester_discord_id && row.video_due_at ? [{ type: 10, content: `🎥 **Requested by <@${row.requester_discord_id}>**, who has until <t:${unix(row.video_due_at)}:R> to post a video of it.` }] : []),
+      { type: 10, content: REWARD_TEXT + "\n-# Only people who requested or voted for this game can use the button." },
+      videoButtons(row),
     ] }] });
     else if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
   }
   const notified = status === "released" ? await notifyVoters(row, voters) : 0;
   return { row, notified };
+}
+
+// Requester video deadlines. A pending or approved submission counts as done (a later rejection doesn't re-open it).
+async function videoTick() {
+  const { data: rows } = await admin.from("script_requests").select("*").eq("video_state", "due");
+  let done = 0, reminded = 0, missed = 0;
+  for (const row of rows ?? []) {
+    const { data: subs } = await admin.from("video_submissions").select("id").eq("request_id", row.id).eq("discord_id", row.requester_discord_id).in("status", ["pending", "approved"]).limit(1);
+    if (subs?.length) { await admin.from("script_requests").update({ video_state: "done" }).eq("id", row.id); done++; continue; }
+    const left = new Date(row.video_due_at).getTime() - Date.now();
+    const due = unix(row.video_due_at);
+    if (left <= 0) {
+      await admin.from("script_requests").update({ video_state: "missed" }).eq("id", row.id);
+      const ban = await requestBan(row.created_by);
+      await dm(row.requester_discord_id, { flags: 1 << 15, components: [{ type: 17, accent_color: 0xe74c3c, components: [
+        { type: 10, content: `### ⛔ No video for ${row.game_name}\nThe ${VIDEO_HOURS} hours to post your video ran out.\n${ban ?? ""}` },
+        { type: 10, content: "-# Already recorded it? You can still press Submit video for the free week." },
+        videoButtons(row),
+      ] }] });
+      missed++;
+    } else if ((left <= 3 * 3600e3 && row.video_reminded < 2) || (left <= 24 * 3600e3 && row.video_reminded < 1)) {
+      const last = left <= 3 * 3600e3;
+      await admin.from("script_requests").update({ video_reminded: last ? 2 : 1 }).eq("id", row.id);
+      await dm(row.requester_discord_id, { flags: 1 << 15, components: [{ type: 17, accent_color: 0xf5b700, components: [
+        { type: 10, content: `### ⏰ ${last ? "Last reminder" : "Reminder"}: your ${row.game_name} video\nYour video is due <t:${due}:R> (<t:${due}:f>).` },
+        { type: 10, content: HOW_TO },
+        videoButtons(row),
+        { type: 10, content: `-# No video by the deadline = no new requests for ${BAN_DAYS} days.` },
+      ] }] });
+      reminded++;
+    }
+  }
+  return { checked: (rows ?? []).length, done, reminded, missed };
 }
 
 Deno.serve(async (req) => {
@@ -199,6 +284,18 @@ Deno.serve(async (req) => {
       return json({ success: true, released: true, game: r.game_name, notified });
     }
 
+    // cron (pg_cron every 10 min): requester video deadlines -> done / reminders / missed
+    if (action === "video_tick") {
+      if (!CRON_SECRET || req.headers.get("x-cw-cron") !== CRON_SECRET) return fail("forbidden", 403);
+      return json({ success: true, ...(await videoTick()) });
+    }
+
+    // signed-in user: am I blocked from new requests? (the website shows it before they search)
+    if (action === "my_status") {
+      if (!user) return json({ success: true, ban: null });
+      return json({ success: true, ban: await requestBan(user.id) });
+    }
+
     if (!user) return fail("Please sign in first.", 401);
     const hasDiscord = (user.identities ?? []).some((i: any) => i.provider === "discord") || user.app_metadata?.provider === "discord";
     if (!hasDiscord && (action === "request" || action === "vote")) return fail("Please sign in with Discord to request and vote.", 401);
@@ -222,6 +319,10 @@ Deno.serve(async (req) => {
         const { n } = await recount(g.request.id);
         return json({ success: true, existed: true, id: g.request.id, vote_count: n });
       }
+      // NEW request (voting on an existing one above needs neither): must accept the video rule, and not be banned for a missed video
+      const ban = await requestBan(user.id);
+      if (ban) return json({ success: false, banned: true, error: ban }, 403);
+      if (b.agreed !== true) return json({ success: false, needs_agreement: true, error: `Please tick the box: you'll post a video within ${VIDEO_HOURS} hours if we make this script.` }, 400);
       const { count } = await admin.from("script_requests").select("*", { count: "exact", head: true }).eq("created_by", user.id).in("status", ["requested", "in_progress"]);
       if ((count ?? 0) >= MAX_OPEN_PER_USER) return fail(`You already have ${MAX_OPEN_PER_USER} open requests. Vote for others while you wait!`, 429);
       const { data: row, error } = await admin.from("script_requests").insert({

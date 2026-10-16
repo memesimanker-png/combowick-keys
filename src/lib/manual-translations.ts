@@ -4,6 +4,14 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "4. Post a video": "4. Publie une vidéo",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Si tu l'as demandé, publie une vidéo de 3 à 5 min sur YouTube ou TikTok dans les 48 heures. Vidéo validée = clé gratuite d'1 semaine.",
+    "If you request a game, you post a video of it": "Si tu demandes un jeu, tu publies une vidéo dessus",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Quand ton script sort, tu as 48 heures pour publier une vidéo de 3 à 5 min sur YouTube ou TikTok et nous envoyer le lien. Pas besoin de Nitro.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Vidéo validée = clé gratuite d'1 semaine. Pas de vidéo = plus de nouvelles demandes pendant 30 jours.",
+    "I'll post a video within 48 hours if this script gets made.": "Je publierai une vidéo dans les 48 heures si ce script est créé.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Coche la case ci-dessus pour demander un nouveau jeu. Pas besoin pour voter.",
+    "You can't request new games right now": "Tu ne peux pas demander de nouveaux jeux pour le moment",
     "Let each step finish on its own.": "Laisse chaque étape se terminer toute seule.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Terminer les étapes garde les clés gratuites pour tout le monde. Merci !",
     "Why {n} steps?": "Pourquoi {n} étapes ?",
@@ -685,6 +693,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "4. Post a video": "4. Sube un video",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Si lo pediste tú, sube un video de 3 a 5 min a YouTube o TikTok en 48 horas. Video aprobado = clave gratis de 1 semana.",
+    "If you request a game, you post a video of it": "Si pides un juego, subes un video de él",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Cuando salga tu script, tienes 48 horas para subir un video de 3 a 5 min a YouTube o TikTok y mandarnos el enlace. No necesitas Nitro.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Video aprobado = clave gratis de 1 semana. Sin video = sin nuevas solicitudes durante 30 días.",
+    "I'll post a video within 48 hours if this script gets made.": "Subiré un video en 48 horas si hacen este script.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Marca la casilla de arriba para pedir un juego nuevo. Para votar no hace falta.",
+    "You can't request new games right now": "Ahora mismo no puedes pedir juegos nuevos",
     "Let each step finish on its own.": "Deja que cada paso termine por sí solo.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Completar los pasos mantiene las claves gratis para todos. ¡Gracias!",
     "Why {n} steps?": "¿Por qué {n} pasos?",
@@ -1366,6 +1382,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "4. Post a video": "4. Lade ein Video hoch",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Wenn du es angefragt hast, lade innerhalb von 48 Stunden ein 3–5 Min. Video auf YouTube oder TikTok hoch. Video angenommen = 1 Woche Key gratis.",
+    "If you request a game, you post a video of it": "Wenn du ein Spiel anfragst, machst du ein Video dazu",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Sobald dein Script raus ist, hast du 48 Stunden, um ein 3–5 Min. Video auf YouTube oder TikTok hochzuladen und uns den Link zu schicken. Kein Nitro nötig.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Video angenommen = 1 Woche Key gratis. Kein Video = 30 Tage keine neuen Anfragen.",
+    "I'll post a video within 48 hours if this script gets made.": "Ich lade innerhalb von 48 Stunden ein Video hoch, wenn das Script gemacht wird.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Hak das Kästchen oben an, um ein neues Spiel anzufragen. Zum Abstimmen brauchst du es nicht.",
+    "You can't request new games right now": "Du kannst gerade keine neuen Spiele anfragen",
     "Let each step finish on its own.": "Lass jeden Schritt von selbst zu Ende laufen.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Wenn du die Schritte abschließt, bleiben Keys für alle kostenlos. Danke!",
     "Why {n} steps?": "Warum {n} Schritte?",
@@ -2047,6 +2071,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "4. Post a video": "4. Poste um vídeo",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Se você pediu, poste um vídeo de 3 a 5 min no YouTube ou TikTok em até 48 horas. Vídeo aprovado = chave grátis de 1 semana.",
+    "If you request a game, you post a video of it": "Se você pedir um jogo, você posta um vídeo dele",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Quando seu script sair, você tem 48 horas para postar um vídeo de 3 a 5 min no YouTube ou TikTok e mandar o link pra gente. Não precisa de Nitro.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Vídeo aprovado = chave grátis de 1 semana. Sem vídeo = sem novos pedidos por 30 dias.",
+    "I'll post a video within 48 hours if this script gets made.": "Vou postar um vídeo em até 48 horas se esse script for feito.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Marque a caixa acima para pedir um jogo novo. Para votar não precisa.",
+    "You can't request new games right now": "Você não pode pedir jogos novos agora",
     "Let each step finish on its own.": "Deixe cada etapa terminar sozinha.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Concluir as etapas mantém as keys grátis para todos. Obrigado!",
     "Why {n} steps?": "Por que {n} etapas?",
@@ -2728,6 +2760,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "4. Post a video": "4. Выложи видео",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Если это твой запрос, выложи видео на 3–5 минут на YouTube или TikTok в течение 48 часов. Видео одобрено = бесплатный ключ на 1 неделю.",
+    "If you request a game, you post a video of it": "Запросил игру — выложи по ней видео",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Когда твой скрипт выйдет, у тебя будет 48 часов, чтобы выложить видео на 3–5 минут на YouTube или TikTok и отправить нам ссылку. Nitro не нужен.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Видео одобрено = бесплатный ключ на 1 неделю. Нет видео = никаких новых запросов 30 дней.",
+    "I'll post a video within 48 hours if this script gets made.": "Я выложу видео в течение 48 часов, если этот скрипт сделают.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Отметь галочку выше, чтобы запросить новую игру. Для голосования это не нужно.",
+    "You can't request new games right now": "Сейчас ты не можешь запрашивать новые игры",
     "Let each step finish on its own.": "Дай каждому шагу завершиться самому.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Прохождение шагов сохраняет ключи бесплатными для всех. Спасибо!",
     "Why {n} steps?": "Почему {n} шага?",
@@ -3409,6 +3449,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "4. Post a video": "4. 发布视频",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "如果是你申请的，请在 48 小时内在 YouTube 或 TikTok 发布一段 3–5 分钟的视频。视频通过 = 免费 1 周密钥。",
+    "If you request a game, you post a video of it": "申请游戏，就要发布它的视频",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "你的脚本上线后，你有 48 小时在 YouTube 或 TikTok 发布一段 3–5 分钟的视频，并把链接发给我们。不需要 Nitro。",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "视频通过 = 免费 1 周密钥。没有视频 = 30 天内不能再申请新游戏。",
+    "I'll post a video within 48 hours if this script gets made.": "如果这个脚本做出来了，我会在 48 小时内发布视频。",
+    "Tick the box above to request a new game. Voting doesn't need it.": "勾选上面的方框才能申请新游戏。投票不需要。",
+    "You can't request new games right now": "你目前不能申请新游戏",
     "Let each step finish on its own.": "让每一步自己完成。",
     "Finishing the steps keeps keys free for everyone. Thank you!": "完成这些步骤，大家的密钥就能一直免费。谢谢！",
     "Why {n} steps?": "为什么要 {n} 个步骤？",
@@ -4090,6 +4138,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "4. Post a video": "4. 영상 올리기",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "직접 요청했다면 48시간 안에 YouTube나 TikTok에 3–5분 영상을 올려 주세요. 영상 승인 = 1주일 무료 키.",
+    "If you request a game, you post a video of it": "게임을 요청하면 그 게임 영상을 올려야 해요",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "스크립트가 나오면 48시간 안에 YouTube나 TikTok에 3–5분 영상을 올리고 링크를 보내 주세요. Nitro는 필요 없어요.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "영상 승인 = 1주일 무료 키. 영상 없음 = 30일 동안 새 요청 불가.",
+    "I'll post a video within 48 hours if this script gets made.": "이 스크립트가 만들어지면 48시간 안에 영상을 올릴게요.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "새 게임을 요청하려면 위의 박스를 체크하세요. 투표에는 필요 없어요.",
+    "You can't request new games right now": "지금은 새 게임을 요청할 수 없어요",
     "Let each step finish on its own.": "각 단계가 끝날 때까지 기다려 주세요.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "단계를 끝까지 완료하면 모두가 키를 무료로 쓸 수 있어요. 고마워요!",
     "Why {n} steps?": "왜 {n}단계인가요?",
@@ -4771,6 +4827,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "4. Post a video": "4. โพสต์วิดีโอ",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "ถ้าคุณเป็นคนขอ ให้โพสต์วิดีโอยาว 3–5 นาทีบน YouTube หรือ TikTok ภายใน 48 ชั่วโมง วิดีโอผ่าน = รับคีย์ฟรี 1 สัปดาห์",
+    "If you request a game, you post a video of it": "ถ้าขอเกม คุณต้องโพสต์วิดีโอของเกมนั้น",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "เมื่อสคริปต์ของคุณออกแล้ว คุณมีเวลา 48 ชั่วโมงในการโพสต์วิดีโอ 3–5 นาทีบน YouTube หรือ TikTok แล้วส่งลิงก์มาให้เรา ไม่ต้องใช้ Nitro",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "วิดีโอผ่าน = รับคีย์ฟรี 1 สัปดาห์ ไม่มีวิดีโอ = ขอเกมใหม่ไม่ได้ 30 วัน",
+    "I'll post a video within 48 hours if this script gets made.": "ฉันจะโพสต์วิดีโอภายใน 48 ชั่วโมงถ้าสคริปต์นี้ถูกสร้างขึ้น",
+    "Tick the box above to request a new game. Voting doesn't need it.": "ติ๊กช่องด้านบนเพื่อขอเกมใหม่ ถ้าแค่โหวตไม่ต้องติ๊ก",
+    "You can't request new games right now": "ตอนนี้คุณขอเกมใหม่ไม่ได้",
     "Let each step finish on its own.": "ปล่อยให้แต่ละขั้นตอนจบเอง",
     "Finishing the steps keeps keys free for everyone. Thank you!": "การทำขั้นตอนให้ครบช่วยให้ทุกคนได้คีย์ฟรี ขอบคุณ!",
     "Why {n} steps?": "ทำไมต้องมี {n} ขั้นตอน?",
@@ -5452,6 +5516,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "4. Post a video": "4. Unggah video",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Kalau kamu yang request, unggah video 3–5 menit ke YouTube atau TikTok dalam 48 jam. Video disetujui = key gratis 1 minggu.",
+    "If you request a game, you post a video of it": "Kalau kamu request game, kamu wajib unggah videonya",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Saat script kamu rilis, kamu punya 48 jam untuk unggah video 3–5 menit ke YouTube atau TikTok dan kirim link-nya ke kami. Tidak perlu Nitro.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Video disetujui = key gratis 1 minggu. Tidak ada video = tidak bisa request game baru selama 30 hari.",
+    "I'll post a video within 48 hours if this script gets made.": "Saya akan unggah video dalam 48 jam kalau script ini dibuat.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Centang kotak di atas untuk request game baru. Untuk vote tidak perlu.",
+    "You can't request new games right now": "Kamu belum bisa request game baru sekarang",
     "Let each step finish on its own.": "Biarkan setiap langkah selesai sendiri.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Menyelesaikan langkah-langkah ini membuat key tetap gratis untuk semua. Terima kasih!",
     "Why {n} steps?": "Kenapa {n} langkah?",
@@ -6133,6 +6205,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "4. Post a video": "4. Mag-post ng video",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Kung ikaw ang nag-request, mag-post ng 3–5 min na video sa YouTube o TikTok sa loob ng 48 oras. Na-approve na video = libreng 1-week key.",
+    "If you request a game, you post a video of it": "Kung mag-request ka ng game, mag-po-post ka ng video nito",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Paglabas ng script mo, may 48 oras ka para mag-post ng 3–5 min na video nito sa YouTube o TikTok at ipadala sa amin ang link. Hindi kailangan ng Nitro.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Na-approve na video = libreng 1-week key. Walang video = bawal mag-request ng bagong game sa loob ng 30 araw.",
+    "I'll post a video within 48 hours if this script gets made.": "Magpo-post ako ng video sa loob ng 48 oras kapag nagawa ang script na ito.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "I-tick ang box sa itaas para mag-request ng bagong game. Hindi ito kailangan sa pagboto.",
+    "You can't request new games right now": "Hindi ka muna puwedeng mag-request ng bagong game ngayon",
     "Let each step finish on its own.": "Hayaang matapos ang bawat hakbang nang kusa.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Ang pagtapos sa mga hakbang ay nagpapanatiling libre ang keys para sa lahat. Salamat!",
     "Why {n} steps?": "Bakit {n} na hakbang?",
@@ -6814,6 +6894,14 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "4. Post a video": "4. Đăng video",
+    "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Nếu bạn là người yêu cầu, hãy đăng video 3–5 phút lên YouTube hoặc TikTok trong 48 giờ. Video được duyệt = key miễn phí 1 tuần.",
+    "If you request a game, you post a video of it": "Nếu bạn yêu cầu một game, bạn sẽ đăng video về nó",
+    "When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.": "Khi script của bạn ra mắt, bạn có 48 giờ để đăng video 3–5 phút lên YouTube hoặc TikTok và gửi link cho chúng tôi. Không cần Nitro.",
+    "Approved video = free 1-week key. No video = no new requests for 30 days.": "Video được duyệt = key miễn phí 1 tuần. Không có video = không được yêu cầu game mới trong 30 ngày.",
+    "I'll post a video within 48 hours if this script gets made.": "Tôi sẽ đăng video trong 48 giờ nếu script này được làm.",
+    "Tick the box above to request a new game. Voting doesn't need it.": "Tích vào ô phía trên để yêu cầu game mới. Bình chọn thì không cần.",
+    "You can't request new games right now": "Hiện bạn chưa thể yêu cầu game mới",
     "Let each step finish on its own.": "Hãy để mỗi bước tự hoàn thành.",
     "Finishing the steps keeps keys free for everyone. Thank you!": "Hoàn thành các bước giúp key luôn miễn phí cho mọi người. Cảm ơn bạn!",
     "Why {n} steps?": "Tại sao cần {n} bước?",

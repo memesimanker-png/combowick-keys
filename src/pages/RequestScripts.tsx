@@ -10,7 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth, useIsAdmin } from "@/hooks/useAuth";
 import { useTranslation } from "@/lib/translation-context";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, Loader2, ThumbsUp, Lightbulb, Users, CheckCircle2, Hammer, Ban, Sparkles, Key, ExternalLink } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Search, Loader2, ThumbsUp, Lightbulb, Users, CheckCircle2, Hammer, Ban, Sparkles, Key, ExternalLink, Video } from "lucide-react";
 
 type Status = "requested" | "in_progress" | "released" | "declined";
 interface Req { id: number; universe_id: string; place_id: string; game_name: string; icon_url: string | null; players_at_request: number | null; status: Status; admin_note: string | null; vote_count: number; discord_thread_id: string | null; created_at: string }
@@ -46,6 +47,9 @@ export default function RequestScripts() {
   const [searching, setSearching] = useState(false);
   const [found, setFound] = useState<Found[] | null>(null);
   const [busy, setBusy] = useState<string | number | null>(null);
+  // video rule (2026-10-16): new requests need the tick box; a missed video blocks new requests (voting still works)
+  const [agreed, setAgreed] = useState(false);
+  const [ban, setBan] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const j = await call({ action: "list" });
@@ -53,6 +57,7 @@ export default function RequestScripts() {
     setLoading(false);
   }, []);
   useEffect(() => { if (!authLoading) load(); }, [authLoading, user?.id, load]);
+  useEffect(() => { if (discordUser) call({ action: "my_status" }).then((j) => setBan(j?.ban ?? null)); }, [discordUser, user?.id]);
 
   const search = async (e?: React.FormEvent) => {
     e?.preventDefault();
@@ -66,12 +71,15 @@ export default function RequestScripts() {
 
   const request = async (g: Found) => {
     setBusy(g.place_id);
-    const j = await call({ action: "request", place_id: g.place_id });
+    const j = await call({ action: "request", place_id: g.place_id, agreed });
     setBusy(null);
     if (j?.success) {
       toast({ title: j.existed ? t("Already requested, your vote was added! 👍") : t("Request sent! 🎉"), description: t("Share it so people vote. The most-voted games get made first.") });
       setFound(null); setQuery(""); setTab("new"); load();
-    } else toast({ variant: j?.covered ? "default" : "destructive", title: j?.covered ? t("Already supported ✅") : t("Couldn't send the request"), description: j?.error });
+    } else {
+      if (j?.banned) setBan(j.error);
+      toast({ variant: j?.covered ? "default" : "destructive", title: j?.covered ? t("Already supported ✅") : t("Couldn't send the request"), description: j?.error });
+    }
   };
 
   const vote = async (r: Req) => {
@@ -126,11 +134,12 @@ export default function RequestScripts() {
           </div>
 
           {/* how it works */}
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {[
               { icon: Search, title: t("1. Find your game"), text: t("Paste the Roblox link or type the game's name.") },
               { icon: ThumbsUp, title: t("2. Request or vote"), text: t("Every account gets one vote per game. Share it with friends!") },
               { icon: Sparkles, title: t("3. We build it"), text: t("Top games get made first. You'll see it here and on our Discord.") },
+              { icon: Video, title: t("4. Post a video"), text: t("If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.") },
             ].map((s) => (
               <Card key={s.title} className="bg-glass border-border/50"><CardContent className="p-4 space-y-1.5">
                 <s.icon className="h-5 w-5 text-primary" />
@@ -158,6 +167,22 @@ export default function RequestScripts() {
                 <CardDescription>{t("Paste a Roblox game link, or type the game's name.")}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
+                {ban ? (
+                  <div className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm">
+                    <p className="flex items-center gap-2 font-semibold text-red-300"><Ban className="h-4 w-4 shrink-0" />{t("You can't request new games right now")}</p>
+                    <p className="mt-1 text-muted-foreground">{ban}</p>
+                  </div>
+                ) : (
+                  <div className="rounded-lg border border-amber-400/40 bg-amber-500/10 p-3 text-sm space-y-2">
+                    <p className="flex items-center gap-2 font-semibold text-amber-300"><Video className="h-4 w-4 shrink-0" />{t("If you request a game, you post a video of it")}</p>
+                    <p className="text-foreground/90">{t("When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.")}</p>
+                    <p className="text-xs text-muted-foreground">{t("Approved video = free 1-week key. No video = no new requests for 30 days.")}</p>
+                    <label className="flex cursor-pointer items-start gap-2 rounded-md border border-border/60 bg-background/40 p-2.5">
+                      <Checkbox checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
+                      <span className="font-medium">{t("I'll post a video within 48 hours if this script gets made.")}</span>
+                    </label>
+                  </div>
+                )}
                 <form onSubmit={search} className="flex gap-2">
                   <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("e.g. roblox.com/games/123… or Build A Boat")} maxLength={200} />
                   <Button type="submit" disabled={searching || query.trim().length < 2} className="shrink-0 gap-1.5">
@@ -165,6 +190,9 @@ export default function RequestScripts() {
                   </Button>
                 </form>
                 {found && found.length === 0 && <p className="text-sm text-muted-foreground">{t("No games found. Try the exact name or paste the game link.")}</p>}
+                {found && found.some((g) => !g.covered && !g.request) && !agreed && !ban && (
+                  <p className="text-xs font-medium text-amber-300">{t("Tick the box above to request a new game. Voting doesn't need it.")}</p>
+                )}
                 {found && found.length > 0 && (
                   <div className="divide-y divide-border/60 rounded-lg border border-border/60">
                     {found.map((g) => (
@@ -179,7 +207,7 @@ export default function RequestScripts() {
                         ) : g.request && g.request.status !== "requested" ? (
                           <span className="shrink-0">{badge(g.request.status)}</span>
                         ) : (
-                          <Button size="sm" onClick={() => request(g)} disabled={busy === g.place_id} className="shrink-0 gap-1.5">
+                          <Button size="sm" onClick={() => request(g)} disabled={busy === g.place_id || (!g.request && (!agreed || !!ban))} className="shrink-0 gap-1.5">
                             {busy === g.place_id ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ThumbsUp className="h-3.5 w-3.5" />}
                             {g.request ? `${t("Vote")} (${g.request.vote_count})` : t("Request")}
                           </Button>
