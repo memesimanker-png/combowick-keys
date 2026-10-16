@@ -103,7 +103,7 @@ const VIDEO_HOURS = 48;
 const BAN_DAYS = 30;
 const HOW_TO = [
   "**How to send it**",
-  "1. Record **3–5 minutes** of the script working in the game.",
+  "1. Record **3–5 minutes** of the script working in the game. Want your name hidden? Use the script's **Streamer** tab.",
   "2. Upload it to **YouTube** or **TikTok**.",
   "3. Press **Submit video** below and paste the link.",
   "-# No Nitro needed. You send a link, not a file.",

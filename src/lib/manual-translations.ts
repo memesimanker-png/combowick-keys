@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Tu veux cacher ton pseudo dans la vidéo ? Utilise l'onglet Streamer du script.",
     "4. Post a video": "4. Publie une vidéo",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Si tu l'as demandé, publie une vidéo de 3 à 5 min sur YouTube ou TikTok dans les 48 heures. Vidéo validée = clé gratuite d'1 semaine.",
     "If you request a game, you post a video of it": "Si tu demandes un jeu, tu publies une vidéo dessus",
@@ -693,6 +694,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "¿Quieres ocultar tu nombre en el video? Usa la pestaña Streamer del script.",
     "4. Post a video": "4. Sube un video",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Si lo pediste tú, sube un video de 3 a 5 min a YouTube o TikTok en 48 horas. Video aprobado = clave gratis de 1 semana.",
     "If you request a game, you post a video of it": "Si pides un juego, subes un video de él",
@@ -1382,6 +1384,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Du willst deinen Namen im Video verstecken? Nutz den Streamer-Tab im Script.",
     "4. Post a video": "4. Lade ein Video hoch",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Wenn du es angefragt hast, lade innerhalb von 48 Stunden ein 3–5 Min. Video auf YouTube oder TikTok hoch. Video angenommen = 1 Woche Key gratis.",
     "If you request a game, you post a video of it": "Wenn du ein Spiel anfragst, machst du ein Video dazu",
@@ -2071,6 +2074,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Quer esconder seu nome no vídeo? Use a aba Streamer do script.",
     "4. Post a video": "4. Poste um vídeo",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Se você pediu, poste um vídeo de 3 a 5 min no YouTube ou TikTok em até 48 horas. Vídeo aprovado = chave grátis de 1 semana.",
     "If you request a game, you post a video of it": "Se você pedir um jogo, você posta um vídeo dele",
@@ -2760,6 +2764,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Хочешь скрыть свой ник на видео? Используй вкладку Streamer в скрипте.",
     "4. Post a video": "4. Выложи видео",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Если это твой запрос, выложи видео на 3–5 минут на YouTube или TikTok в течение 48 часов. Видео одобрено = бесплатный ключ на 1 неделю.",
     "If you request a game, you post a video of it": "Запросил игру — выложи по ней видео",
@@ -3449,6 +3454,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "想在视频里隐藏你的名字？使用脚本里的 Streamer 标签页。",
     "4. Post a video": "4. 发布视频",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "如果是你申请的，请在 48 小时内在 YouTube 或 TikTok 发布一段 3–5 分钟的视频。视频通过 = 免费 1 周密钥。",
     "If you request a game, you post a video of it": "申请游戏，就要发布它的视频",
@@ -4138,6 +4144,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "영상에서 이름을 숨기고 싶다면 스크립트의 Streamer 탭을 사용하세요.",
     "4. Post a video": "4. 영상 올리기",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "직접 요청했다면 48시간 안에 YouTube나 TikTok에 3–5분 영상을 올려 주세요. 영상 승인 = 1주일 무료 키.",
     "If you request a game, you post a video of it": "게임을 요청하면 그 게임 영상을 올려야 해요",
@@ -4827,6 +4834,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "อยากซ่อนชื่อในวิดีโอ? ใช้แท็บ Streamer ในสคริปต์",
     "4. Post a video": "4. โพสต์วิดีโอ",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "ถ้าคุณเป็นคนขอ ให้โพสต์วิดีโอยาว 3–5 นาทีบน YouTube หรือ TikTok ภายใน 48 ชั่วโมง วิดีโอผ่าน = รับคีย์ฟรี 1 สัปดาห์",
     "If you request a game, you post a video of it": "ถ้าขอเกม คุณต้องโพสต์วิดีโอของเกมนั้น",
@@ -5516,6 +5524,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Mau sembunyikan nama kamu di video? Pakai tab Streamer di script.",
     "4. Post a video": "4. Unggah video",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Kalau kamu yang request, unggah video 3–5 menit ke YouTube atau TikTok dalam 48 jam. Video disetujui = key gratis 1 minggu.",
     "If you request a game, you post a video of it": "Kalau kamu request game, kamu wajib unggah videonya",
@@ -6205,6 +6214,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Gusto mong itago ang pangalan mo sa video? Gamitin ang Streamer tab ng script.",
     "4. Post a video": "4. Mag-post ng video",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Kung ikaw ang nag-request, mag-post ng 3–5 min na video sa YouTube o TikTok sa loob ng 48 oras. Na-approve na video = libreng 1-week key.",
     "If you request a game, you post a video of it": "Kung mag-request ka ng game, mag-po-post ka ng video nito",
@@ -6894,6 +6904,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Want your name hidden in the video? Use the script's Streamer tab.": "Muốn ẩn tên của bạn trong video? Dùng tab Streamer trong script.",
     "4. Post a video": "4. Đăng video",
     "If you requested it, post a 3–5 min video on YouTube or TikTok within 48 hours. Approved video = free 1-week key.": "Nếu bạn là người yêu cầu, hãy đăng video 3–5 phút lên YouTube hoặc TikTok trong 48 giờ. Video được duyệt = key miễn phí 1 tuần.",
     "If you request a game, you post a video of it": "Nếu bạn yêu cầu một game, bạn sẽ đăng video về nó",

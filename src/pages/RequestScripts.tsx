@@ -176,6 +176,7 @@ export default function RequestScripts() {
                   <div className="rounded-lg border border-amber-400/40 bg-amber-500/10 p-3 text-sm space-y-2">
                     <p className="flex items-center gap-2 font-semibold text-amber-300"><Video className="h-4 w-4 shrink-0" />{t("If you request a game, you post a video of it")}</p>
                     <p className="text-foreground/90">{t("When your script is out, you have 48 hours to post a 3–5 min video of it on YouTube or TikTok and send us the link. No Nitro needed.")}</p>
+                    <p className="text-xs text-muted-foreground">{t("Want your name hidden in the video? Use the script's Streamer tab.")}</p>
                     <p className="text-xs text-muted-foreground">{t("Approved video = free 1-week key. No video = no new requests for 30 days.")}</p>
                     <label className="flex cursor-pointer items-start gap-2 rounded-md border border-border/60 bg-background/40 p-2.5">
                       <Checkbox checked={agreed} onCheckedChange={(v) => setAgreed(v === true)} className="mt-0.5" />
