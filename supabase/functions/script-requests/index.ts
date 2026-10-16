@@ -97,14 +97,22 @@ const discordIdOf = (u: any): string | null => {
 const REWARD_TEXT = "🎥 **Get a free week:** record **3-5 minutes** using the script with **Streamer Mode ON**, then tap **Submit video**. Once staff approve it, you get a **1-week key** for this game.";
 const CRON_SECRET = Deno.env.get("DISCORD_CRON_SECRET") ?? "";
 
-// DM everyone who voted (Discord sign-ins only) that their game is out.
-async function notifyVoters(row: any) {
+// Discord ids of everyone who requested/voted (Discord sign-ins only), deduped.
+async function voterDiscordIds(row: any): Promise<string[]> {
   const { data: votes } = await admin.from("script_request_votes").select("user_id, discord_id").eq("request_id", row.id).limit(500);
-  let sent = 0;
+  const ids = new Set<string>();
   for (const v of votes ?? []) {
     let discordId: string | null = v.discord_id;
     if (!discordId) { const { data } = await admin.auth.admin.getUserById(v.user_id); discordId = discordIdOf(data?.user); }
-    if (!discordId) continue;
+    if (discordId) ids.add(String(discordId));
+  }
+  return [...ids];
+}
+
+// DM everyone who voted that their game is out.
+async function notifyVoters(row: any, ids: string[]) {
+  let sent = 0;
+  for (const discordId of ids) {
     const dm = await discord("/users/@me/channels", "POST", { recipient_id: discordId });
     if (dm.status !== 200) continue;
     const r = await discord(`/channels/${dm.data.id}/messages`, "POST", {
@@ -130,13 +138,18 @@ async function notifyVoters(row: any) {
 async function applyStatus(id: number, status: string, note: string | null) {
   const { data: row, error } = await admin.from("script_requests").update({ status, admin_note: note, updated_at: new Date().toISOString(), released_at: status === "released" ? new Date().toISOString() : null }).eq("id", id).select().single();
   if (error) throw new Error(error.message);
+  const voters = status === "released" ? await voterDiscordIds(row) : [];
+  // ping the voters on the forum post too (owner 2026-10-16: it only posted, nobody got pinged); Discord caps a message at 100 user pings
+  const pinged = voters.slice(0, 100);
   if (row.discord_thread_id) {
     const tag = status === "requested" ? TAGS.new_game : (TAGS as any)[status];
     await discord(`/channels/${row.discord_thread_id}`, "PATCH", { applied_tags: [tag], archived: false });
     const msg = status === "in_progress" ? `🛠️ **We're working on ${row.game_name}!**`
       : status === "released" ? `✅ **${row.game_name} is out!** Get a key at ${SITE}/keys and run the script.`
       : status === "declined" ? `⛔ **${row.game_name} won't be made.**${note ? " " + note : ""}` : null;
-    if (status === "released") await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { allowed_mentions: { parse: [] }, flags: 1 << 15, components: [{ type: 17, accent_color: 0x2ecc71, components: [
+    if (status === "released") await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { allowed_mentions: { parse: [], users: pinged }, flags: 1 << 15, components: [
+    ...(pinged.length ? [{ type: 10, content: pinged.map((d) => `<@${d}>`).join(" ") + ` your requested script is out 🔥` }] : []),
+    { type: 17, accent_color: 0x2ecc71, components: [
       { type: 10, content: `### ✅ ${row.game_name} is out!\nGet a key at ${SITE}/keys and run the script.` },
       { type: 14, divider: true, spacing: 1 },
       { type: 10, content: REWARD_TEXT + "\n-# Only people who requested or voted for this game can claim it." },
@@ -144,7 +157,7 @@ async function applyStatus(id: number, status: string, note: string | null) {
     ] }] });
     else if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
   }
-  const notified = status === "released" ? await notifyVoters(row) : 0;
+  const notified = status === "released" ? await notifyVoters(row, voters) : 0;
   return { row, notified };
 }
 
