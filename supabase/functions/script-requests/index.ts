@@ -169,6 +169,25 @@ function voterDM(row: any) {
     videoButtons(row),
   ] }] };
 }
+async function requesterIdOf(row: any): Promise<string | null> {
+  if (!row.created_by) return null;
+  const { data: v } = await admin.from("script_request_votes").select("discord_id").eq("request_id", row.id).eq("user_id", row.created_by).maybeSingle();
+  if (v?.discord_id) return v.discord_id;
+  const { data } = await admin.auth.admin.getUserById(row.created_by);
+  return discordIdOf(data?.user);
+}
+function inProgressPost(row: any, pinged: string[]) {
+  return { allowed_mentions: { parse: [], users: pinged }, flags: 1 << 15, components: [
+    ...(pinged.length ? [{ type: 10, content: pinged.map((d) => `<@${d}>`).join(" ") + " we're working on your request 🛠️" }] : []),
+    { type: 17, accent_color: 0xf5b700, components: [
+      { type: 9, components: [{ type: 10, content: `### 🛠️ We're working on ${row.game_name}!\nYou'll get pinged here and a DM when it's out.` }], accessory: { type: 11, media: { url: row.icon_url ?? ICON } } },
+      { type: 14, divider: true, spacing: 1 },
+      { type: 10, content: `🎥 **Heads up${row._requester ? ` <@${row._requester}>` : ""}:** when it's out, the requester has **${VIDEO_HOURS} hours** to post a 3–5 min video of it on YouTube or TikTok. No Nitro needed. Use the script's **Streamer** tab to hide your name.` },
+      { type: 10, content: "-# Voted for it? You can post a video too, for a free 1-week key." },
+    ] },
+  ] };
+}
+
 // DM everyone who voted that their game is out (the requester gets the deadline version).
 async function notifyVoters(row: any, ids: string[]) {
   let sent = 0;
@@ -179,7 +198,8 @@ async function notifyVoters(row: any, ids: string[]) {
 async function applyStatus(id: number, status: string, note: string | null) {
   const { data: row, error } = await admin.from("script_requests").update({ status, admin_note: note, updated_at: new Date().toISOString(), released_at: status === "released" ? new Date().toISOString() : null }).eq("id", id).select().single();
   if (error) throw new Error(error.message);
-  const voters = status === "released" ? await voterDiscordIds(row) : [];
+  const voters = status === "released" || status === "in_progress" ? await voterDiscordIds(row) : [];
+  if (status === "in_progress") row._requester = await requesterIdOf(row);
   if (status === "released" && row.created_by && !row.video_state) {
     const { data: v } = await admin.from("script_request_votes").select("discord_id").eq("request_id", row.id).eq("user_id", row.created_by).maybeSingle();
     let rid: string | null = v?.discord_id ?? null;
@@ -207,6 +227,8 @@ async function applyStatus(id: number, status: string, note: string | null) {
       { type: 10, content: REWARD_TEXT + "\n-# Only people who requested or voted for this game can use the button." },
       videoButtons(row),
     ] }] });
+    // in progress: ping the voters too, and give the requester a heads-up about the video before it drops (owner 2026-10-16)
+    else if (status === "in_progress") await discord(`/channels/${row.discord_thread_id}/messages`, "POST", inProgressPost(row, pinged));
     else if (msg) await discord(`/channels/${row.discord_thread_id}/messages`, "POST", { content: msg, allowed_mentions: { parse: [] } });
   }
   const notified = status === "released" ? await notifyVoters(row, voters) : 0;
