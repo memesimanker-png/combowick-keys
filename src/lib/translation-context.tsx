@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
-import { LangCode, EN_TEXTS } from "./translations";
+import { LangCode, EN_TEXTS, applyDir } from "./translations";
 import { MANUAL_TRANSLATIONS } from "./manual-translations";
 import { supabase } from "@/integrations/supabase/client";
 import { startAutoTranslator, stopAutoTranslator, setAutoTranslateBusyListener, setTranslationOutageListener, reportTranslationOutage } from "./auto-translator";
@@ -19,6 +19,7 @@ export const OUTAGE_MESSAGES: Record<string, string> = {
   fil: "Hindi gumagana ang pagsasalin ngayon — subukan muli mamaya!",
   es: "La traducción no funciona en este momento — ¡inténtalo más tarde!",
   vi: "Bản dịch hiện không hoạt động — vui lòng thử lại sau!",
+  ar: "الترجمة لا تعمل حاليًا — حاول مرة أخرى لاحقًا!",
 };
 
 interface TranslationContextType {
@@ -84,7 +85,7 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
   const [currentLanguage, setCurrentLanguage] = useState<LangCode>(() => {
     const saved = localStorage.getItem("combowick-lang");
     if (saved) return saved as LangCode;
-    const supported: LangCode[] = ["en","fr","th","ko","zh-CN","de","ru","id","pt","fil","es","vi"];
+    const supported: LangCode[] = ["en","fr","th","ko","zh-CN","de","ru","id","pt","fil","es","vi","ar"];
     const navLang = (navigator.language || "en").toLowerCase();
     const exact = supported.find((c) => c.toLowerCase() === navLang);
     if (exact) return exact;
@@ -108,6 +109,8 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
       RU: "ru", BY: "ru", KZ: "ru",
       CN: "zh-CN", TW: "zh-CN", HK: "zh-CN", SG: "zh-CN",
       KR: "ko", TH: "th", ID: "id", PH: "fil", VN: "vi",
+      SA: "ar", AE: "ar", KW: "ar", QA: "ar", BH: "ar", OM: "ar", YE: "ar", IQ: "ar", JO: "ar", LB: "ar", SY: "ar", PS: "ar",
+      EG: "ar", LY: "ar", SD: "ar", TN: "ar", DZ: "ar", MA: "ar", MR: "ar",
     };
     // Cloudflare edge geo (unlimited, same-origin) — store is behind Cloudflare, so
     // /cdn-cgi/trace returns loc=<country>. Replaces ipapi.co (was rate-limited → 429).
@@ -120,7 +123,7 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
         if (detected && detected !== langRef.current) {
           setCurrentLanguage(detected);
           langRef.current = detected;
-          document.documentElement.lang = detected;
+          applyDir(detected);
         }
       })
       .catch(() => { localStorage.setItem("combowick-geo-checked", "1"); });
@@ -145,12 +148,13 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
     setCurrentLanguage(code);
     langRef.current = code;
     localStorage.setItem("combowick-lang", langCode);
-    document.documentElement.lang = langCode;
+    applyDir(langCode);
   }, []);
 
   // Manual-only: translations are seeded statically into the cache (MANUAL_TRANSLATIONS),
   // so on language change we just re-render. No translation API, no DOM auto-translator.
   useEffect(() => {
+    applyDir(currentLanguage); // also covers the saved/browser language on first load
     forceUpdate((n) => n + 1);
   }, [currentLanguage]);
 

@@ -1,4 +1,4 @@
-export type LangCode = "en" | "fr" | "th" | "ko" | "zh-CN" | "de" | "ru" | "id" | "pt" | "fil" | "es" | "vi";
+export type LangCode = "en" | "fr" | "th" | "ko" | "zh-CN" | "de" | "ru" | "id" | "pt" | "fil" | "es" | "vi" | "ar";
 
 export const LANGUAGES: { code: LangCode; label: string; flag: string }[] = [
   { code: "en", label: "English", flag: "🇺🇸" },
@@ -13,7 +13,15 @@ export const LANGUAGES: { code: LangCode; label: string; flag: string }[] = [
   { code: "id", label: "Bahasa Indonesia", flag: "🇮🇩" },
   { code: "fil", label: "Filipino", flag: "🇵🇭" },
   { code: "vi", label: "Tiếng Việt", flag: "🇻🇳" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
 ];
+
+// Right-to-left languages: the page flips direction (keys, code and inputs stay left-to-right, see index.css).
+export const RTL_LANGS = new Set<string>(["ar"]);
+export const applyDir = (lang: string) => {
+  document.documentElement.lang = lang;
+  document.documentElement.dir = RTL_LANGS.has(lang) ? "rtl" : "ltr";
+};
 
 // English-only base texts. All other languages are translated via AI and cached in the database.
 export const EN_TEXTS: Record<string, string> = {

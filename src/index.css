@@ -314,3 +314,12 @@
     .cw-glow { --glow-speed: 6s; animation: none; box-shadow: 0 0 10px hsl(var(--glow) / 0.25); }
   }
 }
+
+/* Arabic / RTL (2026-10-17): the page flips, but keys, loadstrings, code and inputs stay left-to-right */
+[dir="rtl"] code, [dir="rtl"] pre, [dir="rtl"] kbd, [dir="rtl"] samp,
+[dir="rtl"] input, [dir="rtl"] textarea, [dir="rtl"] .font-mono, [dir="rtl"] [data-ltr] {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+[dir="rtl"] input, [dir="rtl"] textarea { text-align: left; }
+[dir="rtl"] body { font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", Arial, sans-serif; }
