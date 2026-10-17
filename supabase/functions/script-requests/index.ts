@@ -306,6 +306,15 @@ Deno.serve(async (req) => {
       return json({ success: true, released: true, game: r.game_name, notified });
     }
 
+    // staff tools (release_request.cjs status ...): same as the website's admin buttons, authed by the cron secret
+    if (action === "cron_set_status") {
+      if (!CRON_SECRET || req.headers.get("x-cw-cron") !== CRON_SECRET) return fail("forbidden", 403);
+      const id = Number(b.id), status = String(b.status), note = b.note ? String(b.note).slice(0, 300) : null;
+      if (!["requested", "in_progress", "released", "declined"].includes(status)) return fail("Bad status.");
+      const { row, notified } = await applyStatus(id, status, note);
+      return json({ success: true, game: row.game_name, status: row.status, notified });
+    }
+
     // cron (pg_cron every 10 min): requester video deadlines -> done / reminders / missed
     if (action === "video_tick") {
       if (!CRON_SECRET || req.headers.get("x-cw-cron") !== CRON_SECRET) return fail("forbidden", 403);
