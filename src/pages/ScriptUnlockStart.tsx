@@ -29,6 +29,14 @@ export default function ScriptUnlockStart() {
   const [resolving, setResolving] = useState(!params.get("slug"));
   const fired = useRef(false);
   const universe = params.get("u"); // key-system universe id (from the YouTube game picker)
+  // ?lv=1 (our YouTube short links): skip the script page and go straight into the Linkvertise steps.
+  const direct = params.get("lv") === "1";
+  const [waited, setWaited] = useState(false);
+  useEffect(() => {
+    if (!direct) return;
+    const t = setTimeout(() => setWaited(true), 1500); // don't wait forever for the admin Linkvertise links
+    return () => clearTimeout(t);
+  }, [direct]);
 
   // Resolve a universe id → this store's script slug (scripts carry game_universe_id).
   useEffect(() => {
@@ -78,9 +86,16 @@ export default function ScriptUnlockStart() {
   // The gate there uses CPALead offers; Linkvertise only if switched on and the visitor has no offers.
   useEffect(() => {
     if (fired.current || resolving || !slug) return;
+    if (direct) {
+      if (links[0] === null && !waited) return; // wait for the admin link (or the 1.5 s timeout)
+      fired.current = true;
+      launch();
+      return;
+    }
     fired.current = true;
     navigate(`/scripts/${encodeURIComponent(slug)}?unlock=1`, { replace: true });
-  }, [slug, resolving, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, resolving, navigate, direct, links, waited]);
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
@@ -94,8 +109,8 @@ export default function ScriptUnlockStart() {
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Unlock Your Script</CardTitle>
-            <CardDescription>Two quick steps to reveal the loadstring.</CardDescription>
+            <CardTitle>Opening your script</CardTitle>
+            <CardDescription>Taking you to the download page…</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8 gap-4">
