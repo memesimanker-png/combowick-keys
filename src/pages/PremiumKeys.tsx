@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   Key, Shield, Zap, Check, Star,
-  ChevronDown, ChevronUp, Unlock, RefreshCw, Award, MessageCircle, Code2, ExternalLink, Crown
+  ChevronDown, ChevronUp, Unlock, RefreshCw, Award, MessageCircle, Code2, ExternalLink, Crown,
+  Lock, CreditCard, Wallet
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { VideoBackground } from "@/components/VideoBackground";
@@ -20,7 +21,7 @@ import { DonateCard } from "@/components/DonateCard";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { OwnerCheckoutModal } from "@/components/OwnerCheckoutModal";
 import { BugReportWidget } from "@/components/BugReportWidget";
-import { PayoneerOrderModal } from "@/components/PayoneerOrderModal";
+import { PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
 
 
 const tiers = [
@@ -116,24 +117,25 @@ export default function PremiumKeys() {
   const [paypalClientId, setPaypalClientId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [ownerOpen, setOwnerOpen] = useState(false);
-  const [payoneerOpen, setPayoneerOpen] = useState(false);
-  const [payoneerPlan, setPayoneerPlan] = useState("90d");
-  const openPayoneer = (plan: string) => {
-    setPayoneerPlan(plan);
-    try { sessionStorage.setItem("cw_po_plan", plan); } catch { /* ignore */ }
-    setPayoneerOpen(true);
-  };
-  // back from the Discord sign-in redirect: reopen the Payoneer order where the buyer left off
-  useEffect(() => {
-    let plan: string | null = null;
-    try { plan = sessionStorage.getItem("cw_po_plan"); } catch { /* ignore */ }
-    if (!plan) return;
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user?.identities?.some((x) => x.provider === "discord")) { setPayoneerPlan(plan as string); setPayoneerOpen(true); }
-    });
-  }, []);
+  const [checkoutMethod, setCheckoutMethod] = useState<"paypal" | "payoneer">("paypal");
   const { data: gameSettings } = usePaidGameSettings();
   const { data: keyDiscounts } = useKeyDiscounts();
+  // back from the Discord sign-in redirect (Payoneer tab of the checkout): reopen it where the buyer left off,
+  // once today's discounts are known so the lifetime price matches the sale
+  useEffect(() => {
+    if (!keyDiscounts) return;
+    let plan: string | null = null;
+    try { plan = sessionStorage.getItem(PO_RETURN_KEY); } catch { /* ignore */ }
+    if (!plan) return;
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session?.user?.identities?.some((x) => x.provider === "discord")) return;
+      const tier = tiers.find((x) => x.id === (plan === "lifetime" ? "lifetime" : "monthly"))!;
+      const disc = applyDiscount(tier.price, keyDiscounts.get(tier.id));
+      setSelectedTier(disc ? { ...tier, price: disc.final } : tier);
+      setCheckoutMethod("payoneer");
+      setModalOpen(true);
+    });
+  }, [keyDiscounts]);
 
   useEffect(() => {
     supabase.functions.invoke("paypal-config").then(({ data }) => {
@@ -148,6 +150,7 @@ export default function PremiumKeys() {
     }
     const disc = applyDiscount(tier.price, keyDiscounts?.get(tier.id));
     setSelectedTier(disc ? { ...tier, price: disc.final } : tier);
+    setCheckoutMethod("paypal");
     setModalOpen(true);
   };
 
@@ -155,11 +158,9 @@ export default function PremiumKeys() {
     <Layout>
       <DiscountNotification />
       <OwnerCheckoutModal isOpen={ownerOpen} onClose={() => setOwnerOpen(false)} paypalClientId={paypalClientId} />
-      <PayoneerOrderModal isOpen={payoneerOpen} initialPlan={payoneerPlan}
-        onClose={() => { setPayoneerOpen(false); try { sessionStorage.removeItem("cw_po_plan"); } catch { /* ignore */ } }} />
       <SEOHead
         title="ComboWick Premium Keys — Plans from $5 to $49.99"
-        description="Buy a ComboWick HWID premium key. 7-day trial $5, monthly $9.99, lifetime $49.99. Instant PayPal delivery, full premium script access."
+        description="Buy a ComboWick HWID premium key. 7-day trial $5, monthly $9.99, lifetime $49.99. Pay with PayPal, card or Payoneer, full premium script access."
         breadcrumbs={[{ name: "Home", url: "/" }, { name: "Premium Keys", url: "/premium-keys" }]}
       />
       {/* Hero */}
@@ -263,21 +264,16 @@ export default function PremiumKeys() {
               );
             })}
           </div>
-        </div>
-      </section>
 
-      {/* No PayPal? Payoneer for the 90-day pack and Lifetime (Payoneer has a $20 minimum) */}
-      <section className="pb-6">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-4 rounded-2xl border border-orange-500/30 bg-orange-500/5 p-5 sm:flex-row sm:items-center">
-            <div className="flex-1">
-              <h3 className="font-heading text-lg font-bold text-orange-300">{t("No PayPal? Pay with Payoneer")}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{t("Sign in with Discord, pick a plan, and we open a private ticket for you. Pay the Payoneer request sent to your email, and your key arrives in your Discord DMs.")}</p>
+          {/* Accepted payment methods (picked inside the checkout after "Purchase Now") */}
+          <div className="mt-8 flex flex-col items-center gap-3 text-center">
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t("We accept")}</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><Lock className="h-3.5 w-3.5 text-primary" /> PayPal</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><CreditCard className="h-3.5 w-3.5 text-primary" /> {t("Credit / Debit")}</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><Wallet className="h-3.5 w-3.5 text-[#FF4800]" /> Payoneer</span>
             </div>
-            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              <Button onClick={() => openPayoneer("90d")} className="bg-orange-600 font-bold hover:bg-orange-700">{t("90 Days")} · $20</Button>
-              <Button onClick={() => openPayoneer("lifetime")} variant="outline" className="border-orange-500/50 font-bold">{t("Lifetime")} · $49.99</Button>
-            </div>
+            <p className="max-w-xl text-xs text-muted-foreground">{t("No PayPal? Choose Payoneer at checkout: Lifetime Key, or the 60 Days Key for $21.99. Your key is sent to your Discord DMs.")}</p>
           </div>
         </div>
       </section>
@@ -478,6 +474,7 @@ export default function PremiumKeys() {
             script: (selectedTier as any).script,
           }}
           paypalClientId={paypalClientId}
+          initialMethod={checkoutMethod}
         />
       )}
       <BugReportWidget page="premium-key" />

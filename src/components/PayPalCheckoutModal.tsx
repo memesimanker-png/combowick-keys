@@ -3,6 +3,7 @@ import { PayPalScriptProvider, PayPalButtons, FUNDING } from "@paypal/react-payp
 import { X, Loader2, CheckCircle, Zap, Lock, CreditCard, Clock, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
+import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
 
 interface PayPalCheckoutModalProps {
   isOpen: boolean;
@@ -16,10 +17,19 @@ interface PayPalCheckoutModalProps {
     script?: string;
   };
   paypalClientId: string;
+  initialMethod?: "paypal" | "payoneer";
 }
 
-export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId }: PayPalCheckoutModalProps) {
+export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, initialMethod = "paypal" }: PayPalCheckoutModalProps) {
   const { t } = useTranslation();
+  // PayPal/card checks out here; Payoneer opens a Discord ticket (Payoneer needs $20+, so the lifetime key keeps its
+  // plan at today's sale price and the cheaper keys become the 60-day pack). Paid-game scripts stay PayPal-only.
+  const payoneerOk = !tier.script && !tier.isSubscription;
+  const payoneerPlan = tier.id === "lifetime" ? "lifetime" : "60d";
+  const payoneerPrice = payoneerPlan === "lifetime" ? Math.max(20, tier.price) : PAYONEER_PLANS["60d"].price;
+  const [method, setMethod] = useState<"paypal" | "payoneer">(initialMethod);
+  useEffect(() => { if (isOpen) setMethod(payoneerOk ? initialMethod : "paypal"); }, [isOpen, initialMethod, payoneerOk]);
+  const onPayoneer = method === "payoneer" && payoneerOk;
   const [error, setError] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
   const [pending, setPending] = useState(false);
@@ -216,6 +226,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId }: P
   // Block accidental close while we're mid-payment OR a result screen is up.
   const guardedClose = () => {
     if (processing || success || pending) return;
+    try { sessionStorage.removeItem(PO_RETURN_KEY); } catch { /* ignore */ }
     onClose();
   };
 
@@ -305,15 +316,44 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId }: P
             </div>
           ) : (
             <>
-              <div className="text-center mb-6">
-                <h2 className="font-heading text-xl font-bold">{tier.name}</h2>
+              <div className="text-center mb-5">
+                <h2 className="font-heading text-xl font-bold">{onPayoneer ? t(PAYONEER_PLANS[payoneerPlan].name) : tier.name}</h2>
                 <div className="mt-2 inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1" data-no-translate>
                   <Zap className="w-3.5 h-3.5 text-primary" />
-                  <span className="text-primary font-bold text-lg">${displayPrice}</span>
+                  <span className="text-primary font-bold text-lg">${onPayoneer ? payoneerPrice : displayPrice}</span>
                   <span className="text-muted-foreground text-sm">{isSubscription ? t("/month") : t(" one-time")}</span>
                 </div>
               </div>
 
+              {payoneerOk && (
+                <div className="mb-5">
+                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-2 text-center">{t("Payment method")}</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {([
+                      { id: "paypal", label: t("PayPal / Card"), sub: t("Instant key") },
+                      { id: "payoneer", label: "Payoneer", sub: t("Key sent to your Discord DMs") },
+                    ] as const).map((m) => (
+                      <button key={m.id} type="button" onClick={() => setMethod(m.id)}
+                        className={`rounded-lg border p-3 text-left transition-all ${method === m.id ? "border-primary bg-primary/15" : "border-border bg-secondary/40 hover:bg-secondary"}`}>
+                        <div className="flex items-center gap-2 text-sm font-semibold">
+                          <span className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 ${method === m.id ? "border-primary bg-primary" : "border-muted-foreground/50"}`} />
+                          {m.label}
+                        </div>
+                        <div className="mt-1 pl-[22px] text-[11px] leading-snug text-muted-foreground">{m.sub}</div>
+                      </button>
+                    ))}
+                  </div>
+                  {onPayoneer && payoneerPlan === "60d" && (
+                    <p className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-[11px] leading-relaxed text-amber-200">
+                      {t("Payoneer has a $20 minimum, so with Payoneer you get the 60 Days Key: 2 months of every game for $21.99.")}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {onPayoneer ? (
+                <PayoneerOrderForm plan={payoneerPlan} price={payoneerPrice} />
+              ) : (<>
               {tier.isSubscription && (
                 <div className="mb-5 rounded-lg border border-primary/20 bg-primary/5 p-3" data-no-translate>
                   <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">{t("Choose your plan")}</p>
@@ -444,6 +484,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId }: P
               <div className="flex items-center justify-center gap-1.5 mt-4 text-[10px] text-muted-foreground">
                 <Lock className="w-3 h-3" /> {t("Secure payment powered by PayPal")}
               </div>
+              </>)}
             </>
           )}
         </div>
