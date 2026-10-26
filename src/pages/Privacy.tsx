@@ -18,7 +18,7 @@ export default function Privacy() {
               <Shield className="h-10 w-10 text-primary" />
               Privacy Policy
             </h1>
-            <p className="text-muted-foreground">Last Updated: January 20, 2026</p>
+            <p className="text-muted-foreground">Last Updated: October 26, 2026</p>
           </div>
 
           <Card className="p-8 bg-glass mb-6">
@@ -61,11 +61,22 @@ export default function Privacy() {
 • Supabase: Provides secure authentication and encrypted database hosting for user accounts
 • Vercel: Powers our website hosting and global content delivery network for fast page loads
 • Google AdSense: Displays advertising on our site — may use cookies for personalized ad delivery based on your browsing history
+• Payoneer: Processes Payoneer payments for orders placed through our Discord ticket flow
+• Discord: Sign-in with Discord, our community server, and our Discord bot (see section 4)
 
 Each provider has access only to the minimum information necessary to perform their function and is contractually obligated to maintain confidentiality and data security.`
               },
               {
-                title: "4. Cookies and Tracking Technologies",
+                title: "4. COMBO_WICK Discord Bot",
+                content: `Our Discord bot (COMBO_WICK) runs only in our own community server. It handles support tickets, key delivery, giveaways and order tickets.
+• What it reads: messages inside support tickets and channels of our server, your Discord user ID, username, server roles and your Discord app language
+• Why: to save ticket transcripts so staff can review past support and payment cases, to answer common questions automatically, to reply to you in your language, and to keep the server safe from spam and scams
+• Ticket transcripts: stored privately, visible only to our staff, deleted after 30 days
+• What we never do: we do not sell or share message content, use it for advertising, or use it to train AI models
+• Your choices: you can ask staff to delete your ticket transcripts at any time by opening a ticket or emailing support@combowick.com`
+              },
+              {
+                title: "5. Cookies and Tracking Technologies",
                 content: `We use cookies and similar technologies to enhance your experience:
 • Essential Cookies: Required for user authentication, session management, and core site functionality
 • Analytics Cookies: Help us understand how visitors navigate and use our site to improve the experience
@@ -74,7 +85,7 @@ Each provider has access only to the minimum information necessary to perform th
 You can manage cookie preferences through your browser settings. Disabling essential cookies may prevent you from logging in or completing purchases. Most browsers allow selective cookie blocking.`
               },
               {
-                title: "5. Data Security",
+                title: "6. Data Security",
                 content: `We implement comprehensive security measures to protect your information:
 • SSL/TLS encryption for all data transmitted between your browser and our servers
 • Secure password hashing using industry-standard algorithms — we never store plaintext passwords
@@ -86,7 +97,7 @@ You can manage cookie preferences through your browser settings. Disabling essen
 While we employ best-in-class security practices, no method of internet transmission is 100% secure. You are responsible for maintaining the confidentiality of your account credentials and should report any suspicious activity immediately.`
               },
               {
-                title: "6. Your Privacy Rights",
+                title: "7. Your Privacy Rights",
                 content: `Depending on your location, you may have the following rights under applicable data protection laws (including GDPR and CCPA):
 • Access: Request a copy of the personal data we hold about you
 • Correction: Update inaccurate or incomplete information in your profile
@@ -98,11 +109,11 @@ While we employ best-in-class security practices, no method of internet transmis
 To exercise any of these rights, contact us at support@combowick.com. We will respond within 30 days as required by law.`
               },
               {
-                title: "7. Children's Privacy",
+                title: "8. Children's Privacy",
                 content: `Our services are not intended for individuals under 13 years of age. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected information from a child, please contact us immediately at support@combowick.com, and we will take prompt steps to delete such information from our systems.`
               },
               {
-                title: "8. Data Retention",
+                title: "9. Data Retention",
                 content: `We retain your personal data only as long as necessary to fulfill the purposes outlined in this policy:
 • Account data is retained while your account is active and for 90 days after deletion request
 • Transaction records are kept for 7 years for legal and tax compliance
@@ -110,15 +121,15 @@ To exercise any of these rights, contact us at support@combowick.com. We will re
 • Analytics data is aggregated and anonymized after 26 months`
               },
               {
-                title: "9. International Data Transfers",
+                title: "10. International Data Transfers",
                 content: `Our servers are located in the United States. If you access our services from outside the US, your data may be transferred to and processed in the US. We ensure appropriate safeguards are in place for international transfers, including standard contractual clauses where required by law.`
               },
               {
-                title: "10. Changes to This Policy",
+                title: "11. Changes to This Policy",
                 content: `We may update this Privacy Policy periodically. Material changes will be communicated via email to registered users and prominently displayed on our website. Your continued use of our services after changes are posted constitutes acceptance of the updated policy. We encourage you to review this page regularly.`
               },
               {
-                title: "11. Contact Us",
+                title: "12. Contact Us",
                 content: `For privacy-related questions, data requests, or concerns about our data practices:
 • Email: support@combowick.com
 • Discord: discord.com/invite/ufrz9Zaqs8
