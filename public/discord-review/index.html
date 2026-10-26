@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>COMBO_WICK Bot: Message Content Use Case</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0b0b0d; color: #e8e8ea; font: 16px/1.55 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 8px; color: #f5b700; }
+  p.lead { color: #b9b9c0; margin: 0 0 32px; }
+  figure { margin: 0 0 40px; }
+  figcaption { margin-bottom: 10px; }
+  figcaption b { color: #f5b700; }
+  img { width: 100%; height: auto; border: 1px solid #2a2a30; border-radius: 10px; display: block; }
+</style>
+</head>
+<body>
+<main>
+  <h1>COMBO_WICK bot: why it needs Message Content</h1>
+  <p class="lead">Screenshots from our own community server (the bot runs only there). The bot runs our private support tickets. Closed tickets are deleted after 2 days, so the bot needs to read the ticket messages to save a staff-only transcript (encrypted, deleted after 30 days) and to auto-answer common questions in the member's language.</p>
+
+  <figure>
+    <figcaption><b>1. A support ticket opened by the bot.</b> The member and staff talk here. This is where the bot would read messages to save the transcript and suggest answers.</figcaption>
+    <img src="1-ticket.jpg" alt="Open support ticket created by the COMBO_WICK bot">
+  </figure>
+
+  <figure>
+    <figcaption><b>2. Ticket closed.</b> The bot moves it to closed tickets and deletes it after 2 days. Today everything said in the ticket is lost at that point.</figcaption>
+    <img src="2-ticket-closed.jpg" alt="Closed ticket message from the bot, auto-deletes in 2 days">
+  </figure>
+
+  <figure>
+    <figcaption><b>3. Current transcripts channel.</b> Without Message Content the bot can only log who opened and closed the ticket and for how long. With it, the bot would save the full conversation for staff.</figcaption>
+    <img src="3-transcripts.jpg" alt="Transcripts channel showing only ticket summaries">
+  </figure>
+
+  <figure>
+    <figcaption><b>4. Language picker.</b> The bot already replies to each member in their language (12 languages). With Message Content it would also answer common questions in tickets and our 7 language chats in the member's language, and flag scam links staff cannot read.</figcaption>
+    <img src="4-languages.jpg" alt="Language picker posted by the bot">
+  </figure>
+</main>
+</body>
+</html>
