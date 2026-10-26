@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Key, Shield, Zap, Check, Star,
   ChevronDown, ChevronUp, Unlock, RefreshCw, Award, MessageCircle, Code2, ExternalLink, Crown,
-  Lock, CreditCard, Wallet
+  Lock, CreditCard, Wallet, Gift
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { VideoBackground } from "@/components/VideoBackground";
@@ -272,6 +272,7 @@ export default function PremiumKeys() {
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><Lock className="h-3.5 w-3.5 text-primary" /> PayPal</span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><CreditCard className="h-3.5 w-3.5 text-primary" /> {t("Credit / Debit")}</span>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><Wallet className="h-3.5 w-3.5 text-[#FF4800]" /> Payoneer</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border px-3 py-1 text-xs font-medium text-muted-foreground"><Gift className="h-3.5 w-3.5" /> {t("Gift card")} <span className="text-[10px] font-bold uppercase text-primary">{t("Coming soon")}</span></span>
             </div>
             <p className="max-w-xl text-xs text-muted-foreground">{t("No PayPal? Choose Payoneer at checkout: Lifetime Key, or the 60 Days Key for $21.99. Your key is sent to your Discord DMs.")}</p>
           </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { PayPalScriptProvider, PayPalButtons, FUNDING } from "@paypal/react-paypal-js";
-import { X, Loader2, CheckCircle, Zap, Lock, CreditCard, Clock, Check } from "lucide-react";
+import { X, Loader2, CheckCircle, Zap, Lock, CreditCard, Clock, Check, Gift } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
@@ -342,6 +342,10 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                         <div className="mt-1 pl-[22px] text-[11px] leading-snug text-muted-foreground">{m.sub}</div>
                       </button>
                     ))}
+                    <div aria-disabled="true" className="col-span-2 flex cursor-not-allowed items-center justify-between gap-2 rounded-lg border border-dashed border-border bg-secondary/20 px-3 py-2.5 opacity-70">
+                      <span className="flex items-center gap-2 text-sm font-semibold"><Gift className="h-4 w-4 text-primary" /> {t("Gift card")}</span>
+                      <span className="rounded bg-primary/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">{t("Coming soon")}</span>
+                    </div>
                   </div>
                   {onPayoneer && payoneerPlan === "60d" && (
                     <p className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-[11px] leading-relaxed text-amber-200">

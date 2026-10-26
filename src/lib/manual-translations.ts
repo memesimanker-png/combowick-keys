@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Gift card": "Carte cadeau",
+    "Coming soon": "Bientôt",
     "Something went wrong. Please try again or open a ticket on Discord.": "Une erreur s'est produite. Réessaie ou ouvre un ticket sur Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Ta commande est enregistrée ! Ouvre ton ticket sur Discord — l'équipe t'y enverra ton lien de paiement Payoneer.",
     "Open my ticket": "Ouvrir mon ticket",
@@ -715,6 +717,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Gift card": "Tarjeta de regalo",
+    "Coming soon": "Próximamente",
     "Something went wrong. Please try again or open a ticket on Discord.": "Algo salió mal. Inténtalo de nuevo o abre un ticket en Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "¡Tu pedido está hecho! Abre tu ticket en Discord — el staff te enviará allí tu enlace de pago de Payoneer.",
     "Open my ticket": "Abrir mi ticket",
@@ -1426,6 +1430,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Gift card": "Geschenkkarte",
+    "Coming soon": "Demnächst",
     "Something went wrong. Please try again or open a ticket on Discord.": "Etwas ist schiefgelaufen. Versuch es erneut oder öffne ein Ticket auf Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Deine Bestellung ist da! Öffne dein Ticket auf Discord — das Team schickt dir dort deinen Payoneer-Zahlungslink.",
     "Open my ticket": "Mein Ticket öffnen",
@@ -2137,6 +2143,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Gift card": "Gift card",
+    "Coming soon": "Em breve",
     "Something went wrong. Please try again or open a ticket on Discord.": "Algo deu errado. Tente de novo ou abra um ticket no Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Seu pedido foi feito! Abra seu ticket no Discord — a equipe vai enviar seu link de pagamento Payoneer lá.",
     "Open my ticket": "Abrir meu ticket",
@@ -2848,6 +2856,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Gift card": "Подарочная карта",
+    "Coming soon": "Скоро",
     "Something went wrong. Please try again or open a ticket on Discord.": "Что-то пошло не так. Попробуй ещё раз или открой тикет в Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Заказ принят! Открой свой тикет в Discord — команда пришлёт туда ссылку на оплату Payoneer.",
     "Open my ticket": "Открыть мой тикет",
@@ -3559,6 +3569,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Gift card": "礼品卡",
+    "Coming soon": "即将推出",
     "Something went wrong. Please try again or open a ticket on Discord.": "出错了。请重试,或在 Discord 上开一个工单。",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "订单已提交!在 Discord 打开你的工单 — 工作人员会在那里发给你 Payoneer 付款链接。",
     "Open my ticket": "打开我的工单",
@@ -4270,6 +4282,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Gift card": "기프트 카드",
+    "Coming soon": "곧 출시",
     "Something went wrong. Please try again or open a ticket on Discord.": "문제가 발생했어요. 다시 시도하거나 Discord에서 티켓을 열어 주세요.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "주문이 접수됐어요! Discord에서 티켓을 열어 주세요 — 스태프가 거기로 Payoneer 결제 링크를 보내드려요.",
     "Open my ticket": "내 티켓 열기",
@@ -4981,6 +4995,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Gift card": "บัตรของขวัญ",
+    "Coming soon": "เร็วๆ นี้",
     "Something went wrong. Please try again or open a ticket on Discord.": "เกิดข้อผิดพลาด ลองใหม่อีกครั้งหรือเปิดทิกเก็ตใน Discord",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "รับคำสั่งซื้อแล้ว! เปิดทิกเก็ตของคุณใน Discord — ทีมงานจะส่งลิงก์ชำระเงิน Payoneer ให้ที่นั่น",
     "Open my ticket": "เปิดทิกเก็ตของฉัน",
@@ -5692,6 +5708,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Gift card": "Kartu hadiah",
+    "Coming soon": "Segera hadir",
     "Something went wrong. Please try again or open a ticket on Discord.": "Terjadi kesalahan. Coba lagi atau buka tiket di Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Pesananmu sudah masuk! Buka tiketmu di Discord — staf akan mengirim link pembayaran Payoneer di sana.",
     "Open my ticket": "Buka tiket saya",
@@ -6403,6 +6421,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Gift card": "Gift card",
+    "Coming soon": "Malapit na",
     "Something went wrong. Please try again or open a ticket on Discord.": "May nagkamali. Subukan ulit o magbukas ng ticket sa Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Pasok na ang order mo! Buksan ang ticket mo sa Discord — doon ipapadala ng staff ang Payoneer payment link mo.",
     "Open my ticket": "Buksan ang ticket ko",
@@ -7114,6 +7134,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Gift card": "Thẻ quà tặng",
+    "Coming soon": "Sắp ra mắt",
     "Something went wrong. Please try again or open a ticket on Discord.": "Đã xảy ra lỗi. Hãy thử lại hoặc mở ticket trên Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "Đơn hàng đã được ghi nhận! Mở ticket của bạn trên Discord — staff sẽ gửi link thanh toán Payoneer cho bạn ở đó.",
     "Open my ticket": "Mở ticket của tôi",
@@ -7825,6 +7847,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "Gift card": "بطاقة هدايا",
+    "Coming soon": "قريبًا",
     "Something went wrong. Please try again or open a ticket on Discord.": "صار خطأ. حاول مرة ثانية أو افتح تذكرة في Discord.",
     "Your order is in! Open your ticket on Discord — staff will send your Payoneer payment link there.": "تم استلام طلبك! افتح تذكرتك في Discord — الفريق بيرسل لك رابط الدفع عبر Payoneer هناك.",
     "Open my ticket": "افتح تذكرتي",
