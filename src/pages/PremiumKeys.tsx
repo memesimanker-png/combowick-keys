@@ -20,6 +20,7 @@ import { DonateCard } from "@/components/DonateCard";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { OwnerCheckoutModal } from "@/components/OwnerCheckoutModal";
 import { BugReportWidget } from "@/components/BugReportWidget";
+import { PayoneerOrderModal } from "@/components/PayoneerOrderModal";
 
 
 const tiers = [
@@ -115,6 +116,22 @@ export default function PremiumKeys() {
   const [paypalClientId, setPaypalClientId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [ownerOpen, setOwnerOpen] = useState(false);
+  const [payoneerOpen, setPayoneerOpen] = useState(false);
+  const [payoneerPlan, setPayoneerPlan] = useState("90d");
+  const openPayoneer = (plan: string) => {
+    setPayoneerPlan(plan);
+    try { sessionStorage.setItem("cw_po_plan", plan); } catch { /* ignore */ }
+    setPayoneerOpen(true);
+  };
+  // back from the Discord sign-in redirect: reopen the Payoneer order where the buyer left off
+  useEffect(() => {
+    let plan: string | null = null;
+    try { plan = sessionStorage.getItem("cw_po_plan"); } catch { /* ignore */ }
+    if (!plan) return;
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user?.identities?.some((x) => x.provider === "discord")) { setPayoneerPlan(plan as string); setPayoneerOpen(true); }
+    });
+  }, []);
   const { data: gameSettings } = usePaidGameSettings();
   const { data: keyDiscounts } = useKeyDiscounts();
 
@@ -138,6 +155,8 @@ export default function PremiumKeys() {
     <Layout>
       <DiscountNotification />
       <OwnerCheckoutModal isOpen={ownerOpen} onClose={() => setOwnerOpen(false)} paypalClientId={paypalClientId} />
+      <PayoneerOrderModal isOpen={payoneerOpen} initialPlan={payoneerPlan}
+        onClose={() => { setPayoneerOpen(false); try { sessionStorage.removeItem("cw_po_plan"); } catch { /* ignore */ } }} />
       <SEOHead
         title="ComboWick Premium Keys — Plans from $5 to $49.99"
         description="Buy a ComboWick HWID premium key. 7-day trial $5, monthly $9.99, lifetime $49.99. Instant PayPal delivery, full premium script access."
@@ -243,6 +262,22 @@ export default function PremiumKeys() {
               </motion.div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* No PayPal? Payoneer for the 90-day pack and Lifetime (Payoneer has a $20 minimum) */}
+      <section className="pb-6">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 rounded-2xl border border-orange-500/30 bg-orange-500/5 p-5 sm:flex-row sm:items-center">
+            <div className="flex-1">
+              <h3 className="font-heading text-lg font-bold text-orange-300">{t("No PayPal? Pay with Payoneer")}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{t("Sign in with Discord, pick a plan, and we open a private ticket for you. Pay the Payoneer request sent to your email, and your key arrives in your Discord DMs.")}</p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+              <Button onClick={() => openPayoneer("90d")} className="bg-orange-600 font-bold hover:bg-orange-700">{t("90 Days")} · $20</Button>
+              <Button onClick={() => openPayoneer("lifetime")} variant="outline" className="border-orange-500/50 font-bold">{t("Lifetime")} · $49.99</Button>
+            </div>
           </div>
         </div>
       </section>
