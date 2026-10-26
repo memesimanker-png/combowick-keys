@@ -4,6 +4,7 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Ban risk: use an alt account": "Risque de ban : utilise un compte secondaire",
     "Working": "Fonctionne",
     "Patched": "Patché",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Trouve un executor qui marche sur ton appareil en ce moment, puis lance notre script en 3 étapes faciles.",
@@ -773,6 +774,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Ban risk: use an alt account": "Riesgo de baneo: usa una cuenta alternativa",
     "Working": "Funciona",
     "Patched": "Parcheado",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Encuentra un executor que funcione en tu dispositivo ahora mismo y ejecuta nuestro script en 3 pasos fáciles.",
@@ -1542,6 +1544,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Ban risk: use an alt account": "Bann-Risiko: nutze einen Zweitaccount",
     "Working": "Funktioniert",
     "Patched": "Gepatcht",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Finde einen Executor, der gerade auf deinem Gerät läuft, und starte dann unser Script in 3 einfachen Schritten.",
@@ -2311,6 +2314,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Ban risk: use an alt account": "Risco de ban: use uma conta alternativa",
     "Working": "Funcionando",
     "Patched": "Patchado",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Encontre um executor que funcione no seu dispositivo agora e rode nosso script em 3 passos fáceis.",
@@ -3080,6 +3084,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Ban risk: use an alt account": "Риск бана: используй твинк",
     "Working": "Работает",
     "Patched": "Запатчен",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Найди экзекьютор, который работает на твоём устройстве прямо сейчас, и запусти наш скрипт за 3 простых шага.",
@@ -3849,6 +3854,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Ban risk: use an alt account": "有封号风险：请使用小号",
     "Working": "可用",
     "Patched": "已失效",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "找到现在能在你设备上用的注入器，然后 3 步轻松运行我们的 script。",
@@ -4618,6 +4624,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Ban risk: use an alt account": "밴 위험: 부계정을 쓰세요",
     "Working": "작동 중",
     "Patched": "패치됨",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "지금 내 기기에서 되는 익스큐터를 찾고, 3단계로 쉽게 script를 실행해 보세요.",
@@ -5387,6 +5394,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Ban risk: use an alt account": "เสี่ยงโดนแบน: ใช้ไอดีสำรอง",
     "Working": "ใช้ได้",
     "Patched": "โดนแพตช์",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "หา executor ที่ใช้ได้กับอุปกรณ์ของคุณตอนนี้ แล้วรัน script ของเราใน 3 ขั้นตอนง่าย ๆ",
@@ -6156,6 +6164,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Ban risk: use an alt account": "Risiko banned: pakai akun alt",
     "Working": "Berfungsi",
     "Patched": "Kena patch",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Cari executor yang jalan di perangkatmu sekarang, lalu jalankan script kami dalam 3 langkah mudah.",
@@ -6925,6 +6934,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Ban risk: use an alt account": "May risk ng ban: gumamit ng alt account",
     "Working": "Gumagana",
     "Patched": "Na-patch",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Maghanap ng executor na gumagana sa device mo ngayon, tapos patakbuhin ang script namin sa 3 simpleng steps.",
@@ -7694,6 +7704,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Ban risk: use an alt account": "Có nguy cơ bị ban: hãy dùng tài khoản phụ",
     "Working": "Đang hoạt động",
     "Patched": "Đã bị patch",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "Tìm executor chạy được trên thiết bị của bạn ngay bây giờ, rồi chạy script của tụi mình qua 3 bước đơn giản.",
@@ -8463,6 +8474,7 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "Ban risk: use an alt account": "خطر الحظر: استخدم حساب ثاني",
     "Working": "يعمل",
     "Patched": "معطّل",
     "Find an executor that works on your device right now, then run our script in 3 easy steps.": "اعثر على إكسكيوتر يعمل على جهازك الآن، ثم شغّل سكربتنا في 3 خطوات سهلة.",

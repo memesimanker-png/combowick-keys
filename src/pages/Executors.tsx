@@ -466,7 +466,7 @@ export default function Executors() {
               ))}
             </ol>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-stretch">
-              <code className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap rounded-lg border border-border/60 bg-background/70 px-3 py-2.5 font-mono text-[11px] text-primary" data-ltr>{IQ}</code>
+              <code className="min-w-0 flex-1 truncate rounded-lg border border-border/60 bg-background/70 px-3 py-2.5 font-mono text-[11px] text-primary" data-ltr>{IQ}</code>
               <Button onClick={copyScript} className="shrink-0 font-bold">
                 {copied ? <><Check className="mr-1.5 h-4 w-4" /> {t("Copied!")}</> : <><Copy className="mr-1.5 h-4 w-4" /> {t("Copy Script")}</>}
               </Button>
@@ -621,14 +621,14 @@ export default function Executors() {
 
 function Logo({ exec, size }: { exec: Executor; size: string }) {
   const logo = typeof exec.slug === "object" ? exec.slug?.logo : undefined;
-  return logo ? (
+  const [failed, setFailed] = useState(false);
+  return logo && !failed ? (
     <img
       src={cacheLogo(logo)}
       alt={`${exec.title} Roblox executor logo`}
-      loading="lazy"
       decoding="async"
       referrerPolicy="no-referrer"
-      onError={(e) => { (e.currentTarget as HTMLImageElement).style.visibility = "hidden"; }}
+      onError={() => setFailed(true)}
       className={`${size} shrink-0 rounded-lg bg-muted object-cover`}
     />
   ) : (
@@ -688,7 +688,7 @@ function ExecRow({ exec, onOpen }: { exec: Executor; onOpen: () => void }) {
           <StatusPill working={working} />
           <PricePill exec={exec} />
           {s > 0 && <span className={`text-[11px] font-semibold tabular-nums ${s >= 95 ? "text-success" : s >= 80 ? "text-warning" : "text-destructive"}`}>{s}% {exec.suncPercentage != null ? "sUNC" : "UNC"}</span>}
-          {exec.detected && <span className="text-[11px] font-semibold text-destructive">{t("Detected")}</span>}
+          {exec.detected && <span className="text-[11px] font-semibold text-warning" title={t("Ban risk: use an alt account")}>{t("Detected")}</span>}
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-1">
