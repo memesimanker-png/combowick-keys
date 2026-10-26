@@ -1,6 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.4";
 import { getClientIp, rateLimit, tooManyRequests } from "../_shared/throttle.ts";
-import { redisGet, redisSet } from "../_shared/redis.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -9,6 +8,11 @@ const corsHeaders = {
 };
 
 const BUCKET = "game-thumbnails";
+
+// Ids we already know are in storage. Kept in this function's memory instead of Redis: every game picker load
+// asked Redis about every thumbnail (~1M Redis commands a month, over Upstash's free 500K), and a warm
+// instance answers from memory just as fast. A cold instance re-checks storage once per id.
+const known = new Set<string>();
 
 async function resolveUniverseId(id: string): Promise<string | null> {
   // First try as universe ID directly
@@ -58,10 +62,8 @@ Deno.serve(async (req) => {
     const filePath = `${rawId}.png`;
     const publicUrl = `${supabaseUrl}/storage/v1/object/public/${BUCKET}/${filePath}`;
 
-    // Fast-path: Redis says we've already cached this → skip Supabase storage lookup entirely.
-    const redisKey = `thumb:${rawId}`;
-    const cachedHit = await redisGet(redisKey);
-    if (cachedHit === "1") {
+    // Fast-path: already confirmed in storage by this instance → skip the storage lookup.
+    if (known.has(rawId)) {
       return new Response(JSON.stringify({ url: publicUrl, cached: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -75,7 +77,7 @@ Deno.serve(async (req) => {
       .createSignedUrl(filePath, 1);
 
     if (existing?.signedUrl) {
-      redisSet(redisKey, "1", 7 * 24 * 60 * 60).catch(() => {});
+      known.add(rawId);
       return new Response(JSON.stringify({ url: publicUrl, cached: true }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -132,7 +134,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    redisSet(redisKey, "1", 7 * 24 * 60 * 60).catch(() => {});
+    known.add(rawId);
     return new Response(JSON.stringify({ url: publicUrl, cached: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
