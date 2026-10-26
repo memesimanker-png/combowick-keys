@@ -300,7 +300,7 @@ export default function PremiumKeys() {
                 </ul>
               </div>
               <div className="text-center sm:text-right">
-                <div className="text-4xl font-extrabold text-yellow-300">$1,000</div>
+                <div className="text-4xl font-extrabold text-yellow-300">$500</div>
                 <p className="text-xs text-muted-foreground">{t("5 months • one-time")}</p>
                 <p className="mb-4 mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-400/70">{t("All sales are final — NO REFUNDS")}</p>
                 <button
