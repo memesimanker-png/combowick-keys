@@ -34,6 +34,7 @@ const ScriptUnlockReturn = lazy(() => import("./pages/ScriptUnlockReturn"));
 const ScriptUnlockStep2 = lazy(() => import("./pages/ScriptUnlockStep2"));
 const ScriptUnlockStart = lazy(() => import("./pages/ScriptUnlockStart"));
 const Scripts = lazy(() => import("./pages/Scripts"));
+const Executors = lazy(() => import("./pages/Executors"));
 const RequestScripts = lazy(() => import("./pages/RequestScripts"));
 const HubPreview = lazy(() => import("./pages/HubPreview"));
 const ScriptDetail = lazy(() => import("./pages/ScriptDetail"));
@@ -105,6 +106,7 @@ const App = () => (
                   <Route path="/scripts" element={<Scripts />} />
                   <Route path="/request" element={<RequestScripts />} />
                   <Route path="/scripts/:slug" element={<ScriptDetail />} />
+                  <Route path="/executors" element={<Executors />} />
                   <Route path="/unlock" element={<ScriptUnlockStart />} />
                   <Route path="/ad-return/script-step2" element={<ScriptUnlockStep2 />} />
                   <Route path="/ad-return/script" element={<ScriptUnlockReturn />} />
