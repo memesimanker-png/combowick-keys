@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Shield, Crown, Key, Code2, Home } from "lucide-react";
+import { Shield, Crown, Key, Code2, Home, Cpu } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
 
@@ -34,15 +34,20 @@ export function FunnelHeader({ title }: { title?: string; short?: string }) {
           >
             <Key className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Get Key")}</span>
           </Link>
-          <a
-            href="https://www.youtube.com/@COMBO_WICK"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/scripts"
             aria-label={t("Get Script")}
             className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary"
           >
             <Code2 className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Get Script")}</span>
-          </a>
+          </Link>
+          <Link
+            to="/executors"
+            aria-label={t("Executors")}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-secondary/60 px-2.5 py-1.5 text-xs font-semibold text-foreground transition-colors hover:bg-secondary"
+          >
+            <Cpu className="h-3.5 w-3.5" /> <span className="hidden sm:inline">{t("Executors")}</span>
+          </Link>
           <Link
             to="/premium-keys"
             aria-label={t("Premium")}

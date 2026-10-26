@@ -430,16 +430,13 @@ export default function AccessKey() {
             </Card>
           )}
 
-          {/* Where to grab the actual script once they have a key → main YouTube channel */}
+          {/* Where to grab the actual script once they have a key → the scripts page */}
           <a
-            href="https://www.youtube.com/@COMBO_WICK"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/scripts"
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
           >
             <Code2 className="h-4 w-4" />
             {t("Get Script")}
-            <ExternalLink className="h-3.5 w-3.5 opacity-70" />
           </a>
 
           {/* Device troubleshooting — key valid but "Invalid Key" on their device */}

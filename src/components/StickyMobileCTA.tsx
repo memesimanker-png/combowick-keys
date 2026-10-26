@@ -56,11 +56,9 @@ export function StickyMobileCTA() {
         >
           <Crown className="h-3.5 w-3.5" /> {t("Premium")}
         </Link>
-        {/* Get the script → main YouTube channel (videos funnel to the script) */}
+        {/* Get the script → the scripts page (the old YouTube channel is gone) */}
         <a
-          href="https://www.youtube.com/@COMBO_WICK"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/scripts"
           className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-secondary text-secondary-foreground border border-border text-xs font-semibold active:scale-95 transition"
         >
           <Code2 className="h-3.5 w-3.5" /> {t("Get Script")}
