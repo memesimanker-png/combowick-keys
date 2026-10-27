@@ -26,7 +26,6 @@ export default function About() {
             knowsAbout: ["Roblox Lua scripting", "Roblox executors", "Roblox anti-cheat", "Game automation"],
             worksFor: { "@type": "Organization", name: "ComboWick", url: "https://combowick.com" },
             sameAs: [
-              "https://www.youtube.com/@COMBO_WICK",
               "https://discord.com/invite/ufrz9Zaqs8",
               "https://rscripts.net/u/Combo_WICK",
             ],
@@ -53,7 +52,7 @@ export default function About() {
                   Combo_WICK exists to make the Roblox scripting community more accessible. Quality script hubs are scattered, paywalled behind sketchy links, or wrapped in malware. We curate, test, and document scripts in one place — with a transparent free tier and a fair premium tier for the people who want to support the work.
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
-                  We started as a YouTube channel (<a href="https://www.youtube.com/@COMBO_WICK" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@COMBO_WICK</a>) covering Roblox script reviews and grew into a full hub: scripts, premium HWID keys, executor breakdowns, anti-cheat explainers, and beginner-to-advanced Lua tutorials.
+                  We started as a YouTube channel covering Roblox script reviews and grew into a full hub: scripts, premium HWID keys, executor breakdowns, anti-cheat explainers, and beginner-to-advanced Lua tutorials.
                 </p>
               </div>
             </div>
@@ -82,8 +81,7 @@ export default function About() {
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
                   We deliberately do not post fake testimonials or invented review scores. Our proof is our public track record:{" "}
-                  <a href="https://rscripts.net/u/Combo_WICK" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Rscripts profile</a>,{" "}
-                  <a href="https://www.youtube.com/@COMBO_WICK" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">YouTube channel</a>, and a 50k+ member{" "}
+                  <a href="https://rscripts.net/u/Combo_WICK" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Rscripts profile</a> and a 50k+ member{" "}
                   <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Discord community</a>.
                 </p>
               </div>

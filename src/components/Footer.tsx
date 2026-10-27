@@ -58,7 +58,6 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
               title: t("Community"),
               links: [
                 { to: "/wall-of-fame", label: "Wall of Fame" },
-                { href: "https://www.youtube.com/@COMBO_WICK", label: "YouTube" },
                 { href: "https://discord.com/invite/ufrz9Zaqs8", label: "Discord" },
                 { href: "mailto:support@combowick.com", label: "Email" },
                 { to: "/contact", label: "Contact" },

@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BadgeCheck, Eye, Youtube, MessageCircle } from "lucide-react";
+import { BadgeCheck, Eye, Languages, MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 // Social proof built ONLY from real, verifiable sources.
@@ -10,7 +10,7 @@ const stats = [
   { icon: BadgeCheck, label: "Rscripts Status", value: "Verified Mythic Creator" },
   { icon: Eye, label: "Script Views", value: "6.7M+" },
   { icon: MessageCircle, label: "Discord Members", value: "50k+" },
-  { icon: Youtube, label: "Channel", value: "@COMBO_WICK" },
+  { icon: Languages, label: "Hub Languages", value: "13" },
 ];
 
 export function TrustSection() {
@@ -59,9 +59,9 @@ export function TrustSection() {
               <BadgeCheck className="mr-2 h-4 w-4" /> Verify on Rscripts
             </Button>
           </a>
-          <a href="https://www.youtube.com/@COMBO_WICK" target="_blank" rel="noopener noreferrer">
+          <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="uppercase tracking-wider border-bronze/30 hover:bg-bronze/10 hover:text-bronze-light">
-              <Youtube className="mr-2 h-4 w-4" /> Watch on YouTube
+              <MessageCircle className="mr-2 h-4 w-4" /> Join the Discord
             </Button>
           </a>
         </div>
