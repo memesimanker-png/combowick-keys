@@ -4,6 +4,10 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Priority: built before all free requests": "Priorité : fait avant toutes les demandes gratuites",
+    "Need it faster? Paid scripts come first": "Besoin plus vite ? Les scripts payants passent en premier",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Les demandes gratuites sont faites dans l'ordre des votes, quand on a le temps. Les scripts personnalisés payants passent avant toute demande gratuite, faits juste pour ton jeu, avec tes propres fonctions.",
+    "Get a price on Discord": "Demande un prix sur Discord",
     "Ban risk: use an alt account": "Risque de ban : utilise un compte secondaire",
     "Working": "Fonctionne",
     "Patched": "Patché",
@@ -774,6 +778,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Priority: built before all free requests": "Prioridad: se hace antes que cualquier pedido gratis",
+    "Need it faster? Paid scripts come first": "¿Lo necesitas más rápido? Los scripts pagados van primero",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Los pedidos gratis se hacen por orden de votos cuando tenemos tiempo. Los scripts personalizados pagados se hacen antes que cualquier pedido gratis, solo para tu juego y con tus propias funciones.",
+    "Get a price on Discord": "Pide un precio en Discord",
     "Ban risk: use an alt account": "Riesgo de baneo: usa una cuenta alternativa",
     "Working": "Funciona",
     "Patched": "Parcheado",
@@ -1544,6 +1552,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Priority: built before all free requests": "Priorität: vor allen kostenlosen Anfragen gebaut",
+    "Need it faster? Paid scripts come first": "Schneller nötig? Bezahlte Skripte kommen zuerst",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Kostenlose Anfragen bauen wir nach Stimmen, wenn wir Zeit haben. Bezahlte Custom-Skripte kommen vor jeder kostenlosen Anfrage, nur für dein Spiel und mit deinen eigenen Funktionen.",
+    "Get a price on Discord": "Preis auf Discord anfragen",
     "Ban risk: use an alt account": "Bann-Risiko: nutze einen Zweitaccount",
     "Working": "Funktioniert",
     "Patched": "Gepatcht",
@@ -2314,6 +2326,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Priority: built before all free requests": "Prioridade: feito antes de todos os pedidos grátis",
+    "Need it faster? Paid scripts come first": "Precisa mais rápido? Scripts pagos vêm primeiro",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Pedidos grátis são feitos pela ordem de votos, quando temos tempo. Scripts personalizados pagos são feitos antes de qualquer pedido grátis, só para o seu jogo e com as suas próprias funções.",
+    "Get a price on Discord": "Peça um preço no Discord",
     "Ban risk: use an alt account": "Risco de ban: use uma conta alternativa",
     "Working": "Funcionando",
     "Patched": "Patchado",
@@ -3084,6 +3100,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Priority: built before all free requests": "Приоритет: делаем раньше всех бесплатных заявок",
+    "Need it faster? Paid scripts come first": "Нужно быстрее? Платные скрипты идут первыми",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Бесплатные заявки делаем по количеству голосов, когда есть время. Платные скрипты на заказ делаем раньше любой бесплатной заявки, только для твоей игры и с твоими функциями.",
+    "Get a price on Discord": "Узнать цену в Discord",
     "Ban risk: use an alt account": "Риск бана: используй твинк",
     "Working": "Работает",
     "Patched": "Запатчен",
@@ -3854,6 +3874,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Priority: built before all free requests": "优先：比所有免费请求先做",
+    "Need it faster? Paid scripts come first": "想更快？付费脚本优先",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "免费请求按投票顺序在有空时制作。付费定制脚本会在所有免费请求之前完成，专为你的游戏打造，功能由你决定。",
+    "Get a price on Discord": "在 Discord 询价",
     "Ban risk: use an alt account": "有封号风险：请使用小号",
     "Working": "可用",
     "Patched": "已失效",
@@ -4624,6 +4648,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Priority: built before all free requests": "우선 제작: 모든 무료 요청보다 먼저 만들어요",
+    "Need it faster? Paid scripts come first": "더 빨리 필요하세요? 유료 스크립트가 먼저예요",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "무료 요청은 시간이 될 때 투표 순서대로 만들어요. 유료 맞춤 스크립트는 어떤 무료 요청보다 먼저, 당신의 게임만을 위해 원하는 기능으로 만들어요.",
+    "Get a price on Discord": "Discord에서 가격 문의",
     "Ban risk: use an alt account": "밴 위험: 부계정을 쓰세요",
     "Working": "작동 중",
     "Patched": "패치됨",
@@ -5394,6 +5422,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Priority: built before all free requests": "สิทธิ์ก่อน: ทำก่อนคำขอฟรีทั้งหมด",
+    "Need it faster? Paid scripts come first": "อยากได้เร็วกว่านี้? สคริปต์แบบจ่ายเงินได้ทำก่อน",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "คำขอฟรีจะทำตามลำดับโหวตเมื่อเรามีเวลา สคริปต์สั่งทำแบบจ่ายเงินจะทำก่อนคำขอฟรีทุกอัน ทำเฉพาะเกมของคุณ พร้อมฟีเจอร์ที่คุณต้องการ",
+    "Get a price on Discord": "ถามราคาใน Discord",
     "Ban risk: use an alt account": "เสี่ยงโดนแบน: ใช้ไอดีสำรอง",
     "Working": "ใช้ได้",
     "Patched": "โดนแพตช์",
@@ -6164,6 +6196,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Priority: built before all free requests": "Prioritas: dibuat sebelum semua request gratis",
+    "Need it faster? Paid scripts come first": "Butuh lebih cepat? Script berbayar didahulukan",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Request gratis dibuat sesuai urutan vote saat kami ada waktu. Script custom berbayar dibuat sebelum request gratis mana pun, khusus untuk game kamu, dengan fitur pilihanmu.",
+    "Get a price on Discord": "Tanya harga di Discord",
     "Ban risk: use an alt account": "Risiko banned: pakai akun alt",
     "Working": "Berfungsi",
     "Patched": "Kena patch",
@@ -6934,6 +6970,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Priority: built before all free requests": "Priority: ginagawa bago ang lahat ng free request",
+    "Need it faster? Paid scripts come first": "Kailangan mo nang mas mabilis? Unang ginagawa ang paid scripts",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Ang free requests ay ginagawa ayon sa dami ng votes kapag may oras kami. Ang paid custom scripts ay ginagawa bago ang kahit anong free request, para lang sa game mo, at may sarili mong features.",
+    "Get a price on Discord": "Magtanong ng presyo sa Discord",
     "Ban risk: use an alt account": "May risk ng ban: gumamit ng alt account",
     "Working": "Gumagana",
     "Patched": "Na-patch",
@@ -7704,6 +7744,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Priority: built before all free requests": "Ưu tiên: làm trước mọi yêu cầu miễn phí",
+    "Need it faster? Paid scripts come first": "Cần nhanh hơn? Script trả phí được làm trước",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Yêu cầu miễn phí được làm theo thứ tự lượt vote khi bọn mình có thời gian. Script đặt riêng trả phí được làm trước mọi yêu cầu miễn phí, chỉ dành cho game của bạn với tính năng bạn muốn.",
+    "Get a price on Discord": "Hỏi giá trên Discord",
     "Ban risk: use an alt account": "Có nguy cơ bị ban: hãy dùng tài khoản phụ",
     "Working": "Đang hoạt động",
     "Patched": "Đã bị patch",
@@ -8474,6 +8518,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "Priority: built before all free requests": "أولوية: نسويه قبل كل الطلبات المجانية",
+    "Need it faster? Paid scripts come first": "تبيه أسرع؟ السكربتات المدفوعة لها الأولوية",
+    "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "الطلبات المجانية نسويها حسب ترتيب التصويت لما يكون عندنا وقت. السكربتات المخصصة المدفوعة نسويها قبل أي طلب مجاني، خاصة للعبتك وبالميزات اللي تبيها.",
+    "Get a price on Discord": "اسأل عن السعر في Discord",
     "Ban risk: use an alt account": "خطر الحظر: استخدم حساب ثاني",
     "Working": "يعمل",
     "Patched": "معطّل",

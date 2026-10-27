@@ -11,7 +11,7 @@ import { useAuth, useIsAdmin } from "@/hooks/useAuth";
 import { useTranslation } from "@/lib/translation-context";
 import { supabase } from "@/integrations/supabase/client";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Search, Loader2, ThumbsUp, Lightbulb, Users, CheckCircle2, Hammer, Ban, Sparkles, Key, ExternalLink, Video } from "lucide-react";
+import { Search, Loader2, ThumbsUp, Lightbulb, Users, CheckCircle2, Hammer, Ban, Sparkles, Key, ExternalLink, Video, Crown } from "lucide-react";
 
 type Status = "requested" | "in_progress" | "released" | "declined";
 interface Req { id: number; universe_id: string; place_id: string; game_name: string; icon_url: string | null; players_at_request: number | null; status: Status; admin_note: string | null; vote_count: number; discord_thread_id: string | null; created_at: string }
@@ -147,6 +147,18 @@ export default function RequestScripts() {
                 <p className="text-xs text-muted-foreground">{s.text}</p>
               </CardContent></Card>
             ))}
+          </div>
+
+          {/* paid custom scripts skip the free queue */}
+          <div className="flex flex-col gap-3 rounded-xl border border-yellow-500/40 bg-yellow-500/5 p-4 sm:flex-row sm:items-center">
+            <Crown className="h-6 w-6 shrink-0 text-yellow-400" />
+            <div className="flex-1 space-y-1">
+              <p className="text-sm font-bold text-yellow-300">{t("Need it faster? Paid scripts come first")}</p>
+              <p className="text-xs text-muted-foreground">{t("Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.")}</p>
+            </div>
+            <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer" className="shrink-0">
+              <Button size="sm" className="w-full bg-yellow-600 font-bold hover:bg-yellow-700 sm:w-auto">{t("Get a price on Discord")}</Button>
+            </a>
           </div>
 
           {/* sign in OR search */}

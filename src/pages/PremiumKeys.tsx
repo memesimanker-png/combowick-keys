@@ -68,7 +68,7 @@ const tiers = [
     price: 0,
     color: "text-yellow-400",
     borderColor: "border-yellow-500/30",
-    featureKeys: ["Contact on Discord", "Custom script tailored to your needs", "Professional support"],
+    featureKeys: ["Priority: built before all free requests", "Custom script tailored to your needs", "Contact on Discord", "Professional support"],
     buttonTextKey: "Contact on Discord",
     buttonStyle: "bg-yellow-600 hover:bg-yellow-700",
     isDiscord: true,
