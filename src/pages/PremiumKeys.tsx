@@ -17,6 +17,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { PAID_GAMES } from "@/lib/paid-games";
 import { usePaidGameSettings } from "@/hooks/usePaidGames";
 import { useKeyDiscounts, applyDiscount } from "@/hooks/useKeyDiscounts";
+import { rememberCodeFromUrl } from "@/lib/creator-code";
 import { DonateCard } from "@/components/DonateCard";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { OwnerCheckoutModal } from "@/components/OwnerCheckoutModal";
@@ -122,6 +123,8 @@ export default function PremiumKeys() {
   const { data: keyDiscounts } = useKeyDiscounts();
   // back from the Discord sign-in redirect (Payoneer tab of the checkout): reopen it where the buyer left off,
   // once today's discounts are known so the lifetime price matches the sale
+  // creator links: keys.combowick.com/premium-keys?code=ZEN -> pre-filled at checkout
+  useEffect(() => { rememberCodeFromUrl(); }, []);
   useEffect(() => {
     if (!keyDiscounts) return;
     let plan: string | null = null;

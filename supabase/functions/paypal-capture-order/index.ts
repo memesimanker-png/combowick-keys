@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { acceptedPrices, decodeOrderTag, paidEnough } from "../_shared/key-pricing.ts";
+import { acceptedPrices, commissionFor, decodeOrderTag, lookupCreatorCode, paidEnough, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -118,8 +118,13 @@ serve(async (req) => {
     // Older unlocked orders: must at least clear the tier's floor.
     let underpaid: boolean;
     let keyFloor: unknown;
+    // creator code locked into the order: discounted price + the creator's commission on what was paid
+    const cc = tag.code ? await lookupCreatorCode(supabasePending, tag.code, true) : null;
+    const creatorCode = cc?.code || null;
+    const creatorCommission = commissionFor(cc, paid, captureData?.payer?.email_address);
     if (lockedTier) {
-      const acc = await acceptedPrices(supabasePending, lockedTier, tag.game);
+      let acc = await acceptedPrices(supabasePending, lockedTier, tag.game);
+      if (cc && acc) acc = acc.map((p) => withCode(p, cc.discount_pct));
       keyFloor = acc;
       underpaid = !paidEnough(paid, acc);
     } else {
@@ -167,6 +172,8 @@ serve(async (req) => {
             amount: paid,
             currency: "USD",
             status: "pending",
+            creator_code: creatorCode,
+            creator_commission: creatorCommission,
             customer_email: pendingEmail,
             user_id: user_id || null,
             expires_at: null,
@@ -222,6 +229,8 @@ serve(async (req) => {
       amount: paid,
       currency: "USD",
       status: "completed",
+      creator_code: creatorCode,
+      creator_commission: creatorCommission,
       customer_email: finalEmail,
       user_id: resolvedUserId,
       expires_at: expiresAt,

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { PayPalScriptProvider, PayPalButtons, FUNDING } from "@paypal/react-paypal-js";
-import { X, Loader2, CheckCircle, Zap, Lock, CreditCard, Clock, Check, Gift } from "lucide-react";
+import { X, Loader2, CheckCircle, Zap, Lock, CreditCard, Clock, Check, Gift, Tag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
+import { checkCreatorCode, savedCode, saveCode, withCode } from "@/lib/creator-code";
 
 interface PayPalCheckoutModalProps {
   isOpen: boolean;
@@ -45,6 +46,27 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   );
   const [planId, setPlanId] = useState<string | null>(null);
   const [loadingPlan, setLoadingPlan] = useState(false);
+  // Creator code: Premium monthly/lifetime by PayPal/card only. The server re-checks the code and the price.
+  const codeEligible = !tier.script && !tier.isSubscription && (tier.id === "monthly" || tier.id === "lifetime");
+  const [codeOpen, setCodeOpen] = useState(false);
+  const [codeInput, setCodeInput] = useState("");
+  const [code, setCode] = useState<{ code: string; discount_pct: number } | null>(null);
+  const [codeMsg, setCodeMsg] = useState<string | null>(null);
+  const [codeBusy, setCodeBusy] = useState(false);
+  useEffect(() => {
+    if (!isOpen || !codeEligible) return;
+    const s = savedCode();   // from a creator's ?code= link
+    if (!s) return;
+    setCodeInput(s);
+    checkCreatorCode(s).then((c) => { if (c) setCode(c); else saveCode(null); });
+  }, [isOpen, codeEligible]);
+  const applyCode = async () => {
+    setCodeBusy(true);
+    setCodeMsg(null);
+    const c = await checkCreatorCode(codeInput);
+    setCodeBusy(false);
+    if (c) { setCode(c); saveCode(c.code); } else { setCode(null); setCodeMsg(t("That code doesn't exist or has expired.")); }
+  };
 
   useEffect(() => {
     if (isOpen) {
@@ -138,13 +160,15 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   if (!isOpen) return null;
 
   const isSubscription = paymentType === "subscription" && tier.isSubscription;
-  const displayPrice = isSubscription ? (tier.subscriptionPrice || tier.price) : tier.price;
+  const basePrice = isSubscription ? (tier.subscriptionPrice || tier.price) : tier.price;
+  const codeOn = !!code && codeEligible && !isSubscription;
+  const displayPrice = codeOn ? withCode(basePrice, code!.discount_pct) : basePrice;
 
   const createOrderHandler = async () => {
     setError(null);
     try {
       const { data, error: fnError } = await supabase.functions.invoke("paypal-create-order", {
-        body: { amount: displayPrice, tier: tier.id, game: tier.gameKey, description: `${tier.name} Premium Key` },
+        body: { amount: displayPrice, tier: tier.id, game: tier.gameKey, creator_code: codeOn ? code!.code : undefined, description: `${tier.name} Premium Key` },
       });
       if (fnError || !data?.order_id) throw new Error("Failed to create order");
       return data.order_id;
@@ -322,6 +346,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                 <h2 className="font-heading text-xl font-bold">{onPayoneer ? t(PAYONEER_PLANS[payoneerPlan].name) : tier.name}</h2>
                 <div className="mt-2 inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 rounded-full px-3 py-1" data-no-translate>
                   <Zap className="w-3.5 h-3.5 text-primary" />
+                  {!onPayoneer && codeOn && <span className="text-muted-foreground line-through text-sm">${basePrice}</span>}
                   <span className="text-primary font-bold text-lg">${onPayoneer ? payoneerPrice : displayPrice}</span>
                   <span className="text-muted-foreground text-sm">{isSubscription ? t("/month") : t(" one-time")}</span>
                 </div>
@@ -404,6 +429,34 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                       <div className="text-base font-bold whitespace-nowrap">${tier.price}<span className="text-[11px] font-normal text-muted-foreground">/{t("mo")}</span></div>
                     </label>
                   </div>
+                </div>
+              )}
+
+              {codeEligible && !onPayoneer && (
+                <div className="mb-4">
+                  {codeOn ? (
+                    <div className="flex items-center justify-between gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-3 py-2 text-xs">
+                      <span className="flex items-center gap-1.5 text-green-400"><Tag className="w-3.5 h-3.5" /> {t("Creator code {code}: {pct}% off").replace("{code}", code!.code).replace("{pct}", String(code!.discount_pct))}</span>
+                      <button type="button" className="text-muted-foreground hover:text-foreground underline" onClick={() => { setCode(null); saveCode(null); setCodeInput(""); }}>{t("Remove")}</button>
+                    </div>
+                  ) : codeOpen ? (
+                    <div>
+                      <div className="flex gap-2">
+                        <input value={codeInput} onChange={(e) => setCodeInput(e.target.value.toUpperCase())} onKeyDown={(e) => { if (e.key === "Enter") applyCode(); }}
+                          placeholder={t("Creator code")} maxLength={20} data-no-translate
+                          className="flex-1 min-w-0 rounded-lg border border-border bg-secondary/50 px-3 py-2 text-sm uppercase tracking-wider focus:outline-none focus:border-primary" />
+                        <button type="button" disabled={codeBusy || codeInput.trim().length < 3} onClick={applyCode}
+                          className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-50">
+                          {codeBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : t("Apply")}
+                        </button>
+                      </div>
+                      {codeMsg && <p className="mt-1.5 text-xs text-destructive">{codeMsg}</p>}
+                    </div>
+                  ) : (
+                    <button type="button" onClick={() => setCodeOpen(true)} className="mx-auto flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary">
+                      <Tag className="w-3.5 h-3.5" /> {t("Have a creator code?")}
+                    </button>
+                  )}
                 </div>
               )}
 

@@ -89,14 +89,49 @@ export async function acceptedPrices(supabase: any, tier: string, game: string |
   return days.map((d) => discounted(base, Math.max(adminPct, autoPercent(tier, d))));
 }
 
-// custom_id we put on PayPal orders: "lifetime" or "lifetime|game:jurassic-blocky"
-export function encodeOrderTag(tier: string, game: string | null): string {
-  return (game ? `${tier}|game:${game}` : tier).slice(0, 127);
+// ---- creator codes ----
+// A creator code takes an extra % off the price shown (stacks on top of any sale), Premium monthly +
+// lifetime only (not the $5 trial, not paid-game scripts). The creator earns commission_pct of what
+// was actually paid; payouts are manual (admin Creator Codes tab).
+export const CODE_TIERS = new Set(["monthly", "lifetime"]);
+export type CreatorCode = { code: string; discount_pct: number; commission_pct: number; payout_email: string | null };
+// deno-lint-ignore no-explicit-any
+// includeInactive: the capture step honours a code that was switched off while the buyer was paying
+export async function lookupCreatorCode(supabase: any, code: string | null | undefined, includeInactive = false): Promise<CreatorCode | null> {
+  const c = String(code || "").trim().toUpperCase();
+  if (!/^[A-Z0-9_-]{3,20}$/.test(c)) return null;
+  try {
+    const { data } = await supabase.from("creator_codes").select("code, discount_pct, commission_pct, active, payout_email").eq("code", c).maybeSingle();
+    if (!data || (!data.active && !includeInactive)) return null;
+    return { code: data.code, discount_pct: Number(data.discount_pct) || 0, commission_pct: Number(data.commission_pct) || 0, payout_email: data.payout_email || null };
+  } catch {
+    return null;
+  }
 }
-export function decodeOrderTag(tag: string | null | undefined): { tier: string | null; game: string | null } {
-  if (!tag) return { tier: null, game: null };
-  const [tier, rest] = tag.split("|");
-  return { tier: tier || null, game: rest?.startsWith("game:") ? rest.slice(5) : null };
+// No commission when the buyer paid from the creator's own payout email (self-referral).
+export function commissionFor(cc: CreatorCode | null, paid: number, payerEmail: string | null | undefined): number | null {
+  if (!cc) return null;
+  if (cc.payout_email && payerEmail && cc.payout_email.trim().toLowerCase() === String(payerEmail).trim().toLowerCase()) return 0;
+  return Math.round(paid * cc.commission_pct) / 100;
+}
+// same rounding as the checkout page (src/lib/creator-code.ts)
+export function withCode(price: number, pct: number): number {
+  if (!pct || pct <= 0) return price;
+  return Math.round(price * (1 - pct / 100) * 100) / 100;
+}
+
+// custom_id we put on PayPal orders: "lifetime", "lifetime|game:jurassic-blocky", "monthly|code:ZEN10"
+export function encodeOrderTag(tier: string, game: string | null, code: string | null = null): string {
+  let t = tier;
+  if (game) t += `|game:${game}`;
+  if (code) t += `|code:${code}`;
+  return t.slice(0, 127);
+}
+export function decodeOrderTag(tag: string | null | undefined): { tier: string | null; game: string | null; code: string | null } {
+  if (!tag) return { tier: null, game: null, code: null };
+  const [tier, ...rest] = tag.split("|");
+  const get = (k: string) => rest.find((r) => r.startsWith(k + ":"))?.slice(k.length + 1) || null;
+  return { tier: tier || null, game: get("game"), code: get("code") };
 }
 export function paidEnough(paid: number, accepted: number[] | null): boolean {
   if (!accepted || accepted.length === 0) return false;

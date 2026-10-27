@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { acceptedPrices, BASE_PRICE, encodeOrderTag, paidEnough } from "../_shared/key-pricing.ts";
+import { acceptedPrices, BASE_PRICE, CODE_TIERS, encodeOrderTag, lookupCreatorCode, paidEnough, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,7 +38,7 @@ serve(async (req) => {
   }
 
   try {
-    const { amount, description, tier, game } = await req.json();
+    const { amount, description, tier, game, creator_code } = await req.json();
 
     if (!amount || isNaN(Number(amount)) || Number(amount) < 1) {
       return new Response(JSON.stringify({ error: "Invalid amount" }), {
@@ -49,9 +49,22 @@ serve(async (req) => {
     const orderTier = String(tier || "other").slice(0, 60);
     const gameKey = typeof game === "string" && game ? game.slice(0, 60) : null;
     let ok = true, expected: unknown = null;
+    let codeUsed: string | null = null;
     if (orderTier in BASE_PRICE || gameKey) {
       const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
-      const acc = await acceptedPrices(sb, orderTier, gameKey);
+      let acc = await acceptedPrices(sb, orderTier, gameKey);
+      // creator code: Premium monthly/lifetime only; an unknown/expired code is refused (the page checks it first)
+      if (creator_code && !gameKey && CODE_TIERS.has(orderTier)) {
+        const cc = await lookupCreatorCode(sb, creator_code);
+        if (!cc) {
+          return new Response(JSON.stringify({ error: "Invalid creator code" }), {
+            status: 400,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+        codeUsed = cc.code;
+        acc = acc ? acc.map((p) => withCode(p, cc.discount_pct)) : acc;
+      }
       expected = acc;
       ok = paidEnough(Number(amount), acc);
     } else if (FIXED_MIN[orderTier] !== undefined) {
@@ -77,7 +90,7 @@ serve(async (req) => {
       body: JSON.stringify({
         intent: "CAPTURE",
         purchase_units: [{
-          custom_id: encodeOrderTag(orderTier, gameKey),
+          custom_id: encodeOrderTag(orderTier, gameKey, codeUsed),
           amount: { currency_code: "USD", value: Number(amount).toFixed(2) },
           description: description || `ComboWick Premium Key - ${tier || "Purchase"}`,
         }],

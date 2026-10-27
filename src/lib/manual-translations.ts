@@ -4,6 +4,12 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Have a creator code?": "Tu as un code créateur ?",
+    "Creator code": "Code créateur",
+    "Apply": "Appliquer",
+    "Remove": "Retirer",
+    "Creator code {code}: {pct}% off": "Code créateur {code} : -{pct}%",
+    "That code doesn't exist or has expired.": "Ce code n'existe pas ou a expiré.",
     "Priority: built before all free requests": "Priorité : fait avant toutes les demandes gratuites",
     "Need it faster? Paid scripts come first": "Besoin plus vite ? Les scripts payants passent en premier",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Les demandes gratuites sont faites dans l'ordre des votes, quand on a le temps. Les scripts personnalisés payants passent avant toute demande gratuite, faits juste pour ton jeu, avec tes propres fonctions.",
@@ -778,6 +784,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Have a creator code?": "¿Tienes un código de creador?",
+    "Creator code": "Código de creador",
+    "Apply": "Aplicar",
+    "Remove": "Quitar",
+    "Creator code {code}: {pct}% off": "Código de creador {code}: {pct}% de descuento",
+    "That code doesn't exist or has expired.": "Ese código no existe o ya expiró.",
     "Priority: built before all free requests": "Prioridad: se hace antes que cualquier pedido gratis",
     "Need it faster? Paid scripts come first": "¿Lo necesitas más rápido? Los scripts pagados van primero",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Los pedidos gratis se hacen por orden de votos cuando tenemos tiempo. Los scripts personalizados pagados se hacen antes que cualquier pedido gratis, solo para tu juego y con tus propias funciones.",
@@ -1552,6 +1564,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Have a creator code?": "Hast du einen Creator-Code?",
+    "Creator code": "Creator-Code",
+    "Apply": "Einlösen",
+    "Remove": "Entfernen",
+    "Creator code {code}: {pct}% off": "Creator-Code {code}: {pct}% Rabatt",
+    "That code doesn't exist or has expired.": "Diesen Code gibt es nicht oder er ist abgelaufen.",
     "Priority: built before all free requests": "Priorität: vor allen kostenlosen Anfragen gebaut",
     "Need it faster? Paid scripts come first": "Schneller nötig? Bezahlte Skripte kommen zuerst",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Kostenlose Anfragen bauen wir nach Stimmen, wenn wir Zeit haben. Bezahlte Custom-Skripte kommen vor jeder kostenlosen Anfrage, nur für dein Spiel und mit deinen eigenen Funktionen.",
@@ -2326,6 +2344,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Have a creator code?": "Tem um código de criador?",
+    "Creator code": "Código de criador",
+    "Apply": "Aplicar",
+    "Remove": "Remover",
+    "Creator code {code}: {pct}% off": "Código de criador {code}: {pct}% de desconto",
+    "That code doesn't exist or has expired.": "Esse código não existe ou expirou.",
     "Priority: built before all free requests": "Prioridade: feito antes de todos os pedidos grátis",
     "Need it faster? Paid scripts come first": "Precisa mais rápido? Scripts pagos vêm primeiro",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Pedidos grátis são feitos pela ordem de votos, quando temos tempo. Scripts personalizados pagos são feitos antes de qualquer pedido grátis, só para o seu jogo e com as suas próprias funções.",
@@ -3100,6 +3124,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Have a creator code?": "Есть код автора?",
+    "Creator code": "Код автора",
+    "Apply": "Применить",
+    "Remove": "Убрать",
+    "Creator code {code}: {pct}% off": "Код автора {code}: скидка {pct}%",
+    "That code doesn't exist or has expired.": "Такого кода нет или он истёк.",
     "Priority: built before all free requests": "Приоритет: делаем раньше всех бесплатных заявок",
     "Need it faster? Paid scripts come first": "Нужно быстрее? Платные скрипты идут первыми",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Бесплатные заявки делаем по количеству голосов, когда есть время. Платные скрипты на заказ делаем раньше любой бесплатной заявки, только для твоей игры и с твоими функциями.",
@@ -3874,6 +3904,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Have a creator code?": "有创作者代码吗？",
+    "Creator code": "创作者代码",
+    "Apply": "使用",
+    "Remove": "移除",
+    "Creator code {code}: {pct}% off": "创作者代码 {code}：优惠 {pct}%",
+    "That code doesn't exist or has expired.": "该代码不存在或已过期。",
     "Priority: built before all free requests": "优先：比所有免费请求先做",
     "Need it faster? Paid scripts come first": "想更快？付费脚本优先",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "免费请求按投票顺序在有空时制作。付费定制脚本会在所有免费请求之前完成，专为你的游戏打造，功能由你决定。",
@@ -4648,6 +4684,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Have a creator code?": "크리에이터 코드가 있나요?",
+    "Creator code": "크리에이터 코드",
+    "Apply": "적용",
+    "Remove": "삭제",
+    "Creator code {code}: {pct}% off": "크리에이터 코드 {code}: {pct}% 할인",
+    "That code doesn't exist or has expired.": "없는 코드이거나 만료된 코드예요.",
     "Priority: built before all free requests": "우선 제작: 모든 무료 요청보다 먼저 만들어요",
     "Need it faster? Paid scripts come first": "더 빨리 필요하세요? 유료 스크립트가 먼저예요",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "무료 요청은 시간이 될 때 투표 순서대로 만들어요. 유료 맞춤 스크립트는 어떤 무료 요청보다 먼저, 당신의 게임만을 위해 원하는 기능으로 만들어요.",
@@ -5422,6 +5464,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Have a creator code?": "มีโค้ดครีเอเตอร์ไหม?",
+    "Creator code": "โค้ดครีเอเตอร์",
+    "Apply": "ใช้โค้ด",
+    "Remove": "ลบ",
+    "Creator code {code}: {pct}% off": "โค้ดครีเอเตอร์ {code}: ลด {pct}%",
+    "That code doesn't exist or has expired.": "ไม่มีโค้ดนี้ หรือโค้ดหมดอายุแล้ว",
     "Priority: built before all free requests": "สิทธิ์ก่อน: ทำก่อนคำขอฟรีทั้งหมด",
     "Need it faster? Paid scripts come first": "อยากได้เร็วกว่านี้? สคริปต์แบบจ่ายเงินได้ทำก่อน",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "คำขอฟรีจะทำตามลำดับโหวตเมื่อเรามีเวลา สคริปต์สั่งทำแบบจ่ายเงินจะทำก่อนคำขอฟรีทุกอัน ทำเฉพาะเกมของคุณ พร้อมฟีเจอร์ที่คุณต้องการ",
@@ -6196,6 +6244,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Have a creator code?": "Punya kode kreator?",
+    "Creator code": "Kode kreator",
+    "Apply": "Pakai",
+    "Remove": "Hapus",
+    "Creator code {code}: {pct}% off": "Kode kreator {code}: diskon {pct}%",
+    "That code doesn't exist or has expired.": "Kode itu tidak ada atau sudah kedaluwarsa.",
     "Priority: built before all free requests": "Prioritas: dibuat sebelum semua request gratis",
     "Need it faster? Paid scripts come first": "Butuh lebih cepat? Script berbayar didahulukan",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Request gratis dibuat sesuai urutan vote saat kami ada waktu. Script custom berbayar dibuat sebelum request gratis mana pun, khusus untuk game kamu, dengan fitur pilihanmu.",
@@ -6970,6 +7024,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Have a creator code?": "May creator code ka?",
+    "Creator code": "Creator code",
+    "Apply": "Gamitin",
+    "Remove": "Alisin",
+    "Creator code {code}: {pct}% off": "Creator code {code}: {pct}% off",
+    "That code doesn't exist or has expired.": "Wala ang code na iyan o expired na.",
     "Priority: built before all free requests": "Priority: ginagawa bago ang lahat ng free request",
     "Need it faster? Paid scripts come first": "Kailangan mo nang mas mabilis? Unang ginagawa ang paid scripts",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Ang free requests ay ginagawa ayon sa dami ng votes kapag may oras kami. Ang paid custom scripts ay ginagawa bago ang kahit anong free request, para lang sa game mo, at may sarili mong features.",
@@ -7744,6 +7804,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Have a creator code?": "Bạn có mã nhà sáng tạo không?",
+    "Creator code": "Mã nhà sáng tạo",
+    "Apply": "Áp dụng",
+    "Remove": "Xóa",
+    "Creator code {code}: {pct}% off": "Mã nhà sáng tạo {code}: giảm {pct}%",
+    "That code doesn't exist or has expired.": "Mã này không tồn tại hoặc đã hết hạn.",
     "Priority: built before all free requests": "Ưu tiên: làm trước mọi yêu cầu miễn phí",
     "Need it faster? Paid scripts come first": "Cần nhanh hơn? Script trả phí được làm trước",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "Yêu cầu miễn phí được làm theo thứ tự lượt vote khi bọn mình có thời gian. Script đặt riêng trả phí được làm trước mọi yêu cầu miễn phí, chỉ dành cho game của bạn với tính năng bạn muốn.",
@@ -8518,6 +8584,12 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "Have a creator code?": "عندك كود صانع محتوى؟",
+    "Creator code": "كود صانع المحتوى",
+    "Apply": "تطبيق",
+    "Remove": "إزالة",
+    "Creator code {code}: {pct}% off": "كود صانع المحتوى {code}: خصم {pct}%",
+    "That code doesn't exist or has expired.": "هذا الكود غير موجود أو انتهت صلاحيته.",
     "Priority: built before all free requests": "أولوية: نسويه قبل كل الطلبات المجانية",
     "Need it faster? Paid scripts come first": "تبيه أسرع؟ السكربتات المدفوعة لها الأولوية",
     "Free requests are built in vote order when we have time. Paid custom scripts are built before any free request, made just for your game, with your own features.": "الطلبات المجانية نسويها حسب ترتيب التصويت لما يكون عندنا وقت. السكربتات المخصصة المدفوعة نسويها قبل أي طلب مجاني، خاصة للعبتك وبالميزات اللي تبيها.",
