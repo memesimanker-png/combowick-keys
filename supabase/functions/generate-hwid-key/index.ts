@@ -37,6 +37,28 @@ async function sha256(input: string): Promise<string> {
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
+const KEY_LIMIT = 5;                       // free keys per IP per window
+const KEY_WINDOW_MS = 10 * 60 * 60 * 1000; // 10 hours
+
+// How many keys this IP made in the window, and when the oldest one drops out (= next free slot).
+async function quotaFor(supabase: any, ip: string): Promise<{ used: number; resets_at: string | null }> {
+  const since = new Date(Date.now() - KEY_WINDOW_MS).toISOString();
+  const { data, count } = await supabase
+    .from("hwid_key_ip_log")
+    .select("created_at", { count: "exact" })
+    .eq("ip", ip)
+    .gte("created_at", since)
+    .order("created_at", { ascending: true })
+    .limit(1);
+  const oldest = data?.[0]?.created_at;
+  return { used: count ?? 0, resets_at: oldest ? new Date(new Date(oldest).getTime() + KEY_WINDOW_MS).toISOString() : null };
+}
+
+// Every refusal is recorded so "earned a token but never got a key" can be explained later.
+function logFail(supabase: any, reason: string, ip: string, tokenIp: string | null = null, detail = "") {
+  supabase.from("key_gen_fail_log").insert({ reason, ip, token_ip: tokenIp, detail: detail.slice(0, 300) }).then(() => {}, () => {});
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -52,6 +74,16 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const { username, verify_token } = body as { username?: string; verify_token?: string };
+
+    // Quota check only (no token needed): the key page asks this BEFORE the visitor does an offer, so
+    // nobody completes an offer just to be told "limit reached" at the very end.
+    if ((body as any)?.check_quota) {
+      const q = await quotaFor(getExternalSupabase(), getIp(req));
+      return new Response(
+        JSON.stringify({ success: true, limit: KEY_LIMIT, used: q.used, limited: q.used >= KEY_LIMIT, resets_at: q.resets_at }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     if (!verify_token || typeof verify_token !== "string") {
       return new Response(
@@ -73,44 +105,40 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (tokErr || !tokenRow) {
+      logFail(supabase, "invalid_token", ip);
       return new Response(
         JSON.stringify({ success: false, error: "Invalid verification token." }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
     if (tokenRow.used) {
+      logFail(supabase, "token_used", ip, tokenRow.ip);
       return new Response(
         JSON.stringify({ success: false, error: "Verification token already used. Please verify again." }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
     if (new Date(tokenRow.expires_at).getTime() < Date.now()) {
+      logFail(supabase, "token_expired", ip, tokenRow.ip);
       return new Response(
         JSON.stringify({ success: false, error: "Verification token expired. Please verify again." }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+    // The token is a long random single-use secret that expires in minutes, so it is NOT tied to the
+    // IP any more: phones switching Wi-Fi <-> mobile data got "does not match this device" and lost the
+    // key they had just earned. Still recorded so we can see how often it happens.
     if (tokenRow.ip !== ip) {
-      console.warn("[generate-hwid-key] IP mismatch:", tokenRow.ip, "vs", ip);
-      return new Response(
-        JSON.stringify({ success: false, error: "Verification token does not match this device." }),
-        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
+      console.warn("[generate-hwid-key] IP changed since verification:", tokenRow.ip, "->", ip);
+      logFail(supabase, "ip_changed_allowed", ip, tokenRow.ip);
     }
 
-    // Per-IP rate limit: 1 key per 10 hours
-    const tenHoursAgo = new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString();
-    const { count, error: cntErr } = await supabase
-      .from("hwid_key_ip_log")
-      .select("id", { count: "exact", head: true })
-      .eq("ip", ip)
-      .gte("created_at", tenHoursAgo);
-
-    if (cntErr) {
-      console.error("[generate-hwid-key] rate-limit count error:", cntErr);
-    } else if ((count ?? 0) >= 5) {
+    // Per-IP rate limit: KEY_LIMIT keys per 10 hours (the token is NOT burned when refused)
+    const quota = await quotaFor(supabase, ip).catch(() => null);
+    if (quota && quota.used >= KEY_LIMIT) {
+      logFail(supabase, "rate_limited", ip, tokenRow.ip);
       return new Response(
-        JSON.stringify({ success: false, error: "Rate limit: only 5 keys per 10 hours per IP." }),
+        JSON.stringify({ success: false, code: "rate_limited", resets_at: quota.resets_at, error: "Rate limit: only 5 keys per 10 hours per IP." }),
         { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -122,24 +150,44 @@ Deno.serve(async (req) => {
       .eq("id", tokenRow.id);
 
     // Hours were decided when the verify token was issued (offer 24 / CPC 8 / Linkvertise 6, admin-set).
-    const keyHours = Number((tokenRow as any).hours) > 0 ? Number((tokenRow as any).hours) : 11;
-    const requestBody: { username?: string; hours: number } = { hours: keyHours };
+    const keyHours = Number((tokenRow as any).hours) > 0 ? Number((tokenRow as any).hours) : 6;
+    const requestBody: { username?: string; hours: number; game_id?: string } = { hours: keyHours };
+    // Lock the key to the game picked on the key page (the executor API maps a place id to its universe).
+    // This was never forwarded before, so keys bound to whatever game they were FIRST used in.
+    const pickedGame = String((body as any)?.game_id ?? "").trim();
+    if (/^[0-9]{1,20}$/.test(pickedGame)) requestBody.game_id = pickedGame;
     if (username && typeof username === "string" && username.trim().length > 0) {
       requestBody.username = username.trim();
     }
 
-    const response = await fetch(HWID_KEY_API_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
+    // If creating the key fails, give the token back — otherwise the visitor loses the key they earned
+    // ("token already used" on retry).
+    const unburn = () => supabase.from("verify_tokens").update({ used: false, used_at: null }).eq("id", tokenRow.id);
+    let response: Response;
+    try {
+      response = await fetch(HWID_KEY_API_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+          "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth
+          Accept: "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+    } catch (e) {
+      await unburn();
+      logFail(supabase, "key_api_unreachable", ip, tokenRow.ip, String(e));
+      return new Response(
+        JSON.stringify({ success: false, error: "Key server is busy — please press Generate again." }),
+        { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
-    const responseData = await response.json();
+    const responseData = await response.json().catch(() => ({}));
     if (!response.ok) {
+      await unburn();
+      logFail(supabase, "key_api_error", ip, tokenRow.ip, `${response.status} ${responseData?.message || responseData?.error || ""}`);
       return new Response(
         JSON.stringify({
           success: false,

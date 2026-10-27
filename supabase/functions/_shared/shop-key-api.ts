@@ -10,6 +10,7 @@ const COMMON_HEADERS = {
   "Content-Type": "application/json",
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
   Accept: "application/json",
+  "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth (mint/extend/transfer/deactivate/skip)
 };
 
 export type ShopKeyResult = {

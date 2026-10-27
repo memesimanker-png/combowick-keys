@@ -129,6 +129,7 @@ async function generateKey(identifier: string, hours: number): Promise<string> {
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth
       Accept: "application/json",
     },
     body: JSON.stringify({ username: identifier, hours }),
@@ -192,11 +193,18 @@ serve(async (req) => {
         });
       }
 
-      const { data: existing } = await supabase
+      const findRow = async () => (await supabase
         .from("premium_key_purchases")
         .select("id, tier, status, key_generated, customer_email")
         .eq("payment_id", orderId)
-        .maybeSingle();
+        .maybeSingle()).data;
+      let existing = await findRow();
+      // PayPal fires this webhook the moment the checkout captures, often before paypal-capture-order
+      // has saved its row. Give the checkout a moment, so the buyer doesn't end up with two keys.
+      if (!existing) {
+        await new Promise((r) => setTimeout(r, 12000));
+        existing = await findRow();
+      }
 
       const floorTier = lockedTier || existing?.tier || null;
       const tooLow = lockedTier

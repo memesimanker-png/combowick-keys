@@ -32,9 +32,10 @@ async function generateKeyFromAPI(tier: string, customHours?: number): Promise<s
     headers: {
       "Content-Type": "application/json",
       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+      "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth
       Accept: "application/json",
     },
-    body: JSON.stringify({ username: `Admin-${Date.now()}`, hours }),
+    body: JSON.stringify({ username: `Admin-${Date.now()}`, hours, all_access: true }),
   });
 
   if (!response.ok) {
