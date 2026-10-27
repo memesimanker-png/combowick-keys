@@ -192,14 +192,20 @@ function PricePill({ exec }: { exec: Executor }) {
   );
 }
 
+// Executors our scripts DON'T run on (missing functions they need) — players kept installing these from
+// the old recommendations and opening tickets. Never a "best pick", always labelled. Keep in sync with the hub's
+// M.EXEC_UNSUPPORTED (key system/hub-redesign/season/upsell.lua).
+const NOT_SUPPORTED = /xeno|solara|jj[\s-]?sploit/i;
+const notSupported = (e: { title: string }) => NOT_SUPPORTED.test(e.title);
+
 const FAQS = [
   {
     q: "What is the best Roblox executor in 2026?",
-    a: "The 'best' executor changes weekly because Roblox patches frequently. Right now, top community picks include Delta, Solara, Xeno, Codex and Wave on Windows, and Delta and Hydrogen on iOS/Mac. The live list above shows real-time UNC/SUNC scores and Working vs Patched status from executors.online and inject.today, so you can always see which one is actually working today.",
+    a: "The 'best' executor changes weekly because Roblox patches frequently. Right now, top community picks include Delta, Codex and Wave on Windows, and Delta and Hydrogen on iOS/Mac. Xeno, Solara and JJSploit don't run our scripts. The live list above shows real-time UNC/SUNC scores and Working vs Patched status from executors.online and inject.today, so you can always see which one is actually working today.",
   },
   {
     q: "Are Roblox executors safe to use?",
-    a: "Reputable executors (Delta, Solara, Xeno, Codex, Wave) don't contain malware, but Roblox can issue account bans for using them. Use an alt account, never run executors as admin, and only download from the official website or Discord links shown on this page — most malware spreads through fake YouTube downloads.",
+    a: "Reputable executors (Delta, Codex, Wave) don't contain malware, but Roblox can issue account bans for using them. Use an alt account, never run executors as admin, and only download from the official website or Discord links shown on this page — most malware spreads through fake YouTube downloads.",
   },
   {
     q: "What does UNC and SUNC mean for Roblox executors?",
@@ -207,7 +213,7 @@ const FAQS = [
   },
   {
     q: "What Roblox executors work on Mac / iOS / Android?",
-    a: "Delta is the most popular cross-platform executor with native iOS, Android and Mac builds. Hydrogen is another solid Mac/iOS option. Windows still has the widest ecosystem (Solara, Xeno, Codex, Wave, Severe, Volt).",
+    a: "Delta is the most popular cross-platform executor with native iOS, Android and Mac builds. Hydrogen is another solid Mac/iOS option. Windows still has the widest ecosystem (Codex, Wave, Severe, Volt).",
   },
   {
     q: "Why is my executor showing as Patched?",
@@ -302,7 +308,7 @@ export default function Executors() {
 
   // our pick: best working free + best working paid internal executor for this device
   const picks = useMemo(() => {
-    const ok = forPlat.filter((e) => e.updateStatus === true && !e.hasIssues && !execPlat(e).external);
+    const ok = forPlat.filter((e) => e.updateStatus === true && !e.hasIssues && !execPlat(e).external && !notSupported(e));
     return { free: ok.find((e) => e.free), paid: ok.find((e) => !e.free) };
   }, [forPlat]);
 
@@ -405,6 +411,11 @@ export default function Executors() {
             </div>
           </div>
 
+          <div className="mb-6 flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+            <p><span className="font-semibold text-destructive">{t("Xeno, Solara and JJSploit don't work with our scripts.")}</span> <span className="text-muted-foreground">{t("They're missing functions our scripts need. Pick another executor below.")}</span></p>
+          </div>
+
           {/* Step 1: device */}
           <div className="mb-6">
             <p className="mb-2 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t("What are you playing on?")}</p>
@@ -452,7 +463,7 @@ export default function Executors() {
             <h2 className="mb-4 font-heading text-lg font-bold">{t("How to run our script")}</h2>
             <ol className="grid gap-4 sm:grid-cols-3">
               {[
-                { n: 1, title: "Get a working executor", text: "Pick one marked Working above. Only download from the official website or Discord link on this page." },
+                { n: 1, title: "Get a working executor", text: "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page." },
                 { n: 2, title: "Open Roblox and join a game", text: "Open your executor, then attach or inject it while you're in the game." },
                 { n: 3, title: "Paste our script and run it", text: "Copy the script below, paste it in the executor and press Execute. Get a free key when it asks." },
               ].map((s) => (
@@ -689,6 +700,7 @@ function ExecRow({ exec, onOpen }: { exec: Executor; onOpen: () => void }) {
           <PricePill exec={exec} />
           {s > 0 && <span className={`text-[11px] font-semibold tabular-nums ${s >= 95 ? "text-success" : s >= 80 ? "text-warning" : "text-destructive"}`}>{s}% {exec.suncPercentage != null ? "sUNC" : "UNC"}</span>}
           {exec.detected && <span className="text-[11px] font-semibold text-warning" title={t("Ban risk: use an alt account")}>{t("Detected")}</span>}
+          {notSupported(exec) && <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[11px] font-semibold text-destructive">{t("Not supported by our scripts")}</span>}
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-1">

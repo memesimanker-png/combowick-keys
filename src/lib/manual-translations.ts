@@ -4,6 +4,10 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara et JJSploit ne marchent pas avec nos scripts.",
+    "They're missing functions our scripts need. Pick another executor below.": "Il leur manque des fonctions dont nos scripts ont besoin. Choisis un autre executor ci-dessous.",
+    "Not supported by our scripts": "Pas compatible avec nos scripts",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Choisis-en un marqué Fonctionne ci-dessus (pas Xeno, Solara ni JJSploit). Télécharge uniquement depuis le site officiel ou le lien Discord sur cette page.",
     "Have a creator code?": "Tu as un code créateur ?",
     "Creator code": "Code créateur",
     "Apply": "Appliquer",
@@ -784,6 +788,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara y JJSploit no funcionan con nuestros scripts.",
+    "They're missing functions our scripts need. Pick another executor below.": "Les faltan funciones que nuestros scripts necesitan. Elige otro executor de abajo.",
+    "Not supported by our scripts": "No compatible con nuestros scripts",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Elige uno marcado como Funciona arriba (no Xeno, Solara ni JJSploit). Descarga solo desde la web oficial o el enlace de Discord de esta página.",
     "Have a creator code?": "¿Tienes un código de creador?",
     "Creator code": "Código de creador",
     "Apply": "Aplicar",
@@ -1564,6 +1572,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara und JJSploit funktionieren nicht mit unseren Skripten.",
+    "They're missing functions our scripts need. Pick another executor below.": "Ihnen fehlen Funktionen, die unsere Skripte brauchen. Wähle unten einen anderen Executor.",
+    "Not supported by our scripts": "Nicht kompatibel mit unseren Skripten",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Wähle oben einen mit Funktioniert (nicht Xeno, Solara oder JJSploit). Lade nur von der offiziellen Website oder dem Discord-Link auf dieser Seite herunter.",
     "Have a creator code?": "Hast du einen Creator-Code?",
     "Creator code": "Creator-Code",
     "Apply": "Einlösen",
@@ -2344,6 +2356,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara e JJSploit não funcionam com nossos scripts.",
+    "They're missing functions our scripts need. Pick another executor below.": "Falta neles funções que nossos scripts precisam. Escolha outro executor abaixo.",
+    "Not supported by our scripts": "Não compatível com nossos scripts",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Escolha um marcado como Funcionando acima (não Xeno, Solara nem JJSploit). Baixe só pelo site oficial ou pelo link do Discord desta página.",
     "Have a creator code?": "Tem um código de criador?",
     "Creator code": "Código de criador",
     "Apply": "Aplicar",
@@ -3124,6 +3140,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara и JJSploit не работают с нашими скриптами.",
+    "They're missing functions our scripts need. Pick another executor below.": "В них нет функций, которые нужны нашим скриптам. Выбери другой экзекьютор ниже.",
+    "Not supported by our scripts": "Не поддерживается нашими скриптами",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Выбери тот, что отмечен как Работает выше (не Xeno, Solara и не JJSploit). Скачивай только с официального сайта или по ссылке на Discord с этой страницы.",
     "Have a creator code?": "Есть код автора?",
     "Creator code": "Код автора",
     "Apply": "Применить",
@@ -3904,6 +3924,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno、Solara 和 JJSploit 无法运行我们的脚本。",
+    "They're missing functions our scripts need. Pick another executor below.": "它们缺少我们脚本需要的功能。请在下方选择其他注入器。",
+    "Not supported by our scripts": "不支持我们的脚本",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "请选择上方标记为可用的（不要选 Xeno、Solara 或 JJSploit）。只从本页的官方网站或 Discord 链接下载。",
     "Have a creator code?": "有创作者代码吗？",
     "Creator code": "创作者代码",
     "Apply": "使用",
@@ -4684,6 +4708,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara, JJSploit는 저희 스크립트가 작동하지 않아요.",
+    "They're missing functions our scripts need. Pick another executor below.": "저희 스크립트에 필요한 기능이 없어요. 아래에서 다른 익스큐터를 고르세요.",
+    "Not supported by our scripts": "저희 스크립트 미지원",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "위에서 작동 중으로 표시된 것을 고르세요 (Xeno, Solara, JJSploit 제외). 이 페이지의 공식 웹사이트나 Discord 링크에서만 다운로드하세요.",
     "Have a creator code?": "크리에이터 코드가 있나요?",
     "Creator code": "크리에이터 코드",
     "Apply": "적용",
@@ -5464,6 +5492,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara และ JJSploit ใช้กับสคริปต์ของเราไม่ได้",
+    "They're missing functions our scripts need. Pick another executor below.": "ขาดฟังก์ชันที่สคริปต์ของเราต้องใช้ เลือก executor ตัวอื่นด้านล่าง",
+    "Not supported by our scripts": "ไม่รองรับสคริปต์ของเรา",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "เลือกตัวที่ขึ้นว่าใช้งานได้ด้านบน (ยกเว้น Xeno, Solara และ JJSploit) ดาวน์โหลดจากเว็บทางการหรือลิงก์ Discord ในหน้านี้เท่านั้น",
     "Have a creator code?": "มีโค้ดครีเอเตอร์ไหม?",
     "Creator code": "โค้ดครีเอเตอร์",
     "Apply": "ใช้โค้ด",
@@ -6244,6 +6276,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara, dan JJSploit tidak bisa menjalankan script kami.",
+    "They're missing functions our scripts need. Pick another executor below.": "Mereka tidak punya fungsi yang dibutuhkan script kami. Pilih executor lain di bawah.",
+    "Not supported by our scripts": "Tidak didukung script kami",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Pilih yang bertanda Berfungsi di atas (bukan Xeno, Solara, atau JJSploit). Unduh hanya dari situs resmi atau link Discord di halaman ini.",
     "Have a creator code?": "Punya kode kreator?",
     "Creator code": "Kode kreator",
     "Apply": "Pakai",
@@ -7024,6 +7060,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Hindi gumagana ang Xeno, Solara at JJSploit sa mga script namin.",
+    "They're missing functions our scripts need. Pick another executor below.": "Kulang sila ng mga function na kailangan ng mga script namin. Pumili ng ibang executor sa ibaba.",
+    "Not supported by our scripts": "Hindi suportado ng mga script namin",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Pumili ng may markang Gumagana sa itaas (hindi Xeno, Solara o JJSploit). Mag-download lang mula sa opisyal na website o Discord link sa page na ito.",
     "Have a creator code?": "May creator code ka?",
     "Creator code": "Creator code",
     "Apply": "Gamitin",
@@ -7804,6 +7844,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara và JJSploit không chạy được script của chúng tôi.",
+    "They're missing functions our scripts need. Pick another executor below.": "Chúng thiếu các hàm mà script cần. Hãy chọn executor khác bên dưới.",
+    "Not supported by our scripts": "Không hỗ trợ script của chúng tôi",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "Chọn cái được đánh dấu Hoạt động ở trên (không phải Xeno, Solara hay JJSploit). Chỉ tải từ trang chính thức hoặc link Discord trên trang này.",
     "Have a creator code?": "Bạn có mã nhà sáng tạo không?",
     "Creator code": "Mã nhà sáng tạo",
     "Apply": "Áp dụng",
@@ -8584,6 +8628,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno و Solara و JJSploit ما تشتغل مع سكربتاتنا.",
+    "They're missing functions our scripts need. Pick another executor below.": "ناقصها دوال تحتاجها سكربتاتنا. اختر executor ثاني من تحت.",
+    "Not supported by our scripts": "غير مدعوم في سكربتاتنا",
+    "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page.": "اختر واحد مكتوب عليه يعمل فوق (مو Xeno ولا Solara ولا JJSploit). حمّل فقط من الموقع الرسمي أو رابط Discord في هذي الصفحة.",
     "Have a creator code?": "عندك كود صانع محتوى؟",
     "Creator code": "كود صانع المحتوى",
     "Apply": "تطبيق",
