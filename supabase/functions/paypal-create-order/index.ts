@@ -1,4 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { acceptedPrices, BASE_PRICE, encodeOrderTag, paidEnough } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -24,20 +26,11 @@ async function getPayPalAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-// Lowest price each product can legitimately be sold for (deepest weekend/flash sale included).
-// The browser sends the amount, so anything below this is a tampered request: refuse it before
-// PayPal ever sees it. The tier is also locked into the order (custom_id) so the capture step
-// reads it from PayPal instead of trusting the browser a second time.
-// NOTE: paid-game scripts (lifetime $11.99/$17) are hidden right now; unhiding them needs the
-// exact-price check, not just these floors.
-const MIN_PRICE: Record<string, number> = {
-  "trial-7day": 5,
-  monthly: 6.49,
-  lifetime: 24.99,
-  "topup-7d": 3,
-  "topup-30d": 8,
-  owner: 500,
-};
+// The browser sends the amount, so it is checked here before PayPal ever sees it:
+// key products must match today's real price (_shared/key-pricing.ts, same math as the page);
+// top-ups / owner have fixed prices. The tier (+ game) is also locked into the order (custom_id)
+// so the capture step reads it from PayPal instead of trusting the browser a second time.
+const FIXED_MIN: Record<string, number> = { "topup-7d": 3, "topup-30d": 8, owner: 500 };
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -45,7 +38,7 @@ serve(async (req) => {
   }
 
   try {
-    const { amount, description, tier } = await req.json();
+    const { amount, description, tier, game } = await req.json();
 
     if (!amount || isNaN(Number(amount)) || Number(amount) < 1) {
       return new Response(JSON.stringify({ error: "Invalid amount" }), {
@@ -53,10 +46,20 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const orderTier = String(tier || "other").slice(0, 100);
-    const floor = MIN_PRICE[orderTier];
-    if (floor !== undefined && Number(amount) < floor - 0.001) {
-      console.warn(`[create-order] refused ${orderTier} at $${amount} (min $${floor})`);
+    const orderTier = String(tier || "other").slice(0, 60);
+    const gameKey = typeof game === "string" && game ? game.slice(0, 60) : null;
+    let ok = true, expected: unknown = null;
+    if (orderTier in BASE_PRICE || gameKey) {
+      const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      const acc = await acceptedPrices(sb, orderTier, gameKey);
+      expected = acc;
+      ok = paidEnough(Number(amount), acc);
+    } else if (FIXED_MIN[orderTier] !== undefined) {
+      expected = FIXED_MIN[orderTier];
+      ok = Number(amount) >= FIXED_MIN[orderTier] - 0.001;
+    }
+    if (!ok) {
+      console.warn(`[create-order] refused ${orderTier}${gameKey ? " / " + gameKey : ""} at $${amount} (expected ${JSON.stringify(expected)})`);
       return new Response(JSON.stringify({ error: "Invalid amount" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -74,7 +77,7 @@ serve(async (req) => {
       body: JSON.stringify({
         intent: "CAPTURE",
         purchase_units: [{
-          custom_id: orderTier,
+          custom_id: encodeOrderTag(orderTier, gameKey),
           amount: { currency_code: "USD", value: Number(amount).toFixed(2) },
           description: description || `ComboWick Premium Key - ${tier || "Purchase"}`,
         }],

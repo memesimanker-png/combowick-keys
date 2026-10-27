@@ -368,6 +368,7 @@ export default function PremiumKeys() {
                     nameKey: `${title} — ${plan.label}`,
                     price: plan.price,
                     script: g.script,
+                    gameKey: g.key,
                     color: "", borderColor: "", featureKeys: [],
                     buttonTextKey: "", buttonStyle: "", isSubscription: false,
                   } as any)}
@@ -473,6 +474,7 @@ export default function PremiumKeys() {
             isSubscription: selectedTier.isSubscription,
             subscriptionPrice: selectedTier.subscriptionPrice,
             script: (selectedTier as any).script,
+            gameKey: (selectedTier as any).gameKey,
           }}
           paypalClientId={paypalClientId}
           initialMethod={checkoutMethod}

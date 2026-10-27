@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { acceptedPrices, decodeOrderTag, paidEnough } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,7 +9,7 @@ const corsHeaders = {
 
 const HWID_KEY_API = "https://v0-remix-of-roblox-executor-system.vercel.app/api/generate-hwid-key";
 
-// Lowest legit price per key tier (deepest sale included). Same table as paypal-create-order.
+// Floor used only for orders created before the tier lock (no custom_id on the PayPal order).
 const KEY_MIN_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 6.49, lifetime: 24.99 };
 
 async function getPayPalAccessToken(): Promise<string> {
@@ -102,23 +103,35 @@ serve(async (req) => {
     // Trust PayPal, not the browser: the tier was locked into the order when it was created
     // (custom_id), and the amount is what PayPal actually charged. Orders created before the
     // tier lock fall back to the browser's tier, but still have to clear the price floor.
-    const lockedTier = captureDetail?.custom_id || unit?.custom_id || null;
+    const tag = decodeOrderTag(captureDetail?.custom_id || unit?.custom_id || null);
+    const lockedTier = tag.tier;
     const usedTier = lockedTier || tier || "lifetime";
     const paid = parseFloat(captureDetail?.amount?.value || "0") || 0;
-    const keyFloor = KEY_MIN_PRICE[usedTier];
-    const underpaid = keyFloor === undefined || paid < keyFloor - 0.001;
 
     const supabasePending = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Locked orders: must match the real price of that product (same math as the page).
+    // Older unlocked orders: must at least clear the tier's floor.
+    let underpaid: boolean;
+    let keyFloor: unknown;
+    if (lockedTier) {
+      const acc = await acceptedPrices(supabasePending, lockedTier, tag.game);
+      keyFloor = acc;
+      underpaid = !paidEnough(paid, acc);
+    } else {
+      keyFloor = KEY_MIN_PRICE[usedTier];
+      underpaid = keyFloor === undefined || paid < (keyFloor as number) - 0.001;
+    }
+
     const pendingEmail = customer_email || captureData.payer?.email_address || null;
 
     // Money moved but it doesn't match a key product (tampered price, or a donation/top-up order
     // pushed through the key capture): no key. Logged as "underpaid" so it can be reviewed/refunded.
     if ((captureStatus === "COMPLETED" || captureStatus === "PENDING") && underpaid) {
-      console.warn(`[capture] UNDERPAID order ${order_id}: tier=${usedTier} locked=${lockedTier} paid=$${paid} min=$${keyFloor}`);
+      console.warn(`[capture] UNDERPAID order ${order_id}: tier=${usedTier} locked=${lockedTier} game=${tag.game} paid=$${paid} expected=${JSON.stringify(keyFloor)}`);
       try {
         await supabasePending.from("premium_key_purchases").insert({
           payment_id: order_id,

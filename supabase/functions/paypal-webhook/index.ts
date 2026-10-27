@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { extendKey, deactivateKey } from "../_shared/shop-key-api.ts";
+import { acceptedPrices, decodeOrderTag, paidEnough } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -63,6 +64,11 @@ async function verifyWebhookSignature(req: Request, body: string, accessToken: s
 const KEY_MIN_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 6.49, lifetime: 24.99 };
 // Orders we create that are NOT key purchases (their own capture functions handle them).
 const isNonKeyOrder = (t: string | null) => !!t && (t === "donation" || t === "owner" || t.startsWith("topup-") || t === "other");
+// deno-lint-ignore no-explicit-any
+async function lockedOrderTooLow(supabase: any, tag: { tier: string | null; game: string | null }, amount: number): Promise<boolean> {
+  if (!tag.tier) return false;
+  return !paidEnough(amount, await acceptedPrices(supabase, tag.tier, tag.game));
+}
 // Monthly subscriptions: the plan's real price (the browser picks the amount when the plan is made).
 async function fetchPlanPrice(planId: string, accessToken: string): Promise<number> {
   try {
@@ -177,7 +183,8 @@ serve(async (req) => {
 
       const amount = confirmed.amount;
       const email = confirmed.email;
-      const lockedTier = confirmed.customId;
+      const tag = decodeOrderTag(confirmed.customId);
+      const lockedTier = tag.tier;
       if (isNonKeyOrder(lockedTier)) {
         console.log(`[webhook] Capture ${captureId} is a ${lockedTier} order — not a key purchase, skipping`);
         return new Response(JSON.stringify({ status: "ignored", reason: "non-key-order" }), {
@@ -192,7 +199,9 @@ serve(async (req) => {
         .maybeSingle();
 
       const floorTier = lockedTier || existing?.tier || null;
-      const tooLow = floorTier && KEY_MIN_PRICE[floorTier] !== undefined && amount < KEY_MIN_PRICE[floorTier] - 0.001;
+      const tooLow = lockedTier
+        ? await lockedOrderTooLow(supabase, tag, amount)
+        : !!floorTier && KEY_MIN_PRICE[floorTier] !== undefined && amount < KEY_MIN_PRICE[floorTier] - 0.001;
       if (existing && existing.status === "completed" && existing.key_generated) {
         console.log(`[webhook] Order ${orderId} already completed — skipping`);
       } else if (existing?.status === "underpaid" || tooLow) {

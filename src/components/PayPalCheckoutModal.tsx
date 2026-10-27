@@ -15,6 +15,8 @@ interface PayPalCheckoutModalProps {
     isSubscription?: boolean;
     subscriptionPrice?: number;
     script?: string;
+    /** paid-game script purchases: which game (the server prices the order from it) */
+    gameKey?: string;
   };
   paypalClientId: string;
   initialMethod?: "paypal" | "payoneer";
@@ -142,7 +144,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
     setError(null);
     try {
       const { data, error: fnError } = await supabase.functions.invoke("paypal-create-order", {
-        body: { amount: displayPrice, tier: tier.id, description: `${tier.name} Premium Key` },
+        body: { amount: displayPrice, tier: tier.id, game: tier.gameKey, description: `${tier.name} Premium Key` },
       });
       if (fnError || !data?.order_id) throw new Error("Failed to create order");
       return data.order_id;
