@@ -8,6 +8,9 @@ const corsHeaders = {
 
 const HWID_KEY_API = "https://v0-remix-of-roblox-executor-system.vercel.app/api/generate-hwid-key";
 
+// Lowest legit price per key tier (deepest sale included). Same table as paypal-create-order.
+const KEY_MIN_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 6.49, lifetime: 24.99 };
+
 async function getPayPalAccessToken(): Promise<string> {
   const clientId = Deno.env.get("PAYPAL_CLIENT_ID")!;
   const clientSecret = Deno.env.get("PAYPAL_CLIENT_SECRET")!;
@@ -89,14 +92,21 @@ serve(async (req) => {
 
     const captureData = await captureRes.json();
 
-    const usedTier = tier || "lifetime";
-
     // Inspect the actual capture status. eCheck (and some manual-review) payments
     // come back as PENDING and the money has NOT landed in the account yet.
-    const captureDetail =
-      captureData?.purchase_units?.[0]?.payments?.captures?.[0] || null;
+    const unit = captureData?.purchase_units?.[0];
+    const captureDetail = unit?.payments?.captures?.[0] || null;
     const captureStatus = captureDetail?.status || captureData?.status || null;
     const pendingReason = captureDetail?.status_details?.reason || null;
+
+    // Trust PayPal, not the browser: the tier was locked into the order when it was created
+    // (custom_id), and the amount is what PayPal actually charged. Orders created before the
+    // tier lock fall back to the browser's tier, but still have to clear the price floor.
+    const lockedTier = captureDetail?.custom_id || unit?.custom_id || null;
+    const usedTier = lockedTier || tier || "lifetime";
+    const paid = parseFloat(captureDetail?.amount?.value || "0") || 0;
+    const keyFloor = KEY_MIN_PRICE[usedTier];
+    const underpaid = keyFloor === undefined || paid < keyFloor - 0.001;
 
     const supabasePending = createClient(
       Deno.env.get("SUPABASE_URL")!,
@@ -104,6 +114,31 @@ serve(async (req) => {
     );
 
     const pendingEmail = customer_email || captureData.payer?.email_address || null;
+
+    // Money moved but it doesn't match a key product (tampered price, or a donation/top-up order
+    // pushed through the key capture): no key. Logged as "underpaid" so it can be reviewed/refunded.
+    if ((captureStatus === "COMPLETED" || captureStatus === "PENDING") && underpaid) {
+      console.warn(`[capture] UNDERPAID order ${order_id}: tier=${usedTier} locked=${lockedTier} paid=$${paid} min=$${keyFloor}`);
+      try {
+        await supabasePending.from("premium_key_purchases").insert({
+          payment_id: order_id,
+          tier: usedTier,
+          key_generated: "",
+          amount: paid,
+          currency: "USD",
+          status: "underpaid",
+          customer_email: pendingEmail,
+          user_id: user_id || null,
+          expires_at: null,
+        });
+      } catch (e) {
+        console.error("[capture] underpaid insert failed:", e);
+      }
+      return new Response(JSON.stringify({ error: "The amount paid doesn't match this product. Contact support on Discord with your PayPal receipt." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Payment not (yet) money-in-hand: do NOT generate or hand over a key.
     if (captureStatus !== "COMPLETED") {
@@ -115,7 +150,7 @@ serve(async (req) => {
             payment_id: order_id,
             tier: usedTier,
             key_generated: "",
-            amount: Number(amount) || 0,
+            amount: paid,
             currency: "USD",
             status: "pending",
             customer_email: pendingEmail,
@@ -170,7 +205,7 @@ serve(async (req) => {
       payment_id: order_id,
       tier: usedTier,
       key_generated: generatedKey,
-      amount: Number(amount) || 0,
+      amount: paid,
       currency: "USD",
       status: "completed",
       customer_email: finalEmail,

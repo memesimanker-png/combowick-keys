@@ -31,7 +31,8 @@ serve(async (req) => {
 
   try {
     const { amount } = await req.json();
-    if (!amount || isNaN(Number(amount)) || Number(amount) < 1) {
+    // 6.49 = lowest legit monthly price (deepest sale); the browser picks the amount, so floor it.
+    if (!amount || isNaN(Number(amount)) || Number(amount) < 6.49 - 0.001) {
       return new Response(JSON.stringify({ error: "Invalid amount" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

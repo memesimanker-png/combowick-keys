@@ -72,6 +72,14 @@ Deno.serve(async (req) => {
       });
     }
 
+    // The browser picked the order amount: make sure PayPal really charged this pack's price.
+    const paid = parseFloat(detail?.amount?.value || "0") || 0;
+    const lockedTier = detail?.custom_id || captureData?.purchase_units?.[0]?.custom_id || null;
+    if (paid < price - 0.001 || (lockedTier && lockedTier !== `topup-${pack}`)) {
+      console.warn(`[topup] UNDERPAID order ${order_id}: pack=${pack} paid=$${paid} locked=${lockedTier}`);
+      return json({ error: "The amount paid doesn't match this top-up. Contact support on Discord with your PayPal receipt." }, 400);
+    }
+
     // Money in hand — extend the key.
     const ext = await extendKey(key, hours);
     if (!ext.ok) {

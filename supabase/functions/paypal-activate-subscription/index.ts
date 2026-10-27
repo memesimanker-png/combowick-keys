@@ -119,6 +119,28 @@ serve(async (req) => {
       });
     }
 
+    // The plan's real price, from PayPal (the browser chose the amount when the plan was made).
+    let planPrice = 0;
+    try {
+      if (subData?.plan_id) {
+        const pr = await fetch(`${PAYPAL_API}/v1/billing/plans/${subData.plan_id}`, {
+          headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+        });
+        const pd = await pr.json();
+        const cyc = (pd.billing_cycles || []).find((c: any) => c.tenure_type === "REGULAR") || pd.billing_cycles?.[0];
+        planPrice = parseFloat(cyc?.pricing_scheme?.fixed_price?.value || "0") || 0;
+      }
+    } catch (e) {
+      console.error("[activate-sub] plan lookup failed:", e);
+    }
+    if (planPrice < 6.49 - 0.001) {
+      console.warn(`[activate-sub] UNDERPAID subscription ${subscription_id}: plan $${planPrice}`);
+      return new Response(JSON.stringify({ error: "The subscription price doesn't match this product. Contact support on Discord." }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // Subscription is ACTIVE — money collected. Reuse an existing pending row if any.
     const { data: existing } = await supabase
       .from("premium_key_purchases")

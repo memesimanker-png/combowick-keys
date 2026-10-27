@@ -59,8 +59,27 @@ async function verifyWebhookSignature(req: Request, body: string, accessToken: s
 // and return its real amount/currency/email. This is the anti-spoof guarantee —
 // even if the signature check fails (wrong webhook id, simulator, replay), a
 // forged event cannot make us issue a key because PayPal itself must confirm it.
+// Lowest legit price per key tier (deepest sale included). Same table as paypal-create-order.
+const KEY_MIN_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 6.49, lifetime: 24.99 };
+// Orders we create that are NOT key purchases (their own capture functions handle them).
+const isNonKeyOrder = (t: string | null) => !!t && (t === "donation" || t === "owner" || t.startsWith("topup-") || t === "other");
+// Monthly subscriptions: the plan's real price (the browser picks the amount when the plan is made).
+async function fetchPlanPrice(planId: string, accessToken: string): Promise<number> {
+  try {
+    const res = await fetch(`${PAYPAL_API}/v1/billing/plans/${planId}`, {
+      headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+    });
+    if (!res.ok) return 0;
+    const d = await res.json();
+    const cyc = (d.billing_cycles || []).find((c: any) => c.tenure_type === "REGULAR") || d.billing_cycles?.[0];
+    return parseFloat(cyc?.pricing_scheme?.fixed_price?.value || "0") || 0;
+  } catch {
+    return 0;
+  }
+}
+
 async function fetchCapture(captureId: string, accessToken: string): Promise<
-  { ok: true; status: string; amount: number; currency: string; email: string | null } | { ok: false }
+  { ok: true; status: string; amount: number; currency: string; email: string | null; customId: string | null } | { ok: false }
 > {
   try {
     const res = await fetch(`${PAYPAL_API}/v2/payments/captures/${captureId}`, {
@@ -74,6 +93,7 @@ async function fetchCapture(captureId: string, accessToken: string): Promise<
       amount: parseFloat(d.amount?.value || "0"),
       currency: d.amount?.currency_code || "USD",
       email: d.payer?.email_address || null,
+      customId: d.custom_id || null,
     };
   } catch (e) {
     console.error("[webhook] fetchCapture threw:", e);
@@ -82,7 +102,7 @@ async function fetchCapture(captureId: string, accessToken: string): Promise<
 }
 
 async function fetchSubscription(subId: string, accessToken: string): Promise<
-  { ok: true; status: string; email: string | null } | { ok: false }
+  { ok: true; status: string; email: string | null; planId: string | null } | { ok: false }
 > {
   try {
     const res = await fetch(`${PAYPAL_API}/v1/billing/subscriptions/${subId}`, {
@@ -90,7 +110,7 @@ async function fetchSubscription(subId: string, accessToken: string): Promise<
     });
     if (!res.ok) return { ok: false };
     const d = await res.json();
-    return { ok: true, status: d.status, email: d.subscriber?.email_address || null };
+    return { ok: true, status: d.status, email: d.subscriber?.email_address || null, planId: d.plan_id || null };
   } catch (e) {
     console.error("[webhook] fetchSubscription threw:", e);
     return { ok: false };
@@ -157,6 +177,13 @@ serve(async (req) => {
 
       const amount = confirmed.amount;
       const email = confirmed.email;
+      const lockedTier = confirmed.customId;
+      if (isNonKeyOrder(lockedTier)) {
+        console.log(`[webhook] Capture ${captureId} is a ${lockedTier} order — not a key purchase, skipping`);
+        return new Response(JSON.stringify({ status: "ignored", reason: "non-key-order" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       const { data: existing } = await supabase
         .from("premium_key_purchases")
@@ -164,12 +191,20 @@ serve(async (req) => {
         .eq("payment_id", orderId)
         .maybeSingle();
 
+      const floorTier = lockedTier || existing?.tier || null;
+      const tooLow = floorTier && KEY_MIN_PRICE[floorTier] !== undefined && amount < KEY_MIN_PRICE[floorTier] - 0.001;
       if (existing && existing.status === "completed" && existing.key_generated) {
         console.log(`[webhook] Order ${orderId} already completed — skipping`);
+      } else if (existing?.status === "underpaid" || tooLow) {
+        console.warn(`[webhook] Order ${orderId} UNDERPAID (tier ${floorTier}, paid $${amount}) — no key`);
       } else {
-        let tier = existing?.tier || "trial-7day";
+        let tier = lockedTier || existing?.tier || "trial-7day";
         let hours = 72;
-        if (!existing) {
+        if (lockedTier) {
+          if (tier === "lifetime") hours = 876000;
+          else if (tier === "monthly") hours = 720;
+          else hours = 168;   // trial-7day = 7 days, same as the capture step
+        } else if (!existing) {
           if (amount >= 40) { tier = "lifetime"; hours = 876000; }
           else if (amount >= 8) { tier = "monthly"; hours = 720; }
         } else {
@@ -267,6 +302,13 @@ serve(async (req) => {
         });
       }
       const email = confirmed.email || event.resource.subscriber?.email_address || null;
+      const planPrice = confirmed.planId ? await fetchPlanPrice(confirmed.planId, accessToken) : 0;
+      if (planPrice < KEY_MIN_PRICE.monthly - 0.001) {
+        console.warn(`[webhook] Subscription ${subId} plan price $${planPrice} below monthly minimum — no key`);
+        return new Response(JSON.stringify({ status: "ignored", reason: "plan-underpriced" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       const { data: existing } = await supabase.from("premium_key_purchases")
         .select("id, key_generated, expires_at")
