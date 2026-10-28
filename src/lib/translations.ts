@@ -82,6 +82,8 @@ export const EN_TEXTS: Record<string, string> = {
   "faq_a6": "Premium keys are HWID-bound after activation. Contact Discord support if you need help with a device change.",
   "faq_q7": "Are custom scripts available?",
   "faq_a7": "Yes! Contact us on Discord for custom script requests and availability.",
+  "faq_q8": "Why don't you use LootLabs or Work.ink for keys?",
+  "faq_a8": "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.",
   // Keys page
   "License Keys": "License Keys",
   "keys_subtitle": "Get your free license key through our quick verification process, or upgrade to premium for instant access.",

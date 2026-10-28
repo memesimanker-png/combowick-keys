@@ -13,6 +13,7 @@ export function FAQSection() {
     { q: t("faq_q5"), a: t("faq_a5") },
     { q: t("faq_q6"), a: t("faq_a6") },
     { q: t("faq_q7"), a: t("faq_a7") },
+    { q: t("faq_q8"), a: t("faq_a8") },
   ];
 
   return (

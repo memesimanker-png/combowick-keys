@@ -4,6 +4,8 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Pourquoi vous n'utilisez pas LootLabs ou Work.ink pour les clés ?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Nous avons essayé d'autres fournisseurs de clés et ça n'a pas bien marché pour nous, donc les clés gratuites restent sur Linkvertise. Si tu ne veux faire aucune étape, Premium les supprime complètement, à partir de 5 $ pour 7 jours.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara et JJSploit ne marchent pas avec nos scripts.",
     "They're missing functions our scripts need. Pick another executor below.": "Il leur manque des fonctions dont nos scripts ont besoin. Choisis un autre executor ci-dessous.",
     "Not supported by our scripts": "Pas compatible avec nos scripts",
@@ -788,6 +790,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Why don't you use LootLabs or Work.ink for keys?": "¿Por qué no usan LootLabs o Work.ink para las keys?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Probamos otros proveedores de keys y no nos funcionaron bien, así que las keys gratis siguen con Linkvertise. Si no quieres hacer ningún paso, Premium los salta por completo, desde $5 por 7 días.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara y JJSploit no funcionan con nuestros scripts.",
     "They're missing functions our scripts need. Pick another executor below.": "Les faltan funciones que nuestros scripts necesitan. Elige otro executor de abajo.",
     "Not supported by our scripts": "No compatible con nuestros scripts",
@@ -1572,6 +1576,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Warum nutzt ihr nicht LootLabs oder Work.ink für Keys?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Wir haben andere Key-Anbieter getestet und sie haben für uns nicht gut funktioniert, deshalb bleiben die kostenlosen Keys bei Linkvertise. Wenn du gar keine Schritte machen willst, überspringt Premium sie komplett, ab 5 $ für 7 Tage.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara und JJSploit funktionieren nicht mit unseren Skripten.",
     "They're missing functions our scripts need. Pick another executor below.": "Ihnen fehlen Funktionen, die unsere Skripte brauchen. Wähle unten einen anderen Executor.",
     "Not supported by our scripts": "Nicht kompatibel mit unseren Skripten",
@@ -2356,6 +2362,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Por que vocês não usam LootLabs ou Work.ink para as keys?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Testamos outros provedores de keys e eles não funcionaram bem pra gente, então as keys grátis continuam no Linkvertise. Se você não quer fazer nenhuma etapa, o Premium pula todas, a partir de US$ 5 por 7 dias.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara e JJSploit não funcionam com nossos scripts.",
     "They're missing functions our scripts need. Pick another executor below.": "Falta neles funções que nossos scripts precisam. Escolha outro executor abaixo.",
     "Not supported by our scripts": "Não compatível com nossos scripts",
@@ -3140,6 +3148,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Почему вы не используете LootLabs или Work.ink для ключей?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Мы пробовали других провайдеров ключей, и у нас с ними не сложилось, поэтому бесплатные ключи остаются на Linkvertise. Если не хочешь проходить шаги вообще, Premium убирает их полностью, от $5 за 7 дней.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara и JJSploit не работают с нашими скриптами.",
     "They're missing functions our scripts need. Pick another executor below.": "В них нет функций, которые нужны нашим скриптам. Выбери другой экзекьютор ниже.",
     "Not supported by our scripts": "Не поддерживается нашими скриптами",
@@ -3924,6 +3934,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Why don't you use LootLabs or Work.ink for keys?": "为什么不用 LootLabs 或 Work.ink 来获取密钥？",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "我们试过其他密钥平台，效果都不好，所以免费密钥继续使用 Linkvertise。如果你完全不想做步骤，Premium 可以全部跳过，7 天只要 5 美元起。",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno、Solara 和 JJSploit 无法运行我们的脚本。",
     "They're missing functions our scripts need. Pick another executor below.": "它们缺少我们脚本需要的功能。请在下方选择其他注入器。",
     "Not supported by our scripts": "不支持我们的脚本",
@@ -4708,6 +4720,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Why don't you use LootLabs or Work.ink for keys?": "왜 키에 LootLabs나 Work.ink를 쓰지 않나요?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "다른 키 제공 업체도 써봤지만 잘 맞지 않아서 무료 키는 계속 Linkvertise를 사용해요. 단계를 아예 하고 싶지 않다면 Premium으로 전부 건너뛸 수 있어요. 7일 $5부터.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara, JJSploit는 저희 스크립트가 작동하지 않아요.",
     "They're missing functions our scripts need. Pick another executor below.": "저희 스크립트에 필요한 기능이 없어요. 아래에서 다른 익스큐터를 고르세요.",
     "Not supported by our scripts": "저희 스크립트 미지원",
@@ -5492,6 +5506,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Why don't you use LootLabs or Work.ink for keys?": "ทำไมไม่ใช้ LootLabs หรือ Work.ink สำหรับคีย์?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "เราเคยลองผู้ให้บริการคีย์อื่นแล้วแต่ใช้ไม่ค่อยดี คีย์ฟรีจึงยังใช้ Linkvertise อยู่ ถ้าไม่อยากทำขั้นตอนเลย Premium ข้ามได้ทั้งหมด เริ่มต้น $5 สำหรับ 7 วัน",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara และ JJSploit ใช้กับสคริปต์ของเราไม่ได้",
     "They're missing functions our scripts need. Pick another executor below.": "ขาดฟังก์ชันที่สคริปต์ของเราต้องใช้ เลือก executor ตัวอื่นด้านล่าง",
     "Not supported by our scripts": "ไม่รองรับสคริปต์ของเรา",
@@ -6276,6 +6292,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Kenapa tidak pakai LootLabs atau Work.ink untuk key?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Kami sudah mencoba penyedia key lain dan hasilnya kurang bagus untuk kami, jadi key gratis tetap pakai Linkvertise. Kalau kamu tidak mau mengerjakan langkah apa pun, Premium melewati semuanya, mulai $5 untuk 7 hari.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara, dan JJSploit tidak bisa menjalankan script kami.",
     "They're missing functions our scripts need. Pick another executor below.": "Mereka tidak punya fungsi yang dibutuhkan script kami. Pilih executor lain di bawah.",
     "Not supported by our scripts": "Tidak didukung script kami",
@@ -7060,6 +7078,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Bakit hindi kayo gumagamit ng LootLabs o Work.ink para sa keys?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Sinubukan namin ang ibang key provider pero hindi sila naging maayos para sa amin, kaya nasa Linkvertise pa rin ang libreng keys. Kung ayaw mong gumawa ng kahit anong step, nilalaktawan lahat ng Premium, simula $5 para sa 7 araw.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Hindi gumagana ang Xeno, Solara at JJSploit sa mga script namin.",
     "They're missing functions our scripts need. Pick another executor below.": "Kulang sila ng mga function na kailangan ng mga script namin. Pumili ng ibang executor sa ibaba.",
     "Not supported by our scripts": "Hindi suportado ng mga script namin",
@@ -7844,6 +7864,8 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Why don't you use LootLabs or Work.ink for keys?": "Sao không dùng LootLabs hoặc Work.ink để lấy key?",
+    "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Bọn mình đã thử các bên cung cấp key khác nhưng không ổn lắm, nên key miễn phí vẫn dùng Linkvertise. Nếu bạn không muốn làm bước nào cả, Premium bỏ qua hết, chỉ từ $5 cho 7 ngày.",
     "Xeno, Solara and JJSploit don't work with our scripts.": "Xeno, Solara và JJSploit không chạy được script của chúng tôi.",
     "They're missing functions our scripts need. Pick another executor below.": "Chúng thiếu các hàm mà script cần. Hãy chọn executor khác bên dưới.",
     "Not supported by our scripts": "Không hỗ trợ script của chúng tôi",
