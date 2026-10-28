@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft, ArrowRight } from "lucide-react";
+import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft, ArrowRight, ThumbsUp } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,6 +33,15 @@ const DL_DONE_AT = "direct_link_done_at";
 const dlRecentlyDone = () => {
   try { const at = Number(localStorage.getItem(DL_DONE_AT)) || 0; return at > 0 && Date.now() - at < DL_COOLDOWN_MS; } catch { return false; }
 };
+// Owner 2026-10-28: the ad-button clicks are replaced by Subscribe + Like on TRIPLE_WICK.
+// Done once, this device skips the step for a week.
+const LIKE_VIDEO_URL = "https://www.youtube.com/watch?v=WIxl2ehPFrs"; // Bike Universe long-form
+const SUB_LIKE_WAIT_SECONDS = 5;
+const SUB_LIKE_DONE_AT = "sub_like_done_at";
+const SUB_LIKE_SKIP_MS = 7 * 24 * 60 * 60 * 1000;
+const subLikeRecentlyDone = () => {
+  try { const at = Number(localStorage.getItem(SUB_LIKE_DONE_AT)) || 0; return at > 0 && Date.now() - at < SUB_LIKE_SKIP_MS; } catch { return false; }
+};
 
 export default function VerifyProviderSelect() {
   const navigate = useNavigate();
@@ -47,6 +56,9 @@ export default function VerifyProviderSelect() {
   const [discordCompleted, setDiscordCompleted] = useState(false);
   const [youtubeTimer, setYoutubeTimer] = useState(0);
   const [discordTimer, setDiscordTimer] = useState(0);
+  const [likeCompleted, setLikeCompleted] = useState(false);
+  const [likeTimer, setLikeTimer] = useState(0);
+  const [subLikeSkip] = useState(subLikeRecentlyDone); // done within the last 7 days -> step hidden
 
   const [directLinkClicks, setDirectLinkClicks] = useState(0);
   const [requiredClicks, setRequiredClicks] = useState(DEFAULT_DIRECT_LINK_CLICKS);
@@ -130,6 +142,21 @@ export default function VerifyProviderSelect() {
   }, [discordTimer]);
 
   useEffect(() => {
+    if (likeTimer > 0) {
+      const interval = setInterval(() => {
+        setLikeTimer((prev) => { if (prev <= 1) { setLikeCompleted(true); return 0; } return prev - 1; });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [likeTimer]);
+
+  useEffect(() => {
+    if (youtubeCompleted && likeCompleted) {
+      try { localStorage.setItem(SUB_LIKE_DONE_AT, String(Date.now())); } catch { /* ignore */ }
+    }
+  }, [youtubeCompleted, likeCompleted]);
+
+  useEffect(() => {
     if (youtubeCompleted && discordCompleted && showSubscriptionGate) {
       localStorage.setItem("subscription_gate_completed", new Date().toISOString());
       setShowSubscriptionGate(false);
@@ -141,6 +168,16 @@ export default function VerifyProviderSelect() {
     window.open(YOUTUBE_URL, "_blank");
     setYoutubeTimer(WAIT_TIME_SECONDS);
     toast({ title: t("Opening YouTube"), description: t("Please subscribe and wait a few seconds...") });
+  };
+
+  const handleSubscribeClick = () => {
+    window.open(YOUTUBE_URL + "?sub_confirmation=1", "_blank");
+    setYoutubeTimer(SUB_LIKE_WAIT_SECONDS);
+  };
+
+  const handleLikeClick = () => {
+    window.open(LIKE_VIDEO_URL, "_blank");
+    setLikeTimer(SUB_LIKE_WAIT_SECONDS);
   };
 
   const handleDiscordClick = () => {
@@ -231,32 +268,36 @@ export default function VerifyProviderSelect() {
     });
   }
 
-  const directLinkAdEnabled = isAdEnabled("verify-provider-select", "direct_link");
+  // Subscribe + Like (replaced the ad-button clicks). Hidden for a week once done on this device.
+  const subLikeDone = subLikeSkip || (youtubeCompleted && likeCompleted);
+  const likeProgress = likeTimer > 0 ? ((SUB_LIKE_WAIT_SECONDS - likeTimer) / SUB_LIKE_WAIT_SECONDS) * 100 : likeCompleted ? 100 : 0;
+  const subProgress = youtubeTimer > 0 ? ((SUB_LIKE_WAIT_SECONDS - youtubeTimer) / SUB_LIKE_WAIT_SECONDS) * 100 : youtubeCompleted ? 100 : 0;
 
-  if (directLinkAdEnabled) {
+  if (!subLikeSkip) {
     steps.push({
-      key: "direct-link",
-      title: t("Process Free Access"),
-      done: directLinkClicks >= requiredClicks,
-      icon: <MousePointerClick className="h-4 w-4" />,
+      key: "sub-like",
+      title: t("Subscribe & Like (once per week)"),
+      done: subLikeDone,
+      icon: <Youtube className="h-4 w-4" />,
       render: () => (
-        <div className="space-y-3">
-          <p className="text-xs text-muted-foreground">
-            {t("Click the button {n} times to process your free access.").replace("{n}", String(requiredClicks))}
-          </p>
-          <Button onClick={handleDirectLinkClick} className="w-full gap-2" disabled={directLinkClicks >= requiredClicks}>
-            <MousePointerClick className="h-4 w-4" />
-            {directLinkClicks >= requiredClicks
-              ? `✓ ${t("Processing Complete")}`
-              : `${t("Click Ad Button")} (${directLinkClicks}/${requiredClicks})`}
+        <div className="space-y-2">
+          <p className="text-xs text-muted-foreground">{t("Subscribe, then like the video. Done once a week.")}</p>
+          <Button onClick={handleSubscribeClick} disabled={youtubeCompleted || youtubeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
+            <Youtube className="mr-2 h-4 w-4" />
+            {youtubeCompleted ? `✓ ${t("YouTube Subscribed")}` : youtubeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(youtubeTimer)) : t("Subscribe to YouTube")}
           </Button>
-          <Progress value={(directLinkClicks / requiredClicks) * 100} className="h-1" />
+          {youtubeTimer > 0 && <Progress value={subProgress} className="h-1" />}
+          <Button onClick={handleLikeClick} disabled={likeCompleted || likeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
+            <ThumbsUp className="mr-2 h-4 w-4" />
+            {likeCompleted ? `✓ ${t("Video Liked")}` : likeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(likeTimer)) : t("Like the Video")}
+          </Button>
+          {likeTimer > 0 && <Progress value={likeProgress} className="h-1" />}
         </div>
       ),
     });
   }
 
-  const directLinkDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
+  const directLinkDone = subLikeDone;
 
   // Linkvertise is offered to everyone as the third option, but the wall only shows/unlocks it after
   // the visitor actually tried an offer (see CpaOfferWall LV_UNLOCK_MS).
