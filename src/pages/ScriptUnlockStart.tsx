@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Shield, Loader2, Unlock } from "lucide-react";
+import { Shield, Loader2, Unlock, Lock, Youtube, ThumbsUp } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NoIndex } from "@/components/NoIndex";
@@ -18,6 +18,20 @@ const SPONSOR_CAP_MS = 10 * 60 * 1000;
 const sponsorRecent = () => {
   try { const at = Number(localStorage.getItem(SPONSOR_AT)) || 0; return at > 0 && Date.now() - at < SPONSOR_CAP_MS; } catch { return false; }
 };
+
+// Subscribe + Like gate for YouTube visitors (owner 2026-10-28, like Asher's link-unlock). TEST ONLY for now:
+// shows when the link has &gate=1. &ch = the source channel (UC… id or @handle), &v = the source video.
+// Done once per channel per device per week.
+const GATE_DEFAULT_CH = "@Triple_WICK";
+const GATE_DEFAULT_V = "WIxl2ehPFrs"; // Bike Universe long-form on TRIPLE_WICK
+const GATE_WAIT_SECONDS = 5;
+const GATE_SKIP_MS = 7 * 24 * 60 * 60 * 1000;
+const gateKey = (ch: string) => "yt_sublike_" + ch.toLowerCase();
+const gateRecent = (ch: string) => {
+  try { const at = Number(localStorage.getItem(gateKey(ch))) || 0; return at > 0 && Date.now() - at < GATE_SKIP_MS; } catch { return false; }
+};
+const channelUrl = (ch: string) =>
+  ch.startsWith("UC") ? `https://www.youtube.com/channel/${ch}` : `https://www.youtube.com/${ch.startsWith("@") ? ch : "@" + ch}`;
 
 /**
  * External entry point for the script unlock (e.g. arrived from the YouTube smart-link gate).
@@ -44,7 +58,28 @@ export default function ScriptUnlockStart() {
   const direct = params.get("lv") === "1";
   const [waited, setWaited] = useState(false);
   const { t } = useTranslation();
-  const [needsTap] = useState(() => direct && !sponsorRecent());
+  const gateCh = (params.get("ch") || GATE_DEFAULT_CH).trim();
+  const gateV = (params.get("v") || GATE_DEFAULT_V).replace(/[^A-Za-z0-9_-]/g, "");
+  const [gateOn] = useState(() => direct && params.get("gate") === "1" && !gateRecent(gateCh));
+  const [needsTap] = useState(() => direct && (gateOn || !sponsorRecent()));
+  const [subTimer, setSubTimer] = useState(0);
+  const [subDone, setSubDone] = useState(false);
+  const [likeTimer, setLikeTimer] = useState(0);
+  const [likeDone, setLikeDone] = useState(false);
+  useEffect(() => {
+    if (subTimer <= 0) return;
+    const id = setTimeout(() => { if (subTimer === 1) setSubDone(true); setSubTimer(subTimer - 1); }, 1000);
+    return () => clearTimeout(id);
+  }, [subTimer]);
+  useEffect(() => {
+    if (likeTimer <= 0) return;
+    const id = setTimeout(() => { if (likeTimer === 1) setLikeDone(true); setLikeTimer(likeTimer - 1); }, 1000);
+    return () => clearTimeout(id);
+  }, [likeTimer]);
+  useEffect(() => {
+    if (!subDone || !likeDone) return;
+    try { localStorage.setItem(gateKey(gateCh), String(Date.now())); } catch { /* ignore */ }
+  }, [subDone, likeDone, gateCh]);
   useEffect(() => {
     if (!direct) return;
     const t = setTimeout(() => setWaited(true), 1500); // don't wait forever for the admin Linkvertise links
@@ -112,11 +147,68 @@ export default function ScriptUnlockStart() {
   }, [slug, resolving, navigate, direct, links, waited, needsTap]);
 
   const continueWithSponsor = () => {
-    try { localStorage.setItem(SPONSOR_AT, String(Date.now())); } catch { /* ignore */ }
-    window.open(SPONSOR_URL, "_blank", "noopener,noreferrer");
+    if (!sponsorRecent()) {
+      try { localStorage.setItem(SPONSOR_AT, String(Date.now())); } catch { /* ignore */ }
+      window.open(SPONSOR_URL, "_blank", "noopener,noreferrer");
+    }
     fired.current = true;
     launch();
   };
+
+  if (needsTap && !error && gateOn) {
+    const ready = !resolving && !!slug && subDone && likeDone;
+    return (
+      <div className="min-h-screen bg-black/70 flex flex-col">
+        <NoIndex />
+        <header className="container py-6">
+          <div className="flex items-center gap-2">
+            <Shield className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          </div>
+        </header>
+        <main className="flex-1 container flex flex-col items-center justify-center pb-12">
+          <Card className="w-full max-w-md border-primary/30 overflow-hidden">
+            <div className="aspect-video w-full bg-black">
+              <iframe
+                src={`https://www.youtube.com/embed/${gateV}?rel=0`}
+                title="Video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+            <CardHeader>
+              <CardTitle>{t("Your script is ready")}</CardTitle>
+              <CardDescription>{t("Subscribe, then like the video. Done once a week.")}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button
+                onClick={() => { window.open(channelUrl(gateCh) + "?sub_confirmation=1", "_blank"); setSubTimer(GATE_WAIT_SECONDS); }}
+                disabled={subDone || subTimer > 0}
+                className="w-full gap-2 bg-red-600 hover:bg-red-700 text-white"
+              >
+                <Youtube className="h-4 w-4" />
+                {subDone ? `✓ ${t("YouTube Subscribed")}` : subTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(subTimer)) : t("Subscribe to YouTube")}
+              </Button>
+              <Button
+                onClick={() => { window.open(`https://www.youtube.com/watch?v=${gateV}`, "_blank"); setLikeTimer(GATE_WAIT_SECONDS); }}
+                disabled={likeDone || likeTimer > 0}
+                className="w-full gap-2 bg-red-600 hover:bg-red-700 text-white"
+              >
+                <ThumbsUp className="h-4 w-4" />
+                {likeDone ? `✓ ${t("Video Liked")}` : likeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(likeTimer)) : t("Like the Video")}
+              </Button>
+              <Button onClick={continueWithSponsor} disabled={!ready} size="lg" className="w-full gap-2 !mt-4">
+                {ready ? <Unlock className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+                {t("Continue")}
+              </Button>
+              <p className="text-center text-xs text-muted-foreground">{t("Tap Continue to start 2 quick steps. A sponsor page opens in a new tab.")}</p>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   if (needsTap && !error) {
     const ready = !resolving && !!slug;
