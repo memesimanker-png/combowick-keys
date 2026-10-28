@@ -146,7 +146,7 @@ async function voterDiscordIds(row: any): Promise<string[]> {
   return [...ids];
 }
 
-const ICON = "https://cdn.discordapp.com/icons/934631259861319733/a_3c6b0ba4deedbc36b995e33a02d0948c.png?size=256";
+const ICON = "https://cdn.discordapp.com/icons/934631259861319733/a_09a00c203b6574b53facfc0e7e779afd.png?size=256";
 const releaseHeader = (row: any, line: string) => ({ type: 9, components: [{ type: 10, content: `### ✅ ${row.game_name} is out!\n${line}` }], accessory: { type: 11, media: { url: row.icon_url ?? ICON } } });
 function requesterDM(row: any) {
   const due = unix(row.video_due_at);
@@ -374,7 +374,7 @@ Deno.serve(async (req) => {
           flags: 1 << 15,
           components: [{ type: 17, accent_color: 0xf5b700, components: [
             { type: 9, components: [{ type: 10, content: `### 🎮 ${g.name}\nRequested on the website · 👥 **${g.playing.toLocaleString("en-US")}** playing now` }],
-              accessory: { type: 11, media: { url: g.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/a_3c6b0ba4deedbc36b995e33a02d0948c.png?size=256" } } },
+              accessory: { type: 11, media: { url: g.icon_url ?? "https://cdn.discordapp.com/icons/934631259861319733/a_09a00c203b6574b53facfc0e7e779afd.png?size=256" } } },
             { type: 14, divider: true, spacing: 1 },
             { type: 10, content: "React 👍 here or vote on the website. The most-voted games get made first." },
             { type: 1, components: [{ type: 2, style: 5, label: "Vote on the website", url: `${SITE}/request`, emoji: { name: "👍" } }, { type: 2, style: 5, label: "Play game", url: `https://www.roblox.com/games/${g.place_id}`, emoji: { name: "🎮" } }] },
