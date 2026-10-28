@@ -408,7 +408,7 @@ export default function AccessKey() {
                   ) : !selectedGame ? (
                     <><Gamepad2 className="mr-2 h-4 w-4" /> {t("Select a game first")}</>
                   ) : adClicks < REQUIRED_AD_CLICKS ? (
-                    <><Key className="mr-2 h-4 w-4" /> {t("Continue")} ({adClicks + 1}/{REQUIRED_AD_CLICKS + 1})</>
+                    <><Key className="mr-2 h-4 w-4" /> {t("Click Ad Button")} ({adClicks}/{REQUIRED_AD_CLICKS})</>
                   ) : (
                     <><Key className="mr-2 h-4 w-4" /> {t("Generate HWID Key")}</>
                   )}

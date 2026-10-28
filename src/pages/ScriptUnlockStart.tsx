@@ -146,6 +146,8 @@ export default function ScriptUnlockStart() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, resolving, navigate, direct, links, waited, needsTap]);
 
+  // The Continue button says "(1 ad)" whenever tapping it will open the sponsor tab.
+  const adNext = !sponsorRecent();
   const continueWithSponsor = () => {
     if (!sponsorRecent()) {
       try { localStorage.setItem(SPONSOR_AT, String(Date.now())); } catch { /* ignore */ }
@@ -200,9 +202,9 @@ export default function ScriptUnlockStart() {
               </Button>
               <Button onClick={continueWithSponsor} disabled={!ready} size="lg" className="w-full gap-2 !mt-4">
                 {ready ? <Unlock className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
-                {t("Continue")}
+                {t("Continue")}{adNext && ` (${t("1 ad")})`}
               </Button>
-              <p className="text-center text-xs text-muted-foreground">{t("Tap Continue to start 2 quick steps. A sponsor page opens in a new tab.")}</p>
+              <p className="text-center text-xs text-muted-foreground">{t("Then 2 quick steps to your script.")}</p>
             </CardContent>
           </Card>
         </main>
@@ -225,12 +227,12 @@ export default function ScriptUnlockStart() {
           <Card className="w-full max-w-md border-primary/30">
             <CardHeader>
               <CardTitle>{t("Your script is ready")}</CardTitle>
-              <CardDescription>{t("Tap Continue to start 2 quick steps. A sponsor page opens in a new tab.")}</CardDescription>
+              <CardDescription>{t("Then 2 quick steps to your script.")}</CardDescription>
             </CardHeader>
             <CardContent>
               <Button onClick={continueWithSponsor} disabled={!ready} size="lg" className="w-full gap-2">
                 {ready ? <Unlock className="h-4 w-4" /> : <Loader2 className="h-4 w-4 animate-spin" />}
-                {t("Continue")}
+                {t("Continue")}{adNext && ` (${t("1 ad")})`}
               </Button>
             </CardContent>
           </Card>

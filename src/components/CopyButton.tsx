@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { Copy, Check } from "lucide-react";
-import { maybeFireDirectLink } from "@/lib/monetag";
+import { canFireDirectLink, maybeFireDirectLink } from "@/lib/monetag";
+import { useTranslation } from "@/lib/translation-context";
 
 export function CopyButton({ text, className = "" }: { text: string; className?: string }) {
   const [copied, setCopied] = useState(false);
+  const { t } = useTranslation();
+  // Says "(1 ad)" while the next copy will open the sponsor tab (rate-capped, see lib/monetag).
+  const [adNext, setAdNext] = useState(canFireDirectLink);
 
   const handleCopy = async () => {
     // Background-tab Monetag hop (rate-capped to once per 3 min).
     // Fires BEFORE the await so the user gesture isn't lost.
     maybeFireDirectLink();
+    setAdNext(false);
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -22,12 +27,12 @@ export function CopyButton({ text, className = "" }: { text: string; className?:
       {copied ? (
         <>
           <Check className="h-4 w-4" />
-          Copied!
+          {t("Copied!")}
         </>
       ) : (
         <>
           <Copy className="h-4 w-4" />
-          Copy Script
+          {t("Copy Script")}{adNext && ` (${t("1 ad")})`}
         </>
       )}
     </button>
