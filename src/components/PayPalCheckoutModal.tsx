@@ -4,7 +4,7 @@ import { X, Loader2, CheckCircle, Zap, Lock, CreditCard, Clock, Check, Gift, Tag
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
-import { checkCreatorCode, savedCode, saveCode, withCode } from "@/lib/creator-code";
+import { checkCreatorCode, savedCode, saveCode, withCode, type CheckoutCode } from "@/lib/creator-code";
 
 interface PayPalCheckoutModalProps {
   isOpen: boolean;
@@ -46,11 +46,11 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   );
   const [planId, setPlanId] = useState<string | null>(null);
   const [loadingPlan, setLoadingPlan] = useState(false);
-  // Creator code: Premium monthly/lifetime by PayPal/card only. The server re-checks the code and the price.
+  // Creator code or promo coupon: Premium monthly/lifetime by PayPal/card only. The server re-checks the code and the price.
   const codeEligible = !tier.script && !tier.isSubscription && (tier.id === "monthly" || tier.id === "lifetime");
   const [codeOpen, setCodeOpen] = useState(false);
   const [codeInput, setCodeInput] = useState("");
-  const [code, setCode] = useState<{ code: string; discount_pct: number } | null>(null);
+  const [code, setCode] = useState<CheckoutCode | null>(null);
   const [codeMsg, setCodeMsg] = useState<string | null>(null);
   const [codeBusy, setCodeBusy] = useState(false);
   useEffect(() => {
@@ -168,7 +168,11 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
     setError(null);
     try {
       const { data, error: fnError } = await supabase.functions.invoke("paypal-create-order", {
-        body: { amount: displayPrice, tier: tier.id, game: tier.gameKey, creator_code: codeOn ? code!.code : undefined, description: `${tier.name} Premium Key` },
+        body: {
+          amount: displayPrice, tier: tier.id, game: tier.gameKey, description: `${tier.name} Premium Key`,
+          creator_code: codeOn && code!.kind === "creator" ? code!.code : undefined,
+          promo_code: codeOn && code!.kind === "promo" ? code!.code : undefined,
+        },
       });
       if (fnError || !data?.order_id) throw new Error("Failed to create order");
       return data.order_id;
@@ -436,7 +440,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                 <div className="mb-4">
                   {codeOn ? (
                     <div className="flex items-center justify-between gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-3 py-2 text-xs">
-                      <span className="flex items-center gap-1.5 text-green-400"><Tag className="w-3.5 h-3.5" /> {t("Creator code {code}: {pct}% off").replace("{code}", code!.code).replace("{pct}", String(code!.discount_pct))}</span>
+                      <span className="flex items-center gap-1.5 text-green-400"><Tag className="w-3.5 h-3.5" /> {t(code!.kind === "promo" ? "Promo code {code}: {pct}% off" : "Creator code {code}: {pct}% off").replace("{code}", code!.code).replace("{pct}", String(code!.discount_pct))}</span>
                       <button type="button" className="text-muted-foreground hover:text-foreground underline" onClick={() => { setCode(null); saveCode(null); setCodeInput(""); }}>{t("Remove")}</button>
                     </div>
                   ) : codeOpen ? (

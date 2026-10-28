@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { acceptedPrices, BASE_PRICE, CODE_TIERS, encodeOrderTag, lookupCreatorCode, paidEnough, withCode } from "../_shared/key-pricing.ts";
+import { acceptedPrices, BASE_PRICE, bestPct, CODE_TIERS, encodeOrderTag, lookupCreatorCode, lookupPromo, paidEnough, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,7 +38,7 @@ serve(async (req) => {
   }
 
   try {
-    const { amount, description, tier, game, creator_code } = await req.json();
+    const { amount, description, tier, game, creator_code, promo_code } = await req.json();
 
     if (!amount || isNaN(Number(amount)) || Number(amount) < 1) {
       return new Response(JSON.stringify({ error: "Invalid amount" }), {
@@ -50,20 +50,25 @@ serve(async (req) => {
     const gameKey = typeof game === "string" && game ? game.slice(0, 60) : null;
     let ok = true, expected: unknown = null;
     let codeUsed: string | null = null;
+    let promoUsed: string | null = null;
     if (orderTier in BASE_PRICE || gameKey) {
       const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
       let acc = await acceptedPrices(sb, orderTier, gameKey);
-      // creator code: Premium monthly/lifetime only; an unknown/expired code is refused (the page checks it first)
-      if (creator_code && !gameKey && CODE_TIERS.has(orderTier)) {
-        const cc = await lookupCreatorCode(sb, creator_code);
-        if (!cc) {
-          return new Response(JSON.stringify({ error: "Invalid creator code" }), {
+      // creator code / promo coupon: Premium monthly/lifetime only; an unknown/expired/used code is refused
+      // (the page checks it first). Both given: the bigger discount wins.
+      if ((creator_code || promo_code) && !gameKey && CODE_TIERS.has(orderTier)) {
+        const cc = creator_code ? await lookupCreatorCode(sb, creator_code) : null;
+        const promo = promo_code ? await lookupPromo(promo_code) : null;
+        if ((creator_code && !cc) || (promo_code && !promo)) {
+          return new Response(JSON.stringify({ error: promo_code && !promo ? "Invalid promo code" : "Invalid creator code" }), {
             status: 400,
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
-        codeUsed = cc.code;
-        acc = acc ? acc.map((p) => withCode(p, cc.discount_pct)) : acc;
+        codeUsed = cc?.code || null;
+        promoUsed = promo?.code || null;
+        const pct = bestPct(cc, promo);
+        acc = acc ? acc.map((p) => withCode(p, pct)) : acc;
       }
       expected = acc;
       ok = paidEnough(Number(amount), acc);
@@ -90,7 +95,7 @@ serve(async (req) => {
       body: JSON.stringify({
         intent: "CAPTURE",
         purchase_units: [{
-          custom_id: encodeOrderTag(orderTier, gameKey, codeUsed),
+          custom_id: encodeOrderTag(orderTier, gameKey, codeUsed, promoUsed),
           amount: { currency_code: "USD", value: Number(amount).toFixed(2) },
           description: description || `ComboWick Premium Key - ${tier || "Purchase"}`,
         }],

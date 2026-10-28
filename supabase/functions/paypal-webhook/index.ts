@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { extendKey, deactivateKey } from "../_shared/shop-key-api.ts";
-import { acceptedPrices, commissionFor, decodeOrderTag, lookupCreatorCode, paidEnough, withCode } from "../_shared/key-pricing.ts";
+import { acceptedPrices, bestPct, commissionFor, decodeOrderTag, lookupCreatorCode, lookupPromo, paidEnough, usePromo, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -65,11 +65,12 @@ const KEY_MIN_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 6.49, 
 // Orders we create that are NOT key purchases (their own capture functions handle them).
 const isNonKeyOrder = (t: string | null) => !!t && (t === "donation" || t === "owner" || t.startsWith("topup-") || t === "other");
 // deno-lint-ignore no-explicit-any
-async function lockedOrderTooLow(supabase: any, tag: { tier: string | null; game: string | null; code: string | null }, amount: number): Promise<boolean> {
+async function lockedOrderTooLow(supabase: any, tag: { tier: string | null; game: string | null; code: string | null; promo: string | null }, amount: number): Promise<boolean> {
   if (!tag.tier) return false;
   let acc = await acceptedPrices(supabase, tag.tier, tag.game);
   const cc = tag.code ? await lookupCreatorCode(supabase, tag.code, true) : null;
-  if (cc && acc) acc = acc.map((p) => withCode(p, cc.discount_pct));
+  const promo = tag.promo ? await lookupPromo(tag.promo, true) : null;
+  if ((cc || promo) && acc) { const pct = bestPct(cc, promo); acc = acc.map((p) => withCode(p, pct)); }
   return !paidEnough(amount, acc);
 }
 // Monthly subscriptions: the plan's real price (the browser picks the amount when the plan is made).
@@ -256,6 +257,8 @@ serve(async (req) => {
             creator_commission: commissionFor(wcc, amount, email),
           });
         }
+        // a cleared eCheck that used a promo coupon burns it now (capture-order burns instant payments)
+        if (tag.promo) await usePromo(tag.promo, orderId);
 
         if (finalEmail) {
           try {

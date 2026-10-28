@@ -120,18 +120,63 @@ export function withCode(price: number, pct: number): number {
   return Math.round(price * (1 - pct / 100) * 100) / 100;
 }
 
-// custom_id we put on PayPal orders: "lifetime", "lifetime|game:jurassic-blocky", "monthly|code:ZEN10"
-export function encodeOrderTag(tier: string, game: string | null, code: string | null = null): string {
+// ---- promo coupons (STREAK-xxxxxx / TRIAL-xxxxxx) ----
+// Single-use % off Premium monthly/lifetime, minted by the hub for a 7-day key streak or a $5 trial that's
+// ending. They live in the executor DB next to the key data (promo_coupons): checked with cw_check_coupon,
+// burned with cw_use_coupon (service role) once PayPal has the money. A promo and a creator code don't
+// stack: the bigger discount wins (the creator still gets credit for the order).
+export type PromoCode = { code: string; kind: string; discount_pct: number };
+async function execRpc(fn: string, body: unknown): Promise<unknown> {
+  const url = Deno.env.get("EXEC_SB_URL"), key = Deno.env.get("EXEC_SB_SERVICE");
+  if (!url || !key) throw new Error("EXEC_SB_URL / EXEC_SB_SERVICE not set");
+  const r = await fetch(`${url}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(`${fn} ${r.status}`);
+  return await r.json();
+}
+// includeUsed: the capture step re-reads a code it already accepted at checkout
+export async function lookupPromo(code: string | null | undefined, includeUsed = false): Promise<PromoCode | null> {
+  const c = String(code || "").trim().toUpperCase();
+  if (!/^[A-Z]+-[A-Z0-9]{6}$/.test(c)) return null;
+  try {
+    // deno-lint-ignore no-explicit-any
+    const d = await execRpc("cw_check_coupon", { p_code: c, p_include_used: includeUsed }) as any;
+    return d?.valid ? { code: d.code, kind: d.kind, discount_pct: Number(d.discount_pct) || 0 } : null;
+  } catch (e) {
+    console.error("[promo] lookup failed:", e);
+    return null;
+  }
+}
+// burn after a completed payment; false = it was already used (log it, the buyer still gets the key)
+export async function usePromo(code: string, orderId: string): Promise<boolean> {
+  try {
+    return (await execRpc("cw_use_coupon", { p_code: code, p_order: orderId })) === true;
+  } catch (e) {
+    console.error("[promo] burn failed:", code, orderId, e);
+    return false;
+  }
+}
+// the discount an order gets: the bigger of its creator code and its promo code
+export function bestPct(cc: CreatorCode | null, promo: PromoCode | null): number {
+  return Math.max(cc?.discount_pct || 0, promo?.discount_pct || 0);
+}
+
+// custom_id we put on PayPal orders: "lifetime", "lifetime|game:jurassic-blocky", "monthly|code:ZEN10", "monthly|promo:TRIAL-AB12CD"
+export function encodeOrderTag(tier: string, game: string | null, code: string | null = null, promo: string | null = null): string {
   let t = tier;
   if (game) t += `|game:${game}`;
   if (code) t += `|code:${code}`;
+  if (promo) t += `|promo:${promo}`;
   return t.slice(0, 127);
 }
-export function decodeOrderTag(tag: string | null | undefined): { tier: string | null; game: string | null; code: string | null } {
-  if (!tag) return { tier: null, game: null, code: null };
+export function decodeOrderTag(tag: string | null | undefined): { tier: string | null; game: string | null; code: string | null; promo: string | null } {
+  if (!tag) return { tier: null, game: null, code: null, promo: null };
   const [tier, ...rest] = tag.split("|");
   const get = (k: string) => rest.find((r) => r.startsWith(k + ":"))?.slice(k.length + 1) || null;
-  return { tier: tier || null, game: get("game"), code: get("code") };
+  return { tier: tier || null, game: get("game"), code: get("code"), promo: get("promo") };
 }
 export function paidEnough(paid: number, accepted: number[] | null): boolean {
   if (!accepted || accepted.length === 0) return false;

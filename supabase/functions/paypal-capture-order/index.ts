@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { acceptedPrices, commissionFor, decodeOrderTag, lookupCreatorCode, paidEnough, withCode } from "../_shared/key-pricing.ts";
+import { acceptedPrices, bestPct, commissionFor, decodeOrderTag, lookupCreatorCode, lookupPromo, paidEnough, usePromo, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -122,9 +122,11 @@ serve(async (req) => {
     const cc = tag.code ? await lookupCreatorCode(supabasePending, tag.code, true) : null;
     const creatorCode = cc?.code || null;
     const creatorCommission = commissionFor(cc, paid, captureData?.payer?.email_address);
+    // promo coupon locked into the order (already checked at checkout; burned below once the money is in)
+    const promo = tag.promo ? await lookupPromo(tag.promo, true) : null;
     if (lockedTier) {
       let acc = await acceptedPrices(supabasePending, lockedTier, tag.game);
-      if (cc && acc) acc = acc.map((p) => withCode(p, cc.discount_pct));
+      if ((cc || promo) && acc) { const pct = bestPct(cc, promo); acc = acc.map((p) => withCode(p, pct)); }
       keyFloor = acc;
       underpaid = !paidEnough(paid, acc);
     } else {
@@ -239,6 +241,7 @@ serve(async (req) => {
     if (dbError) {
       console.error("DB insert error:", dbError);
     }
+    if (promo && !(await usePromo(promo.code, order_id))) console.warn(`[capture] promo ${promo.code} was already used (order ${order_id}); key delivered anyway`);
 
     return new Response(JSON.stringify({
       status: "COMPLETED",
