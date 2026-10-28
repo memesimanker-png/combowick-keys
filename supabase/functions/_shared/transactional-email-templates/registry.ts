@@ -12,9 +12,14 @@ export interface TemplateEntry {
 import { template as scriptDelivery } from './script-delivery.tsx'
 import { template as keyDelivery } from './key-delivery.tsx'
 import { template as contactConfirmation } from './contact-confirmation.tsx'
+import { template as trialWinback } from './trial-winback.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'script-delivery': scriptDelivery,
   'key-delivery': keyDelivery,
   'contact-confirmation': contactConfirmation,
+  'trial-winback': trialWinback,
 }
+
+// templates only the server (service role) may send: they carry codes or are marketing
+export const SERVER_ONLY_TEMPLATES = new Set(['trial-winback'])

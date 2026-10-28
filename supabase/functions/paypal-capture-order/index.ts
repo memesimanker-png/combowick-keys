@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { acceptedPrices, bestPct, commissionFor, decodeOrderTag, lookupCreatorCode, lookupPromo, paidEnough, usePromo, withCode } from "../_shared/key-pricing.ts";
+import { acceptedPrices, commissionFor, decodeOrderTag, lookupCreatorCode, paidEnough, promoPctForOrder, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -122,11 +122,16 @@ serve(async (req) => {
     const cc = tag.code ? await lookupCreatorCode(supabasePending, tag.code, true) : null;
     const creatorCode = cc?.code || null;
     const creatorCommission = commissionFor(cc, paid, captureData?.payer?.email_address);
-    // promo coupon locked into the order (already checked at checkout; burned below once the money is in)
-    const promo = tag.promo ? await lookupPromo(tag.promo, true) : null;
+    // promo coupon locked into the order: it only counts if it burns for THIS order now that PayPal has the money
+    // (a code used by another order, or expired, gives no discount -> the order shows as underpaid)
+    const moneyIn = captureStatus === "COMPLETED" || captureStatus === "PENDING";
+    const promoPct = moneyIn ? await promoPctForOrder(tag.promo, order_id) : 0;
+    // only USD orders are key products (a crafted order in another currency never matches a price)
+    const usd = (captureDetail?.amount?.currency_code || "USD") === "USD";
     if (lockedTier) {
-      let acc = await acceptedPrices(supabasePending, lockedTier, tag.game);
-      if ((cc || promo) && acc) { const pct = bestPct(cc, promo); acc = acc.map((p) => withCode(p, pct)); }
+      let acc = usd ? await acceptedPrices(supabasePending, lockedTier, tag.game) : null;
+      const pct = Math.max(cc?.discount_pct || 0, promoPct);
+      if (pct && acc) acc = acc.map((p) => withCode(p, pct));
       keyFloor = acc;
       underpaid = !paidEnough(paid, acc);
     } else {
@@ -241,7 +246,6 @@ serve(async (req) => {
     if (dbError) {
       console.error("DB insert error:", dbError);
     }
-    if (promo && !(await usePromo(promo.code, order_id))) console.warn(`[capture] promo ${promo.code} was already used (order ${order_id}); key delivered anyway`);
 
     return new Response(JSON.stringify({
       status: "COMPLETED",

@@ -150,14 +150,25 @@ export async function lookupPromo(code: string | null | undefined, includeUsed =
     return null;
   }
 }
-// burn after a completed payment; false = it was already used (log it, the buyer still gets the key)
-export async function usePromo(code: string, orderId: string): Promise<boolean> {
+// Burn the code for this order when PayPal confirms the money. true = the code was unused (or already burned by
+// this same order: retries) -> the discount counts; false = used by another order / expired -> no discount;
+// null = the coupon server didn't answer -> trust the checkout's earlier check (logged).
+// graceHours: how long after expiry a payment started before it still counts (eChecks clear days later).
+export async function usePromo(code: string, orderId: string, graceHours = 6): Promise<boolean | null> {
   try {
-    return (await execRpc("cw_use_coupon", { p_code: code, p_order: orderId })) === true;
+    return (await execRpc("cw_use_coupon", { p_code: code, p_order: orderId, p_grace_hours: graceHours })) === true;
   } catch (e) {
     console.error("[promo] burn failed:", code, orderId, e);
-    return false;
+    return null;
   }
+}
+// the % a paid order gets from its promo tag: burned for this order (or coupon server down) -> its %, else 0
+export async function promoPctForOrder(code: string | null, orderId: string, graceHours = 6): Promise<number> {
+  if (!code) return 0;
+  const burned = await usePromo(code, orderId, graceHours);
+  if (burned === false) { console.warn(`[promo] ${code} refused for order ${orderId} (used by another order or expired)`); return 0; }
+  const p = await lookupPromo(code, true);
+  return p?.discount_pct ?? 20;
 }
 // the discount an order gets: the bigger of its creator code and its promo code
 export function bestPct(cc: CreatorCode | null, promo: PromoCode | null): number {

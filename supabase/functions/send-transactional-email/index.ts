@@ -1,7 +1,21 @@
 import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
-import { TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
+import { SERVER_ONLY_TEMPLATES, TEMPLATES } from '../_shared/transactional-email-templates/registry.ts'
+
+// role of the caller: the project's own service key (inside functions it may be the new non-JWT
+// sb_secret_ format), else the role claim of the JWT (the gateway already verified it: verify_jwt = true)
+function callerRole(req: Request): string | null {
+  try {
+    const token = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '')
+    const own = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    if (own && (token === own || req.headers.get('apikey') === own)) return 'service_role'
+    const part = token.split('.')[1]
+    return JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/'))).role ?? null
+  } catch {
+    return null
+  }
+}
 
 // Configuration baked in at scaffold time — do NOT change these manually.
 // To update, re-run the email domain setup flow.
@@ -91,6 +105,11 @@ Deno.serve(async (req) => {
 
   // 1. Look up template from registry (early — needed to resolve recipient)
   const template = TEMPLATES[templateName]
+  if (template && SERVER_ONLY_TEMPLATES.has(templateName) && callerRole(req) !== 'service_role') {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
+  }
 
   if (!template) {
     console.error('Template not found in registry', { templateName })
@@ -308,12 +327,13 @@ Deno.serve(async (req) => {
     )
   }
 
-  // 4. Render React Email template to HTML and plain text
+  // 4. Render React Email template to HTML and plain text (templates can show a visible unsubscribe link)
+  const renderData = { ...templateData, unsubscribeUrl: `https://keys.combowick.com/unsubscribe?token=${encodeURIComponent(unsubscribeToken)}` }
   const html = await renderAsync(
-    React.createElement(template.component, templateData)
+    React.createElement(template.component, renderData)
   )
   const plainText = await renderAsync(
-    React.createElement(template.component, templateData),
+    React.createElement(template.component, renderData),
     { plainText: true }
   )
 

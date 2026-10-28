@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { extendKey, deactivateKey } from "../_shared/shop-key-api.ts";
-import { acceptedPrices, bestPct, commissionFor, decodeOrderTag, lookupCreatorCode, lookupPromo, paidEnough, usePromo, withCode } from "../_shared/key-pricing.ts";
+import { acceptedPrices, commissionFor, decodeOrderTag, lookupCreatorCode, paidEnough, promoPctForOrder, withCode } from "../_shared/key-pricing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -65,12 +65,15 @@ const KEY_MIN_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 6.49, 
 // Orders we create that are NOT key purchases (their own capture functions handle them).
 const isNonKeyOrder = (t: string | null) => !!t && (t === "donation" || t === "owner" || t.startsWith("topup-") || t === "other");
 // deno-lint-ignore no-explicit-any
-async function lockedOrderTooLow(supabase: any, tag: { tier: string | null; game: string | null; code: string | null; promo: string | null }, amount: number): Promise<boolean> {
+async function lockedOrderTooLow(supabase: any, tag: { tier: string | null; game: string | null; code: string | null; promo: string | null }, amount: number, orderId: string): Promise<boolean> {
   if (!tag.tier) return false;
   let acc = await acceptedPrices(supabase, tag.tier, tag.game);
   const cc = tag.code ? await lookupCreatorCode(supabase, tag.code, true) : null;
-  const promo = tag.promo ? await lookupPromo(tag.promo, true) : null;
-  if ((cc || promo) && acc) { const pct = bestPct(cc, promo); acc = acc.map((p) => withCode(p, pct)); }
+  // promo counts only if it burns for this order (capture-order usually burned it already = ok); eChecks clear
+  // days after checkout, so a code that expired meanwhile still counts for 14 days
+  const promoPct = await promoPctForOrder(tag.promo, orderId, 14 * 24);
+  const pct = Math.max(cc?.discount_pct || 0, promoPct);
+  if (pct && acc) acc = acc.map((p) => withCode(p, pct));
   return !paidEnough(amount, acc);
 }
 // Monthly subscriptions: the plan's real price (the browser picks the amount when the plan is made).
@@ -211,8 +214,9 @@ serve(async (req) => {
       }
 
       const floorTier = lockedTier || existing?.tier || null;
-      const tooLow = lockedTier
-        ? await lockedOrderTooLow(supabase, tag, amount)
+      // only USD orders are key products (a crafted order in another currency never matches a price)
+      const tooLow = confirmed.currency !== "USD" || lockedTier
+        ? confirmed.currency !== "USD" || await lockedOrderTooLow(supabase, tag, amount, orderId)
         : !!floorTier && KEY_MIN_PRICE[floorTier] !== undefined && amount < KEY_MIN_PRICE[floorTier] - 0.001;
       if (existing && existing.status === "completed" && existing.key_generated) {
         console.log(`[webhook] Order ${orderId} already completed — skipping`);
@@ -257,8 +261,6 @@ serve(async (req) => {
             creator_commission: commissionFor(wcc, amount, email),
           });
         }
-        // a cleared eCheck that used a promo coupon burns it now (capture-order burns instant payments)
-        if (tag.promo) await usePromo(tag.promo, orderId);
 
         if (finalEmail) {
           try {
