@@ -17,6 +17,7 @@ import { SkipAdsBanner } from "@/components/SkipAdsBanner";
 import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
+import { canFireDirectLink, maybeFireDirectLink } from "@/lib/monetag";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 
@@ -32,8 +33,12 @@ export default function VerifyStep1() {
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
   const links = useVerifyLinks();
 
-  // Popunder on Step 1 too (previously only Step 2) so it can load on both steps.
-  usePopunder(true);
+  // Owner 2026-10-28: the ad-button step moved off the key page INTO this Proceed button (one sponsor tab,
+  // "(1 ad)" label, 3-min cap in lib/monetag). Step 1's popunder is off by default now (admin toggle
+  // verify-step1/popunder) so this tap never opens two ad tabs; the popunder stays on step 2.
+  usePopunder(isAdEnabled("verify-step1", "popunder"));
+  const sponsorOn = isAdEnabled("verify-step1", "direct_link");
+  const [adNext] = useState(canFireDirectLink);
 
   useEffect(() => {
     localStorage.setItem("selected_ad_provider", "linkvertise");
@@ -41,6 +46,7 @@ export default function VerifyStep1() {
   }, []);
 
   const handleVerification = () => {
+    if (sponsorOn) maybeFireDirectLink(); // before navigating, so the tap still counts as the user gesture
     setIsLoading(true);
     localStorage.setItem("verification_step", "step1");
     localStorage.setItem("selected_ad_provider", "linkvertise");
@@ -81,6 +87,7 @@ export default function VerifyStep1() {
                 >
                   <ExternalLink className="mr-2 h-4 w-4" />
                   {isLoading ? t("Processing...") : t("Proceed to Verification")}
+                  {!isLoading && sponsorOn && adNext && ` (${t("1 ad")})`}
                 </Button>
               </CardFooter>
             </Card>
