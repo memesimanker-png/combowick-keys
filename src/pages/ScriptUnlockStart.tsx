@@ -7,6 +7,17 @@ import { NoIndex } from "@/components/NoIndex";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/lib/translation-context";
+
+// YouTube visitors (?lv=1): one visible Continue tap opens a Monetag sponsor tab and starts the
+// Linkvertise steps in the same click (owner 2026-10-28; this zone paid ~$7 CPM on the old yotuube gate).
+// Tapped within SPONSOR_CAP_MS -> straight into the steps like before.
+const SPONSOR_URL = "https://omg10.com/4/11035810";
+const SPONSOR_AT = "unlock_sponsor_at";
+const SPONSOR_CAP_MS = 10 * 60 * 1000;
+const sponsorRecent = () => {
+  try { const at = Number(localStorage.getItem(SPONSOR_AT)) || 0; return at > 0 && Date.now() - at < SPONSOR_CAP_MS; } catch { return false; }
+};
 
 /**
  * External entry point for the script unlock (e.g. arrived from the YouTube smart-link gate).
@@ -32,6 +43,8 @@ export default function ScriptUnlockStart() {
   // ?lv=1 (our YouTube short links): skip the script page and go straight into the Linkvertise steps.
   const direct = params.get("lv") === "1";
   const [waited, setWaited] = useState(false);
+  const { t } = useTranslation();
+  const [needsTap] = useState(() => direct && !sponsorRecent());
   useEffect(() => {
     if (!direct) return;
     const t = setTimeout(() => setWaited(true), 1500); // don't wait forever for the admin Linkvertise links
@@ -87,6 +100,7 @@ export default function ScriptUnlockStart() {
   useEffect(() => {
     if (fired.current || resolving || !slug) return;
     if (direct) {
+      if (needsTap) return; // waits for the Continue tap (sponsor tab + steps)
       if (links[0] === null && !waited) return; // wait for the admin link (or the 1.5 s timeout)
       fired.current = true;
       launch();
@@ -95,7 +109,43 @@ export default function ScriptUnlockStart() {
     fired.current = true;
     navigate(`/scripts/${encodeURIComponent(slug)}?unlock=1`, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, resolving, navigate, direct, links, waited]);
+  }, [slug, resolving, navigate, direct, links, waited, needsTap]);
+
+  const continueWithSponsor = () => {
+    try { localStorage.setItem(SPONSOR_AT, String(Date.now())); } catch { /* ignore */ }
+    window.open(SPONSOR_URL, "_blank", "noopener,noreferrer");
+    fired.current = true;
+    launch();
+  };
+
+  if (needsTap && !error) {
+    const ready = !resolving && !!slug;
+    return (
+      <div className="min-h-screen bg-black/70 flex flex-col">
+        <NoIndex />
+        <header className="container py-6">
+          <div className="flex items-center gap-2">
+            <Shield className="h-6 w-6 text-primary" />
+            <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          </div>
+        </header>
+        <main className="flex-1 container flex flex-col items-center justify-center py-12">
+          <Card className="w-full max-w-md border-primary/30">
+            <CardHeader>
+              <CardTitle>{t("Your script is ready")}</CardTitle>
+              <CardDescription>{t("Tap Continue to start 2 quick steps. A sponsor page opens in a new tab.")}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={continueWithSponsor} disabled={!ready} size="lg" className="w-full gap-2">
+                {ready ? <Unlock className="h-4 w-4" /> : <Loader2 className="h-4 w-4 animate-spin" />}
+                {t("Continue")}
+              </Button>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
