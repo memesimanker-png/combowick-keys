@@ -247,6 +247,28 @@ serve(async (req) => {
       console.error("DB insert error:", dbError);
     }
 
+    // Email the key on every purchase (owner 2026-10-28): ~3 in 4 buyers check out as guests, so
+    // without this the key only exists on the thank-you page. The webhook sends this same email
+    // only when IT issues the key, so a buyer never gets two.
+    if (finalEmail) {
+      try {
+        await supabase.functions.invoke("send-transactional-email", {
+          body: {
+            templateName: "key-delivery",
+            recipientEmail: finalEmail,
+            idempotencyKey: `key-delivery-${order_id}`,
+            templateData: {
+              premiumKey: generatedKey,
+              tier: usedTier,
+              expiresAt: usedTier === "lifetime" ? "" : new Date(expiresAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" }),
+            },
+          },
+        });
+      } catch (e) {
+        console.error("[capture] key-delivery email failed:", e);
+      }
+    }
+
     return new Response(JSON.stringify({
       status: "COMPLETED",
       key: generatedKey,

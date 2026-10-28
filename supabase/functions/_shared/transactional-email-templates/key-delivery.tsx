@@ -13,6 +13,10 @@ interface KeyDeliveryProps {
   expiresAt?: string
 }
 
+// tier ids from checkout -> what the buyer saw on the store
+const TIER_NAMES: Record<string, string> = { 'trial-7day': '7-Day Trial', monthly: 'Monthly', lifetime: 'Lifetime' }
+const STORE = 'https://keys.combowick.com'
+
 const KeyDeliveryEmail = ({ premiumKey = '', tier, expiresAt }: KeyDeliveryProps) => (
   <Html lang="en" dir="ltr">
     <Head />
@@ -23,16 +27,18 @@ const KeyDeliveryEmail = ({ premiumKey = '', tier, expiresAt }: KeyDeliveryProps
           <Heading style={brand}>COMBO_WICK</Heading>
         </Section>
         <Section style={card}>
-          <Heading style={h1}>Your premium key 🔑</Heading>
+          <Heading style={h1}>Your premium key</Heading>
           <Text style={text}>
-            Thanks for purchasing{tier ? <> the <strong>{tier}</strong> plan</> : null}. Here's your key:
+            Thanks for buying{tier ? <> the <strong>{TIER_NAMES[tier] || tier}</strong> plan</> : null}. Here's your key:
           </Text>
           <Section style={keyBox}>
             <Text style={keyText}>{premiumKey}</Text>
           </Section>
-          {expiresAt ? <Text style={text}>Expires: <strong>{expiresAt}</strong></Text> : null}
+          <Text style={text}>Expires: <strong>{expiresAt || 'Never (Lifetime)'}</strong></Text>
+          <Text style={text}>Paste this key when the COMBO_WICK hub asks for it in Roblox. Keep this email so you never lose it.</Text>
           <Text style={fineprint}>
-            Manage it anytime from your <Link href="https://combowick.com/dashboard" style={link}>dashboard</Link>.
+            Want to see your key anytime? Make a free account on <Link href={`${STORE}/dashboard`} style={link}>keys.combowick.com</Link> with
+            this same email address and the key shows up in your Dashboard. Need help? Open a ticket in our Discord.
           </Text>
         </Section>
         <Text style={footer}>© {SITE_NAME} · combowick.com</Text>
@@ -45,7 +51,7 @@ export const template = {
   component: KeyDeliveryEmail,
   subject: 'Your Combo_WICK premium key',
   displayName: 'Premium key delivery',
-  previewData: { premiumKey: 'CW-XXXX-XXXX-XXXX', tier: 'Monthly', expiresAt: '2026-06-01' },
+  previewData: { premiumKey: 'CW-XXXX-XXXX-XXXX', tier: 'trial-7day', expiresAt: 'Nov 4, 2026' },
 } satisfies TemplateEntry
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Inter, Arial, sans-serif', padding: '24px 0' }
