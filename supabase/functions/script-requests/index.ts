@@ -335,7 +335,12 @@ Deno.serve(async (req) => {
       const discordId = user.user_metadata?.provider_id ?? user.user_metadata?.sub ?? user.identities?.find((i: any) => i.provider === "discord")?.id;
       const accessToken = String(b.provider_token ?? "");
       if (!discordId || !accessToken) return fail("Not a Discord sign-in.");
-      const r = await discord(`/guilds/${GUILD_ID}/members/${discordId}`, "PUT", { access_token: accessToken });
+      // join WITH the Member role + the 4 ping roles (same set the Verify button gives), so website sign-ins and
+      // buyers see the whole server, not just welcome/rules/verify. Already in the server (204): add Member only.
+      const MEMBER = "1428384911995174995";
+      const PINGS = ["1559636824971026543", "1559636825923129405", "1559636826896077010", "1559636827718295593"];
+      const r = await discord(`/guilds/${GUILD_ID}/members/${discordId}`, "PUT", { access_token: accessToken, roles: [MEMBER, ...PINGS] });
+      if (r.status === 204) await discord(`/guilds/${GUILD_ID}/members/${discordId}/roles/${MEMBER}`, "PUT");
       return json({ success: r.status === 201 || r.status === 204, joined: r.status === 201, already: r.status === 204, status: r.status });
     }
 
