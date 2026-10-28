@@ -7,6 +7,35 @@ const DEFAULT_SEND_DELAY_MS = 200
 const DEFAULT_AUTH_TTL_MINUTES = 15
 const DEFAULT_TRANSACTIONAL_TTL_MINUTES = 60
 
+// Sender: Resend (RESEND_API_KEY, combowick.com verified there). The Lovable email API this was scaffolded
+// for was never set up on this project, so it stays only as a fallback when LOVABLE_API_KEY exists.
+// deno-lint-ignore no-explicit-any
+async function sendViaResend(p: any, key: string): Promise<void> {
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      ...(p.idempotency_key ? { 'Idempotency-Key': String(p.idempotency_key).slice(0, 256) } : {}),
+    },
+    body: JSON.stringify({
+      from: p.from,
+      to: [p.to],
+      subject: p.subject,
+      html: p.html,
+      text: p.text,
+      headers: p.unsubscribe_token
+        ? { 'List-Unsubscribe': `<https://keys.combowick.com/unsubscribe?token=${encodeURIComponent(p.unsubscribe_token)}>` }
+        : undefined,
+    }),
+  })
+  if (!res.ok) {
+    const err = new Error(`Resend ${res.status}: ${(await res.text()).slice(0, 300)}`) as Error & { status: number }
+    err.status = res.status   // 429 -> rate-limit backoff, 403 -> DLQ (same handling as the Lovable errors)
+    throw err
+  }
+}
+
 // Check if an error is a rate-limit (429) response.
 // Uses EmailAPIError.status when available (email-js >=0.x with structured errors),
 // falls back to parsing the error message for older versions.
@@ -79,11 +108,12 @@ async function moveToDlq(
 }
 
 Deno.serve(async (req) => {
+  const resendKey = Deno.env.get('RESEND_API_KEY')
   const apiKey = Deno.env.get('LOVABLE_API_KEY')
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
 
-  if (!apiKey || !supabaseUrl || !supabaseServiceKey) {
+  if (!(resendKey || apiKey) || !supabaseUrl || !supabaseServiceKey) {
     console.error('Missing required environment variables')
     return new Response(
       JSON.stringify({ error: 'Server configuration error' }),
@@ -249,7 +279,8 @@ Deno.serve(async (req) => {
       }
 
       try {
-        await sendLovableEmail(
+        if (resendKey) await sendViaResend(payload, resendKey)
+        else await sendLovableEmail(
           {
             run_id: payload.run_id,
             to: payload.to,
@@ -267,7 +298,7 @@ Deno.serve(async (req) => {
           // sendUrl is optional — when LOVABLE_SEND_URL is not set, the library
           // falls back to the default Lovable API endpoint (https://api.lovable.dev).
           // Set LOVABLE_SEND_URL as a Supabase secret to override (e.g. for local dev).
-          { apiKey, sendUrl: Deno.env.get('LOVABLE_SEND_URL') }
+          { apiKey: apiKey!, sendUrl: Deno.env.get('LOVABLE_SEND_URL') }
         )
 
         // Log success
