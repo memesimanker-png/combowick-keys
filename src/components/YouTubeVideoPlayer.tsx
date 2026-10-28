@@ -7,7 +7,8 @@ interface YouTubeVideoPlayerProps {
   timerSeconds?: number;
 }
 
-const FALLBACK = ["srCkA0m-620", "uTzha7s7Or8", "HzD4Eg2f7G8"];
+// Bike Universe long-form on TRIPLE_WICK (the old COMBO_WICK videos are gone with that channel)
+const FALLBACK = ["WIxl2ehPFrs", "WIxl2ehPFrs", "WIxl2ehPFrs"];
 const STEP_INDEX: Record<string, number> = {
   "provider-select": 0,
   step1: 0,

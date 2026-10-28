@@ -1,14 +1,18 @@
-// Fetches latest 3 long-form videos from COMBO_WICK YouTube channel.
-// Uses YouTube's public RSS playlist feed (UULF prefix = uploads, long-form only — filters out Shorts).
-// Zero API key, zero quota. Cached in-memory for 2h, served via CDN cache headers.
+// Videos for the key steps (step 1/2/3 each take one; with fewer videos they repeat).
+// PINNED wins while it has entries; otherwise the latest 3 long-form videos from TRIPLE_WICK (ex Kryos Hub1)
+// via YouTube's public RSS playlist feed (UULF prefix = uploads, long-form only — filters out Shorts).
+// Zero API key, zero quota. Cached in-memory + Redis, served via CDN cache headers.
 
 import { redisGetJSON, redisSetJSON } from "../_shared/redis.ts";
 
-const CHANNEL_SUFFIX = "Y-K7zQjLXzGSOz-Na7A6nQ"; // @COMBO_WICK
+// Bike Universe long-form on TRIPLE_WICK, on all 3 steps until more English long-forms are up.
+const PINNED: string[] = ["WIxl2ehPFrs"];
+
+const CHANNEL_SUFFIX = "m6wx1Eo5WqDHoFHa6aFSnA"; // TRIPLE_WICK (Kryos Hub1); @COMBO_WICK was terminated
 const PLAYLIST_ID = `UULF${CHANNEL_SUFFIX}`;
 const FEED_URL = `https://www.youtube.com/feeds/videos.xml?playlist_id=${PLAYLIST_ID}`;
 const CACHE_TTL_MS = 15 * 60 * 60 * 1000; // 15 hours
-const REDIS_KEY = "yt-latest:videos:v1";
+const REDIS_KEY = "yt-latest:videos:v2";
 const REDIS_TTL = 15 * 60 * 60; // 15 hours shared
 
 const corsHeaders = {
@@ -40,6 +44,7 @@ function decode(s: string): string {
 }
 
 async function fetchLatest() {
+  if (PINNED.length) return { videos: PINNED.map((id) => ({ id, title: "", published: "" })), fetchedAt: new Date().toISOString() };
   const res = await fetch(FEED_URL);
   const xml = await res.text();
   const entries = xml.split("<entry>").slice(1);
