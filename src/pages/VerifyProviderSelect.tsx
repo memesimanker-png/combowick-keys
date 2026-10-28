@@ -20,8 +20,6 @@ import { RequestWidget } from "@/components/RequestWidget";
 import { useCpaOffers, getCpaSubid, cpaSession, cpaTrack } from "@/lib/cpa";
 
 
-// "How to get a key" tutorial popup — off until the new video is recorded. Set true + swap the embed id to re-enable.
-const SHOW_KEY_TUTORIAL = false;
 const YOUTUBE_URL = "https://www.youtube.com/@COMBO_WICK";
 const DISCORD_URL = "https://discord.com/invite/9FWBQnVXCy";
 const SUBSCRIPTION_GATE_DURATION_DAYS = 7;
@@ -43,7 +41,6 @@ export default function VerifyProviderSelect() {
   const { isAdEnabled } = useAdSettings();
   const [mounted, setMounted] = useState(false);
 
-  const [showTutorialPopup, setShowTutorialPopup] = useState(false);
   const [showSubscriptionGate, setShowSubscriptionGate] = useState(false);
 
   const [youtubeCompleted, setYoutubeCompleted] = useState(false);
@@ -77,9 +74,6 @@ export default function VerifyProviderSelect() {
 
   useEffect(() => {
     setMounted(true);
-
-    const hideTutorial = localStorage.getItem("hide_tutorial_popup");
-    if (SHOW_KEY_TUTORIAL && !hideTutorial) setShowTutorialPopup(true);
 
     // Subscribe-to-YouTube / Join-Discord gate REMOVED per owner — never enable it.
     // (State + handlers left inert below; the step never renders and never blocks
@@ -191,7 +185,7 @@ export default function VerifyProviderSelect() {
   const AUTO_ADVANCE = false;
   useEffect(() => {
     if (!AUTO_ADVANCE) return;
-    if (showTutorialPopup || starting || showSubscriptionGate) return;
+    if (starting || showSubscriptionGate) return;
     // Wait for the offer check; if there are offers the visitor CHOOSES (no auto-advance).
     if (cpa.status === "loading" || cpaAvailable) return;
     if (!lvEnabled) return; // Linkvertise off: never auto-jump to it
@@ -204,14 +198,7 @@ export default function VerifyProviderSelect() {
     const tmr = setTimeout(() => handleStart(), 900);
     return () => clearTimeout(tmr);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [directLinkClicks, requiredClicks, showTutorialPopup, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled, cpa.blocked, cpa.lockerOk, lvChoice]);
-
-  const handleCloseTutorial = () => setShowTutorialPopup(false);
-  const handleNeverShowAgain = () => {
-    localStorage.setItem("hide_tutorial_popup", "true");
-    setShowTutorialPopup(false);
-    toast({ title: t("Tutorial Hidden"), description: t("You won't see this popup again.") });
-  };
+  }, [directLinkClicks, requiredClicks, starting, showSubscriptionGate, cpa.status, cpaAvailable, lvEnabled, cpa.blocked, cpa.lockerOk, lvChoice]);
 
   if (!mounted) return null;
 
@@ -433,39 +420,6 @@ export default function VerifyProviderSelect() {
       <NoIndex />
       <AdBlockGate page="verify-provider-select" />
       <DiscountNotification startMinimized />
-
-      {showTutorialPopup && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="border-primary/30 w-full max-w-3xl relative animate-in fade-in zoom-in duration-300">
-            <CardHeader className="border-b border-primary/20">
-              <div className="flex items-start justify-between gap-2">
-                <CardTitle className="text-lg sm:text-2xl">{t("FREE KEY TUTORIAL")}</CardTitle>
-                <div className="flex shrink-0 items-center gap-1">
-                  <Button variant="ghost" size="sm" onClick={handleNeverShowAgain} className="h-8 px-2 text-xs text-muted-foreground hover:text-foreground">
-                    {t("Don't show again")}
-                  </Button>
-                  <Button variant="ghost" size="icon" aria-label={t("Close tutorial")} onClick={handleCloseTutorial} className="h-10 w-10">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <CardDescription>{t("Watch this quick tutorial to learn how to get your free key")}</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="aspect-video rounded-lg overflow-hidden border border-border/50">
-                <iframe
-                  src="https://www.youtube-nocookie.com/embed/zGkNbPgQQx4?rel=0"
-                  title="Free Key Tutorial"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                  className="w-full h-full"
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
 
       <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
 
