@@ -297,7 +297,35 @@ export default function VerifyProviderSelect() {
     });
   }
 
-  const directLinkDone = subLikeDone;
+  // Ad-button clicks come back AFTER Subscribe + Like (owner 2026-10-28: it was ~37% of Monetag).
+  // Still skipped for DL_COOLDOWN_MS once done (dlSkip).
+  const directLinkAdEnabled = isAdEnabled("verify-provider-select", "direct_link");
+  const adClicksDone = !directLinkAdEnabled || directLinkClicks >= requiredClicks;
+
+  if (directLinkAdEnabled && !dlSkip) {
+    steps.push({
+      key: "direct-link",
+      title: t("Process Free Access"),
+      done: adClicksDone,
+      icon: <MousePointerClick className="h-4 w-4" />,
+      render: () => (
+        <div className="space-y-3">
+          <p className="text-xs text-muted-foreground">
+            {t("Click the button {n} times to process your free access.").replace("{n}", String(requiredClicks))}
+          </p>
+          <Button onClick={handleDirectLinkClick} className="w-full gap-2" disabled={adClicksDone}>
+            <MousePointerClick className="h-4 w-4" />
+            {adClicksDone
+              ? `✓ ${t("Processing Complete")}`
+              : `${t("Click Ad Button")} (${directLinkClicks}/${requiredClicks})`}
+          </Button>
+          <Progress value={(directLinkClicks / requiredClicks) * 100} className="h-1" />
+        </div>
+      ),
+    });
+  }
+
+  const directLinkDone = subLikeDone && adClicksDone;
 
   // Linkvertise is offered to everyone as the third option, but the wall only shows/unlocks it after
   // the visitor actually tried an offer (see CpaOfferWall LV_UNLOCK_MS).
