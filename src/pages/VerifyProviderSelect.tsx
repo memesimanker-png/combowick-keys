@@ -311,7 +311,9 @@ export default function VerifyProviderSelect() {
       render: () => (
         <div className="space-y-3">
           <p className="text-xs text-muted-foreground">
-            {t("Click the button {n} times to process your free access.").replace("{n}", String(requiredClicks))}
+            {requiredClicks === 1
+              ? t("Click the button once to process your free access.")
+              : t("Click the button {n} times to process your free access.").replace("{n}", String(requiredClicks))}
           </p>
           <Button onClick={handleDirectLinkClick} className="w-full gap-2" disabled={adClicksDone}>
             <MousePointerClick className="h-4 w-4" />
