@@ -18,6 +18,7 @@ import { EngagementTracker } from "@/components/EngagementTracker";
 // Store + key system.
 const Index = lazy(() => import("./pages/Index"));
 const PremiumKeys = lazy(() => import("./pages/PremiumKeys"));
+const PayoneerOrder = lazy(() => import("./pages/PayoneerOrder"));
 const Keys = lazy(() => import("./pages/Keys"));
 const AccessKey = lazy(() => import("./pages/AccessKey"));
 const ExtendKey = lazy(() => import("./pages/ExtendKey"));
@@ -92,6 +93,7 @@ const App = () => (
 
                   {/* Store + key system */}
                   <Route path="/premium-keys" element={<PremiumKeys />} />
+                  <Route path="/payoneer-order" element={<PayoneerOrder />} />
                   <Route path="/keys" element={<Keys />} />
                   <Route path="/access-key" element={<AccessKey />} />
                   <Route path="/extend-key" element={<ExtendKey />} />
