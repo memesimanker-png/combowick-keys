@@ -124,7 +124,7 @@ export default function PayoneerOrder() {
             ) : done ? (
               <div className="space-y-4">
                 <div className="rounded-xl border border-green-500/40 bg-green-500/10 p-4 text-center">
-                  <p className="mb-2 text-sm text-green-300">{t("Payment confirmed. Thanks for your purchase!")}</p>
+                  <p className="mb-2 text-sm font-semibold text-green-300">{t("Payment verified. Key unlocked!")}</p>
                   {o.key && <KeyBox value={o.key} tone="green" />}
                 </div>
                 <p className="text-center text-xs text-muted-foreground">{t("Run the script in any supported game and paste the key in the Premium Key tab. We also sent it to your Discord DMs and your email.")}</p>
@@ -141,35 +141,45 @@ export default function PayoneerOrder() {
                 <Link to="/premium-keys" className="inline-block rounded-lg bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground">{t("Order again")}</Link>
               </div>
             ) : o.pay_pressed ? (
-              // verifying (first 30 minutes after Pay now) or still verifying after that
-              <div className="space-y-4 py-4 text-center">
-                <div className="relative mx-auto h-20 w-20">
+              // verifying (first 30 minutes after Pay now) or "takes longer" after that: a live checklist, nothing to press
+              <div className="space-y-5 py-2">
+                <div className="relative mx-auto h-16 w-16">
                   <div className="absolute inset-0 rounded-full border-4 border-primary/15" />
                   <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-primary" style={{ animationDuration: "1.1s" }} />
                   <div className="absolute inset-3 animate-pulse rounded-full bg-primary/10" />
                 </div>
-                <div>
-                  <p className="text-lg font-bold">{o.verifying ? t("Verifying your payment…") : t("Still verifying…")}</p>
-                  <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-                    {o.verifying
-                      ? t("Payments can take a bit to verify, so please sit tight.")
-                      : t("Some payments take longer. Your key comes to your Discord DMs and here the moment it's confirmed.")}
-                  </p>
-                </div>
+                <ul className="mx-auto max-w-sm space-y-2.5">
+                  <li className="flex items-center gap-3 text-sm">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-green-500/20"><Check className="h-3.5 w-3.5 text-green-400" /></span>
+                    <span className="text-muted-foreground">{t("Payment page opened")}</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-sm">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-primary" /></span>
+                    <span className="font-semibold">{t("Verifying payment with Payoneer…")}</span>
+                  </li>
+                  <li className="flex items-center gap-3 text-sm">
+                    <span className="h-6 w-6 shrink-0 rounded-full border-2 border-border" />
+                    <span className="text-muted-foreground">{t("Unlocking your key")}</span>
+                  </li>
+                </ul>
+                <p className="mx-auto max-w-md text-center text-sm text-muted-foreground">
+                  {o.verifying
+                    ? t("This usually takes a few minutes, sometimes a bit longer. You don't need to do anything, you can even close this page.")
+                    : <><b className="text-foreground">{t("Some Payoneer payments take longer to clear.")}</b> {t("Your key unlocks automatically the moment it does.")}</>}
+                </p>
                 {o.temp_key && (
-                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4">
-                    <p className="mb-2 text-sm">{t("Play right now with this 24-hour key:")}</p>
+                  <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 text-center">
+                    <p className="mb-2 text-sm">{t("Here's a 24-hour key so you can play right now:")}</p>
                     <KeyBox value={o.temp_key} tone="gold" />
                   </div>
                 )}
-                <p className="text-xs text-muted-foreground">{t("You can leave this page. Your key also comes to your Discord DMs.")}</p>
               </div>
             ) : (
               // ordered, not paid yet: the Pay now button is in their Discord DMs
               <div className="space-y-4 py-2 text-center">
                 <p className="text-sm font-semibold">{o.link_ready ? (o.dm ? t("Your payment link is in your Discord DMs.") : t("Your payment link is in your Discord ticket.")) : t("Your payment link is on its way.")}</p>
                 <p className="mx-auto max-w-md text-sm text-muted-foreground">
-                  {t("Press Pay now there and pay on Payoneer. That's it! This page then shows your payment being verified.")}
+                  {t("Press Pay now there and pay on Payoneer. That's it! Your key unlocks automatically once Payoneer clears the payment.")}
                   {o.plan === "lifetime" && <> {t("Type exactly this amount on the Payoneer page:")} <b data-no-translate className="text-foreground">{o.price.toFixed(2)} USD</b></>}
                 </p>
                 {openDiscord}

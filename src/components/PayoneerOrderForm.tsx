@@ -62,7 +62,7 @@ export function PayoneerOrderForm({ plan, price }: { plan: PayoneerPlan; price: 
     "Sign in with Discord and place your order.",
     "We send your Payoneer payment link to your Discord DMs right away.",
     "Press Pay now and pay. That's it!",
-    "Your key comes to your Discord DMs, your email and your order page.",
+    "Your key unlocks automatically in your Discord DMs, your email and your order page.",
   ];
 
   if (ticket) {
