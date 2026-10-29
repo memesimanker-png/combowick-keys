@@ -118,6 +118,7 @@ export default async function handler(req: any, res: any) {
             "https://discord.gg/ufrz9Zaqs8",
             "https://scriptblox.com/u/COMBO_WOOCK",
             "https://rscripts.net/@ComboWick",
+            "https://haxhell.com/user/COMBO_WICK",
             "https://keys.combowick.com",
           ],
         },
