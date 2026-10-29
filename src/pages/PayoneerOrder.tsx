@@ -19,6 +19,20 @@ type Order = {
 
 const PLAN_NAME: Record<string, string> = { "60d": "60 Days Key", lifetime: "Lifetime Key" };
 
+// ?preview=<state> shows each screen with sample data (no sign-in), so the owner can look at them
+const PREVIEW_BASE: Order = {
+  id: 1234, plan: "60d", price: 21.99, status: "pending", created_at: "", card: "https://discord.com/channels/@me", dm: true,
+  link_ready: true, pay_pressed: false, verifying: false, temp_key: null, key: null,
+};
+const PREVIEWS: Record<string, Partial<Order>> = {
+  waiting: {},
+  verifying: { pay_pressed: true, verifying: true },
+  still: { pay_pressed: true, temp_key: "CW-SAMPLE-24H-KEY" },
+  paid: { status: "approved", key: "CW-SAMPLE-FULL-KEY" },
+  cancelled: { status: "denied" },
+  expired: { status: "expired" },
+};
+
 function KeyBox({ value, tone }: { value: string; tone: "green" | "gold" }) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
@@ -46,20 +60,26 @@ export default function PayoneerOrder() {
     setOrder(data?.order ?? null);
   }, []);
 
+  const preview = new URLSearchParams(window.location.search).get("preview");
   useEffect(() => {
+    if (preview && PREVIEWS[preview]) {
+      setSignedIn(true);
+      setOrder({ ...PREVIEW_BASE, ...PREVIEWS[preview] });
+      return;
+    }
     supabase.auth.getSession().then(({ data }) => {
       const ok = !!data.session?.user?.identities?.some((x) => x.provider === "discord");
       setSignedIn(ok);
       if (ok) load();
     });
-  }, [load]);
+  }, [load, preview]);
 
   // keep checking until the order is finished (every 8s while verifying, else every 20s)
   useEffect(() => {
-    if (!order || ["approved", "denied"].includes(order.status) || (order.status === "expired" && !order.pay_pressed)) return;
+    if (preview || !order || ["approved", "denied"].includes(order.status) || (order.status === "expired" && !order.pay_pressed)) return;
     const id = setInterval(load, order.verifying ? 8000 : 20000);
     return () => clearInterval(id);
-  }, [order, load]);
+  }, [order, load, preview]);
 
   const o = order;
   const done = o?.status === "approved";
@@ -74,6 +94,14 @@ export default function PayoneerOrder() {
     <Layout>
       <SEOHead title="Your Payoneer Order — Combo_WICK" description="Track your Payoneer order and get your premium key." />
       <section className="px-4 py-10 sm:py-14">
+        {preview && PREVIEWS[preview] && (
+          <div data-no-translate className="mx-auto mb-4 flex max-w-3xl flex-wrap items-center gap-2 rounded-lg border border-dashed border-primary/40 p-2 text-xs">
+            <span className="font-bold text-primary">Preview:</span>
+            {Object.keys(PREVIEWS).map((k) => (
+              <a key={k} href={`?preview=${k}`} className={`rounded px-2 py-1 ${k === preview ? "bg-primary text-primary-foreground" : "bg-secondary hover:bg-secondary/70"}`}>{k}</a>
+            ))}
+          </div>
+        )}
         <VerifyCard>
           <VerifyHeader
             title={done ? t("Your Key Is Ready") : t("Your Payoneer Order")}
