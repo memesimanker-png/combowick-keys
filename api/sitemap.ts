@@ -16,6 +16,8 @@ const STATIC: { path: string; priority: string; freq: string }[] = [
   { path: "/", priority: "1.0", freq: "daily" },
   { path: "/scripts", priority: "0.9", freq: "daily" },
   { path: "/premium-keys", priority: "0.8", freq: "weekly" },
+  { path: "/executors", priority: "0.8", freq: "weekly" },
+  { path: "/request", priority: "0.6", freq: "daily" },
   { path: "/keys", priority: "0.7", freq: "weekly" },
   { path: "/privacy", priority: "0.3", freq: "yearly" },
   { path: "/terms", priority: "0.3", freq: "yearly" },

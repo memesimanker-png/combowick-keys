@@ -60,5 +60,5 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/
 
-# Sitemap (project domain)
-Sitemap: https://combowick-keys.vercel.app/sitemap.xml
+# Sitemap
+Sitemap: https://keys.combowick.com/sitemap.xml
