@@ -1,14 +1,6 @@
 import { Layout } from "@/components/Layout";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  Key, Shield, Zap, Check, Star,
-  ChevronDown, ChevronUp, Unlock, RefreshCw, Award, MessageCircle, Code2, ExternalLink, Crown,
-  Lock, CreditCard, Wallet, Gift
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import { VideoBackground } from "@/components/VideoBackground";
-import { motion } from "framer-motion";
+import { Crown, ChevronDown, ChevronUp, Zap, Mail, MessageCircle, Lock, CreditCard, Wallet, Gamepad2, Heart, ArrowRight, Check } from "lucide-react";
+import { useState, useEffect, type ReactNode } from "react";
 import { PayPalCheckoutModal } from "@/components/PayPalCheckoutModal";
 import { PaidGameCard } from "@/components/PaidGameCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,108 +15,85 @@ import { DiscountNotification } from "@/components/DiscountNotification";
 import { OwnerCheckoutModal } from "@/components/OwnerCheckoutModal";
 import { BugReportWidget } from "@/components/BugReportWidget";
 import { PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
+import { useVerifySteps } from "@/components/VerifyShell";
 
+// Premium page v3 (owner-approved mockup mockups/premium-v3.html, 2026-10-29): cowboy art, the $5 trial first and glowing
+// (most sales), slim plan rows on phones / three columns on PC, the custom script box right under the plans (free quote,
+// no public price), then Free vs Premium and a short FAQ. Removed the old "What are Premium Keys" claims that weren't true.
+const DISCORD = "https://discord.com/invite/ufrz9Zaqs8";
 
 const tiers = [
-  {
-    id: "trial-7day",
-    nameKey: "7-Day Trial",
-    price: 5,
-    color: "text-yellow-400",
-    borderColor: "border-yellow-500/30",
-    featureKeys: ["🎮 Works in EVERY game — one key", "No per-game unlocks, no cooldown", "7 Days Full Access", "$0.71 per day"],
-    subtitleKey: "Short entry price before monthly",
-    buttonTextKey: "Purchase Now",
-    buttonStyle: "bg-primary hover:bg-primary/90",
-    isSubscription: false,
-  },
-  {
-    id: "monthly",
-    nameKey: "Monthly Access",
-    price: 9.99,
-
-    color: "text-green-400",
-    borderColor: "border-green-500/30",
-    featureKeys: ["🎮 Works in EVERY game — one key", "No per-game unlocks, no cooldown", "30 Days Access", "$0.33 per day", "Priority support"],
-    subtitleKey: "Best for regular buyers",
-    buttonTextKey: "Purchase Now",
-    buttonStyle: "bg-green-600 hover:bg-green-700",
-    popular: true,
-    isSubscription: false,
-  },
-  {
-    id: "lifetime",
-    nameKey: "Lifetime Key",
-    price: 49.99,
-    color: "text-red-400",
-    borderColor: "border-red-500/30",
-    featureKeys: ["🎮 Works in EVERY game — one key", "No per-game unlocks, no cooldown, forever", "Lifetime Access", "VIP Priority Support"],
-    buttonTextKey: "Purchase Now",
-    buttonStyle: "bg-red-600 hover:bg-red-700",
-    isSubscription: false,
-  },
-  {
-    id: "custom-script",
-    nameKey: "Custom Script Request",
-    price: 0,
-    color: "text-yellow-400",
-    borderColor: "border-yellow-500/30",
-    featureKeys: ["Priority: built before all free requests", "Custom script tailored to your needs", "Contact on Discord", "Professional support"],
-    buttonTextKey: "Contact on Discord",
-    buttonStyle: "bg-yellow-600 hover:bg-yellow-700",
-    isDiscord: true,
-    isSubscription: false,
-  },
+  { id: "trial-7day", nameKey: "7-Day Trial", price: 5, isSubscription: false },
+  { id: "monthly", nameKey: "Monthly Access", price: 9.99, isSubscription: false },
+  { id: "lifetime", nameKey: "Lifetime Key", price: 49.99, isSubscription: false },
 ];
+type Tier = (typeof tiers)[number] & { script?: string; gameKey?: string; subscriptionPrice?: number };
 
-function FeatureIcon({ index }: { index: number }) {
-  if (index === 0) return <Zap className="h-4 w-4 text-primary flex-shrink-0" />;
-  if (index === 1) return <div className="h-4 w-4 rounded-full border-2 border-orange-400 flex-shrink-0" />;
-  return <Check className="h-4 w-4 text-green-500 flex-shrink-0" />;
-}
-
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border border-border/50 rounded-lg">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between p-5 text-left hover:bg-muted/30 transition-colors rounded-lg"
-      >
-        <span className="font-medium pr-4">{q}</span>
-        {open ? <ChevronUp className="h-5 w-5 text-muted-foreground flex-shrink-0" /> : <ChevronDown className="h-5 w-5 text-muted-foreground flex-shrink-0" />}
-      </button>
-      {open && (
-        <div className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">{a}</div>
-      )}
-    </div>
-  );
-}
-
-const overrideText = (value: string | null | undefined, fallback?: string) => {
-  if (value === null || value === undefined) return fallback;
-  return value;
+// what each plan card says (the label/period lines and the PC feature list)
+const PLAN_COPY: Record<string, { label: string; period: string; perDay?: string; features: string[]; buy: string; tag?: "pop" | "best" }> = {
+  "trial-7day": { label: "7-Day Trial", period: "7 days · one-time", perDay: "$0.71 a day", features: ["Every game for 7 days", "No checkpoints, ads or cooldown", "The easy way to try Premium"], buy: "Try for $5", tag: "pop" },
+  monthly: { label: "Monthly", period: "30 days · one-time", perDay: "$0.33 a day", features: ["Every game for 30 days", "No checkpoints, ads or cooldown", "Priority support"], buy: "Get Monthly" },
+  lifetime: { label: "Lifetime", period: "forever · pay once", features: ["Every game, forever", "No checkpoints, ads or cooldown", "VIP priority support"], buy: "Get Lifetime", tag: "best" },
 };
 
+const overrideText = (value: string | null | undefined, fallback?: string) => (value === null || value === undefined ? fallback : value);
 const overridePrice = (value: number | null | undefined, fallback?: number) => {
   if (value === null || value === undefined) return fallback;
   const price = Number(value);
   return Number.isFinite(price) && price > 0 ? price : undefined;
 };
+const money = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
+
+// sale prices are worked out per UTC day, so today's price ends at the next UTC midnight
+function useUntilUtcMidnight() {
+  const calc = () => {
+    const now = new Date();
+    const end = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
+    const s = Math.max(0, Math.floor((end - now.getTime()) / 1000));
+    return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map((x) => String(x).padStart(2, "0")).join(":");
+  };
+  const [left, setLeft] = useState(calc);
+  useEffect(() => {
+    const id = setInterval(() => setLeft(calc()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return left;
+}
+
+function FAQItem({ q, a }: { q: string; a: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-t border-border">
+      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm hover:bg-secondary/40">
+        <span className="font-medium">{q}</span>
+        {open ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
+      </button>
+      {open && <div className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">{a}</div>}
+    </div>
+  );
+}
+
+function Tag({ kind, children }: { kind: "pop" | "best" | "quote"; children: ReactNode }) {
+  const cls = kind === "pop" ? "bg-green-500/15 text-green-400" : "bg-primary text-primary-foreground";
+  return <span className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider ${cls}`}>{children}</span>;
+}
 
 export default function PremiumKeys() {
   const { t } = useTranslation();
-  const [selectedTier, setSelectedTier] = useState<typeof tiers[0] | null>(null);
+  const [selectedTier, setSelectedTier] = useState<Tier | null>(null);
   const [paypalClientId, setPaypalClientId] = useState<string>("");
   const [modalOpen, setModalOpen] = useState(false);
   const [ownerOpen, setOwnerOpen] = useState(false);
   const [checkoutMethod, setCheckoutMethod] = useState<"paypal" | "payoneer">("paypal");
   const { data: gameSettings } = usePaidGameSettings();
   const { data: keyDiscounts } = useKeyDiscounts();
-  // back from the Discord sign-in redirect (Payoneer tab of the checkout): reopen it where the buyer left off,
-  // once today's discounts are known so the lifetime price matches the sale
+  const steps = useVerifySteps();
+  const saleEnds = useUntilUtcMidnight();
+
   // creator links: keys.combowick.com/premium-keys?code=ZEN -> pre-filled at checkout
   useEffect(() => { rememberCodeFromUrl(); }, []);
+  // back from the Discord sign-in redirect (Payoneer tab of the checkout): reopen it where the buyer left off,
+  // once today's discounts are known so the lifetime price matches the sale
   useEffect(() => {
     if (!keyDiscounts) return;
     let plan: string | null = null;
@@ -146,193 +115,221 @@ export default function PremiumKeys() {
     });
   }, []);
 
-  const handlePurchase = (tier: typeof tiers[0]) => {
-    if (tier.isDiscord) {
-      window.open("https://discord.com/invite/ufrz9Zaqs8", "_blank");
-      return;
-    }
+  const handlePurchase = (tier: Tier) => {
     const disc = applyDiscount(tier.price, keyDiscounts?.get(tier.id));
     setSelectedTier(disc ? { ...tier, price: disc.final } : tier);
     setCheckoutMethod("paypal");
     setModalOpen(true);
   };
 
+  const priceOf = (id: string) => {
+    const tier = tiers.find((x) => x.id === id)!;
+    const disc = applyDiscount(tier.price, keyDiscounts?.get(id));
+    return { tier, now: disc ? disc.final : tier.price, was: disc ? tier.price : null, percent: disc?.percent ?? 0 };
+  };
+  const life = priceOf("lifetime");
+  const month = priceOf("monthly");
+  const sale = life.percent ? { name: "Lifetime", percent: life.percent } : month.percent ? { name: "Monthly", percent: month.percent } : null;
+
+  // phone: slim rows (trial, lifetime, monthly) · PC: three columns (trial, monthly, lifetime)
+  const row = (id: string) => {
+    const p = priceOf(id);
+    const c = PLAN_COPY[id];
+    const inner = (
+      <div className={`rounded-[14px] p-3.5 ${id === "lifetime" ? "border-[1.5px] border-primary bg-gradient-to-br from-primary/10 to-card" : id === "trial-7day" ? "bg-gradient-to-br from-primary/15 to-card" : "border border-border bg-card"}`}>
+        <div className="flex items-center justify-between gap-2">
+          <span className={`text-[13px] font-extrabold uppercase tracking-wider ${id === "monthly" ? "text-muted-foreground" : "text-primary"}`}>{t(c.label)}</span>
+          {c.tag === "pop" && <Tag kind="pop">{t("Most popular")}</Tag>}
+          {c.tag === "best" && <Tag kind="best">{t("Best value")}</Tag>}
+        </div>
+        <div className="mt-1.5 flex items-center justify-between gap-3">
+          <div data-no-translate>
+            <span className="mr-1.5 text-[26px] font-extrabold">{money(p.now)}</span>
+            {p.was && <span className="text-[13px] text-muted-foreground line-through">{money(p.was)}</span>}
+            <span className="block text-[11.5px] text-muted-foreground">{t(c.period)}</span>
+          </div>
+          <button onClick={() => handlePurchase(p.tier)}
+            className={`h-[42px] shrink-0 rounded-[10px] px-4 text-sm font-extrabold ${id === "monthly" ? "border border-primary/40 font-bold hover:bg-primary/10" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}>
+            {t(c.buy)}
+          </button>
+        </div>
+      </div>
+    );
+    return id === "trial-7day"
+      ? <div key={id} className="cw-glow" style={{ ["--glow-radius" as string]: "14px" }}>{inner}</div>
+      : <div key={id}>{inner}</div>;
+  };
+  const column = (id: string) => {
+    const p = priceOf(id);
+    const c = PLAN_COPY[id];
+    const inner = (
+      <div className={`flex h-full flex-col rounded-2xl p-5 ${id === "lifetime" ? "border-[1.5px] border-primary bg-gradient-to-br from-primary/10 to-card" : id === "trial-7day" ? "bg-gradient-to-br from-primary/15 to-card" : "border border-border bg-card"}`}>
+        <div className="flex items-center justify-between gap-2">
+          <span className={`text-[13px] font-extrabold uppercase tracking-wider ${id === "monthly" ? "text-muted-foreground" : "text-primary"}`}>{t(c.label)}</span>
+          {c.tag === "pop" && <Tag kind="pop">{t("Most popular")}</Tag>}
+          {c.tag === "best" && <Tag kind="best">{t("Best value")}</Tag>}
+        </div>
+        <div data-no-translate className="mt-2 flex items-baseline gap-2">
+          <span className="text-[34px] font-extrabold">{money(p.now)}</span>
+          {p.was && <span className="text-[15px] text-muted-foreground line-through">{money(p.was)}</span>}
+          {p.percent > 0 && <span className="rounded-md bg-green-500/15 px-1.5 py-0.5 text-[11px] font-extrabold text-green-400">{p.percent}% OFF</span>}
+        </div>
+        <p className="mt-0.5 text-xs text-muted-foreground">{id === "lifetime" ? t("Pay once. Never expires.") : `${t(c.period)} · ${c.perDay ? t(c.perDay) : ""}`}</p>
+        <ul className="my-4 grid gap-1.5 text-[13px]">
+          {c.features.map((f) => <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-primary" />{t(f)}</li>)}
+        </ul>
+        <button onClick={() => handlePurchase(p.tier)}
+          className={`mt-auto h-[46px] rounded-[11px] text-[15px] font-extrabold ${id === "monthly" ? "border border-primary/40 font-bold hover:bg-primary/10" : "bg-primary text-primary-foreground hover:bg-primary/90"}`}>
+          {t(c.buy)}
+        </button>
+      </div>
+    );
+    return id === "trial-7day"
+      ? <div key={id} className="cw-glow h-full" style={{ ["--glow-radius" as string]: "16px" }}>{inner}</div>
+      : <div key={id} className="h-full">{inner}</div>;
+  };
+
+  const chips = [
+    { icon: Zap, text: "Instant key with PayPal or card" },
+    { icon: Mail, text: "Also sent by email" },
+    { icon: MessageCircle, text: "Discord support" },
+  ];
+  const saleBar = sale && (
+    <div className="cw-glow" style={{ ["--glow-radius" as string]: "12px" }}>
+      <div className="flex items-center justify-between gap-3 px-3.5 py-2.5">
+        <span className="text-[13px] font-semibold">{t(sale.name === "Lifetime" ? "Lifetime sale today" : "Monthly sale today")} · <b className="text-green-400" data-no-translate>{sale.percent}% OFF</b></span>
+        <span data-no-translate className="whitespace-nowrap rounded-lg border border-primary/40 bg-background px-2 py-1 font-mono text-[13px] font-bold text-primary">{saleEnds}</span>
+      </div>
+    </div>
+  );
+
   return (
     <Layout>
       <DiscountNotification />
       <OwnerCheckoutModal isOpen={ownerOpen} onClose={() => setOwnerOpen(false)} paypalClientId={paypalClientId} />
       <SEOHead
-        title="ComboWick Premium Keys — Plans from $5 to $49.99"
-        description="Buy a ComboWick HWID premium key. 7-day trial $5, monthly $9.99, lifetime $49.99. Pay with PayPal, card or Payoneer, full premium script access."
+        title="ComboWick Premium Keys — Plans from $5"
+        description="Buy a ComboWick premium key. 7-day trial $5, monthly $9.99, lifetime $49.99 (often on sale). One key for every game, no checkpoints. Pay with PayPal, card or Payoneer."
         breadcrumbs={[{ name: "Home", url: "/" }, { name: "Premium Keys", url: "/premium-keys" }]}
       />
-      {/* Hero */}
-      <section className="relative py-16 sm:py-20 overflow-hidden">
-        <VideoBackground overlay />
-        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-6">
-              <Key className="h-4 w-4 text-primary" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t("Premium Features")}</span>
+
+      <section className="mx-auto max-w-[1080px] px-4 pb-6 pt-5 sm:px-6 lg:px-10 lg:pt-10">
+        {/* hero: phone = big square art, title under it · PC = title left, art right */}
+        <div className="lg:grid lg:grid-cols-[1fr_440px] lg:items-center lg:gap-8">
+          <div className="order-2 lg:order-1">
+            <div className="mb-4 overflow-hidden rounded-2xl border border-primary/35 lg:hidden">
+              <img src="/images/premium-cowboy.webp" alt="COMBO_WICK" className="aspect-square w-full object-cover" />
             </div>
-            <h1 className="font-heading text-4xl sm:text-5xl font-bold tracking-tight mb-4 max-w-4xl mx-auto">
-              <span className="text-gradient-primary">{t("Premium Keys")}</span>
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              {t("prem_hero_desc")}
-            </p>
-            <a
-              href="http://combowick.com/scripts"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
-            >
-              <Code2 className="h-4 w-4" /> {t("Get Script")} <ExternalLink className="h-3.5 w-3.5 opacity-70" />
-            </a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div data-pricing-cards className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {tiers.map((tier, i) => {
-              const disc = applyDiscount(tier.price, keyDiscounts?.get(tier.id));
-              return (
-              <motion.div
-                key={tier.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-              >
-                <Card className={`p-6 h-full flex flex-col card-neon ${disc ? "border-green-500/50" : tier.borderColor}`}>
-                  <div className="text-center mb-6">
-                    {disc ? (
-                      <div className="inline-flex items-center rounded-full border border-green-500/40 bg-green-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-green-300 mb-4">
-                        {disc.label || t("Limited-Time Sale")}
-                      </div>
-                    ) : tier.popular && (
-                      <div className="inline-flex items-center rounded-full border border-green-500/30 bg-green-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-green-300 mb-4">
-                        {t("Best Value")}
-                      </div>
-                    )}
-                    <h3 className={`font-heading text-sm font-bold uppercase tracking-wider mb-4 ${tier.color}`}>
-                      {t(tier.nameKey)}
-                    </h3>
-                    {tier.price > 0 ? (
-                      <>
-                        {disc && (
-                          <div className="flex items-center justify-center gap-2 mb-1">
-                            <span className="text-lg text-muted-foreground line-through">${tier.price}</span>
-                            <span className="text-xs font-bold px-2 py-0.5 rounded bg-green-500/20 text-green-400">{disc.percent}% OFF</span>
-                          </div>
-                        )}
-
-                        <div className="text-4xl font-bold mb-1">${disc ? disc.final : tier.price}</div>
-                        <p className="text-sm text-muted-foreground">{t("Premium Key")}</p>
-                        {tier.subtitleKey && <p className="text-xs text-muted-foreground mt-2">{t(tier.subtitleKey)}</p>}
-                      </>
-                    ) : (
-                      <div className="py-4" />
-                    )}
-                  </div>
-
-                  <ul className="space-y-3 mb-6 flex-1">
-                    {tier.featureKeys.map((f, fi) => (
-                      <li key={f} className="flex items-center gap-3 text-sm">
-                        <FeatureIcon index={fi} />
-                        <span>{t(f)}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {tier.subscribeTextKey && (
-                    <div className="text-center mb-3 p-3 rounded-lg bg-accent/10 border border-accent/20">
-                      <p className="text-sm font-semibold text-accent">{t(tier.subscribeTextKey)}</p>
-                      <p className="text-xs text-muted-foreground">{t(tier.subscribeSubtextKey!)}</p>
-                    </div>
-                  )}
-
-                  <Button
-                    onClick={() => handlePurchase(tier)}
-                    className={`w-full py-5 font-bold ${tier.buttonStyle}`}
-                  >
-                    {tier.isDiscord && <MessageCircle className="h-4 w-4 mr-2" />}
-                    {t(tier.buttonTextKey)}
-                  </Button>
-                </Card>
-              </motion.div>
-              );
-            })}
+            <div className="text-center lg:text-left">
+              <h1 className="font-heading text-[30px] font-bold text-gradient-primary sm:text-[40px]">{t("Premium Key")}</h1>
+              <p className="mt-1.5 text-sm text-foreground/85 sm:text-base">{t("One key. Every game. No checkpoints, no ads, no cooldown.")}</p>
+            </div>
+            <div className="mt-3 flex flex-wrap justify-center gap-1.5 lg:justify-start">
+              {chips.map((c) => (
+                <span key={c.text} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11px] text-foreground/85">
+                  <c.icon className="h-3.5 w-3.5 text-primary" />{t(c.text)}
+                </span>
+              ))}
+            </div>
+            {saleBar && <div className="mt-4">{saleBar}</div>}
           </div>
-
-          {/* Accepted payment methods (picked inside the checkout after "Purchase Now") */}
-          <div className="mt-8 flex flex-col items-center gap-3 text-center">
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t("We accept")}</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><Lock className="h-3.5 w-3.5 text-primary" /> PayPal</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><CreditCard className="h-3.5 w-3.5 text-primary" /> {t("Credit / Debit")}</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/60 px-3 py-1 text-xs font-medium"><Wallet className="h-3.5 w-3.5 text-[#FF4800]" /> Payoneer</span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-border px-3 py-1 text-xs font-medium text-muted-foreground"><Gift className="h-3.5 w-3.5" /> {t("Gift card")} <span className="text-[10px] font-bold uppercase text-primary">{t("Coming soon")}</span></span>
-            </div>
-            <p className="max-w-xl text-xs text-muted-foreground">{t("No PayPal? Choose Payoneer at checkout: Lifetime Key, or the 60 Days Key for $21.99. Your key is sent to your Discord DMs.")}</p>
+          <div className="cw-glow hidden lg:order-2 lg:block" style={{ ["--glow-radius" as string]: "18px" }}>
+            <img src="/images/premium-cowboy.webp" alt="COMBO_WICK" className="aspect-square w-full rounded-[16px] object-cover" />
           </div>
         </div>
-      </section>
 
-      {/* Flagship: Owner/Admin access — high-ticket, moved below the key tiers */}
-      <section className="pb-2 pt-2 sm:pt-4">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-yellow-950/40 via-black/60 to-black/60 p-6 sm:p-8">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-yellow-500/10 blur-3xl" />
-            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-              <div className="flex-1">
-                <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-yellow-500/40 bg-yellow-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-yellow-300">
-                  <Crown className="h-3 w-3" /> {t("Flagship")}
-                </div>
-                <h3 className="font-heading text-2xl font-bold text-yellow-300">{t("Owner / Admin Access")}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {t("Become an owner/admin of the ComboWick Discord for 5 full months.")}
-                </p>
-                <ul className="mt-4 space-y-2 text-sm">
-                  <li className="flex items-center gap-2"><Crown className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Full owner/admin role for 5 months")}</li>
-                  <li className="flex items-center gap-2"><Star className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Top of the member list with full server powers")}</li>
-                  <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Direct line to the founder")}</li>
-                </ul>
+        {/* plans */}
+        <div data-pricing-cards className="scroll-mt-20">
+          <div className="mt-4 grid gap-2.5 lg:hidden">
+            {["trial-7day", "lifetime", "monthly"].map(row)}
+            <p className="text-center text-[11.5px] text-muted-foreground">{t("Every plan: all games, no checkpoints, no ads, no cooldown.")}</p>
+          </div>
+          <div className="mt-6 hidden grid-cols-3 items-stretch gap-[18px] lg:grid">
+            {["trial-7day", "monthly", "lifetime"].map(column)}
+          </div>
+        </div>
+
+        {/* custom scripts: right under the plans, free quote (no public price) */}
+        <a href={DISCORD} target="_blank" rel="noopener noreferrer" className="cw-glow mt-4 block lg:mt-5" style={{ ["--glow-radius" as string]: "16px" }}>
+          <div className="px-4 py-3.5 lg:flex lg:items-center lg:justify-between lg:gap-5">
+            <div>
+              <div className="flex items-center justify-between gap-2 lg:justify-start lg:gap-2.5">
+                <b className="flex items-center gap-1.5 text-sm"><Crown className="h-4 w-4 text-primary" />{t("Want a script for your own game?")}</b>
+                <Tag kind="quote">{t("Free quote")}</Tag>
               </div>
-              <div className="text-center sm:text-right">
-                <div className="text-4xl font-extrabold text-yellow-300">$500</div>
-                <p className="text-xs text-muted-foreground">{t("5 months • one-time")}</p>
-                <p className="mb-4 mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-400/70">{t("All sales are final — NO REFUNDS")}</p>
-                <button
-                  onClick={() => setOwnerOpen(true)}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-yellow-500 px-5 py-2.5 text-sm font-bold text-black transition-colors hover:bg-yellow-400"
-                >
-                  <Crown className="h-4 w-4" /> {t("Claim Owner Access")}
-                </button>
-              </div>
+              <p className="mt-1 text-xs text-muted-foreground">{t("Your own script with your features, built before every free request.")}</p>
+            </div>
+            <span className="mt-2.5 flex h-10 items-center justify-center gap-1.5 rounded-[10px] bg-primary px-5 text-[13.5px] font-extrabold text-primary-foreground lg:mt-0 lg:shrink-0">
+              {t("Get a price on Discord")} <ArrowRight className="h-4 w-4" />
+            </span>
+          </div>
+        </a>
+
+        {/* how to pay */}
+        <div className="mt-4 text-center">
+          <div className="flex flex-wrap justify-center gap-1.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><Lock className="h-3.5 w-3.5 text-primary" />PayPal</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><CreditCard className="h-3.5 w-3.5 text-primary" />{t("Card")}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><Wallet className="h-3.5 w-3.5 text-[#FF4800]" />Payoneer</span>
+          </div>
+          <p className="mx-auto mt-2 max-w-xl text-[11.5px] leading-relaxed text-muted-foreground">{t("No PayPal? Pick Payoneer at checkout (Lifetime, or 60 days for $21.99). Got a creator code? Add it at checkout.")}</p>
+        </div>
+
+        {/* Free vs Premium + questions */}
+        <div className="mt-5 grid items-start gap-4 lg:grid-cols-[1.2fr_1fr]">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
+            <h2 className="px-4 pb-2.5 pt-3.5 font-heading text-base font-bold">{t("Free vs Premium")}</h2>
+            <table className="w-full text-[12.5px]">
+              <thead>
+                <tr className="border-t border-border text-left text-[11px] uppercase tracking-wider text-muted-foreground">
+                  <th className="px-3 py-2 font-bold" /><th className="px-3 py-2 font-bold">{t("Free key")}</th><th className="px-3 py-2 font-bold">{t("Premium")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Checkpoints", t("{n} each time").replace("{n}", String(steps)), t("None")],
+                  ["Key lasts", t("8 hours"), t("7 days to forever")],
+                  ["Games", t("1 per key"), t("Every game")],
+                  ["Ads", t("Yes"), t("None")],
+                  ["Wait between keys", t("1 hour"), t("Never")],
+                ].map(([k, free, prem]) => (
+                  <tr key={k} className="border-t border-border">
+                    <td className="px-3 py-2">{t(k)}</td><td className="px-3 py-2 text-muted-foreground">{free}</td><td className="px-3 py-2 font-bold text-primary">{prem}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div className="overflow-hidden rounded-2xl border border-border bg-card">
+              <h2 className="px-4 pb-2.5 pt-3.5 font-heading text-base font-bold">{t("Questions")}</h2>
+              <FAQItem q={t("How fast do I get my key?")} a={t("With PayPal or card, right away: it shows on the screen and is sent to your email. With Payoneer, it unlocks as soon as the payment clears and comes to your Discord DMs, email and order page.")} />
+              <FAQItem q={t("Does it work on my phone and PC?")} a={t("Yes. Run the script on any supported executor, phone or PC, and paste your key in the Premium Key tab. The key locks to the first device you use it on.")} />
+              <FAQItem q={t("What if my key stops working?")} a={<>{t("Use Fix Key on the website or open a ticket in our Discord and we'll sort it out.")} <a href="/fix-key" className="text-primary underline">{t("Fix Key")}</a></>} />
+              <FAQItem q={t("Can I get a refund?")} a={<>{t("Keys are digital and delivered instantly, so sales are final. If your key is broken and we can't fix it, we replace it.")} <a href="/refund-policy" className="text-primary underline">{t("Refund Policy")}</a></>} />
+            </div>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <a href="#paid-scripts" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
+                <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Gamepad2 className="h-4 w-4 text-primary" />{t("Paid game scripts")}</b>
+                <span className="text-muted-foreground">{t("Premium scripts for one game")}</span>
+              </a>
+              <a href="#support-us" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
+                <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Heart className="h-4 w-4 text-primary" />{t("Support us")}</b>
+                <span className="text-muted-foreground">{t("Donate or Owner access")}</span>
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Donate / Support — placed right under the pricing cards so it's seen without scrolling */}
-      <section className="pt-2 pb-10 sm:pb-14">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <DonateCard paypalClientId={paypalClientId} />
-        </div>
-      </section>
-
-      {/* Paid Game Scripts */}
-      <section className="py-16 sm:py-20 bg-muted/20">
+      {/* Paid game scripts (kept, lower on the page) */}
+      <section id="paid-scripts" className="scroll-mt-20 bg-muted/20 py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-3xl font-bold text-center mb-4">{t("Paid Game Scripts")}</h2>
-          <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-10">
+          <h2 className="mb-3 text-center font-heading text-3xl font-bold">{t("Paid Game Scripts")}</h2>
+          <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">
             {t("Premium scripts for popular Roblox games. Monthly or lifetime access — fixes pushed regularly.")}
           </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {PAID_GAMES.filter((g) => !gameSettings?.get(g.key)?.hidden).map((g) => {
               const setting = gameSettings?.get(g.key);
               const title = overrideText(setting?.title, g.title) || g.title;
@@ -372,9 +369,8 @@ export default function PremiumKeys() {
                     price: plan.price,
                     script: g.script,
                     gameKey: g.key,
-                    color: "", borderColor: "", featureKeys: [],
-                    buttonTextKey: "", buttonStyle: "", isSubscription: false,
-                  } as any)}
+                    isSubscription: false,
+                  })}
                 />
               );
             })}
@@ -382,90 +378,33 @@ export default function PremiumKeys() {
         </div>
       </section>
 
-      {/* What Are Premium Keys */}
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-3xl font-bold text-center mb-4">{t("What Are Premium Keys?")}</h2>
-          <p className="text-muted-foreground text-center max-w-3xl mx-auto mb-12 text-lg leading-relaxed">
-            {t("prem_what_desc")}
-          </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Unlock, titleKey: "Early Access to New Products", descKey: "prem_early_desc" },
-              { icon: Zap, titleKey: "Priority Queue Processing", descKey: "prem_priority_desc" },
-              { icon: Shield, titleKey: "Extended Replacement Warranty", descKey: "prem_warranty_desc" },
-              { icon: RefreshCw, titleKey: "Auto-Renewal & Notifications", descKey: "prem_renewal_desc" },
-              { icon: Award, titleKey: "VIP Discord Channel", descKey: "prem_vip_desc" },
-              { icon: Star, titleKey: "Loyalty Rewards Program", descKey: "prem_loyalty_desc" },
-            ].map((item) => (
-              <Card key={item.titleKey} className="p-6 bg-glass hover:border-primary/30 transition-all">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 mb-4">
-                  <item.icon className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="font-heading text-lg font-semibold mb-2">{t(item.titleKey)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{t(item.descKey)}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-16 sm:py-20 bg-muted/20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-3xl font-bold text-center mb-12">{t("How Premium Keys Work")}</h2>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[
-              { step: "1", titleKey: "Choose a Plan", descKey: "prem_step1_desc" },
-              { step: "2", titleKey: "Secure Checkout", descKey: "prem_step2_desc" },
-              { step: "3", titleKey: "Receive Your Key", descKey: "prem_step3_desc" },
-              { step: "4", titleKey: "Enjoy Benefits", descKey: "prem_step4_desc" },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/30 flex items-center justify-center mx-auto mb-4">
-                  <span className="font-heading text-lg font-bold text-primary">{item.step}</span>
-                </div>
-                <h3 className="font-heading text-base font-semibold mb-2">{t(item.titleKey)}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{t(item.descKey)}</p>
+      {/* Support us: donate + Owner / Admin access */}
+      <section id="support-us" className="scroll-mt-20 py-12 sm:py-16">
+        <div className="mx-auto max-w-5xl space-y-6 px-4 sm:px-6 lg:px-8">
+          <div className="relative overflow-hidden rounded-2xl border border-yellow-500/40 bg-gradient-to-br from-yellow-950/40 via-black/60 to-black/60 p-6 sm:p-8">
+            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
+              <div className="flex-1">
+                <h3 className="font-heading text-2xl font-bold text-yellow-300">{t("Owner / Admin Access")}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{t("Become an owner/admin of the ComboWick Discord for 5 full months.")}</p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  <li className="flex items-center gap-2"><Crown className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Full owner/admin role for 5 months")}</li>
+                  <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Direct line to the founder")}</li>
+                </ul>
               </div>
-            ))}
+              <div className="text-center sm:text-right">
+                <div className="text-4xl font-extrabold text-yellow-300">$500</div>
+                <p className="text-xs text-muted-foreground">{t("5 months • one-time")}</p>
+                <p className="mb-4 mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-400/70">{t("All sales are final — NO REFUNDS")}</p>
+                <button onClick={() => setOwnerOpen(true)} className="inline-flex items-center justify-center gap-2 rounded-lg bg-yellow-500 px-5 py-2.5 text-sm font-bold text-black transition-colors hover:bg-yellow-400">
+                  <Crown className="h-4 w-4" /> {t("Claim Owner Access")}
+                </button>
+              </div>
+            </div>
           </div>
+          <div className="mx-auto max-w-3xl"><DonateCard paypalClientId={paypalClientId} /></div>
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-3xl font-bold text-center mb-12">{t("Premium Keys FAQ")}</h2>
-          <div className="space-y-3">
-            <FAQItem q={t("prem_faq1_q")} a={t("prem_faq1_a")} />
-            <FAQItem q={t("prem_faq2_q")} a={t("prem_faq2_a")} />
-            <FAQItem q={t("prem_faq3_q")} a={t("prem_faq3_a")} />
-            <FAQItem q={t("prem_faq4_q")} a={t("prem_faq4_a")} />
-            <FAQItem q={t("prem_faq5_q")} a={t("prem_faq5_a")} />
-          </div>
-        </div>
-      </section>
-
-
-      {/* CTA */}
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-heading text-3xl font-bold mb-4">{t("Upgrade to Premium Today")}</h2>
-          <p className="text-muted-foreground text-lg mb-8">
-            {t("prem_cta_desc")}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="outline" className="text-base px-8 py-6 border-primary/20">
-                <MessageCircle className="h-5 w-5 mr-2" /> {t("Join Discord")}
-              </Button>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* PayPal Checkout Modal */}
       {selectedTier && paypalClientId && (
         <PayPalCheckoutModal
           isOpen={modalOpen}
@@ -476,8 +415,8 @@ export default function PremiumKeys() {
             price: selectedTier.price,
             isSubscription: selectedTier.isSubscription,
             subscriptionPrice: selectedTier.subscriptionPrice,
-            script: (selectedTier as any).script,
-            gameKey: (selectedTier as any).gameKey,
+            script: selectedTier.script,
+            gameKey: selectedTier.gameKey,
           }}
           paypalClientId={paypalClientId}
           initialMethod={checkoutMethod}
