@@ -5,6 +5,8 @@ interface YouTubeVideoPlayerProps {
   step: string;
   onTimerComplete?: () => void;
   timerSeconds?: number;
+  /** Landing use (key page): no autoplay, and pausing is allowed (the step pages force-resume). */
+  allowPause?: boolean;
 }
 
 // Bike Universe long-form on TRIPLE_WICK (the old COMBO_WICK videos are gone with that channel)
@@ -35,7 +37,7 @@ async function getVideos(): Promise<string[]> {
   return inflight;
 }
 
-export function YouTubeVideoPlayer({ step, onTimerComplete, timerSeconds = 0 }: YouTubeVideoPlayerProps) {
+export function YouTubeVideoPlayer({ step, onTimerComplete, timerSeconds = 0, allowPause = false }: YouTubeVideoPlayerProps) {
   const [videoId, setVideoId] = useState<string>(FALLBACK[STEP_INDEX[step] ?? 0]);
   const [timeLeft, setTimeLeft] = useState(timerSeconds);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -67,6 +69,7 @@ export function YouTubeVideoPlayer({ step, onTimerComplete, timerSeconds = 0 }: 
 
   // Auto-resume if user pauses: listen for YT iframe state events and force play.
   useEffect(() => {
+    if (allowPause) return;
     const onMsg = (e: MessageEvent) => {
       if (typeof e.data !== "string") return;
       try {
@@ -98,14 +101,14 @@ export function YouTubeVideoPlayer({ step, onTimerComplete, timerSeconds = 0 }: 
       window.removeEventListener("message", onMsg);
       iframe?.removeEventListener("load", onLoad);
     };
-  }, [videoId]);
+  }, [videoId, allowPause]);
 
   return (
     <div className="relative w-full">
       <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg">
         <iframe
           ref={iframeRef}
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${shouldMute ? 1 : 0}&rel=0&enablejsapi=1`}
+          src={`https://www.youtube.com/embed/${videoId}?autoplay=${allowPause ? 0 : 1}&mute=${shouldMute ? 1 : 0}&rel=0&enablejsapi=1`}
           title="YouTube video player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen

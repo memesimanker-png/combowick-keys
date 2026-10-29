@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft, ArrowRight, ThumbsUp } from "lucide-react";
+import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft, ArrowRight, ThumbsUp, Crown, KeyRound, Gamepad2, ClipboardPaste } from "lucide-react";
+import { YouTubeVideoPlayer } from "@/components/YouTubeVideoPlayer";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -56,6 +57,16 @@ export default function VerifyProviderSelect() {
   const [discordCompleted, setDiscordCompleted] = useState(false);
   const [youtubeTimer, setYoutubeTimer] = useState(0);
   const [discordTimer, setDiscordTimer] = useState(0);
+  // Redesigned key page (owner 2026-10-29, after studying Lumin/BigFroot/H4x/Molyn): PREVIEW only.
+  // ?v2=1 turns it on for this browser, ?v2=0 turns it off. English-only until it goes live.
+  const [v2] = useState(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get("v2");
+      if (q === "1") localStorage.setItem("cw_keypage_v2", "1");
+      if (q === "0") localStorage.removeItem("cw_keypage_v2");
+      return localStorage.getItem("cw_keypage_v2") === "1";
+    } catch { return false; }
+  });
   const [likeCompleted, setLikeCompleted] = useState(false);
   const [likeTimer, setLikeTimer] = useState(0);
   const [subLikeSkip] = useState(subLikeRecentlyDone); // done within the last 7 days -> step hidden
@@ -403,7 +414,7 @@ export default function VerifyProviderSelect() {
           <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
         </button>
       </div>
-      <a href="/premium-keys"
+      {!v2 && <a href="/premium-keys"
         className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-primary"><Zap className="h-5 w-5" /></span>
         <span className="min-w-0 flex-1">
@@ -414,7 +425,7 @@ export default function VerifyProviderSelect() {
           <span className="block text-xs text-muted-foreground">{t("Skip every step. One key for every game.")}</span>
         </span>
         <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-      </a>
+      </a>}
     </div>
   );
 
@@ -485,6 +496,95 @@ export default function VerifyProviderSelect() {
   const completedCount = gateSteps.filter((s) => s.done).length;
   const totalGates = gateSteps.length;
   const overallPercent = totalGates === 0 ? 100 : Math.round((completedCount / totalGates) * 100);
+
+  if (v2) {
+    // One clean page: what you get + how it works, the video, Premium first, then the free key
+    // (Sub+Like once a week, then the same choices as before).
+    const subLikeStep = steps.find((s) => s.key === "sub-like");
+    const unlockStep = steps[steps.length - 1];
+    const how: [React.ElementType, string][] = [
+      [KeyRound, t("Get a key")],
+      [Gamepad2, t("Run the script in Roblox")],
+      [ClipboardPaste, t("Paste your key when asked")],
+    ];
+    const chip = "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase";
+    return (
+      <div className="min-h-screen bg-black/70 flex flex-col">
+        <NoIndex />
+        <AdBlockGate page="verify-provider-select" />
+        <DiscountNotification startMinimized />
+        <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
+
+        <main className="flex-1 container px-3 pt-6 pb-36 sm:px-8 sm:py-10">
+          <div className="max-w-xl w-full mx-auto space-y-5">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold sm:text-4xl">{t("Get your key")}</h1>
+              <p className="text-sm text-muted-foreground">{t("Free keys come from a short checkpoint. Premium skips everything.")}</p>
+            </div>
+
+            <ol className="grid grid-cols-3 gap-2 text-center">
+              {how.map(([Icon, label], i) => (
+                <li key={i} className="rounded-lg border border-border/60 bg-secondary/20 px-2 py-3">
+                  <span className="mx-auto mb-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary">
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <span className="block text-[10px] font-bold text-primary">{i + 1}</span>
+                  <span className="block text-[11px] leading-tight text-foreground/80">{label}</span>
+                </li>
+              ))}
+            </ol>
+
+            <YouTubeVideoPlayer step="provider-select" allowPause />
+
+            {keyLimited ? (
+              <KeyLimitNotice resetsAt={keyQuota?.resets_at} limit={keyQuota?.limit} />
+            ) : (
+              <>
+                <a href="/premium-keys" className="cw-glow block">
+                  <span className="relative block rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/20 to-primary/5 p-5">
+                    <span className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-2 text-lg font-bold"><Crown className="h-5 w-5 text-primary" /> {t("Premium Key")}</span>
+                      <span className={`${chip} bg-primary text-primary-foreground`}>{t("Best value")}</span>
+                    </span>
+                    <span className="mt-3 block space-y-1.5 text-sm text-foreground/85">
+                      <span className="flex items-center gap-2"><Zap className="h-4 w-4 shrink-0 text-primary" />{t("Instant key after checkout")}</span>
+                      <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />{t("No checkpoints or ads")}</span>
+                      <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />{t("One key for every game")}</span>
+                    </span>
+                    <span className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+                      {t("Get Premium")} <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </span>
+                </a>
+
+                <div className="space-y-4 rounded-lg border border-border bg-secondary/20 p-5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-lg font-bold">{t("Free key")}</span>
+                    <span className={`${chip} bg-green-500/20 text-green-300`}>{t("Free")}</span>
+                    <span className={`${chip} bg-primary/20 text-primary`}>{t("{n}-hour key").replace("{n}", String(keyHours.lv))}</span>
+                  </div>
+                  {subLikeStep && !subLikeStep.done ? (
+                    <div className="space-y-3">
+                      <p className="flex items-center gap-2 text-sm font-semibold"><Youtube className="h-4 w-4 text-primary" /> {t("Subscribe & Like (once per week)")}</p>
+                      {subLikeStep.render()}
+                    </div>
+                  ) : (
+                    unlockStep.render()
+                  )}
+                </div>
+              </>
+            )}
+
+            <p className="text-center text-xs text-muted-foreground">
+              {t("Stuck?")} <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline">{t("Open a ticket in our Discord")}</a>
+            </p>
+
+            <RequestWidget />
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
