@@ -19,8 +19,9 @@ const sponsorRecent = () => {
   try { const at = Number(localStorage.getItem(SPONSOR_AT)) || 0; return at > 0 && Date.now() - at < SPONSOR_CAP_MS; } catch { return false; }
 };
 
-// Subscribe + Like gate for YouTube visitors (owner 2026-10-28, like Asher's link-unlock). TEST ONLY for now:
-// shows when the link has &gate=1. &ch = the source channel (UC… id or @handle), &v = the source video.
+// Subscribe + Like gate for YouTube visitors (owner 2026-10-28, like Asher's link-unlock). ON for every ?lv=1
+// link (owner tested + approved 2026-10-29); &gate=0 skips it. &ch = the source channel (UC… id or @handle),
+// &v = the source video (our go.combowick.com links carry both).
 // Done once per channel per device per week.
 const GATE_DEFAULT_CH = "@Triple_WICK";
 const GATE_DEFAULT_V = "WIxl2ehPFrs"; // Bike Universe long-form on TRIPLE_WICK
@@ -60,7 +61,7 @@ export default function ScriptUnlockStart() {
   const { t } = useTranslation();
   const gateCh = (params.get("ch") || GATE_DEFAULT_CH).trim();
   const gateV = (params.get("v") || GATE_DEFAULT_V).replace(/[^A-Za-z0-9_-]/g, "");
-  const [gateOn] = useState(() => direct && params.get("gate") === "1" && !gateRecent(gateCh));
+  const [gateOn] = useState(() => direct && params.get("gate") !== "0" && !gateRecent(gateCh));
   const [needsTap] = useState(() => direct && (gateOn || !sponsorRecent()));
   const [subTimer, setSubTimer] = useState(0);
   const [subDone, setSubDone] = useState(false);
