@@ -42,6 +42,50 @@
       "destination": "/google249552f9b2711a57.html"
     },
     {
+      "source": "/scripts",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider|applebot|facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot|telegrambot|whatsapp|pinterest|gptbot|chatgpt-user|claudebot|perplexitybot|oai-searchbot|youbot|anthropic-ai|cohere-ai|bytespider|ccbot|google-extended).*"
+        }
+      ],
+      "destination": "/api/page?route=scripts"
+    },
+    {
+      "source": "/executors",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider|applebot|facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot|telegrambot|whatsapp|pinterest|gptbot|chatgpt-user|claudebot|perplexitybot|oai-searchbot|youbot|anthropic-ai|cohere-ai|bytespider|ccbot|google-extended).*"
+        }
+      ],
+      "destination": "/api/page?route=executors"
+    },
+    {
+      "source": "/premium-keys",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider|applebot|facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot|telegrambot|whatsapp|pinterest|gptbot|chatgpt-user|claudebot|perplexitybot|oai-searchbot|youbot|anthropic-ai|cohere-ai|bytespider|ccbot|google-extended).*"
+        }
+      ],
+      "destination": "/api/page?route=premium-keys"
+    },
+    {
+      "source": "/request",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandex|duckduckbot|slurp|baiduspider|applebot|facebookexternalhit|twitterbot|linkedinbot|slackbot|discordbot|telegrambot|whatsapp|pinterest|gptbot|chatgpt-user|claudebot|perplexitybot|oai-searchbot|youbot|anthropic-ai|cohere-ai|bytespider|ccbot|google-extended).*"
+        }
+      ],
+      "destination": "/api/page?route=request"
+    },
+    {
       "source": "/scripts/:slug",
       "has": [
         {
