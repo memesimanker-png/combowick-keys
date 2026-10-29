@@ -36,8 +36,24 @@ function readPendingKeyHours(): number {
   try { const h = Number(JSON.parse(localStorage.getItem("verify_token") || "{}").hours); return h > 0 ? h : 6; } catch { return 6; }
 }
 
+// "Key #3 this week": this browser's own key history (made-at times, last 7 days), saved when a key is made
+const KEY_LOG = "cw_key_log";
+const WEEK_MS = 7 * 864e5;
+function readKeyLog(): number[] {
+  try {
+    const a = JSON.parse(localStorage.getItem(KEY_LOG) || "[]");
+    return Array.isArray(a) ? a.filter((x) => typeof x === "number" && Date.now() - x < WEEK_MS) : [];
+  } catch { return []; }
+}
+function logKey(at: number): number[] {
+  const a = [...readKeyLog(), at];
+  try { localStorage.setItem(KEY_LOG, JSON.stringify(a.slice(-50))); } catch { /* private mode: count just won't stick */ }
+  return a;
+}
+
 export default function AccessKey() {
   const pendingKeyHours = readPendingKeyHours();
+  const [weekKeys, setWeekKeys] = useState<number[]>(readKeyLog);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -268,6 +284,7 @@ export default function AccessKey() {
         setKeyEndsAt(now + keyData.key_hours! * 3600e3);
         setKeyExpiresAt(expiryDate.toISOString());
         setCanGenerate(false);
+        setWeekKeys(logKey(now));
 
         toast({ title: "Key Generated!", description: `Your ${data.hours || readPendingKeyHours()}-hour HWID key has been generated.` });
       } else {
@@ -324,6 +341,15 @@ export default function AccessKey() {
     return `${Math.floor(ms / 3600e3)}h ${Math.floor((ms % 3600e3) / 60e3)}m`;
   })();
   const fact = "rounded-xl border border-border bg-secondary/40 p-3";
+  // last 7 days, oldest first: did this browser make a key that day? (today = last dot)
+  const keyDays = (() => {
+    const d0 = new Date(); d0.setHours(0, 0, 0, 0);
+    return Array.from({ length: 7 }, (_, i) => {
+      const s = d0.getTime() - (6 - i) * 864e5;
+      return weekKeys.some((x) => x >= s && x < s + 864e5);
+    });
+  })();
+  const weekN = weekKeys.length;
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col pb-40 sm:pb-0">{/* room for the floating Back button on phones */}
@@ -402,7 +428,23 @@ export default function AccessKey() {
                     <button type="button" onClick={startNewKey} className="text-primary hover:underline">{t("Need a key for another game?")}</button>
                     <button type="button" onClick={() => navigate("/extend-key")} className="text-primary hover:underline">{t("Already have a key? Add more hours")}</button>
                   </div>
-                  <PremiumGlowBar title={t("Want a key that never runs out?")} sub={t("Premium never expires")} />
+                  {weekN > 0 && (
+                    <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/30 bg-primary/5 px-3.5 py-2.5">
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold">🔥 {t("Key #{n} this week").replace("{n}", String(weekN))}</p>
+                        <p className="text-xs text-muted-foreground">{t("7 days in a row = 20% off Premium")}</p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-1" aria-hidden>
+                        {keyDays.map((on, i) => (
+                          <span key={i} className={`h-2.5 w-2.5 rounded-full ${on ? "bg-primary" : "bg-white/15"} ${i === 6 ? "ring-1 ring-primary/70 ring-offset-1 ring-offset-black" : ""}`} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <PremiumGlowBar
+                    title={weekN >= 3 ? t("Key #{n} this week. Skip the steps for good?").replace("{n}", String(weekN)) : t("Want a key that never runs out?")}
+                    sub={t("Premium never expires")}
+                  />
                 </>
               )}
             </div>
