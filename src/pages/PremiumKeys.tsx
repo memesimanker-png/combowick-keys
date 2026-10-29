@@ -45,14 +45,10 @@ const overridePrice = (value: number | null | undefined, fallback?: number) => {
 const money = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
 
 // Sale prices are worked out per UTC day (src/lib/auto-key-discounts.ts): a sale ends at the next UTC midnight, and the
-// weekend sale (Fri–Sun, Lifetime up to 40% off) starts at Friday 00:00 UTC.
+// weekend sale (Fri–Sun) is never announced ahead of time.
 const nextUtcMidnight = () => {
   const n = new Date();
   return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + 1);
-};
-const nextUtcFriday = () => {
-  const n = new Date();
-  return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + (((5 - n.getUTCDay() + 7) % 7) || 7));
 };
 function useCountdown(target: () => number) {
   const calc = () => {
@@ -103,7 +99,6 @@ export default function PremiumKeys() {
   const { data: keyDiscounts } = useKeyDiscounts();
   const steps = useVerifySteps();
   const saleEnds = useCountdown(nextUtcMidnight);
-  const weekendStarts = useCountdown(nextUtcFriday);
   // paid game scripts the admin hasn't hidden (none = no section and no shortcut box)
   const paidGames = PAID_GAMES.filter((g) => !gameSettings?.get(g.key)?.hidden);
 
@@ -212,16 +207,19 @@ export default function PremiumKeys() {
     { emoji: "💬", text: t("Discord support") },
     { emoji: "🔒", text: `PayPal · ${t("Card")} · Payoneer`, pcOnly: true },
   ];
-  // sale on: today's real % and when it ends · no sale: the weekend sale and when it starts
+  // sale on: today's real % and when it ends · no sale: push the $5 trial (never tease the weekend sale on a
+  // weekday, that just teaches buyers to wait; owner 2026-10-29)
   const saleBar = (
     <div className="cw-glow" style={{ ["--glow-radius" as string]: "12px" }}>
       <div className="flex items-center justify-between gap-3 px-3.5 py-2.5">
         <span className="text-[13px] font-semibold">
-          🔥 {sale
-            ? <>{withPercent(t(sale.name === "Lifetime" ? "Lifetime {p} off today" : "Monthly {p} off today"), `${sale.percent}%`)}{sale.name === "Lifetime" && <span className="hidden lg:inline"> {t("Pay once. Never expires.")}</span>}</>
-            : withPercent(t("Weekend sale: Lifetime up to {p} off, starts in"), "40%")}
+          {sale
+            ? <>🔥 {withPercent(t(sale.name === "Lifetime" ? "Lifetime {p} off today" : "Monthly {p} off today"), `${sale.percent}%`)}{sale.name === "Lifetime" && <span className="hidden lg:inline"> {t("Pay once. Never expires.")}</span>}</>
+            : <>⚡ {withPercent(t("Every game for 7 days, just {p}"), "$5")}</>}
         </span>
-        <span data-no-translate className="whitespace-nowrap rounded-lg border border-primary/40 bg-background px-2 py-1 font-mono text-[13px] font-bold text-primary">{sale ? saleEnds : weekendStarts}</span>
+        {sale
+          ? <span data-no-translate className="whitespace-nowrap rounded-lg border border-primary/40 bg-background px-2 py-1 font-mono text-[13px] font-bold text-primary">{saleEnds}</span>
+          : <button onClick={() => handlePurchase(tiers[0])} className="whitespace-nowrap rounded-lg bg-primary px-3 py-1.5 text-[12.5px] font-extrabold text-primary-foreground hover:bg-primary/90">{t("Try for $5")}</button>}
       </div>
     </div>
   );
