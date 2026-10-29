@@ -29,9 +29,10 @@ export function useVerifySteps(): number {
   return steps;
 }
 
-export function VerifyCard({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
+/** allowOverflow: lets dropdowns (the game picker) spill past the card edge instead of being cut off. */
+export function VerifyCard({ children, wide = false, allowOverflow = false }: { children: ReactNode; wide?: boolean; allowOverflow?: boolean }) {
   return (
-    <div className={`mx-auto w-full ${wide ? "max-w-4xl" : "max-w-3xl"} overflow-hidden rounded-2xl border border-primary/30 bg-card`}>
+    <div className={`mx-auto w-full ${wide ? "max-w-4xl" : "max-w-3xl"} ${allowOverflow ? "" : "overflow-hidden"} rounded-2xl border border-primary/30 bg-card`}>
       {children}
     </div>
   );
@@ -41,7 +42,7 @@ export function VerifyCard({ children, wide = false }: { children: ReactNode; wi
 export function VerifyHeader({ title, sub, percent, tracker }: { title: string; sub?: string; percent: number; tracker?: ReactNode }) {
   const { t } = useTranslation();
   return (
-    <div className="border-b border-border/50 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 p-4 sm:px-7 sm:py-6">
+    <div className="rounded-t-2xl border-b border-border/50 bg-gradient-to-r from-primary/10 via-transparent to-primary/10 p-4 sm:px-7 sm:py-6">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-xl font-bold leading-tight sm:text-3xl">{title}</h1>

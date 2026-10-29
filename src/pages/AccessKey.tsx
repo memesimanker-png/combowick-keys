@@ -333,7 +333,7 @@ export default function AccessKey() {
 
       <main className="flex-1 container flex flex-col items-center justify-start px-3 pt-4 sm:px-8 sm:py-10">
         <div className="w-full space-y-4">
-          <VerifyCard>
+          <VerifyCard allowOverflow>
             <VerifyHeader
               title={generatedKey ? t("Your Key Is Ready") : t("Almost There")}
               sub={generatedKey ? t("Copy it and paste it in the hub.") : t("Pick the game you'll use it in.")}
