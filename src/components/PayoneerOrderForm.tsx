@@ -5,8 +5,8 @@ import { useTranslation } from "@/lib/translation-context";
 import { DiscordSignInButton } from "@/components/DiscordSignInButton";
 
 // Payoneer tab of the checkout modal. Payoneer needs $20+, so only Lifetime (at today's sale price) and the 60-day pack. The buyer signs in
-// with Discord, the payoneer-order edge fn saves the order and the bot opens their private ticket, where staff send
-// the Payoneer payment link. Once it's paid, staff press Approve and the key goes to the buyer's DMs.
+// with Discord, the payoneer-order edge fn saves the order and the bot DMs them a card with Pay now (a private ticket only if
+// their DMs are closed). Pay now starts the verifying screen on /payoneer-order; staff Approve and the key goes to DMs + email.
 export const PAYONEER_PLANS = {
   "60d": { name: "60 Days Key", price: 21.99 },
   lifetime: { name: "Lifetime Key", price: 49.99 },
@@ -30,6 +30,7 @@ export function PayoneerOrderForm({ plan, price }: { plan: PayoneerPlan; price: 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [ticket, setTicket] = useState("");
+  const [inDm, setInDm] = useState(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -44,6 +45,7 @@ export function PayoneerOrderForm({ plan, price }: { plan: PayoneerPlan; price: 
       if (fnErr) throw fnErr;
       if (data?.ticket) {
         setTicket(data.ticket);
+        setInDm(data.dm !== false);
         try { sessionStorage.removeItem(PO_RETURN_KEY); } catch { /* ignore */ }
         return;
       }
@@ -58,23 +60,23 @@ export function PayoneerOrderForm({ plan, price }: { plan: PayoneerPlan; price: 
 
   const steps = [
     "Sign in with Discord and place your order.",
-    "Your Payoneer payment link arrives in your Discord ticket right away.",
-    "Pay it, then upload a screenshot of the payment on your order page.",
-    "We check it and your key goes to your Discord DMs, your email and your order page.",
+    "We send your Payoneer payment link to your Discord DMs right away.",
+    "Press Pay now and pay. That's it!",
+    "Your key comes to your Discord DMs, your email and your order page.",
   ];
 
   if (ticket) {
     return (
       <div className="space-y-3 py-2 text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-500/15"><Check className="h-7 w-7 text-green-400" /></div>
-        <p className="text-sm">{t("Your order is in! Your Payoneer payment link is waiting in your Discord ticket.")}</p>
+        <p className="text-sm">{inDm ? t("Your order is in! Your Payoneer payment link is in your Discord DMs.") : t("Your order is in! Your Payoneer payment link is waiting in your Discord ticket.")}</p>
         <a href={ticket} target="_blank" rel="noopener noreferrer"
           className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white hover:bg-[#4752C4]">
-          <ExternalLink className="h-4 w-4" /> {t("Open my ticket")}
+          <ExternalLink className="h-4 w-4" /> {inDm ? t("Open my Discord DMs") : t("Open my ticket")}
         </a>
         <a href="/payoneer-order"
           className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-primary/50 px-4 py-3 text-sm font-semibold text-primary hover:bg-primary/10">
-          {t("After paying: upload your screenshot")}
+          {t("My order page")}
         </a>
       </div>
     );
