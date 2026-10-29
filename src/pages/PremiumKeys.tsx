@@ -1,5 +1,5 @@
 import { Layout } from "@/components/Layout";
-import { Crown, ChevronDown, ChevronUp, Zap, Mail, MessageCircle, Lock, CreditCard, Wallet, Gamepad2, Heart, ArrowRight, Check } from "lucide-react";
+import { Crown, MessageCircle, ArrowRight, Check } from "lucide-react";
 import { useState, useEffect, type ReactNode } from "react";
 import { PayPalCheckoutModal } from "@/components/PayPalCheckoutModal";
 import { PaidGameCard } from "@/components/PaidGameCard";
@@ -30,10 +30,10 @@ const tiers = [
 type Tier = (typeof tiers)[number] & { script?: string; gameKey?: string; subscriptionPrice?: number };
 
 // what each plan card says (the label/period lines and the PC feature list)
-const PLAN_COPY: Record<string, { label: string; period: string; perDay?: string; features: string[]; buy: string; tag?: "pop" | "best" }> = {
-  "trial-7day": { label: "7-Day Trial", period: "7 days · one-time", perDay: "$0.71 a day", features: ["Every game for 7 days", "No checkpoints, ads or cooldown", "The easy way to try Premium"], buy: "Try for $5", tag: "pop" },
-  monthly: { label: "Monthly", period: "30 days · one-time", perDay: "$0.33 a day", features: ["Every game for 30 days", "No checkpoints, ads or cooldown", "Priority support"], buy: "Get Monthly" },
-  lifetime: { label: "Lifetime", period: "forever · pay once", features: ["Every game, forever", "No checkpoints, ads or cooldown", "VIP priority support"], buy: "Get Lifetime", tag: "best" },
+const PLAN_COPY: Record<string, { label: string; period: string; pcLine: string; features: string[]; buy: string; tag?: "pop" | "best" }> = {
+  "trial-7day": { label: "7-Day Trial", period: "7 days · one-time", pcLine: "7 days · $0.71 a day · one-time payment", features: ["Every game for 7 days", "No checkpoints, ads or cooldown", "The easy way to try Premium"], buy: "Try for $5", tag: "pop" },
+  monthly: { label: "Monthly", period: "30 days · one-time", pcLine: "30 days · $0.33 a day · one-time payment", features: ["Every game for 30 days", "No checkpoints, ads or cooldown", "Priority support"], buy: "Get Monthly" },
+  lifetime: { label: "Lifetime", period: "forever · pay once", pcLine: "Pay once. Never expires.", features: ["Every game, forever", "No checkpoints, ads or cooldown", "VIP priority support"], buy: "Get Lifetime", tag: "best" },
 };
 
 const overrideText = (value: string | null | undefined, fallback?: string) => (value === null || value === undefined ? fallback : value);
@@ -44,13 +44,22 @@ const overridePrice = (value: number | null | undefined, fallback?: number) => {
 };
 const money = (n: number) => `$${Number.isInteger(n) ? n : n.toFixed(2)}`;
 
-// sale prices are worked out per UTC day, so today's price ends at the next UTC midnight
-function useUntilUtcMidnight() {
+// Sale prices are worked out per UTC day (src/lib/auto-key-discounts.ts): a sale ends at the next UTC midnight, and the
+// weekend sale (Fri–Sun, Lifetime up to 40% off) starts at Friday 00:00 UTC.
+const nextUtcMidnight = () => {
+  const n = new Date();
+  return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + 1);
+};
+const nextUtcFriday = () => {
+  const n = new Date();
+  return Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate() + (((5 - n.getUTCDay() + 7) % 7) || 7));
+};
+function useCountdown(target: () => number) {
   const calc = () => {
-    const now = new Date();
-    const end = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1);
-    const s = Math.max(0, Math.floor((end - now.getTime()) / 1000));
-    return [Math.floor(s / 3600), Math.floor((s % 3600) / 60), s % 60].map((x) => String(x).padStart(2, "0")).join(":");
+    const s = Math.max(0, Math.floor((target() - Date.now()) / 1000));
+    const d = Math.floor(s / 86400);
+    const hms = [Math.floor((s % 86400) / 3600), Math.floor((s % 3600) / 60), s % 60].map((x) => String(x).padStart(2, "0")).join(":");
+    return d > 0 ? `${d}d ${hms}` : hms;
   };
   const [left, setLeft] = useState(calc);
   useEffect(() => {
@@ -59,6 +68,11 @@ function useUntilUtcMidnight() {
   }, []);
   return left;
 }
+// "Lifetime {p} off today" -> the percent in bold green, wherever the translation puts it
+function withPercent(text: string, p: string) {
+  const [a, b = ""] = text.split("{p}");
+  return <>{a}<b className="text-green-400" data-no-translate>{p}</b>{b}</>;
+}
 
 function FAQItem({ q, a }: { q: string; a: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -66,7 +80,7 @@ function FAQItem({ q, a }: { q: string; a: ReactNode }) {
     <div className="border-t border-border">
       <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm hover:bg-secondary/40">
         <span className="font-medium">{q}</span>
-        {open ? <ChevronUp className="h-4 w-4 shrink-0 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />}
+        <span className="shrink-0 text-muted-foreground">{open ? "−" : "+"}</span>
       </button>
       {open && <div className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">{a}</div>}
     </div>
@@ -88,7 +102,8 @@ export default function PremiumKeys() {
   const { data: gameSettings } = usePaidGameSettings();
   const { data: keyDiscounts } = useKeyDiscounts();
   const steps = useVerifySteps();
-  const saleEnds = useUntilUtcMidnight();
+  const saleEnds = useCountdown(nextUtcMidnight);
+  const weekendStarts = useCountdown(nextUtcFriday);
   // paid game scripts the admin hasn't hidden (none = no section and no shortcut box)
   const paidGames = PAID_GAMES.filter((g) => !gameSettings?.get(g.key)?.hidden);
 
@@ -176,7 +191,7 @@ export default function PremiumKeys() {
           {p.was && <span className="text-[15px] text-muted-foreground line-through">{money(p.was)}</span>}
           {p.percent > 0 && <span className="rounded-md bg-green-500/15 px-1.5 py-0.5 text-[11px] font-extrabold text-green-400">{p.percent}% OFF</span>}
         </div>
-        <p className="mt-0.5 text-xs text-muted-foreground">{id === "lifetime" ? t("Pay once. Never expires.") : `${t(c.period)} · ${c.perDay ? t(c.perDay) : ""}`}</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">{t(c.pcLine)}</p>
         <ul className="my-4 grid gap-1.5 text-[13px]">
           {c.features.map((f) => <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4 shrink-0 text-primary" />{t(f)}</li>)}
         </ul>
@@ -192,15 +207,21 @@ export default function PremiumKeys() {
   };
 
   const chips = [
-    { icon: Zap, text: "Instant key with PayPal or card" },
-    { icon: Mail, text: "Also sent by email" },
-    { icon: MessageCircle, text: "Discord support" },
+    { emoji: "⚡", text: t("Key in seconds") },
+    { emoji: "📧", text: t("Also sent by email") },
+    { emoji: "💬", text: t("Discord support") },
+    { emoji: "🔒", text: `PayPal · ${t("Card")} · Payoneer`, pcOnly: true },
   ];
-  const saleBar = sale && (
+  // sale on: today's real % and when it ends · no sale: the weekend sale and when it starts
+  const saleBar = (
     <div className="cw-glow" style={{ ["--glow-radius" as string]: "12px" }}>
       <div className="flex items-center justify-between gap-3 px-3.5 py-2.5">
-        <span className="text-[13px] font-semibold">{t(sale.name === "Lifetime" ? "Lifetime sale today" : "Monthly sale today")} · <b className="text-green-400" data-no-translate>{sale.percent}% OFF</b></span>
-        <span data-no-translate className="whitespace-nowrap rounded-lg border border-primary/40 bg-background px-2 py-1 font-mono text-[13px] font-bold text-primary">{saleEnds}</span>
+        <span className="text-[13px] font-semibold">
+          🔥 {sale
+            ? <>{withPercent(t(sale.name === "Lifetime" ? "Lifetime {p} off today" : "Monthly {p} off today"), `${sale.percent}%`)}{sale.name === "Lifetime" && <span className="hidden lg:inline"> {t("Pay once. Never expires.")}</span>}</>
+            : withPercent(t("Weekend sale: Lifetime up to {p} off, starts in"), "40%")}
+        </span>
+        <span data-no-translate className="whitespace-nowrap rounded-lg border border-primary/40 bg-background px-2 py-1 font-mono text-[13px] font-bold text-primary">{sale ? saleEnds : weekendStarts}</span>
       </div>
     </div>
   );
@@ -228,12 +249,12 @@ export default function PremiumKeys() {
             </div>
             <div className="mt-3 flex flex-wrap justify-center gap-1.5 lg:justify-start">
               {chips.map((c) => (
-                <span key={c.text} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11px] text-foreground/85">
-                  <c.icon className="h-3.5 w-3.5 text-primary" />{t(c.text)}
+                <span key={c.emoji} className={`items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11px] text-foreground/85 ${c.pcOnly ? "hidden lg:inline-flex" : "inline-flex"}`}>
+                  <span aria-hidden>{c.emoji}</span>{c.text}
                 </span>
               ))}
             </div>
-            {saleBar && <div className="mt-4">{saleBar}</div>}
+            <div className="mt-4">{saleBar}</div>
           </div>
           <div className="cw-glow hidden lg:order-2 lg:block" style={{ ["--glow-radius" as string]: "18px" }}>
             <img src="/images/premium-cowboy.webp" alt="COMBO_WICK" className="aspect-square w-full rounded-[16px] object-cover" />
@@ -256,7 +277,7 @@ export default function PremiumKeys() {
           <div className="px-4 py-3.5 lg:flex lg:items-center lg:justify-between lg:gap-5">
             <div>
               <div className="flex items-center justify-between gap-2 lg:justify-start lg:gap-2.5">
-                <b className="flex items-center gap-1.5 text-sm"><Crown className="h-4 w-4 text-primary" />{t("Want a script for your own game?")}</b>
+                <b className="flex items-center gap-1.5 text-sm"><span aria-hidden>👑</span>{t("Want a script for your own game?")}</b>
                 <Tag kind="quote">{t("Free quote")}</Tag>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{t("Your own script with your features, built before every free request.")}</p>
@@ -270,9 +291,9 @@ export default function PremiumKeys() {
         {/* how to pay */}
         <div className="mt-4 text-center">
           <div className="flex flex-wrap justify-center gap-1.5">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><Lock className="h-3.5 w-3.5 text-primary" />PayPal</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><CreditCard className="h-3.5 w-3.5 text-primary" />{t("Card")}</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><Wallet className="h-3.5 w-3.5 text-[#FF4800]" />Payoneer</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><span aria-hidden>🔒</span>PayPal</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><span aria-hidden>💳</span>{t("Card")}</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary px-2.5 py-1 text-[11.5px] font-semibold"><span aria-hidden>🟠</span>Payoneer</span>
           </div>
           <p className="mx-auto mt-2 max-w-xl text-[11.5px] leading-relaxed text-muted-foreground">{t("No PayPal? Pick Payoneer at checkout (Lifetime, or 60 days for $21.99). Got a creator code? Add it at checkout.")}</p>
         </div>
@@ -290,7 +311,7 @@ export default function PremiumKeys() {
               <tbody>
                 {[
                   ["Checkpoints", t("{n} each time").replace("{n}", String(steps)), t("None")],
-                  ["Key lasts", t("8 hours"), t("7 days to forever")],
+                  ["Key lasts", t("8 hours"), t("7 days → forever")],
                   ["Games", t("1 per key"), t("Every game")],
                   ["Ads", t("Yes"), t("None")],
                   ["Wait between keys", t("1 hour"), t("Never")],
@@ -310,16 +331,16 @@ export default function PremiumKeys() {
               <FAQItem q={t("What if my key stops working?")} a={<>{t("Use Fix Key on the website or open a ticket in our Discord and we'll sort it out.")} <a href="/fix-key" className="text-primary underline">{t("Fix Key")}</a></>} />
               <FAQItem q={t("Can I get a refund?")} a={<>{t("Keys are digital and delivered instantly, so sales are final. If your key is broken and we can't fix it, we replace it.")} <a href="/refund-policy" className="text-primary underline">{t("Refund Policy")}</a></>} />
             </div>
-            <div className={`mt-3 grid gap-2 ${paidGames.length ? "grid-cols-2" : "grid-cols-1"}`}>
-              {paidGames.length > 0 && (
-                <a href="#paid-scripts" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
-                  <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Gamepad2 className="h-4 w-4 text-primary" />{t("Paid game scripts")}</b>
-                  <span className="text-muted-foreground">{t("Premium scripts for one game")}</span>
-                </a>
-              )}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {/* no paid game listed right now -> ask about one on Discord */}
+              <a href={paidGames.length ? "#paid-scripts" : DISCORD} {...(paidGames.length ? {} : { target: "_blank", rel: "noopener noreferrer" })}
+                className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
+                <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><span aria-hidden>🎮</span>{t("Paid game scripts")}</b>
+                <span className="text-muted-foreground">{t("Premium scripts for one game")} →</span>
+              </a>
               <a href="#support-us" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
-                <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Heart className="h-4 w-4 text-primary" />{t("Support us")}</b>
-                <span className="text-muted-foreground">{t("Donate or Owner access")}</span>
+                <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><span aria-hidden>❤️</span>{t("Support us")}</b>
+                <span className="text-muted-foreground">{t("Donate or Owner access")} →</span>
               </a>
             </div>
           </div>
