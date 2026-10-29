@@ -89,6 +89,8 @@ export default function PremiumKeys() {
   const { data: keyDiscounts } = useKeyDiscounts();
   const steps = useVerifySteps();
   const saleEnds = useUntilUtcMidnight();
+  // paid game scripts the admin hasn't hidden (none = no section and no shortcut box)
+  const paidGames = PAID_GAMES.filter((g) => !gameSettings?.get(g.key)?.hidden);
 
   // creator links: keys.combowick.com/premium-keys?code=ZEN -> pre-filled at checkout
   useEffect(() => { rememberCodeFromUrl(); }, []);
@@ -308,11 +310,13 @@ export default function PremiumKeys() {
               <FAQItem q={t("What if my key stops working?")} a={<>{t("Use Fix Key on the website or open a ticket in our Discord and we'll sort it out.")} <a href="/fix-key" className="text-primary underline">{t("Fix Key")}</a></>} />
               <FAQItem q={t("Can I get a refund?")} a={<>{t("Keys are digital and delivered instantly, so sales are final. If your key is broken and we can't fix it, we replace it.")} <a href="/refund-policy" className="text-primary underline">{t("Refund Policy")}</a></>} />
             </div>
-            <div className="mt-3 grid grid-cols-2 gap-2">
-              <a href="#paid-scripts" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
-                <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Gamepad2 className="h-4 w-4 text-primary" />{t("Paid game scripts")}</b>
-                <span className="text-muted-foreground">{t("Premium scripts for one game")}</span>
-              </a>
+            <div className={`mt-3 grid gap-2 ${paidGames.length ? "grid-cols-2" : "grid-cols-1"}`}>
+              {paidGames.length > 0 && (
+                <a href="#paid-scripts" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
+                  <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Gamepad2 className="h-4 w-4 text-primary" />{t("Paid game scripts")}</b>
+                  <span className="text-muted-foreground">{t("Premium scripts for one game")}</span>
+                </a>
+              )}
               <a href="#support-us" className="rounded-xl border border-border bg-secondary p-3 text-xs hover:border-primary/40">
                 <b className="mb-0.5 flex items-center gap-1.5 text-[13px]"><Heart className="h-4 w-4 text-primary" />{t("Support us")}</b>
                 <span className="text-muted-foreground">{t("Donate or Owner access")}</span>
@@ -323,14 +327,14 @@ export default function PremiumKeys() {
       </section>
 
       {/* Paid game scripts (kept, lower on the page) */}
-      <section id="paid-scripts" className="scroll-mt-20 bg-muted/20 py-12 sm:py-16">
+      {paidGames.length > 0 && <section id="paid-scripts" className="scroll-mt-20 bg-muted/20 py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="mb-3 text-center font-heading text-3xl font-bold">{t("Paid Game Scripts")}</h2>
           <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">
             {t("Premium scripts for popular Roblox games. Monthly or lifetime access — fixes pushed regularly.")}
           </p>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {PAID_GAMES.filter((g) => !gameSettings?.get(g.key)?.hidden).map((g) => {
+            {paidGames.map((g) => {
               const setting = gameSettings?.get(g.key);
               const title = overrideText(setting?.title, g.title) || g.title;
               const subtitle = overrideText(setting?.subtitle, g.subtitle) || "";
@@ -376,7 +380,7 @@ export default function PremiumKeys() {
             })}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* Support us: donate + Owner / Admin access */}
       <section id="support-us" className="scroll-mt-20 py-12 sm:py-16">
