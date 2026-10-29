@@ -8,10 +8,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "@/lib/translation-context";
 import { callRequests, fmtCount, type FoundGame, type ScriptRequest } from "@/lib/script-requests";
-import { Lightbulb, Search, Loader2, ThumbsUp, Users, Key, ChevronRight } from "lucide-react";
+import { Lightbulb, Search, Loader2, ThumbsUp, Users, Key, ChevronRight, ChevronDown, ChevronUp } from "lucide-react";
 
 /** Compact "request a script" box for the key page: top requests + inline search/request/vote. */
-export function RequestWidget() {
+export function RequestWidget({ embedded = false }: { embedded?: boolean } = {}) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
@@ -60,24 +60,8 @@ export function RequestWidget() {
 
   const thumb = (src: string | null) => (src ? <img src={src} alt="" className="h-9 w-9 shrink-0 rounded-md object-cover" loading="lazy" /> : <div className="h-9 w-9 shrink-0 rounded-md bg-secondary" />);
 
-  return (
-    <div className="cw-glow" style={{ "--glow": "268 85% 66%", "--glow-radius": "0.75rem", "--glow-speed": "2.6s", overflow: "clip" } as React.CSSProperties}>
-    <Card className="relative rounded-[calc(0.75rem-1.5px)] border-0 bg-gradient-to-br from-violet-500/15 via-card to-card">
-      <CardContent className="space-y-3 p-4 sm:p-5">
-        <div className="flex items-center gap-3">
-          <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-500/20">
-            <span className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
-            <Lightbulb className="relative h-6 w-6 text-violet-300" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="flex flex-wrap items-center gap-2 text-base font-bold leading-tight sm:text-lg">
-              <span>{t("Don't see your game? Request a script")}</span>
-              <span className="rounded-full bg-violet-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white">{t("New")}</span>
-            </p>
-            <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">{t("Request any Roblox game or vote for one. The most-voted games get made first.")}</p>
-          </div>
-        </div>
-
+  const body = (
+    <>
         <form onSubmit={search} className="flex gap-2">
           <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("Game name or Roblox link")} maxLength={200} className="h-11 min-w-0 border-violet-400/50 bg-black/50 text-base placeholder:text-muted-foreground/80 focus-visible:ring-violet-400 sm:text-sm" />
           <Button type="submit" disabled={searching || query.trim().length < 2} className="h-11 shrink-0 gap-1.5 bg-violet-600 px-4 font-semibold text-white hover:bg-violet-500 disabled:opacity-60">
@@ -144,8 +128,60 @@ export function RequestWidget() {
         <Link to="/request" className="flex items-center justify-center gap-1 text-xs font-semibold text-violet-300 hover:underline">
           <Key className="h-3 w-3" /> {t("See all requests")} <ChevronRight className="h-3 w-3" />
         </Link>
+    </>
+  );
+  // Inside the key card (RequestStrip): just the search + most wanted, no card/header of its own.
+  if (embedded) return <div className="space-y-3">{body}</div>;
+
+  return (
+    <div className="cw-glow" style={{ "--glow": "268 85% 66%", "--glow-radius": "0.75rem", "--glow-speed": "2.6s", overflow: "clip" } as React.CSSProperties}>
+    <Card className="relative rounded-[calc(0.75rem-1.5px)] border-0 bg-gradient-to-br from-violet-500/15 via-card to-card">
+      <CardContent className="space-y-3 p-4 sm:p-5">
+        <div className="flex items-center gap-3">
+          <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-500/20">
+            <span className="absolute inset-0 animate-ping rounded-full bg-violet-500/20" />
+            <Lightbulb className="relative h-6 w-6 text-violet-300" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="flex flex-wrap items-center gap-2 text-base font-bold leading-tight sm:text-lg">
+              <span>{t("Don't see your game? Request a script")}</span>
+              <span className="rounded-full bg-violet-500 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white">{t("New")}</span>
+            </p>
+            <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">{t("Request any Roblox game or vote for one. The most-voted games get made first.")}</p>
+          </div>
+        </div>
+
+        {body}
       </CardContent>
     </Card>
+    </div>
+  );
+}
+
+/**
+ * Slim "Don't see your game?" strip that sits INSIDE the key card, right under its header, so players see it
+ * without scrolling (owner 2026-10-29, mockups/keypage-v3-request.html). Tap to open the search + most wanted in place.
+ */
+export function RequestStrip() {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(() => { try { return sessionStorage.getItem("cw_req_open") === "1"; } catch { return false; } });
+  const toggle = () => setOpen((o) => { try { sessionStorage.setItem("cw_req_open", o ? "0" : "1"); } catch { /* ignore */ } return !o; });
+  return (
+    <div className="border-b border-border/50 bg-gradient-to-r from-violet-500/15 to-transparent">
+      <button type="button" onClick={toggle} className="flex w-full items-center gap-3 px-4 py-3 text-left sm:px-7">
+        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/25">
+          <Lightbulb className="h-4 w-4 text-violet-300" />
+          <span className="absolute -left-2 -top-2 rounded-full bg-violet-500 px-1.5 py-px text-[8.5px] font-extrabold uppercase text-white">{t("New")}</span>
+        </span>
+        <span className="min-w-0 flex-1 text-sm font-semibold leading-tight">
+          {t("Don't see your game?")}
+          <span className="block text-[11px] font-normal text-muted-foreground sm:text-xs">{t("Request it. Most votes get made first.")}</span>
+        </span>
+        <span className="flex shrink-0 items-center gap-1 rounded-full border border-violet-400/50 bg-violet-500/20 px-3 py-1.5 text-xs font-extrabold text-violet-200">
+          {open ? t("Close") : t("Request")} {open ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+        </span>
+      </button>
+      {open && <div className="px-4 pb-4 sm:px-7"><RequestWidget embedded /></div>}
     </div>
   );
 }

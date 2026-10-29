@@ -18,7 +18,7 @@ import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
 import { CpaOfferWall } from "@/components/CpaOfferWall";
 import { useKeyQuota, KeyLimitNotice } from "@/lib/key-quota";
-import { RequestWidget } from "@/components/RequestWidget";
+import { RequestStrip } from "@/components/RequestWidget";
 import { useCpaOffers, getCpaSubid, cpaSession, cpaTrack } from "@/lib/cpa";
 
 
@@ -516,6 +516,7 @@ export default function VerifyProviderSelect() {
         <div className="w-full space-y-4">
           <VerifyCard>
             <VerifyHeader title={t("Get Your Free Key")} sub={t("3 quick sections. About 2 minutes.")} percent={percent} />
+            <RequestStrip />
 
             {keyLimited ? (
               <div className="p-4 sm:px-7 sm:py-5"><KeyLimitNotice resetsAt={keyQuota?.resets_at} limit={keyQuota?.limit} /></div>
@@ -598,7 +599,6 @@ export default function VerifyProviderSelect() {
             {t("Stuck?")} <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline">{t("Open a ticket in our Discord")}</a>
           </p>
 
-          <div className="mx-auto w-full max-w-3xl"><RequestWidget /></div>
         </div>
       </main>
     </div>

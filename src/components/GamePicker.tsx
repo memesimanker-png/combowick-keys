@@ -107,9 +107,23 @@ export function GamePicker({
                 <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading games…")}
               </div>
             ) : filtered.length === 0 ? (
-              <div className="px-3 py-5 text-center text-sm text-muted-foreground space-y-2">
-                <p>{t("No games found.")}</p>
-                <Link to={`/request${q.trim() ? `?q=${encodeURIComponent(q.trim())}` : ""}`} className="inline-flex items-center gap-1 rounded-md bg-primary/15 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/25">💡 {t("Request this game")}</Link>
+              // Their game isn't supported, so a free key can't help them yet: two ways out (owner 2026-10-29) —
+              // request/vote for it free, or a paid custom script built first (custom scripts carry the business).
+              <div className="space-y-2 px-3 py-4 text-sm">
+                <p className="text-center text-muted-foreground">
+                  {q.trim() ? t("We don't have {name} yet.").replace("{name}", q.trim()) : t("No games found.")} {t("Two ways to get it:")}
+                </p>
+                <Link to={`/request${q.trim() ? `?q=${encodeURIComponent(q.trim())}` : ""}`}
+                  className="block rounded-lg border border-violet-400/40 bg-violet-500/15 px-3 py-2 hover:bg-violet-500/25">
+                  <span className="flex items-center justify-between gap-2 font-bold">💡 {t("Request it free")}<span className="text-[10px] font-extrabold text-violet-300">{t("Free").toUpperCase()}</span></span>
+                  <span className="block text-[11px] text-muted-foreground">{t("Vote for it. The most-voted games get made first.")}</span>
+                </Link>
+                <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer" className="cw-glow block" style={{ ["--glow-fill" as string]: "30 8% 9%", ["--glow-radius" as string]: "0.5rem" }}>
+                  <span className="block px-3 py-2">
+                    <span className="flex items-center justify-between gap-2 font-bold">👑 {t("Get it made for you")}<span className="text-[10px] font-extrabold text-primary">{t("FROM $20")}</span></span>
+                    <span className="block text-[11px] text-muted-foreground">{t("Your own script, your features. Built before every free request.")}</span>
+                  </span>
+                </a>
               </div>
             ) : (
               filtered.map((g) => {
