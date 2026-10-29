@@ -120,7 +120,7 @@ export function GamePicker({
                 </Link>
                 <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer" className="cw-glow block" style={{ ["--glow-fill" as string]: "30 8% 9%", ["--glow-radius" as string]: "0.5rem" }}>
                   <span className="block px-3 py-2">
-                    <span className="flex items-center justify-between gap-2 font-bold">👑 {t("Get it made for you")}<span className="text-[10px] font-extrabold text-primary">{t("FROM $20")}</span></span>
+                    <span className="flex items-center justify-between gap-2 font-bold">👑 {t("Get it made for you")}<span className="text-[10px] font-extrabold text-primary">{t("FREE QUOTE")}</span></span>
                     <span className="block text-[11px] text-muted-foreground">{t("Your own script, your features. Built before every free request.")}</span>
                   </span>
                 </a>
