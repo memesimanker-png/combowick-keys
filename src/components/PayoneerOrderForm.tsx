@@ -58,58 +58,49 @@ export function PayoneerOrderForm({ plan, price }: { plan: PayoneerPlan; price: 
     }
   };
 
-  const steps = [
-    "Sign in with Discord and place your order.",
-    "We send your Payoneer payment link to your Discord DMs right away.",
-    "Press Pay now and pay. That's it!",
-    "Your key unlocks automatically in your Discord DMs, your email and your order page.",
+  // three short "this is automatic" points instead of a numbered how-to (owner: anything that sounds manual loses sales)
+  const points = [
+    { emoji: "⚡", text: "Pay on Payoneer" },
+    { emoji: "🔓", text: "Key unlocks automatically" },
+    { emoji: "📧", text: "Sent to Discord and email" },
   ];
 
   if (ticket) {
     return (
       <div className="space-y-3 py-2 text-center">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-500/15"><Check className="h-7 w-7 text-green-400" /></div>
-        <p className="text-sm">{inDm ? t("Your order is in! Your Payoneer payment link is in your Discord DMs.") : t("Your order is in! Your Payoneer payment link is waiting in your Discord ticket.")}</p>
+        <p className="text-sm font-semibold">{inDm ? t("Almost done! Tap Pay now in your Discord DMs.") : t("Almost done! Tap Pay now in your Discord ticket.")}</p>
         <a href={ticket} target="_blank" rel="noopener noreferrer"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white hover:bg-[#4752C4]">
-          <ExternalLink className="h-4 w-4" /> {inDm ? t("Open my Discord DMs") : t("Open my ticket")}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#FF4800] px-4 py-3 text-sm font-bold text-white hover:bg-[#e04000]">
+          <ExternalLink className="h-4 w-4" /> {t("Pay now in Discord")}
         </a>
-        <a href="/payoneer-order"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-primary/50 px-4 py-3 text-sm font-semibold text-primary hover:bg-primary/10">
-          {t("My order page")}
-        </a>
+        <a href="/payoneer-order" className="block text-xs text-muted-foreground underline hover:text-foreground">{t("Track my order")}</a>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <ol className="space-y-2 rounded-lg border border-border bg-secondary/50 p-3">
-        {steps.map((s, i) => (
-          <li key={s} className="flex items-start gap-2.5 text-xs">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary">{i + 1}</span>
-            <span className="pt-0.5">{t(s)}</span>
-          </li>
+      <div className="grid grid-cols-3 gap-2">
+        {points.map((p) => (
+          <div key={p.text} className="rounded-lg border border-border bg-secondary/50 px-2 py-2.5 text-center text-[11px] font-medium leading-tight">
+            <span className="mb-1 block text-base" aria-hidden>{p.emoji}</span>{t(p.text)}
+          </div>
         ))}
-      </ol>
+      </div>
 
       {isDiscord === null ? (
         <div className="flex justify-center py-4"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
       ) : !isDiscord ? (
         <div onClickCapture={() => { try { sessionStorage.setItem(PO_RETURN_KEY, plan); } catch { /* ignore */ } }}>
-          <DiscordSignInButton label={t("Sign in with Discord")} redirectPath="/premium-keys" />
+          <DiscordSignInButton label={t("Continue with Discord")} redirectPath="/premium-keys" />
         </div>
       ) : (
         <>
-          <div className="space-y-1.5">
-            <label htmlFor="po-roblox" className="text-xs font-medium">{t("Roblox username (optional)")}</label>
-            <input id="po-roblox" value={roblox} onChange={(e) => setRoblox(e.target.value)} placeholder="Roblox username"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary" />
-          </div>
           {error && <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-3 text-center text-sm text-destructive">{error}</div>}
           <button onClick={submit} disabled={busy}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#FF4800] py-3 text-sm font-bold text-white transition-colors hover:bg-[#e04000] disabled:opacity-50">
-            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <span data-no-translate>{t("Order with Payoneer")} · ${price}</span>}
+            {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <span data-no-translate>{t("Pay with Payoneer")} · ${price}</span>}
           </button>
         </>
       )}

@@ -362,7 +362,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                   <div className="grid grid-cols-2 gap-2">
                     {([
                       { id: "paypal", label: t("PayPal / Card"), sub: t("Instant key") },
-                      { id: "payoneer", label: "Payoneer", sub: t("Key sent to your Discord DMs") },
+                      { id: "payoneer", label: "Payoneer", sub: t("Automatic key") },
                     ] as const).map((m) => (
                       <button key={m.id} type="button" onClick={() => setMethod(m.id)}
                         className={`rounded-lg border p-3 text-left transition-all ${method === m.id ? "border-primary bg-primary/15" : "border-border bg-secondary/40 hover:bg-secondary"}`}>
@@ -379,8 +379,8 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                     </div>
                   </div>
                   {onPayoneer && payoneerPlan === "60d" && (
-                    <p className="mt-3 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-[11px] leading-relaxed text-amber-200">
-                      {t("Payoneer has a $20 minimum, so with Payoneer you get the 60 Days Key: 2 months of every game for $21.99.")}
+                    <p className="mt-3 text-center text-[11.5px] text-muted-foreground">
+                      {t("With Payoneer you get 2 months of every game.")}
                     </p>
                   )}
                 </div>
