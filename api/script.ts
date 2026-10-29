@@ -5,11 +5,13 @@ import { createClient } from "@supabase/supabase-js";
 
 export const config = { runtime: "nodejs" };
 
+// Same project as the sitemap/llms (the store, sqahviibykrzlwnulgmw). It used to fall back to the OLD combowick.com
+// project, which has none of the current scripts, so every bot got a 404 for every script page (fixed 2026-10-29).
 const SUPABASE_URL =
-  process.env.VITE_SUPABASE_URL || "https://iphiksvnuzpteoryrdxf.supabase.co";
+  process.env.VITE_SUPABASE_URL || "https://sqahviibykrzlwnulgmw.supabase.co";
 const SUPABASE_KEY =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwaGlrc3ZudXpwdGVvcnlyZHhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyNjE2MzIsImV4cCI6MjA5MDgzNzYzMn0.jDERthuKYBOIu6KRFQB1WQjoCjWfKPmesZFQK8K9Clk";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxYWh2aWlieWtyemx3bnVsZ213Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyODAxNjQsImV4cCI6MjEwMzg1NjE2NH0.mvRGR-d3EOcy8bBlCTDwIHEF4ELIU9PfVXDi8NSALlA";
 // Canonical host. Was hardcoded to combowick.com — which told Google to index these
 // pages on a different domain. Now matches the SPA's own domain (override with SITE_URL env).
 const BASE_URL = (process.env.SITE_URL || "https://keys.combowick.com").replace(/\/$/, "");
