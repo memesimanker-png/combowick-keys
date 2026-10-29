@@ -9,16 +9,14 @@ import { YouTubeVideoPlayer } from "@/components/YouTubeVideoPlayer";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { useTranslation } from "@/lib/translation-context";
-import { LinkvertiseTimerNotice } from "@/components/LinkvertiseTimerNotice";
 import { NoIndex } from "@/components/NoIndex";
 import { AdBlockGate } from "@/components/AdBlockGate";
 import { useLinkvertiseGuard } from "@/hooks/useLinkvertiseGuard";
-import { SkipAdsBanner } from "@/components/SkipAdsBanner";
-import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
+import { CheckpointLayout, useVerifySteps } from "@/components/VerifyShell";
 import { supabase } from "@/integrations/supabase/client";
 
 
@@ -27,6 +25,7 @@ export default function VerifyStep3() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
+  const verifySteps = useVerifySteps();
   const { isAdEnabled } = useAdSettings();
   // Monetag popunder lives on the verify steps (2 & 3), not the key-generation page.
   usePopunder(isAdEnabled("verify-step3", "popunder"));
@@ -59,45 +58,24 @@ export default function VerifyStep3() {
   };
 
   return (
-    <>
-      <div className="min-h-screen bg-black/70 flex flex-col">
+    <div className="min-h-screen bg-black/70 flex flex-col">
       <NoIndex />
       <AdBlockGate page="verify-step3" />
       <DiscountNotification startMinimized />
-        {isAdEnabled("verify-step3", "skip_ads_banner") && <SkipAdsBanner />}
-        <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
-        <main className="flex-1 container flex flex-col items-center justify-center py-12">
-          <div className="max-w-2xl w-full mx-auto space-y-6">
-            <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold">{t("Verification Step 3")}</h1>
-              <p className="text-muted-foreground">{t("verify_step3_desc")}</p>
-            </div>
-            <Card>
-              <div className="p-6 pb-0">
-                <YouTubeVideoPlayer step="step3" timerSeconds={4} onTimerComplete={() => setButtonEnabled(true)} />
-              </div>
-              <CardHeader>
-                <CardTitle>{t("Final Verification")}</CardTitle>
-                <CardDescription>{t("verify_watch_desc")}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <LinkvertiseTimerNotice />
-              </CardContent>
-              <CardFooter>
-                <Button
-                  className="w-full relative overflow-hidden group bg-gradient-to-r from-primary via-purple-500 to-primary bg-[length:200%_100%] hover:shadow-lg hover:shadow-primary/50 transition-all duration-300"
-                  onClick={handleVerification}
-                  disabled={isLoading || !buttonEnabled}
-                >
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  {isLoading ? t("Processing...") : t("Proceed to Final Verification")}
-                </Button>
-              </CardFooter>
-            </Card>
-          </div>
-        </main>
-        {isAdEnabled("verify-step3", "skip_ads_float") && <SkipAdsFloatButton />}
-      </div>
-    </>
+      <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
+      <main className="flex-1 container flex flex-col items-center justify-start px-3 pt-4 pb-36 sm:px-8 sm:py-10">
+        <CheckpointLayout
+          n={3}
+          steps={verifySteps}
+          video={<YouTubeVideoPlayer step="step3" timerSeconds={4} onTimerComplete={() => setButtonEnabled(true)} />}
+          button={
+            <Button className="h-12 w-full text-[15px] font-bold" onClick={handleVerification} disabled={isLoading || !buttonEnabled}>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              {isLoading ? t("Processing...") : !buttonEnabled ? `${t("Please wait")}…` : t("Finish & Get My Key")}
+            </Button>
+          }
+        />
+      </main>
+    </div>
   );
 }

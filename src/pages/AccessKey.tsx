@@ -11,12 +11,11 @@ import { useIsAdmin } from "@/hooks/useAuth";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useTranslation } from "@/lib/translation-context";
 import { FunnelHeader } from "@/components/FunnelHeader";
+import { VerifyCard, VerifyHeader, CheckpointTracker, PremiumGlowBar, useVerifySteps } from "@/components/VerifyShell";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { NoIndex } from "@/components/NoIndex";
 import { AdBlockGate } from "@/components/AdBlockGate";
-import { SkipAdsBanner } from "@/components/SkipAdsBanner";
-import { SkipAdsFloatButton } from "@/components/SkipAdsFloatButton";
 import { useAdSettings } from "@/hooks/useAdSettings";
 import { BugReportWidget } from "@/components/BugReportWidget";
 
@@ -28,6 +27,7 @@ interface StoredKeyData {
   username?: string;
   generated_at: number;
   game_name?: string; // the ONE game this key works in — shown with the key so nobody mixes them up
+  key_hours?: number; // real key length, for the "Time left" box (expires_at above is only the 10-min display window)
 }
 
 // Hours of the key this visitor earned (stored with the verify token: offer 24 / quick click 6 / Linkvertise 6).
@@ -46,6 +46,10 @@ export default function AccessKey() {
   const [keyGameName, setKeyGameName] = useState("");
   const [generatedKey, setGeneratedKey] = useState("");
   const [keyExpiresAt, setKeyExpiresAt] = useState<string | null>(null);
+  const [keyEndsAt, setKeyEndsAt] = useState<number | null>(null); // real end of the key (ms), when known
+  const [, setTick] = useState(0);
+  useEffect(() => { const id = setInterval(() => setTick((x) => x + 1), 30000); return () => clearInterval(id); }, []);
+  const verifySteps = useVerifySteps();
   const [isLoading, setIsLoading] = useState(false);
   const [canGenerate, setCanGenerate] = useState(true);
   const [error, setError] = useState("");
@@ -104,6 +108,7 @@ export default function AccessKey() {
           setKeyExpiresAt(expiryDate.toISOString());
           setUsername(keyData.username || "");
           setKeyGameName(keyData.game_name || "");
+          if (keyData.key_hours) setKeyEndsAt(keyData.generated_at + keyData.key_hours * 3600e3);
           setCanGenerate(false);
         } else {
           localStorage.removeItem("hwid_key_data");
@@ -254,11 +259,13 @@ export default function AccessKey() {
           username: data.username || username.trim(),
           generated_at: now,
           game_name: selectedGame?.name,
+          key_hours: Number(data.hours) || readPendingKeyHours(),
         };
 
         localStorage.setItem("hwid_key_data", JSON.stringify(keyData));
         setGeneratedKey(data.key);
         setKeyGameName(selectedGame?.name || "");
+        setKeyEndsAt(now + keyData.key_hours! * 3600e3);
         setKeyExpiresAt(expiryDate.toISOString());
         setCanGenerate(false);
 
@@ -292,6 +299,7 @@ export default function AccessKey() {
     localStorage.removeItem("hwid_key_data");
     setGeneratedKey("");
     setKeyExpiresAt(null);
+    setKeyEndsAt(null);
     setSelectedGame(null);
     setKeyGameName("");
     setUsername("");
@@ -309,147 +317,107 @@ export default function AccessKey() {
     return `${hours}h ${minutes}m`;
   };
 
+  const keyLeft = (() => {
+    if (!keyEndsAt) return "";
+    const ms = keyEndsAt - Date.now();
+    if (ms <= 0) return t("Expired");
+    return `${Math.floor(ms / 3600e3)}h ${Math.floor((ms % 3600e3) / 60e3)}m`;
+  })();
+  const fact = "rounded-xl border border-border bg-secondary/40 p-3";
+
   return (
-    <div className="min-h-screen bg-black/70 flex flex-col pb-40 sm:pb-0">{/* room for the floating Back / Skip Ads buttons on phones */}
+    <div className="min-h-screen bg-black/70 flex flex-col pb-40 sm:pb-0">{/* room for the floating Back button on phones */}
       <NoIndex />
       <AdBlockGate page="access-key" />
-      {isAdEnabled("access-key", "skip_ads_banner") && <SkipAdsBanner />}
       <FunnelHeader title="COMBO WICK" />
 
-      <main className="flex-1 container flex flex-col items-center justify-center py-12">
-        <div className="max-w-md w-full mx-auto space-y-6">
-          <div className="text-center space-y-2">
-            <Key className="h-12 w-12 text-primary mx-auto" />
-            <h1 className="text-3xl font-bold">{t("Access Key Generator")}</h1>
-            <p className="text-muted-foreground">{t("Generate your HWID access key below.")}</p>
-            <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate("/extend-key")}>
-              <Clock className="h-4 w-4" /> {t("Already have a key? Add more hours")}
-            </Button>
-          </div>
-
-          <Card className="border-primary/30">
-            <CardHeader>
-              <CardTitle>{t("Generate Your Key")}</CardTitle>
-              <CardDescription>{t("Enter a username (optional) and generate your {n}-hour HWID key.").replace("{n}", String(pendingKeyHours))}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-muted-foreground" />
-                  <label className="text-sm font-medium">{t("Username (optional)")}</label>
-                </div>
-                <Input
-                  placeholder={t("Enter your Roblox username")}
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  disabled={!canGenerate || isLoading}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Gamepad2 className="h-4 w-4 text-muted-foreground" />
-                  <label className="text-sm font-medium">{t("Game")} <span className="text-primary">*</span></label>
-                </div>
-                <GamePicker value={selectedGame} onChange={setSelectedGame} disabled={!canGenerate || isLoading} />
-                {selectedGame && !generatedKey ? (
-                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs">
-                    <p className="font-semibold text-amber-300">{t("This key will ONLY work in:")}</p>
-                    <p className="mt-0.5 break-words text-sm font-bold text-foreground">{selectedGame.name}</p>
-                    <p className="mt-1 text-muted-foreground">{t("Wrong game? Tap the box above to change it.")}</p>
-                  </div>
-                ) : (
-                  <p className="text-xs text-muted-foreground">{t("Your key will only work in the game you pick.")}</p>
-                )}
-              </div>
-
-              {error && (
-                <p className="text-sm text-red-400">{error}</p>
-              )}
-
-              {generatedKey ? (
-                <div className="space-y-3">
-                  <div className="rounded-lg bg-black/50 p-4 border border-green-500/30">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-green-400 font-medium">{t("Your HWID Key:")}</span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => copyToClipboard(generatedKey)}
-                        className="h-7 text-green-400 hover:text-green-300"
-                      >
-                        <Copy className="h-3 w-3 mr-1" /> {t("Copy")}
-                      </Button>
-                    </div>
-                    <pre className="text-xs font-mono text-green-400 break-all whitespace-pre-wrap select-all leading-relaxed">
-                      {generatedKey}
-                    </pre>
-                    {keyGameName && (
-                      <p className="mt-2 border-t border-green-500/20 pt-2 text-xs text-muted-foreground">
-                        {t("Works only in:")} <b className="text-foreground">{keyGameName}</b>
-                      </p>
+      <main className="flex-1 container flex flex-col items-center justify-start px-3 pt-4 sm:px-8 sm:py-10">
+        <div className="w-full space-y-4">
+          <VerifyCard>
+            <VerifyHeader
+              title={generatedKey ? t("Your Key Is Ready") : t("Almost There")}
+              sub={generatedKey ? t("Copy it and paste it in the hub.") : t("Pick the game you'll use it in.")}
+              percent={100}
+              tracker={<CheckpointTracker steps={verifySteps} current={verifySteps + 1} keyDone={!!generatedKey} />}
+            />
+            <div className="space-y-4 p-4 sm:px-7 sm:py-6">
+              {!generatedKey ? (
+                <>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium"><Gamepad2 className="h-4 w-4 text-muted-foreground" />{t("Game")} <span className="text-primary">*</span></label>
+                    <GamePicker value={selectedGame} onChange={setSelectedGame} disabled={!canGenerate || isLoading} />
+                    {selectedGame ? (
+                      <div className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs">
+                        <p className="font-semibold text-amber-300">{t("This key will ONLY work in:")}</p>
+                        <p className="mt-0.5 break-words text-sm font-bold text-foreground">{selectedGame.name}</p>
+                        <p className="mt-1 text-muted-foreground">{t("Wrong game? Tap the box above to change it.")}</p>
+                      </div>
+                    ) : (
+                      <p className="text-xs text-muted-foreground">{t("Your key will only work in the game you pick.")}</p>
                     )}
                   </div>
-                  {keyExpiresAt && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="h-4 w-4" />
-                      <span>{t("Key stays shown for:")} {formatTimeRemaining()}</span>
-                    </div>
-                  )}
-                </div>
+                  <div className="space-y-2">
+                    <label className="flex items-center gap-2 text-sm font-medium"><User className="h-4 w-4 text-muted-foreground" />{t("Username (optional)")}</label>
+                    <Input placeholder={t("Enter your Roblox username")} value={username} onChange={(e) => setUsername(e.target.value)} disabled={!canGenerate || isLoading} />
+                  </div>
+                  {error && <p className="text-sm text-red-400">{error}</p>}
+                  <Button onClick={generateKey} disabled={!canGenerate || isLoading || !selectedGame} className="h-12 w-full text-[15px] font-bold">
+                    {isLoading ? (
+                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("Generating...")}</>
+                    ) : !selectedGame ? (
+                      <><Gamepad2 className="mr-2 h-4 w-4" /> {t("Select a game first")}</>
+                    ) : adClicks < REQUIRED_AD_CLICKS ? (
+                      <><Key className="mr-2 h-4 w-4" /> {t("Click Ad Button")} ({adClicks}/{REQUIRED_AD_CLICKS})</>
+                    ) : (
+                      <><Key className="mr-2 h-4 w-4" /> {t("Get My {n}-Hour Key").replace("{n}", String(pendingKeyHours))}</>
+                    )}
+                  </Button>
+                  <button type="button" onClick={() => navigate("/extend-key")} className="mx-auto flex items-center gap-1.5 text-sm text-primary hover:underline">
+                    <Clock className="h-4 w-4" /> {t("Already have a key? Add more hours")}
+                  </button>
+                </>
               ) : (
-                <Button
-                  onClick={generateKey}
-                  disabled={!canGenerate || isLoading || !selectedGame}
-                  className="w-full bg-gradient-to-r from-primary to-purple-500 hover:shadow-lg transition-all"
-                >
-                  {isLoading ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("Generating...")}</>
-                  ) : !selectedGame ? (
-                    <><Gamepad2 className="mr-2 h-4 w-4" /> {t("Select a game first")}</>
-                  ) : adClicks < REQUIRED_AD_CLICKS ? (
-                    <><Key className="mr-2 h-4 w-4" /> {t("Click Ad Button")} ({adClicks}/{REQUIRED_AD_CLICKS})</>
-                  ) : (
-                    <><Key className="mr-2 h-4 w-4" /> {t("Generate HWID Key")}</>
-                  )}
-                </Button>
+                <>
+                  <div className="rounded-xl border border-primary/40 bg-black/60 p-4 text-center sm:p-5">
+                    <pre className="select-all whitespace-pre-wrap break-all font-mono text-sm leading-relaxed tracking-wider text-[#f3e6c8] sm:text-lg">{generatedKey}</pre>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <Button onClick={() => copyToClipboard(generatedKey)} className="h-11 font-bold"><Copy className="mr-2 h-4 w-4" /> {t("Copy Key")}</Button>
+                    <a href="/scripts" className="flex h-11 items-center justify-center gap-2 rounded-md border border-primary/40 text-sm font-semibold hover:bg-primary/10"><Code2 className="h-4 w-4" /> {t("Get Script")}</a>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                    {keyGameName && <div className={fact}><span className="block text-[11px] text-muted-foreground">{t("Works in")}</span><b className="break-words text-sm sm:text-base">{keyGameName}</b></div>}
+                    {keyLeft && <div className={fact}><span className="block text-[11px] text-muted-foreground">{t("Time left")}</span><b className="text-sm text-green-400 sm:text-base">{keyLeft}</b></div>}
+                    <div className={`${fact} ${keyGameName && keyLeft ? "col-span-2 sm:col-span-1" : ""}`}><span className="block text-[11px] text-muted-foreground">{t("Device")}</span><b className="text-sm sm:text-base">{t("This device only")}</b></div>
+                  </div>
+                  <div className="text-sm text-foreground/85">
+                    <p className="font-semibold">{t("How to use it")}</p>
+                    <ol className="mt-1.5 list-decimal space-y-1 pl-5">
+                      <li>{t("Run the COMBO_WICK script in Roblox")}</li>
+                      <li>{t("Paste this key when it asks")}</li>
+                      <li>{t("Done. It stays on this device until it runs out.")}</li>
+                    </ol>
+                  </div>
+                  <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                    <button type="button" onClick={startNewKey} className="text-primary hover:underline">{t("Need a key for another game?")}</button>
+                    <button type="button" onClick={() => navigate("/extend-key")} className="text-primary hover:underline">{t("Already have a key? Add more hours")}</button>
+                  </div>
+                  <PremiumGlowBar title={t("Want a key that never runs out?")} sub={t("Premium never expires")} />
+                </>
               )}
-            </CardContent>
-          </Card>
-
-          {/* After a key is shown, offer a key for a DIFFERENT game instead of a dead-end wait. */}
-          {generatedKey && (
-            <Card className="border-primary/20 bg-primary/5">
-              <CardContent className="py-5 text-center space-y-3">
-                <p className="text-sm font-medium">{t("Need a key for a different game?")}</p>
-                <p className="text-xs text-muted-foreground">{t("Each key only works in one game. Generate another for a different game.")}</p>
-                <Button onClick={startNewKey} variant="outline" className="w-full gap-2 border-primary/40 hover:bg-primary/10">
-                  <Gamepad2 className="h-4 w-4" /> {t("Generate a key for another game")}
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Where to grab the actual script once they have a key → the scripts page */}
-          <a
-            href="/scripts"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
-          >
-            <Code2 className="h-4 w-4" />
-            {t("Get Script")}
-          </a>
+            </div>
+          </VerifyCard>
 
           {/* Device troubleshooting — key valid but "Invalid Key" on their device */}
           <Link
             to="/fix-key"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border border-border/60 bg-secondary/30 px-4 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary hover:border-primary/40"
+            className="mx-auto flex w-full max-w-3xl items-center justify-center gap-2 rounded-lg border border-border/60 bg-secondary/30 px-4 py-2.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary hover:border-primary/40"
           >
             <Shield className="h-3.5 w-3.5" />
             {t("Getting \"Invalid Key\" on your device? Fix it here")}
           </Link>
         </div>
       </main>
-      {isAdEnabled("access-key", "skip_ads_float") && <SkipAdsFloatButton />}
       <BugReportWidget page="access-key" game={selectedGame?.name} />
     </div>
   );

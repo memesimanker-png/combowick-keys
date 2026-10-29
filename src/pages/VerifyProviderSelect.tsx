@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Shield, Youtube, MessageCircle, X, CheckCircle2, Lock, Loader2, MousePointerClick, Zap, Link2, ArrowLeft, ArrowRight, ThumbsUp, Crown, KeyRound, Gamepad2, ClipboardPaste } from "lucide-react";
 import { YouTubeVideoPlayer } from "@/components/YouTubeVideoPlayer";
+import { VerifyCard, VerifyHeader } from "@/components/VerifyShell";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -57,16 +58,8 @@ export default function VerifyProviderSelect() {
   const [discordCompleted, setDiscordCompleted] = useState(false);
   const [youtubeTimer, setYoutubeTimer] = useState(0);
   const [discordTimer, setDiscordTimer] = useState(0);
-  // Redesigned key page (owner 2026-10-29, after studying Lumin/BigFroot/H4x/Molyn): PREVIEW only.
-  // ?v2=1 turns it on for this browser, ?v2=0 turns it off. English-only until it goes live.
-  const [v2] = useState(() => {
-    try {
-      const q = new URLSearchParams(window.location.search).get("v2");
-      if (q === "1") localStorage.setItem("cw_keypage_v2", "1");
-      if (q === "0") localStorage.removeItem("cw_keypage_v2");
-      return localStorage.getItem("cw_keypage_v2") === "1";
-    } catch { return false; }
-  });
+  // Free tile tapped while offers are available -> show the offer/Linkvertise choice under the tiles.
+  const [freeOpen, setFreeOpen] = useState(false);
   const [likeCompleted, setLikeCompleted] = useState(false);
   const [likeTimer, setLikeTimer] = useState(0);
   const [subLikeSkip] = useState(subLikeRecentlyDone); // done within the last 7 days -> step hidden
@@ -292,7 +285,6 @@ export default function VerifyProviderSelect() {
       icon: <Youtube className="h-4 w-4" />,
       render: () => (
         <div className="space-y-2">
-          <p className="text-xs text-muted-foreground">{t("Subscribe, then like the video. Done once a week.")}</p>
           <Button onClick={handleSubscribeClick} disabled={youtubeCompleted || youtubeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
             <Youtube className="mr-2 h-4 w-4" />
             {youtubeCompleted ? `✓ ${t("YouTube Subscribed")}` : youtubeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(youtubeTimer)) : t("Subscribe to YouTube")}
@@ -414,7 +406,7 @@ export default function VerifyProviderSelect() {
           <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
         </button>
       </div>
-      {!v2 && <a href="/premium-keys"
+      <a href="/premium-keys"
         className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-primary"><Zap className="h-5 w-5" /></span>
         <span className="min-w-0 flex-1">
@@ -425,7 +417,7 @@ export default function VerifyProviderSelect() {
           <span className="block text-xs text-muted-foreground">{t("Skip every step. One key for every game.")}</span>
         </span>
         <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
-      </a>}
+      </a>
     </div>
   );
 
@@ -491,100 +483,26 @@ export default function VerifyProviderSelect() {
       : renderLinkvertiseChoice()
   });
 
-  const activeIdx = steps.findIndex((s) => !s.done && !s.optional);
-  const gateSteps = steps.slice(0, -1).filter((s) => !s.optional);
-  const completedCount = gateSteps.filter((s) => s.done).length;
-  const totalGates = gateSteps.length;
-  const overallPercent = totalGates === 0 ? 100 : Math.round((completedCount / totalGates) * 100);
-
-  if (v2) {
-    // One clean page: what you get + how it works, the video, Premium first, then the free key
-    // (Sub+Like once a week, then the same choices as before).
-    const subLikeStep = steps.find((s) => s.key === "sub-like");
-    const unlockStep = steps[steps.length - 1];
-    const how: [React.ElementType, string][] = [
-      [KeyRound, t("Get a key")],
-      [Gamepad2, t("Run the script in Roblox")],
-      [ClipboardPaste, t("Paste your key when asked")],
-    ];
-    const chip = "rounded-full px-2 py-0.5 text-[10px] font-bold uppercase";
-    return (
-      <div className="min-h-screen bg-black/70 flex flex-col">
-        <NoIndex />
-        <AdBlockGate page="verify-provider-select" />
-        <DiscountNotification startMinimized />
-        <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
-
-        <main className="flex-1 container px-3 pt-6 pb-36 sm:px-8 sm:py-10">
-          <div className="max-w-xl w-full mx-auto space-y-5">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold sm:text-4xl">{t("Get your key")}</h1>
-              <p className="text-sm text-muted-foreground">{t("Free keys come from a short checkpoint. Premium skips everything.")}</p>
-            </div>
-
-            <ol className="grid grid-cols-3 gap-2 text-center">
-              {how.map(([Icon, label], i) => (
-                <li key={i} className="rounded-lg border border-border/60 bg-secondary/20 px-2 py-3">
-                  <span className="mx-auto mb-1.5 flex h-8 w-8 items-center justify-center rounded-full bg-primary/15 text-primary">
-                    <Icon className="h-4 w-4" />
-                  </span>
-                  <span className="block text-[10px] font-bold text-primary">{i + 1}</span>
-                  <span className="block text-[11px] leading-tight text-foreground/80">{label}</span>
-                </li>
-              ))}
-            </ol>
-
-            <YouTubeVideoPlayer step="provider-select" allowPause />
-
-            {keyLimited ? (
-              <KeyLimitNotice resetsAt={keyQuota?.resets_at} limit={keyQuota?.limit} />
-            ) : (
-              <>
-                <a href="/premium-keys" className="cw-glow block">
-                  <span className="relative block rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/20 to-primary/5 p-5">
-                    <span className="flex items-center justify-between gap-2">
-                      <span className="flex items-center gap-2 text-lg font-bold"><Crown className="h-5 w-5 text-primary" /> {t("Premium Key")}</span>
-                      <span className={`${chip} bg-primary text-primary-foreground`}>{t("Best value")}</span>
-                    </span>
-                    <span className="mt-3 block space-y-1.5 text-sm text-foreground/85">
-                      <span className="flex items-center gap-2"><Zap className="h-4 w-4 shrink-0 text-primary" />{t("Instant key after checkout")}</span>
-                      <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />{t("No checkpoints or ads")}</span>
-                      <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />{t("One key for every game")}</span>
-                    </span>
-                    <span className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
-                      {t("Get Premium")} <ArrowRight className="h-4 w-4" />
-                    </span>
-                  </span>
-                </a>
-
-                <div className="space-y-4 rounded-lg border border-border bg-secondary/20 p-5">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-lg font-bold">{t("Free key")}</span>
-                    <span className={`${chip} bg-green-500/20 text-green-300`}>{t("Free")}</span>
-                    <span className={`${chip} bg-primary/20 text-primary`}>{t("{n}-hour key").replace("{n}", String(keyHours.lv))}</span>
-                  </div>
-                  {subLikeStep && !subLikeStep.done ? (
-                    <div className="space-y-3">
-                      <p className="flex items-center gap-2 text-sm font-semibold"><Youtube className="h-4 w-4 text-primary" /> {t("Subscribe & Like (once per week)")}</p>
-                      {subLikeStep.render()}
-                    </div>
-                  ) : (
-                    unlockStep.render()
-                  )}
-                </div>
-              </>
-            )}
-
-            <p className="text-center text-xs text-muted-foreground">
-              {t("Stuck?")} <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline">{t("Open a ticket in our Discord")}</a>
-            </p>
-
-            <RequestWidget />
-          </div>
-        </main>
-      </div>
-    );
-  }
+  // ── Redesign (owner 2026-10-29, mockups/keypage-v3*.html): 3 sections in one gold card ──
+  // 1 Subscribe & Like (video inside, once a week) · 2 Free or Premium tiles · 3 the checkpoint path.
+  const subLikeStep = steps.find((s) => s.key === "sub-like");
+  const unlockStep = steps[steps.length - 1];
+  const percent = subLikeDone ? 50 : 0;
+  // Plain Linkvertise path (no offers in this country): the Free tile starts the checkpoints directly.
+  const plainLv = cpa.status !== "loading" && !cpaAvailable && lvEnabled && !(lvEnabled && !lvChoice && !cpa.blocked && cpa.lockerOk !== false);
+  const startFree = () => { if (plainLv) handleStart(); else setFreeOpen(true); };
+  const sectionCls = (state: "done" | "active" | "locked") =>
+    `border-b border-border/50 p-4 last:border-b-0 sm:px-7 sm:py-5 ${state === "active" ? "bg-primary/5" : state === "locked" ? "opacity-45" : ""}`;
+  const SectionHead = ({ n, title, state, meta }: { n: number; title: string; state: "done" | "active" | "locked"; meta?: ReactNode }) => (
+    <div className="flex items-center gap-3">
+      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold sm:h-9 sm:w-9 ${
+        state === "done" ? "bg-green-500/20 text-green-300" : state === "active" ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"}`}>
+        {state === "done" ? <CheckCircle2 className="h-4 w-4" /> : n}
+      </span>
+      <h3 className="text-sm font-bold sm:text-base">{title}</h3>
+      <span className={`ml-auto text-xs ${state === "done" ? "font-semibold text-green-400" : "text-muted-foreground"}`}>{meta}</span>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">
@@ -594,57 +512,93 @@ export default function VerifyProviderSelect() {
 
       <FunnelHeader title={t("ComboWick Verify")} short="CW_V™" />
 
-      <main className="flex-1 container flex flex-col items-center justify-start px-3 pt-4 pb-36 sm:justify-center sm:px-8 sm:py-8">
-        <div className="max-w-xl w-full mx-auto space-y-4">
-          <Card className="border-primary/30 overflow-hidden">
-            <CardHeader className="border-b border-border/40 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 p-4 sm:p-6">
-              <div className="flex items-center justify-between gap-2">
-                <div>
-                  <CardTitle className="text-xl sm:text-2xl">{t("Verification")}</CardTitle>
-                  <CardDescription>{t("Complete the steps to unlock your free key.")}</CardDescription>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-muted-foreground">{t("Progress")}</p>
-                  <p className="text-lg font-bold text-primary">{overallPercent}%</p>
-                </div>
-              </div>
-              <Progress value={overallPercent} className="h-1.5 mt-3" />
-            </CardHeader>
+      <main className="flex-1 container flex flex-col items-center justify-start px-3 pt-4 pb-36 sm:px-8 sm:py-10">
+        <div className="w-full space-y-4">
+          <VerifyCard>
+            <VerifyHeader title={t("Get Your Free Key")} sub={t("3 quick sections. About 2 minutes.")} percent={percent} />
 
-            <CardContent className="p-0">
-              {keyLimited ? (
-                <div className="p-4"><KeyLimitNotice resetsAt={keyQuota?.resets_at} limit={keyQuota?.limit} /></div>
-              ) : (
-              <ol className="divide-y divide-border/40">
-                {steps.map((step, idx) => {
-                  const isActive = idx === activeIdx || (!!step.optional && !step.done && (activeIdx === -1 || idx < activeIdx));
-                  const isLocked = !step.optional && activeIdx !== -1 && idx > activeIdx;
-                  const isDone = step.done;
-                  return (
-                    <li key={step.key} className={`p-4 sm:p-5 transition-colors ${isActive ? "bg-primary/5" : isDone ? "opacity-60" : isLocked ? "opacity-40" : ""}`}>
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                          isDone ? "bg-green-500/20 text-green-300" : isActive ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
-                        }`}>
-                          {isDone ? <CheckCircle2 className="h-4 w-4" /> : isLocked ? <Lock className="h-3.5 w-3.5" /> : idx + 1}
-                        </span>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold text-sm flex items-center gap-2">
-                            <span className="text-primary">{step.icon}</span>
-                            {step.title}
-                          </h3>
-                        </div>
+            {keyLimited ? (
+              <div className="p-4 sm:px-7 sm:py-5"><KeyLimitNotice resetsAt={keyQuota?.resets_at} limit={keyQuota?.limit} /></div>
+            ) : (
+              <>
+                {/* 1 · Subscribe & Like (the video they like sits right here) */}
+                {subLikeStep && !subLikeDone ? (
+                  <section className={sectionCls("active")}>
+                    <SectionHead n={1} title={t("Subscribe & Like")} state="active" meta={t("once a week")} />
+                    <div className="mt-4 grid items-center gap-4 sm:grid-cols-[1.35fr_1fr] sm:gap-6">
+                      <YouTubeVideoPlayer step="provider-select" allowPause />
+                      <div>
+                        <p className="mb-3 text-sm text-foreground/85">{t("Subscribe to the channel, then like this video. You only do this once a week.")}</p>
+                        {subLikeStep.render()}
                       </div>
-                      {isActive && <div className="sm:pl-11">{step.render()}</div>}
-                    </li>
-                  );
-                })}
-              </ol>
-              )}
-            </CardContent>
-          </Card>
+                    </div>
+                  </section>
+                ) : (
+                  <section className={sectionCls("done")}>
+                    <SectionHead n={1} title={t("Subscribe & Like")} state="done" meta={t("Done")} />
+                  </section>
+                )}
 
-          <RequestWidget />
+                {/* 2 · Free or Premium */}
+                <section className={sectionCls(subLikeDone ? "active" : "locked")}>
+                  <SectionHead n={2} title={t("Choose Free or Premium")} state={subLikeDone ? "active" : "locked"} meta={subLikeDone ? undefined : <Lock className="h-3.5 w-3.5" />} />
+                  {subLikeDone && (
+                    <div className="mt-4 space-y-3">
+                      <div className="grid grid-cols-2 gap-2.5 sm:gap-4">
+                        <div className="flex flex-col rounded-xl border-[1.5px] border-primary bg-gradient-to-br from-primary/20 to-primary/5 p-3 sm:p-5">
+                          <span className="mb-2 self-start rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-green-300">{t("Free")}</span>
+                          <p className="mb-2 text-base font-bold sm:text-xl">{t("Free Key")}</p>
+                          <ul className="mb-3 space-y-1 text-xs text-foreground/85 sm:text-sm">
+                            <li>✓ {t("{n}-hour key").replace("{n}", String(keyHours.lv))}</li>
+                            <li>✓ {t("{n} short checkpoints").replace("{n}", String(verifySteps))}</li>
+                            {cpaAvailable ? <li>✓ {t("or 1 offer for a {n}-hour key").replace("{n}", String(keyHours.offer))}</li> : <li>✓ Linkvertise</li>}
+                          </ul>
+                          <Button onClick={startFree} disabled={starting || cpa.status === "loading"} className="mt-auto h-10 w-full font-bold sm:h-11">
+                            {starting || cpa.status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t("Start free")} <ArrowRight className="ml-1 h-4 w-4" /></>}
+                          </Button>
+                        </div>
+                        <a href="/premium-keys" data-no-popunder className="flex flex-col rounded-xl border border-border bg-secondary/40 p-3 transition-colors hover:border-primary/50 sm:p-5">
+                          <span className="mb-2 self-start rounded-full bg-primary px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-primary-foreground">{t("No ads")}</span>
+                          <p className="mb-2 text-base font-bold sm:text-xl">{t("Premium")}</p>
+                          <ul className="mb-3 space-y-1 text-xs text-foreground/85 sm:text-sm">
+                            <li>✓ {t("Key in seconds")}</li>
+                            <li>✓ {t("No checkpoints")}</li>
+                            <li>✓ {t("Every game")}</li>
+                          </ul>
+                          <span className="mt-auto flex h-10 w-full items-center justify-center gap-1 rounded-md border border-primary/40 text-sm font-bold sm:h-11">
+                            {t("See Premium")} <ArrowRight className="h-4 w-4" />
+                          </span>
+                        </a>
+                      </div>
+                      {freeOpen && !plainLv && <div className="pt-1">{unlockStep.render()}</div>}
+                    </div>
+                  )}
+                </section>
+
+                {/* 3 · the path to the key */}
+                <section className={sectionCls(subLikeDone ? "active" : "locked")}>
+                  <SectionHead n={3} title={t("Get Your Key")} state={subLikeDone ? "active" : "locked"} meta={subLikeDone ? undefined : <Lock className="h-3.5 w-3.5" />} />
+                  {subLikeDone && (
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                      {Array.from({ length: verifySteps }, (_, i) => (
+                        <span key={i} className="flex items-center gap-1.5">
+                          <span className="rounded-full border border-border bg-secondary px-2.5 py-1">{t("Checkpoint")} {i + 1}</span>
+                          <span className="opacity-60">→</span>
+                        </span>
+                      ))}
+                      <span className="rounded-full border border-primary/40 px-2.5 py-1 font-bold text-primary">🔑 {t("Your key")}</span>
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
+          </VerifyCard>
+
+          <p className="text-center text-xs text-muted-foreground">
+            {t("Stuck?")} <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="text-primary underline">{t("Open a ticket in our Discord")}</a>
+          </p>
+
+          <div className="mx-auto w-full max-w-3xl"><RequestWidget /></div>
         </div>
       </main>
     </div>
