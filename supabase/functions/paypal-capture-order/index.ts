@@ -75,7 +75,9 @@ serve(async (req) => {
   }
 
   try {
-    const { order_id, tier, amount, customer_email, user_id } = await req.json();
+    const { order_id, tier, amount, customer_email, user_id, source } = await req.json();
+    // where the buyer came from (?src= remembered by the site, e.g. hub-offer); analytics only, never trusted for price
+    const saleSrc = typeof source === "string" && /^[a-z0-9_-]{2,40}$/i.test(source) ? source.toLowerCase() : null;
 
     if (!order_id) {
       return new Response(JSON.stringify({ error: "Missing order_id" }), {
@@ -243,6 +245,7 @@ serve(async (req) => {
       customer_email: finalEmail,
       user_id: resolvedUserId,
       expires_at: expiresAt,
+      source: saleSrc,
     });
 
     if (dbError) {

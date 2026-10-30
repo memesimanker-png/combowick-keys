@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
 import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
 import { checkCreatorCode, savedCode, saveCode, withCode, type CheckoutCode } from "@/lib/creator-code";
+import { saleSource } from "@/lib/sale-source";
 
 // PayPal's cut on a $5 sale is $0.57 (5.4% + $0.30), so the trial's checkout adds this line; the page still says $5.
 // KEEP IN SYNC with PAYPAL_FEE in supabase/functions/_shared/key-pricing.ts (the server refuses less).
@@ -238,6 +239,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
               order_id: data.orderID,
               tier: tier.id,
               amount: chargePrice,
+              source: saleSource(),
               customer_email: user?.email || null,
               user_id: user?.id || null,
             },
