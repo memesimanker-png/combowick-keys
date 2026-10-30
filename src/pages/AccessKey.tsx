@@ -442,8 +442,8 @@ export default function AccessKey() {
                     </div>
                   )}
                   <PremiumGlowBar
-                    title={weekN >= 3 ? t("Key #{n} this week. Skip the steps for good?").replace("{n}", String(weekN)) : t("Want a key that never runs out?")}
-                    sub={t("Premium never expires")}
+                    title={weekN >= 3 ? t("Key #{n} this week. Done with Linkvertise?").replace("{n}", String(weekN)) : t("Done with Linkvertise and the 1-hour wait?")}
+                    sub={t("Premium: no Linkvertise, no 1-hour wait, every game")}
                   />
                 </>
               )}

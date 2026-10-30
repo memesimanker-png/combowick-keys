@@ -99,10 +99,11 @@ export function CheckpointLayout({ n, steps, video, button }: { n: number; steps
       ? t("One more Linkvertise page and you'll pick your game and get your key.")
       : t("Same as before: one Linkvertise page, then back here. {n} to go.").replace("{n}", String(left));
   const premium = n === 1
-    ? { title: t("Skip every checkpoint"), sub: t("Premium: no ads, key in seconds") }
+    // the buyers' own words ("remove the 1 hour wait", "linkvertise sucks"), not ours ("checkpoints")
+    ? { title: t("Skip Linkvertise for good"), sub: t("Premium: no ads, no 1-hour wait, key in seconds") }
     : last
-      ? { title: t("Next time, skip all this"), sub: t("Premium: one key, every game") }
-      : { title: t("Tired of checkpoints?"), sub: t("Premium skips all of them") };
+      ? { title: t("Next time, skip all this"), sub: t("Premium: no Linkvertise, no 1-hour wait, every game") }
+      : { title: t("Tired of Linkvertise?"), sub: t("Premium: no Linkvertise, no 1-hour wait, every game") };
   return (
     <VerifyCard wide>
       <VerifyHeader title={title} sub={sub} percent={Math.round(((n - 1) / steps) * 100)} tracker={<CheckpointTracker steps={steps} current={n} />} />

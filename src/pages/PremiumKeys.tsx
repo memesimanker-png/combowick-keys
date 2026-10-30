@@ -215,7 +215,7 @@ export default function PremiumKeys() {
         <span className="text-[13px] font-semibold">
           {sale
             ? <>🔥 {withPercent(t(sale.name === "Lifetime" ? "Lifetime {p} off today" : "Monthly {p} off today"), `${sale.percent}%`)}{sale.name === "Lifetime" && <span className="hidden lg:inline"> {t("Pay once. Never expires.")}</span>}</>
-            : <>⚡ {withPercent(t("Every game for 7 days, just {p}"), "$5")}</>}
+            : <>⚡ {withPercent(t("No Linkvertise, no 1-hour wait: every game 7 days, {p}"), "$5")}</>}
         </span>
         {sale
           ? <span data-no-translate className="whitespace-nowrap rounded-lg border border-primary/40 bg-background px-2 py-1 font-mono text-[13px] font-bold text-primary">{saleEnds}</span>
