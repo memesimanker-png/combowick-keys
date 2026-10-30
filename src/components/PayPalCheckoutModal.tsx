@@ -6,6 +6,10 @@ import { useTranslation } from "@/lib/translation-context";
 import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/PayoneerOrderForm";
 import { checkCreatorCode, savedCode, saveCode, withCode, type CheckoutCode } from "@/lib/creator-code";
 
+// PayPal's cut on a $5 sale is $0.57 (5.4% + $0.30), so the trial's checkout adds this line; the page still says $5.
+// KEEP IN SYNC with PAYPAL_FEE in supabase/functions/_shared/key-pricing.ts (the server refuses less).
+const PAYPAL_FEE: Record<string, number> = { "trial-7day": 0.49 };
+
 interface PayPalCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -163,13 +167,16 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   const basePrice = isSubscription ? (tier.subscriptionPrice || tier.price) : tier.price;
   const codeOn = !!code && codeEligible && !isSubscription;
   const displayPrice = codeOn ? withCode(basePrice, code!.discount_pct) : basePrice;
+  // PayPal fee added at checkout (the $5 trial only; the page keeps showing $5). Same number as the server's PAYPAL_FEE.
+  const paypalFee = !isSubscription && !tier.script ? (PAYPAL_FEE[tier.id] ?? 0) : 0;
+  const chargePrice = Math.round((displayPrice + paypalFee) * 100) / 100;
 
   const createOrderHandler = async () => {
     setError(null);
     try {
       const { data, error: fnError } = await supabase.functions.invoke("paypal-create-order", {
         body: {
-          amount: displayPrice, tier: tier.id, game: tier.gameKey, description: `${tier.name} Premium Key`,
+          amount: chargePrice, tier: tier.id, game: tier.gameKey, description: `${tier.name} Premium Key`,
           creator_code: codeOn && code!.kind === "creator" ? code!.code : undefined,
           promo_code: codeOn && code!.kind === "promo" ? code!.code : undefined,
         },
@@ -230,7 +237,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
             body: {
               order_id: data.orderID,
               tier: tier.id,
-              amount: displayPrice,
+              amount: chargePrice,
               customer_email: user?.email || null,
               user_id: user?.id || null,
             },
@@ -478,6 +485,14 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                 <div className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1 text-[10px] text-muted-foreground"><Lock className="w-3 h-3 text-primary" /> PayPal</div>
               </div>
 
+              {paypalFee > 0 && (
+                <div className="mb-4 rounded-lg border border-border bg-secondary/40 px-3 py-2.5 text-xs" data-no-translate>
+                  <div className="flex justify-between text-muted-foreground"><span>{tier.name}</span><span>${displayPrice.toFixed(2)}</span></div>
+                  <div className="mt-1 flex justify-between text-muted-foreground"><span>{t("PayPal fee")}</span><span>${paypalFee.toFixed(2)}</span></div>
+                  <div className="mt-1.5 flex justify-between border-t border-border pt-1.5 text-sm font-bold text-foreground"><span>{t("Total")}</span><span>${chargePrice.toFixed(2)}</span></div>
+                </div>
+              )}
+
               {error && (
                 <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 mb-4 text-sm text-destructive text-center">{error}</div>
               )}
@@ -489,7 +504,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                 </div>
               ) : (
                 <PayPalScriptProvider
-                  key={`${paymentType}-${tier.id}-${displayPrice}`}
+                  key={`${paymentType}-${tier.id}-${chargePrice}`}
                   options={{
                     clientId: paypalClientId,
                     currency: "USD",

@@ -7,6 +7,9 @@
 // gets "Invalid amount" before paying (never charged without a key).
 
 export const BASE_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 9.99, lifetime: 49.99 };
+// PayPal fee the checkout adds on top of the shown price (the $5 trial nets $4.43 after PayPal's 5.4% + $0.30).
+// KEEP IN SYNC with PAYPAL_FEE in src/components/PayPalCheckoutModal.tsx.
+export const PAYPAL_FEE: Record<string, number> = { "trial-7day": 0.49 };
 export const PAID_GAMES: Record<string, { monthly: number; lifetime?: number }> = {
   "desert-war": { monthly: 9 },
   "jurassic-blocky": { monthly: 7.99, lifetime: 11.99 },
@@ -86,7 +89,8 @@ export async function acceptedPrices(supabase: any, tier: string, game: string |
   } catch { /* no admin discount */ }
   const days = [at];
   if (at.getUTCHours() < 2) days.push(new Date(at.getTime() - 3 * 3600 * 1000));
-  return days.map((d) => discounted(base, Math.max(adminPct, autoPercent(tier, d))));
+  const fee = PAYPAL_FEE[tier] ?? 0;
+  return days.map((d) => Math.round((discounted(base, Math.max(adminPct, autoPercent(tier, d))) + fee) * 100) / 100);
 }
 
 // ---- creator codes ----
