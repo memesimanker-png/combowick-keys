@@ -37,7 +37,7 @@ async function generateKeyFromAPI(subscriptionId: string): Promise<string> {
       "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth
       Accept: "application/json",
     },
-    body: JSON.stringify({ username: `Sub-${subscriptionId}`, hours: 720 }),
+    body: JSON.stringify({ username: `Sub-${subscriptionId}`, hours: 720, all_access: true }),   // Premium = every game
   });
 
   if (!response.ok) {

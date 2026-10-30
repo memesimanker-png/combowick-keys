@@ -44,7 +44,9 @@ function calculateExpiry(tier: string): string {
   return new Date(now.getTime() + 100 * 365 * 24 * 60 * 60 * 1000).toISOString();
 }
 
-async function generateKeyFromAPI(tier: string, paymentId: string): Promise<string> {
+// allAccess: Premium keys (trial/monthly/lifetime) work in EVERY game. Without it the key server leaves the key
+// unbound and it locks to the first game it's used in (8 trials got stuck on one game, Oct 28-30).
+async function generateKeyFromAPI(tier: string, paymentId: string, allAccess: boolean): Promise<string> {
   const hours = getTierHours(tier);
   const response = await fetch(HWID_KEY_API, {
     method: "POST",
@@ -54,7 +56,7 @@ async function generateKeyFromAPI(tier: string, paymentId: string): Promise<stri
       "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth
       Accept: "application/json",
     },
-    body: JSON.stringify({ username: `PayPal-${paymentId}`, hours }),
+    body: JSON.stringify({ username: `PayPal-${paymentId}`, hours, ...(allAccess ? { all_access: true } : {}) }),
   });
 
   if (!response.ok) {
@@ -204,7 +206,7 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const generatedKey = await generateKeyFromAPI(usedTier, order_id);
+    const generatedKey = await generateKeyFromAPI(usedTier, order_id, !tag.game);   // paid-game scripts stay per-game
     const expiresAt = calculateExpiry(usedTier);
 
     const supabase = createClient(

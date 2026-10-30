@@ -130,7 +130,8 @@ async function fetchSubscription(subId: string, accessToken: string): Promise<
   }
 }
 
-async function generateKey(identifier: string, hours: number): Promise<string> {
+// allAccess: Premium keys work in every game (without it the key locks to the first game it's used in).
+async function generateKey(identifier: string, hours: number, allAccess: boolean): Promise<string> {
   const res = await fetch(HWID_KEY_API, {
     method: "POST",
     headers: {
@@ -139,7 +140,7 @@ async function generateKey(identifier: string, hours: number): Promise<string> {
       "x-cw-key-secret": Deno.env.get("KEY_API_SECRET") ?? "",   // key server auth
       Accept: "application/json",
     },
-    body: JSON.stringify({ username: identifier, hours }),
+    body: JSON.stringify({ username: identifier, hours, ...(allAccess ? { all_access: true } : {}) }),
   });
   if (!res.ok) throw new Error("Key generation failed");
   const data = await res.json();
@@ -238,7 +239,7 @@ serve(async (req) => {
           else hours = 72;
         }
 
-        const key = await generateKey(`PayPal-${orderId}`, hours);
+        const key = await generateKey(`PayPal-${orderId}`, hours, !tag.game);
         const expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
         const finalEmail = email || existing?.customer_email || null;
 
@@ -363,7 +364,7 @@ serve(async (req) => {
           .eq("id", existing.id);
         console.log(`[webhook] Subscription ${subId} renewed — key extended to ${newExpiry}`);
       } else {
-        const key = await generateKey(`Sub-${subId}`, 720);
+        const key = await generateKey(`Sub-${subId}`, 720, true);
         const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
         await supabase.from("premium_key_purchases").insert({
           payment_id: subId,
