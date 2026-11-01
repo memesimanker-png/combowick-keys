@@ -13,13 +13,15 @@ import { template as scriptDelivery } from './script-delivery.tsx'
 import { template as keyDelivery } from './key-delivery.tsx'
 import { template as contactConfirmation } from './contact-confirmation.tsx'
 import { template as trialWinback } from './trial-winback.tsx'
+import { template as trialDay2 } from './trial-day2.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'script-delivery': scriptDelivery,
   'key-delivery': keyDelivery,
   'contact-confirmation': contactConfirmation,
   'trial-winback': trialWinback,
+  'trial-day2': trialDay2,
 }
 
 // templates only the server (service role) may send: they carry codes or are marketing
-export const SERVER_ONLY_TEMPLATES = new Set(['trial-winback'])
+export const SERVER_ONLY_TEMPLATES = new Set(['trial-winback', 'trial-day2'])

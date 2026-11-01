@@ -4,6 +4,9 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "Want to keep Premium for good?": "Tu veux garder Premium pour de bon ?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Ton code {code} enlève {pct}% sur Lifetime ou Mensuel. Il marche une seule fois, pendant 7 jours.",
+    "See Lifetime with {pct}% off": "Voir Lifetime à -{pct}%",
     "Promo code {code}: {pct}% off": "Code promo {code} : -{pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "Pourquoi vous n'utilisez pas LootLabs ou Work.ink pour les clés ?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Nous avons essayé d'autres fournisseurs de clés et ça n'a pas bien marché pour nous, donc les clés gratuites restent sur Linkvertise. Si tu ne veux faire aucune étape, Premium les supprime complètement, à partir de 5 $ pour 7 jours.",
@@ -1006,6 +1009,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "Want to keep Premium for good?": "¿Quieres quedarte con Premium para siempre?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Tu código {code} te da {pct}% de descuento en Lifetime o Mensual. Funciona una sola vez, durante 7 días.",
+    "See Lifetime with {pct}% off": "Ver Lifetime con {pct}% de descuento",
     "Promo code {code}: {pct}% off": "Código promocional {code}: {pct}% de descuento",
     "Why don't you use LootLabs or Work.ink for keys?": "¿Por qué no usan LootLabs o Work.ink para las keys?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Probamos otros proveedores de keys y no nos funcionaron bien, así que las keys gratis siguen con Linkvertise. Si no quieres hacer ningún paso, Premium los salta por completo, desde $5 por 7 días.",
@@ -2008,6 +2014,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "Want to keep Premium for good?": "Willst du Premium für immer behalten?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Dein Code {code} gibt {pct}% Rabatt auf Lifetime oder Monatlich. Er gilt einmal, 7 Tage lang.",
+    "See Lifetime with {pct}% off": "Lifetime mit {pct}% Rabatt ansehen",
     "Promo code {code}: {pct}% off": "Promo-Code {code}: {pct}% Rabatt",
     "Why don't you use LootLabs or Work.ink for keys?": "Warum nutzt ihr nicht LootLabs oder Work.ink für Keys?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Wir haben andere Key-Anbieter getestet und sie haben für uns nicht gut funktioniert, deshalb bleiben die kostenlosen Keys bei Linkvertise. Wenn du gar keine Schritte machen willst, überspringt Premium sie komplett, ab 5 $ für 7 Tage.",
@@ -3010,6 +3019,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "Want to keep Premium for good?": "Quer ficar com o Premium de vez?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Seu código {code} dá {pct}% de desconto no Lifetime ou Mensal. Funciona uma vez, por 7 dias.",
+    "See Lifetime with {pct}% off": "Ver Lifetime com {pct}% de desconto",
     "Promo code {code}: {pct}% off": "Código promocional {code}: {pct}% de desconto",
     "Why don't you use LootLabs or Work.ink for keys?": "Por que vocês não usam LootLabs ou Work.ink para as keys?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Testamos outros provedores de keys e eles não funcionaram bem pra gente, então as keys grátis continuam no Linkvertise. Se você não quer fazer nenhuma etapa, o Premium pula todas, a partir de US$ 5 por 7 dias.",
@@ -4012,6 +4024,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "Want to keep Premium for good?": "Хочешь оставить Premium навсегда?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Твой код {code} даёт скидку {pct}% на Lifetime или Monthly. Работает один раз, 7 дней.",
+    "See Lifetime with {pct}% off": "Смотреть Lifetime со скидкой {pct}%",
     "Promo code {code}: {pct}% off": "Промокод {code}: скидка {pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "Почему вы не используете LootLabs или Work.ink для ключей?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Мы пробовали других провайдеров ключей, и у нас с ними не сложилось, поэтому бесплатные ключи остаются на Linkvertise. Если не хочешь проходить шаги вообще, Premium убирает их полностью, от $5 за 7 дней.",
@@ -5014,6 +5029,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "Want to keep Premium for good?": "想一直保留 Premium 吗？",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "你的优惠码 {code} 可享终身版或月度版 {pct}% 折扣。仅可使用一次，有效期 7 天。",
+    "See Lifetime with {pct}% off": "查看终身版 {pct}% 折扣",
     "Promo code {code}: {pct}% off": "优惠码 {code}：优惠 {pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "为什么不用 LootLabs 或 Work.ink 来获取密钥？",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "我们试过其他密钥平台，效果都不好，所以免费密钥继续使用 Linkvertise。如果你完全不想做步骤，Premium 可以全部跳过，7 天只要 5 美元起。",
@@ -6016,6 +6034,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "Want to keep Premium for good?": "Premium을 계속 쓰고 싶나요?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "코드 {code}로 평생권 또는 월간권을 {pct}% 할인받으세요. 한 번만 쓸 수 있고 7일 동안 유효해요.",
+    "See Lifetime with {pct}% off": "평생권 {pct}% 할인 보기",
     "Promo code {code}: {pct}% off": "프로모 코드 {code}: {pct}% 할인",
     "Why don't you use LootLabs or Work.ink for keys?": "왜 키에 LootLabs나 Work.ink를 쓰지 않나요?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "다른 키 제공 업체도 써봤지만 잘 맞지 않아서 무료 키는 계속 Linkvertise를 사용해요. 단계를 아예 하고 싶지 않다면 Premium으로 전부 건너뛸 수 있어요. 7일 $5부터.",
@@ -7018,6 +7039,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "Want to keep Premium for good?": "อยากเก็บ Premium ไว้ตลอดไหม?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "โค้ด {code} ลด {pct}% สำหรับ Lifetime หรือรายเดือน ใช้ได้ครั้งเดียว ภายใน 7 วัน",
+    "See Lifetime with {pct}% off": "ดู Lifetime ลด {pct}%",
     "Promo code {code}: {pct}% off": "โค้ดโปรโมชั่น {code}: ลด {pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "ทำไมไม่ใช้ LootLabs หรือ Work.ink สำหรับคีย์?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "เราเคยลองผู้ให้บริการคีย์อื่นแล้วแต่ใช้ไม่ค่อยดี คีย์ฟรีจึงยังใช้ Linkvertise อยู่ ถ้าไม่อยากทำขั้นตอนเลย Premium ข้ามได้ทั้งหมด เริ่มต้น $5 สำหรับ 7 วัน",
@@ -8020,6 +8044,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "Want to keep Premium for good?": "Mau pakai Premium seterusnya?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Kode {code} kamu memberi diskon {pct}% untuk Lifetime atau Bulanan. Berlaku sekali, selama 7 hari.",
+    "See Lifetime with {pct}% off": "Lihat Lifetime diskon {pct}%",
     "Promo code {code}: {pct}% off": "Kode promo {code}: diskon {pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "Kenapa tidak pakai LootLabs atau Work.ink untuk key?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Kami sudah mencoba penyedia key lain dan hasilnya kurang bagus untuk kami, jadi key gratis tetap pakai Linkvertise. Kalau kamu tidak mau mengerjakan langkah apa pun, Premium melewati semuanya, mulai $5 untuk 7 hari.",
@@ -9022,6 +9049,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "Want to keep Premium for good?": "Gusto mo bang panatilihin ang Premium?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Ang code mong {code} ay may {pct}% off sa Lifetime o Monthly. Isang beses lang gagana, sa loob ng 7 araw.",
+    "See Lifetime with {pct}% off": "Tingnan ang Lifetime na may {pct}% off",
     "Promo code {code}: {pct}% off": "Promo code {code}: {pct}% off",
     "Why don't you use LootLabs or Work.ink for keys?": "Bakit hindi kayo gumagamit ng LootLabs o Work.ink para sa keys?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Sinubukan namin ang ibang key provider pero hindi sila naging maayos para sa amin, kaya nasa Linkvertise pa rin ang libreng keys. Kung ayaw mong gumawa ng kahit anong step, nilalaktawan lahat ng Premium, simula $5 para sa 7 araw.",
@@ -10024,6 +10054,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "Want to keep Premium for good?": "Muốn giữ Premium luôn không?",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Mã {code} của bạn giảm {pct}% cho Lifetime hoặc Hàng tháng. Chỉ dùng được một lần, trong 7 ngày.",
+    "See Lifetime with {pct}% off": "Xem Lifetime giảm {pct}%",
     "Promo code {code}: {pct}% off": "Mã khuyến mãi {code}: giảm {pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "Sao không dùng LootLabs hoặc Work.ink để lấy key?",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "Bọn mình đã thử các bên cung cấp key khác nhưng không ổn lắm, nên key miễn phí vẫn dùng Linkvertise. Nếu bạn không muốn làm bước nào cả, Premium bỏ qua hết, chỉ từ $5 cho 7 ngày.",
@@ -11026,6 +11059,9 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "Want to keep Premium for good?": "هل تريد الاحتفاظ بـ Premium دائمًا؟",
+    "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "رمزك {code} يخصم {pct}% من Lifetime أو الاشتراك الشهري. يعمل مرة واحدة، لمدة 7 أيام.",
+    "See Lifetime with {pct}% off": "شاهد Lifetime بخصم {pct}%",
     "Promo code {code}: {pct}% off": "كود الخصم {code}: خصم {pct}%",
     "Why don't you use LootLabs or Work.ink for keys?": "ليش ما تستخدمون LootLabs أو Work.ink للمفاتيح؟",
     "We tried other key providers and they didn't work well for us, so free keys stay on Linkvertise. If you don't want to do key steps at all, Premium skips them completely, starting at $5 for 7 days.": "جربنا مزودي مفاتيح ثانيين وما اشتغلوا زين معنا، فالمفاتيح المجانية باقية على Linkvertise. إذا ما تبي تسوي أي خطوات، Premium يتخطاها كلها، يبدأ من 5$ لمدة 7 أيام.",

@@ -44,6 +44,17 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [success, setSuccess] = useState<{ key: string; expires_at: string } | null>(null);
+  // $5 trial bought: the success screen offers the buyer's own single-use code for Monthly/Lifetime
+  const [offerOrderId, setOfferOrderId] = useState<string | null>(null);
+  const [upgrade, setUpgrade] = useState<{ code: string; pct: number } | null>(null);
+  useEffect(() => {
+    if (!success || !offerOrderId || tier.id !== "trial-7day") return;
+    let active = true;
+    supabase.functions.invoke("trial-upgrade-offer", { body: { order_id: offerOrderId } })
+      .then(({ data }) => { if (active && data?.ok && data.code) setUpgrade({ code: data.code, pct: Number(data.pct) || 20 }); })
+      .catch(() => { /* no offer: the key they paid for is already on screen */ });
+    return () => { active = false; };
+  }, [success, offerOrderId, tier.id]);
   // No tabs anymore — for subscription tiers we default to auto-renew (the highlighted offer)
   // and let users pick "one-time" via a card click. State drives the PayPal button rendered.
   const [paymentType, setPaymentType] = useState<"onetime" | "subscription">(
@@ -253,6 +264,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
           return;
         }
         persistKey(result.key, result.expires_at);
+        setOfferOrderId(data.orderID);
         setSuccess({ key: result.key, expires_at: result.expires_at });
       }
     } catch {
@@ -340,6 +352,22 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
               </button>
               <p className="text-xs text-muted-foreground">{t("Expires:")} {new Date(success.expires_at).toLocaleDateString()}</p>
               <p className="text-xs text-muted-foreground mt-1">{t("modal_key_saved_dashboard")}</p>
+              {upgrade && (
+                <div className="mt-5 text-left bg-primary/10 p-4 rounded-lg border border-primary/40">
+                  <p className="text-sm font-semibold mb-1">{t("Want to keep Premium for good?")}</p>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    {t("Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.").replace("{code}", upgrade.code).replace("{pct}", String(upgrade.pct))}
+                  </p>
+                  <a
+                    href={`/premium-keys?promo=${encodeURIComponent(upgrade.code)}&src=thankyou`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-semibold text-sm text-center hover:bg-primary/90 transition-colors"
+                  >
+                    {t("See Lifetime with {pct}% off").replace("{pct}", String(upgrade.pct))}
+                  </a>
+                </div>
+              )}
               {tier.script && (
                 <div className="mt-5 text-left bg-background/50 backdrop-blur-sm p-4 rounded-lg border border-primary/30">
                   <p className="text-xs text-muted-foreground mb-2 font-medium">{t("Your Script (run with your key):")}</p>
