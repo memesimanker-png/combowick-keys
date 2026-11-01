@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast";
 import { YouTubeVideoPlayer } from "@/components/YouTubeVideoPlayer";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
+import { newVerifySid, reportStep } from "@/lib/verify-session";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { useTranslation } from "@/lib/translation-context";
 import { NoIndex } from "@/components/NoIndex";
@@ -44,11 +45,13 @@ export default function VerifyStep1() {
     setSelectedProvider("linkvertise");
   }, []);
 
-  const handleVerification = () => {
+  const handleVerification = async () => {
     if (sponsorOn) maybeFireDirectLink(); // before navigating, so the tap still counts as the user gesture
     setIsLoading(true);
     localStorage.setItem("verification_step", "step1");
     localStorage.setItem("selected_ad_provider", "linkvertise");
+    // new key attempt: the server starts this session's step chain now (the key token needs every step after it)
+    await reportStep({ action: "start", sid: newVerifySid() }, 3000);
     const returnUrl = `${window.location.origin}/ad-return/step1`;
     window.location.href = buildLinkvertiseUrl(links[0], returnUrl);
   };

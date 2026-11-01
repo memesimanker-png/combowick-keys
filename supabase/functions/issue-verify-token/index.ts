@@ -53,6 +53,58 @@ async function cpaCheck(subid: string): Promise<{ ok: boolean; reason?: string; 
   }
 }
 
+// ---- Linkvertise step chain (2026-11-01, after a reported 1-second bypass) ----
+// The old Linkvertise path gave a token to anyone who asked: the only "proof" was localStorage flags + a ?hash=
+// the browser checked. Now the site reports every step to the server (action "start" when step 1's Linkvertise
+// opens, then "step" with Linkvertise's ?hash= on each return) and a key token needs a complete chain for that
+// verify session: start -> step1 -> ... -> last step, in order, each at least MIN_STEP_GAP_S after the one before,
+// every hash used once, all within CHAIN_MAX_MIN. One token per chain.
+const MIN_STEP_GAP_S = 8;      // a Linkvertise page (ads + countdown) can't be done faster than this
+const CHAIN_MAX_MIN = 60;
+const SID_RE = /^[a-f0-9]{32}$/;
+const STEPS = ["step1", "step2", "step3"];
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+}
+// deno-lint-ignore no-explicit-any
+async function lastStepName(supabase: any): Promise<string> {
+  try {
+    const { data } = await supabase.from("verify_settings").select("verify_steps").eq("id", 1).maybeSingle();
+    return Number(data?.verify_steps) === 2 ? "step2" : "step3";
+  } catch { return "step3"; }
+}
+// deno-lint-ignore no-explicit-any
+async function recordStep(supabase: any, sid: string, step: string, hash: string | null, ip: string): Promise<{ ok: boolean; reason?: string }> {
+  const { data: rows } = await supabase.from("verify_steps").select("step, created_at").eq("sid", sid);
+  const have = new Map((rows || []).map((r: any) => [r.step, new Date(r.created_at).getTime()]));
+  if (have.has("token")) return { ok: false, reason: "used" };
+  if (step !== "start") {
+    const prev = step === "step1" ? "start" : STEPS[STEPS.indexOf(step) - 1];
+    const prevAt = have.get(prev) as number | undefined;
+    if (!prevAt) return { ok: false, reason: "out_of_order" };
+    if (Date.now() - prevAt < MIN_STEP_GAP_S * 1000) return { ok: false, reason: "too_fast" };
+    if (!hash || hash.length < 6) return { ok: false, reason: "no_hash" };
+  }
+  const { error } = await supabase.from("verify_steps").insert({ sid, step, hash: step === "start" ? null : hash, ip });
+  if (error) return { ok: false, reason: String(error.code) === "23505" ? "repeat" : "db" };
+  return { ok: true };
+}
+// deno-lint-ignore no-explicit-any
+async function chainComplete(supabase: any, sid: string): Promise<{ ok: boolean; reason?: string }> {
+  const last = await lastStepName(supabase);
+  const need = ["start", ...STEPS.slice(0, STEPS.indexOf(last) + 1)];
+  const { data: rows } = await supabase.from("verify_steps").select("step, created_at").eq("sid", sid);
+  const at = new Map((rows || []).map((r: any) => [r.step, new Date(r.created_at).getTime()]));
+  if (at.has("token")) return { ok: false, reason: "used" };
+  for (let i = 0; i < need.length; i++) {
+    const t = at.get(need[i]) as number | undefined;
+    if (!t) return { ok: false, reason: "missing_" + need[i] };
+    if (i > 0 && t - (at.get(need[i - 1]) as number) < MIN_STEP_GAP_S * 1000) return { ok: false, reason: "too_fast" };
+  }
+  if (Date.now() - (at.get("start") as number) > CHAIN_MAX_MIN * 60000) return { ok: false, reason: "expired" };
+  return { ok: true };
+}
+
 async function sha256(input: string): Promise<string> {
   const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -73,6 +125,18 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({} as any));
+    const sid = String(body?.sid || "");
+
+    // the site reports a Linkvertise step (start = step 1's Linkvertise just opened)
+    if (body?.action === "start" || body?.action === "step") {
+      if (!SID_RE.test(sid)) return json({ success: false, error: "bad_session" }, 400);
+      const step = body.action === "start" ? "start" : String(body?.step || "");
+      if (step !== "start" && !STEPS.includes(step)) return json({ success: false, error: "bad_step" }, 400);
+      const hash = typeof body?.hash === "string" ? body.hash.slice(0, 300) : null;
+      const r = await recordStep(getExternalSupabase(), sid, step, hash, getIp(req));
+      if (!r.ok) console.warn("[issue-verify-token] step refused:", step, r.reason, getIp(req));
+      return json({ success: r.ok, reason: r.reason }, r.ok ? 200 : 403);
+    }
     // Key length follows what the unlock paid (admin: verify_settings.key_hours_*):
     //   CPA offer paying >= OFFER_MIN_PAYOUT -> key_hours_offer (24) · cheaper / CPC click -> key_hours_cpc (6)
     //   Linkvertise (no method) -> key_hours_linkvertise (6)
@@ -91,10 +155,25 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Linkvertise path: only for a complete step chain (the CPA path above already proved its offer server-side)
+    if (method === "linkvertise") {
+      if (!SID_RE.test(sid)) return json({ success: false, error: "steps_not_done", reason: "no_session" }, 403);
+      const chk = await chainComplete(getExternalSupabase(), sid);
+      if (!chk.ok) {
+        console.warn("[issue-verify-token] linkvertise chain refused:", chk.reason, getIp(req));
+        return json({ success: false, error: "steps_not_done", reason: chk.reason }, 403);
+      }
+      // one token per chain (primary key sid+step: a second request fails here)
+      const { error: tErr } = await getExternalSupabase().from("verify_steps").insert({ sid, step: "token", ip: getIp(req) });
+      if (tErr) return json({ success: false, error: "steps_not_done", reason: "used" }, 403);
+    }
+
     const ip = getIp(req);
     const token = randomToken();
     const tokenHash = await sha256(token);
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    // 30 min (was 10): after the offer they still pick a game, click the ad step and press Generate —
+    // slower visitors lost the key they had just earned.
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
 
     // Offloaded to EXTERNAL Supabase.
     const supabase = getExternalSupabase();

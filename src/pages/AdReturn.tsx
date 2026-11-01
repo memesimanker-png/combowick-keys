@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/components/ui/use-toast";
 import { NoIndex } from "@/components/NoIndex";
 import { supabase } from "@/integrations/supabase/client";
+import { reportStep, verifySid } from "@/lib/verify-session";
 
 type VerificationStep = "step1" | "step2" | "step3";
 
@@ -131,6 +132,14 @@ export default function AdReturn() {
         navigate(`/blocked?reason=suspicious_activity&redirect=/verify/${currentStep}`, { replace: true });
         return;
       }
+      // the server records this step (+ Linkvertise's one-time hash) and refuses a chain that is out of order, too
+      // fast or reuses a hash. A network hiccup lets them continue (the final token check is what counts).
+      const rep = await reportStep({ action: "step", sid: verifySid() || "", step: currentStep, hash });
+      if (cancelled) return;
+      if (!rep.ok && rep.reason !== "network") {
+        navigate(`/blocked?reason=suspicious_activity&redirect=/verify/${rep.reason === "out_of_order" || rep.reason === "used" ? "step1" : currentStep}`, { replace: true });
+        return;
+      }
     }
 
     localStorage.setItem(`${currentStep}_completed`, "true");
@@ -149,7 +158,7 @@ export default function AdReturn() {
     // verify token so generate-hwid-key can confirm a real verified user, then go to the key.
     if (isLast) {
       supabase.functions
-        .invoke("issue-verify-token", { body: {} })
+        .invoke("issue-verify-token", { body: { sid: verifySid() || "" } })
         .then(({ data, error }) => {
           if (!error && data?.success && data?.token) {
             localStorage.setItem("verify_token", JSON.stringify({ token: data.token, expires_at: data.expires_at, hours: data.hours }));
