@@ -97,6 +97,78 @@
       "destination": "/api/script?slug=:slug"
     },
     {
+      "source": "/roblox",
+      "destination": "/roblox/index.html"
+    },
+    {
+      "source": "/roblox/:page",
+      "destination": "/roblox/:page.html"
+    },
+    {
+      "source": "/pt/roblox",
+      "destination": "/pt/roblox/index.html"
+    },
+    {
+      "source": "/pt/roblox/:page",
+      "destination": "/pt/roblox/:page.html"
+    },
+    {
+      "source": "/es/roblox",
+      "destination": "/es/roblox/index.html"
+    },
+    {
+      "source": "/es/roblox/:page",
+      "destination": "/es/roblox/:page.html"
+    },
+    {
+      "source": "/th/roblox",
+      "destination": "/th/roblox/index.html"
+    },
+    {
+      "source": "/th/roblox/:page",
+      "destination": "/th/roblox/:page.html"
+    },
+    {
+      "source": "/id/roblox",
+      "destination": "/id/roblox/index.html"
+    },
+    {
+      "source": "/id/roblox/:page",
+      "destination": "/id/roblox/:page.html"
+    },
+    {
+      "source": "/fil/roblox",
+      "destination": "/fil/roblox/index.html"
+    },
+    {
+      "source": "/fil/roblox/:page",
+      "destination": "/fil/roblox/:page.html"
+    },
+    {
+      "source": "/vi/roblox",
+      "destination": "/vi/roblox/index.html"
+    },
+    {
+      "source": "/vi/roblox/:page",
+      "destination": "/vi/roblox/:page.html"
+    },
+    {
+      "source": "/ko/roblox",
+      "destination": "/ko/roblox/index.html"
+    },
+    {
+      "source": "/ko/roblox/:page",
+      "destination": "/ko/roblox/:page.html"
+    },
+    {
+      "source": "/ar/roblox",
+      "destination": "/ar/roblox/index.html"
+    },
+    {
+      "source": "/ar/roblox/:page",
+      "destination": "/ar/roblox/:page.html"
+    },
+    {
       "source": "/((?!api/|assets/|images/|videos/|.*\\.(?:xml|txt|json|js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|otf|mp4|webmanifest|html)).*)",
       "destination": "/index.html"
     }

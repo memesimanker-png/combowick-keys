@@ -62,3 +62,5 @@ Disallow: /admin/
 
 # Sitemap
 Sitemap: https://keys.combowick.com/sitemap.xml
+
+Sitemap: https://keys.combowick.com/sitemap-roblox.xml
