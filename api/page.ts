@@ -22,8 +22,8 @@ const ORG = {
   "@id": "https://combowick.com/#org",
   name: "ComboWick",
   alternateName: ["Combo_WICK", "COMBO_WICK", "Combo Wick", "combowick"],
-  url: "https://combowick.com",
-  logo: "https://combowick.com/images/combo-wick-logo.png",
+  url: "https://keys.combowick.com",
+  logo: "https://keys.combowick.com/images/combo-wick-logo.png",
   description:
     "ComboWick (Combo_WICK) is a Roblox script hub that makes Lua scripts for Roblox games, with a free key system and Premium keys at keys.combowick.com.",
   sameAs: [
@@ -43,7 +43,7 @@ const BRAND_FAQ: [string, string][] = [
   ],
   [
     "Is ComboWick the same as Combo_WICK?",
-    "Yes. ComboWick, Combo_WICK, COMBO_WICK and Combo Wick are the same Roblox script hub. The official sites are keys.combowick.com and combowick.com, and the Discord is discord.gg/ufrz9Zaqs8.",
+    "Yes. ComboWick, Combo_WICK, COMBO_WICK and Combo Wick are the same Roblox script hub. The official site is keys.combowick.com, and the Discord is discord.gg/ufrz9Zaqs8.",
   ],
 ];
 
@@ -72,7 +72,7 @@ function shell(o: { path: string; title: string; description: string; body: stri
 <script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": graph }).replace(/</g, "\\u003c")}</script>
 </head>
 <body>
-<header><nav><a href="/">ComboWick</a> · <a href="/scripts">Scripts</a> · <a href="/executors">Executors</a> · <a href="/premium-keys">Premium keys</a> · <a href="/request">Request a script</a> · <a href="https://combowick.com/roblox">All game scripts</a></nav></header>
+<header><nav><a href="/">ComboWick</a> · <a href="/scripts">Scripts</a> · <a href="/executors">Executors</a> · <a href="/premium-keys">Premium keys</a> · <a href="/request">Request a script</a> · <a href="https://keys.combowick.com/roblox">All game scripts</a></nav></header>
 <main>
 ${o.body}
 </main>
@@ -118,7 +118,7 @@ async function scriptsPage() {
 <ul>
 ${list.map((s: any) => `<li><a href="/scripts/${esc(s.slug)}"><strong>${esc(s.game)} script</strong></a> — ${esc(featuresOf(s.title))}. ${esc(s.description || "")}</li>`).join("\n")}
 </ul>
-<p>More games (with the full feature list of each script): <a href="https://combowick.com/roblox">all COMBO_WICK Roblox game scripts</a>.</p>
+<p>More games (with the full feature list of each script): <a href="https://keys.combowick.com/roblox">all COMBO_WICK Roblox game scripts</a>.</p>
 <h2>FAQ</h2>
 ${faqHtml(faqs)}`;
   return shell({
@@ -260,7 +260,7 @@ function requestPage() {
 </ol>
 <h2>FAQ</h2>
 ${faqHtml(faqs)}
-<p>Already made: <a href="/scripts">current scripts</a> · <a href="https://combowick.com/roblox">all game scripts</a></p>`;
+<p>Already made: <a href="/scripts">current scripts</a> · <a href="https://keys.combowick.com/roblox">all game scripts</a></p>`;
   return shell({
     path: "/request",
     title: "Request a Roblox Script – Vote for the Next Game | ComboWick",

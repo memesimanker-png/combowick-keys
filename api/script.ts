@@ -112,7 +112,7 @@ export default async function handler(req: any, res: any) {
           "@id": "https://combowick.com/#org",
           name: "ComboWick",
           alternateName: ["Combo_WICK", "COMBO_WICK", "Combo Wick"],
-          url: "https://combowick.com",
+          url: "https://keys.combowick.com",
           sameAs: [
             "https://www.youtube.com/@Triple_WICK",
             "https://discord.gg/ufrz9Zaqs8",
