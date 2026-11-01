@@ -63,6 +63,24 @@ const MIN_STEP_GAP_S = 8;      // a Linkvertise page (ads + countdown) can't be 
 const CHAIN_MAX_MIN = 60;
 const SID_RE = /^[a-f0-9]{32}$/;
 const STEPS = ["step1", "step2", "step3"];
+// Linkvertise Anti-Bypassing: every step's ?hash= is checked with Linkvertise itself (the hash lives 10 s and verifies
+// TRUE exactly once). LV_ENFORCE=false = log only (lv_ok stored per step); true = a step whose hash Linkvertise didn't
+// confirm is refused. Linkvertise's own advice: log first, enforce once real visitors verify.
+const LV_TOKEN = Deno.env.get("LINKVERTISE_AB_TOKEN") || "";
+const LV_ENFORCE = (Deno.env.get("LV_ENFORCE") || "false") === "true";
+async function lvVerify(hash: string): Promise<{ ok: boolean | null; resp: string }> {
+  if (!LV_TOKEN || !/^[A-Za-z0-9]{64}$/.test(hash)) return { ok: false, resp: LV_TOKEN ? "bad_hash_format" : "no_token" };
+  try {
+    const r = await fetch(`https://publisher.linkvertise.com/api/v1/anti_bypassing?token=${LV_TOKEN}&hash=${encodeURIComponent(hash)}`, { method: "POST", signal: AbortSignal.timeout(4000) });
+    const t = await r.text();
+    let st: unknown = null; try { st = JSON.parse(t)?.status; } catch { /* plain text */ }
+    if (st === true || /^\s*true\s*$/i.test(t)) return { ok: true, resp: "true" };
+    if (st === false || /^\s*false\s*$/i.test(t)) return { ok: false, resp: "false" };
+    return { ok: null, resp: t.slice(0, 80) };   // "Invalid token." / outage: unknown, not the visitor's fault
+  } catch (e) {
+    return { ok: null, resp: "unreachable" };
+  }
+}
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 }
@@ -85,7 +103,10 @@ async function recordStep(supabase: any, sid: string, step: string, hash: string
     if (Date.now() - prevAt < MIN_STEP_GAP_S * 1000) return { ok: false, reason: "too_fast" };
     if (!hash || hash.length < 6) return { ok: false, reason: "no_hash" };
   }
-  const { error } = await supabase.from("verify_steps").insert({ sid, step, hash: step === "start" ? null : hash, ip });
+  // ask Linkvertise right away (the hash expires 10 s after the visitor finished the page)
+  const lv = step === "start" ? { ok: null, resp: null } : await lvVerify(hash as string);
+  if (LV_ENFORCE && step !== "start" && lv.ok === false) return { ok: false, reason: "lv_not_verified" };
+  const { error } = await supabase.from("verify_steps").insert({ sid, step, hash: step === "start" ? null : hash, ip, lv_ok: lv.ok, lv_resp: lv.resp });
   if (error) return { ok: false, reason: String(error.code) === "23505" ? "repeat" : "db" };
   return { ok: true };
 }

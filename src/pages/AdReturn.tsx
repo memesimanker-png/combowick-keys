@@ -79,6 +79,12 @@ export default function AdReturn() {
     let timeoutId: number | undefined;
     let cancelled = false;
 
+    // Report the step to the server FIRST: Linkvertise keeps the ?hash= only 10 seconds, so it must be checked before
+    // anything else loads (slow phones). The result is used further down, after the local checks.
+    const earlyStep = routeStep || queryStep || localStorage.getItem("verification_step");
+    const earlyReport = hash && isVerificationStep(earlyStep) && (localStorage.getItem("selected_ad_provider") || "linkvertise") === "linkvertise"
+      ? reportStep({ action: "step", sid: verifySid() || "", step: earlyStep, hash })
+      : null;
     (async () => {
     // How many Linkvertise steps the admin configured (2 or 3). Determines the final step.
     let verifySteps = 3;
@@ -134,7 +140,7 @@ export default function AdReturn() {
       }
       // the server records this step (+ Linkvertise's one-time hash) and refuses a chain that is out of order, too
       // fast or reuses a hash. A network hiccup lets them continue (the final token check is what counts).
-      const rep = await reportStep({ action: "step", sid: verifySid() || "", step: currentStep, hash });
+      const rep = await (earlyReport || reportStep({ action: "step", sid: verifySid() || "", step: currentStep, hash }));
       if (cancelled) return;
       if (!rep.ok && rep.reason !== "network") {
         navigate(`/blocked?reason=suspicious_activity&redirect=/verify/${rep.reason === "out_of_order" || rep.reason === "used" ? "step1" : currentStep}`, { replace: true });
