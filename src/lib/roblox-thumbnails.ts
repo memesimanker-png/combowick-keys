@@ -1,6 +1,6 @@
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
-const CACHE_KEY = "roblox_thumb_cache_v6"; // bumped: now wraps in wsrv.nl
+const CACHE_KEY = "roblox_thumb_cache_v7"; // bumped: direct storage links, drops links saved with the logo fallback
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
 
 interface CacheEntry { url: string; ts: number; }
@@ -35,8 +35,8 @@ export async function fetchGameThumbnailByUniverseId(universeId: number): Promis
   if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.url;
 
   // Straight from public storage: calling a function once per game on every fresh visit used up the Edge Function quota.
-  // New games get their file when they're added. A missing file shows our logo through wsrv's default image.
-  const direct = `${compress(`${SUPABASE_URL}/storage/v1/object/public/game-thumbnails/${key}.png`)}&default=${encodeURIComponent("https://keys.combowick.com/images/combo-wick-logo.png")}`;
+  // New games get their file when they're added (add_game_to_systems.cjs).
+  const direct = `${compress(`${SUPABASE_URL}/storage/v1/object/public/game-thumbnails/${key}.png`)}`;
   const c = getCache();
   c[key] = { url: direct, ts: Date.now() };
   setCache(c);
