@@ -18,17 +18,28 @@ const STEP_INDEX: Record<string, number> = {
   step3: 2,
 };
 
+const YT_KEY = "yt_latest_v1";
+const YT_TTL = 6 * 60 * 60 * 1000;
 let cachedVideos: string[] | null = null;
 let inflight: Promise<string[]> | null = null;
 
 async function getVideos(): Promise<string[]> {
   if (cachedVideos) return cachedVideos;
   if (inflight) return inflight;
+  // Saved for 6 hours so each verify step doesn't call the function again after a page load.
+  try {
+    const saved = JSON.parse(localStorage.getItem(YT_KEY) || "null");
+    if (saved && Date.now() - saved.ts < YT_TTL && Array.isArray(saved.ids) && saved.ids.length) {
+      cachedVideos = saved.ids as string[];
+      return cachedVideos;
+    }
+  } catch {}
   inflight = (async () => {
     try {
       const { data } = await supabase.functions.invoke("yt-latest");
       const ids = (data?.videos ?? []).map((v: any) => v.id).filter(Boolean);
       cachedVideos = ids.length ? ids : FALLBACK;
+      if (ids.length) { try { localStorage.setItem(YT_KEY, JSON.stringify({ ids, ts: Date.now() })); } catch {} }
     } catch {
       cachedVideos = FALLBACK;
     }

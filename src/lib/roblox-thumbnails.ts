@@ -1,5 +1,4 @@
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 const CACHE_KEY = "roblox_thumb_cache_v6"; // bumped: now wraps in wsrv.nl
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
@@ -35,22 +34,12 @@ export async function fetchGameThumbnailByUniverseId(universeId: number): Promis
   const entry = cache[key];
   if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.url;
 
-  try {
-    const res = await fetch(
-      `${SUPABASE_URL}/functions/v1/cache-thumbnail?id=${universeId}`,
-      { headers: { Authorization: `Bearer ${SUPABASE_KEY}`, apikey: SUPABASE_KEY } }
-    );
-    if (!res.ok) return null;
-    const json = await res.json();
-    const thumbnailUrl: string | undefined = json?.url;
-    if (thumbnailUrl) {
-      const compressed = compress(thumbnailUrl);
-      const c = getCache();
-      c[key] = { url: compressed, ts: Date.now() };
-      setCache(c);
-      return compressed;
-    }
-    return null;
-  } catch { return null; }
+  // Straight from public storage: calling a function once per game on every fresh visit used up the Edge Function quota.
+  // New games get their file when they're added. A missing file shows our logo through wsrv's default image.
+  const direct = `${compress(`${SUPABASE_URL}/storage/v1/object/public/game-thumbnails/${key}.png`)}&default=${encodeURIComponent("https://keys.combowick.com/images/combo-wick-logo.png")}`;
+  const c = getCache();
+  c[key] = { url: direct, ts: Date.now() };
+  setCache(c);
+  return direct;
 }
 
