@@ -195,13 +195,14 @@ function PricePill({ exec }: { exec: Executor }) {
 // Executors our scripts DON'T run on (missing functions they need) — players kept installing these from
 // the old recommendations and opening tickets. Never a "best pick", always labelled. Keep in sync with the hub's
 // M.EXEC_UNSUPPORTED (key system/hub-redesign/season/upsell.lua).
-const NOT_SUPPORTED = /xeno|solara|jj[\s-]?sploit/i;
-const notSupported = (e: { title: string }) => NOT_SUPPORTED.test(e.title);
+// No executor is labelled unsupported here any more: the loader checks each script's real needs in game and tells the
+// player what won't run (2026-11-06).
+const notSupported = (_e: { title: string }) => false;
 
 const FAQS = [
   {
     q: "What is the best Roblox executor in 2026?",
-    a: "The 'best' executor changes weekly because Roblox patches frequently. Right now, top community picks include Delta, Codex and Wave on Windows, and Delta and Hydrogen on iOS/Mac. Xeno, Solara and JJSploit don't run our scripts. The live list above shows real-time UNC/SUNC scores and Working vs Patched status from executors.online and inject.today, so you can always see which one is actually working today.",
+    a: "The 'best' executor changes weekly because Roblox patches frequently. Right now, top community picks include Delta, Codex and Wave on Windows, and Delta and Hydrogen on iOS/Mac. The live list above shows real-time UNC/SUNC scores and Working vs Patched status from executors.online and inject.today, so you can always see which one is actually working today.",
   },
   {
     q: "Are Roblox executors safe to use?",
@@ -411,11 +412,6 @@ export default function Executors() {
             </div>
           </div>
 
-          <div className="mb-6 flex items-start gap-2 rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-sm">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-            <p><span className="font-semibold text-destructive">{t("Xeno, Solara and JJSploit don't work with our scripts.")}</span> <span className="text-muted-foreground">{t("They're missing functions our scripts need. Pick another executor below.")}</span></p>
-          </div>
-
           {/* Step 1: device */}
           <div className="mb-6">
             <p className="mb-2 text-center text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{t("What are you playing on?")}</p>
@@ -463,7 +459,7 @@ export default function Executors() {
             <h2 className="mb-4 font-heading text-lg font-bold">{t("How to run our script")}</h2>
             <ol className="grid gap-4 sm:grid-cols-3">
               {[
-                { n: 1, title: "Get a working executor", text: "Pick one marked Working above (not Xeno, Solara or JJSploit). Only download from the official website or Discord link on this page." },
+                { n: 1, title: "Get a working executor", text: "Pick one marked Working above. Only download from the official website or Discord link on this page." },
                 { n: 2, title: "Open Roblox and join a game", text: "Open your executor, then attach or inject it while you're in the game." },
                 { n: 3, title: "Paste our script and run it", text: "Copy the script below, paste it in the executor and press Execute. Get a free key when it asks." },
               ].map((s) => (
