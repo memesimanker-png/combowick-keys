@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Crown, ArrowRight, Check, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
+import { InAppBrowserNotice } from "@/components/InAppBrowserNotice";
 
 /**
  * Shared pieces of the free-key funnel redesign (owner 2026-10-29, mockups/keypage-v3*.html):
@@ -31,8 +32,16 @@ export function useVerifySteps(): number {
 
 /** allowOverflow: lets dropdowns (the game picker) spill past the card edge instead of being cut off. */
 export function VerifyCard({ children, wide = false, allowOverflow = false }: { children: ReactNode; wide?: boolean; allowOverflow?: boolean }) {
+  // free-key pages only: in an app's built-in browser the steps lose progress and look like a bypass (2026-11-10).
+  // "Open in Chrome" always goes back to the START, since a half-done step doesn't carry over to another browser.
+  const path = typeof window !== "undefined" ? window.location.pathname : "";
+  const keyFlow = path.startsWith("/verify") || path.startsWith("/access-key");
+  const startUrl = typeof window !== "undefined"
+    ? (path.startsWith("/verify/provider-select") ? window.location.href : window.location.origin + "/verify/provider-select")
+    : "https://keys.combowick.com/verify/provider-select";
   return (
     <div className={`mx-auto w-full ${wide ? "max-w-4xl" : "max-w-3xl"} ${allowOverflow ? "" : "overflow-hidden"} rounded-2xl border border-primary/30 bg-card`}>
+      {keyFlow && <InAppBrowserNotice url={startUrl} />}
       {children}
     </div>
   );

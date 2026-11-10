@@ -4,6 +4,7 @@ import { Shield, AlertTriangle, Lock } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { NoIndex } from "@/components/NoIndex";
+import { InAppBrowserNotice } from "@/components/InAppBrowserNotice";
 
 export default function Blocked() {
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ export default function Blocked() {
       </header>
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <div className="max-w-md w-full mx-auto space-y-6">
+          <InAppBrowserNotice always url={(typeof window !== "undefined" ? window.location.origin : "https://keys.combowick.com") + "/verify/provider-select"} />
           <Card className="border-amber-500">
             <CardHeader>
               <div className="flex items-center gap-2">
