@@ -7,9 +7,11 @@
 // gets "Invalid amount" before paying (never charged without a key).
 
 export const BASE_PRICE: Record<string, number> = { "trial-7day": 5, monthly: 9.99, lifetime: 49.99 };
-// PayPal fee the checkout adds on top of the shown price (the $5 trial nets $4.43 after PayPal's 5.4% + $0.30).
-// KEEP IN SYNC with PAYPAL_FEE in src/components/PayPalCheckoutModal.tsx.
-export const PAYPAL_FEE: Record<string, number> = { "trial-7day": 0.49 };
+// PayPal fee the checkout adds on top of the shown price. $0.61 makes the $5 trial net the full $5.00 after PayPal's
+// 5.4% + $0.30 ($5.61 x 0.946 - 0.30 = $5.01). KEEP IN SYNC with PAYPAL_FEE in src/components/PayPalCheckoutModal.tsx.
+export const PAYPAL_FEE: Record<string, number> = { "trial-7day": 0.61 };
+// Old fee still accepted while browsers holding the previous page ($5.49) catch up. Remove after a few days.
+export const PAYPAL_FEE_OLD: Record<string, number> = { "trial-7day": 0.49 };
 export const PAID_GAMES: Record<string, { monthly: number; lifetime?: number }> = {
   "desert-war": { monthly: 9 },
   "jurassic-blocky": { monthly: 7.99, lifetime: 11.99 },
@@ -89,8 +91,8 @@ export async function acceptedPrices(supabase: any, tier: string, game: string |
   } catch { /* no admin discount */ }
   const days = [at];
   if (at.getUTCHours() < 2) days.push(new Date(at.getTime() - 3 * 3600 * 1000));
-  const fee = PAYPAL_FEE[tier] ?? 0;
-  return days.map((d) => Math.round((discounted(base, Math.max(adminPct, autoPercent(tier, d))) + fee) * 100) / 100);
+  const fees = [PAYPAL_FEE[tier] ?? 0, ...(PAYPAL_FEE_OLD[tier] !== undefined ? [PAYPAL_FEE_OLD[tier]] : [])];
+  return days.flatMap((d) => fees.map((fee) => Math.round((discounted(base, Math.max(adminPct, autoPercent(tier, d))) + fee) * 100) / 100));
 }
 
 // ---- creator codes ----

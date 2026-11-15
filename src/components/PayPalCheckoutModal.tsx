@@ -7,9 +7,9 @@ import { PayoneerOrderForm, PAYONEER_PLANS, PO_RETURN_KEY } from "@/components/P
 import { checkCreatorCode, savedCode, saveCode, withCode, type CheckoutCode } from "@/lib/creator-code";
 import { saleSource } from "@/lib/sale-source";
 
-// PayPal's cut on a $5 sale is $0.57 (5.4% + $0.30), so the trial's checkout adds this line; the page still says $5.
+// PayPal takes 5.4% + $0.30, so the trial's checkout adds this line ($5.61 nets the full $5.00); the page still says $5.
 // KEEP IN SYNC with PAYPAL_FEE in supabase/functions/_shared/key-pricing.ts (the server refuses less).
-const PAYPAL_FEE: Record<string, number> = { "trial-7day": 0.49 };
+const PAYPAL_FEE: Record<string, number> = { "trial-7day": 0.61 };
 
 interface PayPalCheckoutModalProps {
   isOpen: boolean;
