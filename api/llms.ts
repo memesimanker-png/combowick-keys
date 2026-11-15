@@ -13,7 +13,7 @@ const SUPABASE_KEY =
 // Keep these facts current (2026-10-29): free key = 8 hours, one game; premium = every game.
 const STATIC = `# ComboWick
 
-> ComboWick (also written Combo Wick, Combo_WICK or COMBO_WICK) is a Roblox script hub: one script hub (loader) that runs free Roblox scripts for many games, in 13 languages, on PC and mobile executors. Official sites: keys.combowick.com (scripts, keys, Premium) and combowick.com (guides).
+> ComboWick (also written Combo Wick, Combo_WICK or COMBO_WICK) is a Roblox script hub: one script hub (loader) that runs free Roblox scripts for many games, in 13 languages, on PC and mobile executors. Official site: keys.combowick.com (scripts, keys, Premium); combowick.com redirects there.
 
 - Not to be confused with "Wick, the Whorled Mind" combos in Magic: The Gathering; ComboWick is the Roblox script hub.
 - Free keys: open the key page, pass a few short checkpoints and get a free key for 8 hours for one game.
@@ -26,6 +26,7 @@ const STATIC = `# ComboWick
 
 - [Home](/): Featured scripts, premium key plans, and brand intro.
 - [Scripts](/scripts): Every free ComboWick Roblox script, by game, with features and the loadstring.
+- [Game scripts](/roblox): One page per game with the script's real features, how to run it and an FAQ (also in Portuguese, Spanish, Thai, Indonesian, Filipino, Vietnamese, Korean and Arabic under /pt/roblox, /es/roblox, ...).
 - [Premium Keys](/premium-keys): Premium plans: 7-day trial, monthly, lifetime.
 - [Keys](/keys): Get a free 8-hour key through short checkpoints.
 - [Executors](/executors): Which Roblox executors work with our scripts right now, on PC and mobile.
@@ -35,7 +36,6 @@ const STATIC = `# ComboWick
 const OPTIONAL = `
 ## Optional
 
-- [Anti-Cheat Guide](/anti-cheat-guide)
 - [Refund Policy](/refund-policy): All sales are final — no refunds.
 - [Privacy](/privacy)
 - [Terms](/terms)
@@ -68,7 +68,18 @@ export default async function handler(_req: any, res: any) {
     scriptsSection += "- [All Scripts](/scripts): Browse the full library of Roblox scripts by game.\n";
   }
 
-  const body = STATIC + scriptsSection + OPTIONAL;
+  // every static game page (written by tools/game_pages.cjs)
+  let gamesSection = "";
+  try {
+    const r = await fetch("https://keys.combowick.com/roblox/games.json");
+    const games = r.ok ? await r.json() : [];
+    if (Array.isArray(games) && games.length) {
+      gamesSection = `\n## Game script pages (${games.length} games)\n\n`;
+      for (const g of games) gamesSection += `- [${g.name} script](/roblox/${g.slug}-script): ${oneLine((g.feats || []).join(", "))}\n`;
+    }
+  } catch { /* skip */ }
+
+  const body = STATIC + scriptsSection + gamesSection + OPTIONAL;
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/plain; charset=utf-8");
   res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=21600, stale-while-revalidate=86400");

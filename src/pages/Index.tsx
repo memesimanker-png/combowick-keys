@@ -12,9 +12,20 @@ import { AdSlot } from "@/components/AdSlot";
 import { useTranslation } from "@/lib/translation-context";
 import { motion } from "framer-motion";
 import { SEOHead } from "@/components/SEOHead";
+import { useEffect, useState } from "react";
+
+type GamePage = { slug: string; name: string; feats: string[] };
 
 export default function Index() {
   const { t } = useTranslation();
+  // Static game pages (/roblox/...) are outside the SPA, so they get plain <a> links. List written by tools/game_pages.cjs.
+  const [games, setGames] = useState<GamePage[]>([]);
+  useEffect(() => {
+    fetch("/roblox/games.json")
+      .then((r) => (r.ok ? r.json() : []))
+      .then((j) => setGames(Array.isArray(j) ? j : []))
+      .catch(() => {});
+  }, []);
 
   return (
     <Layout>
@@ -95,6 +106,31 @@ export default function Index() {
       <HowItWorksSection />
       <TrustSection />
       <FAQSection />
+
+      {/* Game scripts */}
+      <section className="relative py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold mb-2 tracking-tight">{t("Roblox Game Scripts")}</h2>
+          <p className="text-muted-foreground mb-6">{t("Every COMBO_WICK game script with its real features.")}</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {games.slice(0, 12).map((g) => (
+              <a
+                key={g.slug}
+                href={`/roblox/${g.slug}-script`}
+                className="block rounded-lg border border-border/50 bg-card/60 px-4 py-3 hover:border-bronze/50 transition-colors"
+              >
+                <span className="font-semibold text-bronze-light">{g.name}</span>
+                <span className="block text-xs text-muted-foreground truncate">{g.feats.join(", ")}</span>
+              </a>
+            ))}
+          </div>
+          <a href="/roblox" className="inline-flex items-center mt-6 text-bronze-light hover:underline font-semibold">
+            {t("See all game scripts")}
+            {games.length ? ` (${games.length})` : ""}
+            <ArrowRight className="ml-1 h-4 w-4" />
+          </a>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="relative py-24 sm:py-32 overflow-hidden">

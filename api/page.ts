@@ -97,7 +97,19 @@ const faqHtml = (faqs: [string, string][]) => faqs.map(([q, a]) => `<h3>${esc(q)
 // "Kaiju Alpha — COMBO_WICK | Auto Farm, Cell Spoofer" -> "Auto Farm, Cell Spoofer"
 const featuresOf = (title: string) => String(title || "").split("|").slice(1).join("|").trim() || String(title || "");
 
+// Every static game page (/roblox/<slug>-script), written by tools/game_pages.cjs.
+async function gamePages(): Promise<{ slug: string; name: string; feats: string[] }[]> {
+  try {
+    const r = await fetch(`${BASE}/roblox/games.json`);
+    const j = r.ok ? await r.json() : [];
+    return Array.isArray(j) ? j : [];
+  } catch {
+    return [];
+  }
+}
+
 async function scriptsPage() {
+  const gp = await gamePages();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
   const { data } = await supabase
     .from("scripts")
@@ -118,7 +130,11 @@ async function scriptsPage() {
 <ul>
 ${list.map((s: any) => `<li><a href="/scripts/${esc(s.slug)}"><strong>${esc(s.game)} script</strong></a> — ${esc(featuresOf(s.title))}. ${esc(s.description || "")}</li>`).join("\n")}
 </ul>
-<p>More games (with the full feature list of each script): <a href="https://keys.combowick.com/roblox">all COMBO_WICK Roblox game scripts</a>.</p>
+<h2>Every game script (${gp.length || "all"} games)</h2>
+<p>Each page lists that script's real features and how to run it. <a href="/roblox">All COMBO_WICK Roblox game scripts</a>.</p>
+<ul>
+${gp.map((g) => `<li><a href="/roblox/${esc(g.slug)}-script">${esc(g.name)} script</a> — ${esc(g.feats.join(", "))}</li>`).join("\n")}
+</ul>
 <h2>FAQ</h2>
 ${faqHtml(faqs)}`;
   return shell({
