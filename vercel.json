@@ -210,5 +210,13 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "api/page.ts": {
+      "includeFiles": "public/roblox/games.json"
+    },
+    "api/llms.ts": {
+      "includeFiles": "public/roblox/games.json"
+    }
+  }
 }

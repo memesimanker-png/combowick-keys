@@ -97,11 +97,13 @@ const faqHtml = (faqs: [string, string][]) => faqs.map(([q, a]) => `<h3>${esc(q)
 // "Kaiju Alpha — COMBO_WICK | Auto Farm, Cell Spoofer" -> "Auto Farm, Cell Spoofer"
 const featuresOf = (title: string) => String(title || "").split("|").slice(1).join("|").trim() || String(title || "");
 
-// Every static game page (/roblox/<slug>-script), written by tools/game_pages.cjs.
+// Every static game page (/roblox/<slug>-script), written by tools/game_pages.cjs. Read from the deployment's own files
+// (vercel.json includeFiles): fetching it from keys.combowick.com gets blocked by Cloudflare bot protection.
 async function gamePages(): Promise<{ slug: string; name: string; feats: string[] }[]> {
   try {
-    const r = await fetch(`${BASE}/roblox/games.json`);
-    const j = r.ok ? await r.json() : [];
+    const fs = await import("fs");
+    const path = await import("path");
+    const j = JSON.parse(fs.readFileSync(path.join(process.cwd(), "public", "roblox", "games.json"), "utf8"));
     return Array.isArray(j) ? j : [];
   } catch {
     return [];

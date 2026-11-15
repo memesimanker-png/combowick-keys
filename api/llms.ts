@@ -68,11 +68,13 @@ export default async function handler(_req: any, res: any) {
     scriptsSection += "- [All Scripts](/scripts): Browse the full library of Roblox scripts by game.\n";
   }
 
-  // every static game page (written by tools/game_pages.cjs)
+  // every static game page (written by tools/game_pages.cjs); read from the deployment (vercel.json includeFiles),
+  // a fetch to keys.combowick.com is blocked by Cloudflare bot protection
   let gamesSection = "";
   try {
-    const r = await fetch("https://keys.combowick.com/roblox/games.json");
-    const games = r.ok ? await r.json() : [];
+    const fs = await import("fs");
+    const path = await import("path");
+    const games = JSON.parse(fs.readFileSync(path.join(process.cwd(), "public", "roblox", "games.json"), "utf8"));
     if (Array.isArray(games) && games.length) {
       gamesSection = `\n## Game script pages (${games.length} games)\n\n`;
       for (const g of games) gamesSection += `- [${g.name} script](/roblox/${g.slug}-script): ${oneLine((g.feats || []).join(", "))}\n`;
