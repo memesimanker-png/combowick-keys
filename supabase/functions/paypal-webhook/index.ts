@@ -203,7 +203,7 @@ serve(async (req) => {
 
       const findRow = async () => (await supabase
         .from("premium_key_purchases")
-        .select("id, tier, status, key_generated, customer_email")
+        .select("id, tier, status, key_generated, customer_email, amount")
         .eq("payment_id", orderId)
         .maybeSingle()).data;
       let existing = await findRow();
@@ -216,7 +216,12 @@ serve(async (req) => {
 
       const floorTier = lockedTier || existing?.tier || null;
       // only USD orders are key products (a crafted order in another currency never matches a price)
-      const tooLow = confirmed.currency !== "USD" || lockedTier
+      // A "pending" row (eCheck / PayPal review) was price-checked by paypal-capture-order at checkout time. It can
+      // clear days later, after the weekend sale or a fee change, so re-pricing it at TODAY's price would wrongly call
+      // it underpaid (2026-11-16: a $7.29 weekend monthly would have got no key on a weekday). Same amount = paid.
+      const checkedAtCheckout = existing?.status === "pending" && confirmed.currency === "USD" &&
+        Number(existing.amount) > 0 && amount >= Number(existing.amount) - 0.001;
+      const tooLow = checkedAtCheckout ? false : confirmed.currency !== "USD" || lockedTier
         ? confirmed.currency !== "USD" || await lockedOrderTooLow(supabase, tag, amount, orderId)
         : !!floorTier && KEY_MIN_PRICE[floorTier] !== undefined && amount < KEY_MIN_PRICE[floorTier] - 0.001;
       if (existing && existing.status === "completed" && existing.key_generated) {
