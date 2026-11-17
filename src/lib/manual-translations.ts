@@ -4,6 +4,10 @@
 
 export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
   "fr": {
+    "How to get through Linkvertise": "Comment passer Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Appuie sur le premier « Get access » en haut. C'est le nôtre.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Choisis « Watch Ads », pas l'essai, puis appuie sur Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Appuie sur « Open here ». Tu continues dans un nouvel onglet.",
     "Want to keep Premium for good?": "Tu veux garder Premium pour de bon ?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Ton code {code} enlève {pct}% sur Lifetime ou Mensuel. Il marche une seule fois, pendant 7 jours.",
     "See Lifetime with {pct}% off": "Voir Lifetime à -{pct}%",
@@ -1009,6 +1013,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Échec de la capture du paiement"
   },
   "es": {
+    "How to get through Linkvertise": "Cómo pasar Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Toca el primer \"Get access\" de arriba. Ese es el nuestro.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Elige \"Watch Ads\", no la prueba, y luego toca Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Toca \"Open here\". Sigues en una pestaña nueva.",
     "Want to keep Premium for good?": "¿Quieres quedarte con Premium para siempre?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Tu código {code} te da {pct}% de descuento en Lifetime o Mensual. Funciona una sola vez, durante 7 días.",
     "See Lifetime with {pct}% off": "Ver Lifetime con {pct}% de descuento",
@@ -2014,6 +2022,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Error al procesar el pago"
   },
   "de": {
+    "How to get through Linkvertise": "So kommst du durch Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Tippe oben auf das erste „Get access“. Das ist unseres.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Wähle „Watch Ads“, nicht die Testversion, dann tippe auf Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Tippe auf „Open here“. Es geht in einem neuen Tab weiter.",
     "Want to keep Premium for good?": "Willst du Premium für immer behalten?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Dein Code {code} gibt {pct}% Rabatt auf Lifetime oder Monatlich. Er gilt einmal, 7 Tage lang.",
     "See Lifetime with {pct}% off": "Lifetime mit {pct}% Rabatt ansehen",
@@ -3019,6 +3031,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Zahlungserfassung fehlgeschlagen"
   },
   "pt": {
+    "How to get through Linkvertise": "Como passar pelo Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Toque no primeiro \"Get access\" lá em cima. Esse é o nosso.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Escolha \"Watch Ads\", não o teste grátis, depois toque em Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Toque em \"Open here\". Você continua numa nova aba.",
     "Want to keep Premium for good?": "Quer ficar com o Premium de vez?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Seu código {code} dá {pct}% de desconto no Lifetime ou Mensal. Funciona uma vez, por 7 dias.",
     "See Lifetime with {pct}% off": "Ver Lifetime com {pct}% de desconto",
@@ -4024,6 +4040,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Falha ao processar o pagamento"
   },
   "ru": {
+    "How to get through Linkvertise": "Как пройти Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Нажми первую кнопку «Get access» вверху. Это наша.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Выбери «Watch Ads», не пробный период, потом нажми Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Нажми «Open here». Продолжишь в новой вкладке.",
     "Want to keep Premium for good?": "Хочешь оставить Premium навсегда?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Твой код {code} даёт скидку {pct}% на Lifetime или Monthly. Работает один раз, 7 дней.",
     "See Lifetime with {pct}% off": "Смотреть Lifetime со скидкой {pct}%",
@@ -5029,6 +5049,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Не удалось обработать платёж"
   },
   "zh-CN": {
+    "How to get through Linkvertise": "如何通过 Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "点最上面的第一个“Get access”，那是我们的。",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "选“Watch Ads”，不要选试用，然后点 Skip Ad。",
+    "Tap \"Open here\". You continue in a new tab.": "点“Open here”，会在新标签页继续。",
     "Want to keep Premium for good?": "想一直保留 Premium 吗？",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "你的优惠码 {code} 可享终身版或月度版 {pct}% 折扣。仅可使用一次，有效期 7 天。",
     "See Lifetime with {pct}% off": "查看终身版 {pct}% 折扣",
@@ -6034,6 +6058,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "付款扣款失败"
   },
   "ko": {
+    "How to get through Linkvertise": "Linkvertise 통과하는 법",
+    "Tap the first \"Get access\" at the top. That's ours.": "맨 위의 첫 번째 \"Get access\"를 누르세요. 그게 저희 거예요.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "체험판 말고 \"Watch Ads\"를 고른 뒤 Skip Ad를 누르세요.",
+    "Tap \"Open here\". You continue in a new tab.": "\"Open here\"를 누르세요. 새 탭에서 이어집니다.",
     "Want to keep Premium for good?": "Premium을 계속 쓰고 싶나요?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "코드 {code}로 평생권 또는 월간권을 {pct}% 할인받으세요. 한 번만 쓸 수 있고 7일 동안 유효해요.",
     "See Lifetime with {pct}% off": "평생권 {pct}% 할인 보기",
@@ -7039,6 +7067,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "결제 처리에 실패했습니다"
   },
   "th": {
+    "How to get through Linkvertise": "วิธีผ่าน Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "กด \"Get access\" อันแรกด้านบนสุด อันนั้นคือของเรา",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "เลือก \"Watch Ads\" ไม่ใช่ทดลองใช้ แล้วกด Skip Ad",
+    "Tap \"Open here\". You continue in a new tab.": "กด \"Open here\" แล้วทำต่อในแท็บใหม่",
     "Want to keep Premium for good?": "อยากเก็บ Premium ไว้ตลอดไหม?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "โค้ด {code} ลด {pct}% สำหรับ Lifetime หรือรายเดือน ใช้ได้ครั้งเดียว ภายใน 7 วัน",
     "See Lifetime with {pct}% off": "ดู Lifetime ลด {pct}%",
@@ -8044,6 +8076,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "การเก็บเงินล้มเหลว"
   },
   "id": {
+    "How to get through Linkvertise": "Cara lewat Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Ketuk \"Get access\" pertama di paling atas. Itu punya kami.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Pilih \"Watch Ads\", bukan trial, lalu ketuk Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Ketuk \"Open here\". Lanjutkan di tab baru.",
     "Want to keep Premium for good?": "Mau pakai Premium seterusnya?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Kode {code} kamu memberi diskon {pct}% untuk Lifetime atau Bulanan. Berlaku sekali, selama 7 hari.",
     "See Lifetime with {pct}% off": "Lihat Lifetime diskon {pct}%",
@@ -9049,6 +9085,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Pengambilan pembayaran gagal"
   },
   "fil": {
+    "How to get through Linkvertise": "Paano lusutan ang Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "I-tap ang unang \"Get access\" sa itaas. Iyon ang sa amin.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Piliin ang \"Watch Ads\", hindi ang trial, tapos i-tap ang Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "I-tap ang \"Open here\". Sa bagong tab ka magpapatuloy.",
     "Want to keep Premium for good?": "Gusto mo bang panatilihin ang Premium?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Ang code mong {code} ay may {pct}% off sa Lifetime o Monthly. Isang beses lang gagana, sa loob ng 7 araw.",
     "See Lifetime with {pct}% off": "Tingnan ang Lifetime na may {pct}% off",
@@ -10054,6 +10094,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Nabigo ang pagproseso ng bayad"
   },
   "vi": {
+    "How to get through Linkvertise": "Cách vượt Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "Bấm nút \"Get access\" đầu tiên ở trên cùng. Đó là của tụi mình.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "Chọn \"Watch Ads\", không chọn dùng thử, rồi bấm Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "Bấm \"Open here\". Bạn tiếp tục ở tab mới.",
     "Want to keep Premium for good?": "Muốn giữ Premium luôn không?",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "Mã {code} của bạn giảm {pct}% cho Lifetime hoặc Hàng tháng. Chỉ dùng được một lần, trong 7 ngày.",
     "See Lifetime with {pct}% off": "Xem Lifetime giảm {pct}%",
@@ -11059,6 +11103,10 @@ export const MANUAL_TRANSLATIONS: Record<string, Record<string, string>> = {
     "Payment capture failed": "Thu thanh toán thất bại"
   },
   "ar": {
+    "How to get through Linkvertise": "طريقة اجتياز Linkvertise",
+    "Tap the first \"Get access\" at the top. That's ours.": "اضغط أول زر \"Get access\" في الأعلى. هذا زرنا.",
+    "Pick \"Watch Ads\", not the trial, then tap Skip Ad.": "اختر \"Watch Ads\" وليس التجربة، ثم اضغط Skip Ad.",
+    "Tap \"Open here\". You continue in a new tab.": "اضغط \"Open here\". ستكمل في تبويب جديد.",
     "Want to keep Premium for good?": "هل تريد الاحتفاظ بـ Premium دائمًا؟",
     "Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.": "رمزك {code} يخصم {pct}% من Lifetime أو الاشتراك الشهري. يعمل مرة واحدة، لمدة 7 أيام.",
     "See Lifetime with {pct}% off": "شاهد Lifetime بخصم {pct}%",

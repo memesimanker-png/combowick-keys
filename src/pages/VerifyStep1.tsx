@@ -18,7 +18,7 @@ import { usePopunder } from "@/hooks/usePopunder";
 import { canFireDirectLink, maybeFireDirectLink } from "@/lib/monetag";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
-import { CheckpointLayout, useVerifySteps } from "@/components/VerifyShell";
+import { CheckpointLayout, useVerifySteps, useLinkvertiseResume } from "@/components/VerifyShell";
 
 
 export default function VerifyStep1() {
@@ -29,6 +29,7 @@ export default function VerifyStep1() {
   const verifySteps = useVerifySteps();
   const { isAdEnabled } = useAdSettings();
   const [isLoading, setIsLoading] = useState(false);
+  const markLeaving = useLinkvertiseResume("step1", () => setIsLoading(false));
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
   const links = useVerifyLinks();
@@ -46,6 +47,7 @@ export default function VerifyStep1() {
   }, []);
 
   const handleVerification = async () => {
+    markLeaving();
     if (sponsorOn) maybeFireDirectLink(); // before navigating, so the tap still counts as the user gesture
     setIsLoading(true);
     localStorage.setItem("verification_step", "step1");

@@ -16,7 +16,7 @@ import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
-import { CheckpointLayout, useVerifySteps } from "@/components/VerifyShell";
+import { CheckpointLayout, useVerifySteps, useLinkvertiseResume } from "@/components/VerifyShell";
 
 // Seconds the continue button stays disabled so the Monetag popunder has time to
 // fully load + register before the user leaves for Linkvertise.
@@ -30,6 +30,7 @@ export default function VerifyStep2() {
   const verifySteps = useVerifySteps();
   const { isAdEnabled } = useAdSettings();
   const [isLoading, setIsLoading] = useState(false);
+  const markLeaving = useLinkvertiseResume("step2", () => setIsLoading(false));
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(AD_LOAD_WAIT);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
@@ -57,6 +58,7 @@ export default function VerifyStep2() {
   }, [navigate, toast, t]);
 
   const handleVerification = () => {
+    markLeaving();
     setIsLoading(true);
     localStorage.setItem("selected_ad_provider", "linkvertise");
     localStorage.setItem("verification_step", "step2");

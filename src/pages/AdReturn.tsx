@@ -174,9 +174,11 @@ export default function AdReturn() {
         })
         .catch((err) => console.warn("[AdReturn] issue-verify-token error", err))
         .finally(() => {
+          try { localStorage.setItem("cw_lv_done", JSON.stringify({ step: currentStep, next: "/access-key", at: Date.now() })); } catch { /* ignore */ }
           timeoutId = window.setTimeout(() => { if (!cancelled) navigate("/access-key", { replace: true }); }, 800);
         });
     } else {
+      try { localStorage.setItem("cw_lv_done", JSON.stringify({ step: currentStep, next: NEXT_ROUTE[currentStep], at: Date.now() })); } catch { /* ignore */ }
       timeoutId = window.setTimeout(() => { if (!cancelled) navigate(NEXT_ROUTE[currentStep], { replace: true }); }, 1500);
     }
     })();

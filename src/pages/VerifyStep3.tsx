@@ -16,7 +16,7 @@ import { useAdSettings } from "@/hooks/useAdSettings";
 import { usePopunder } from "@/hooks/usePopunder";
 import { DiscountNotification } from "@/components/DiscountNotification";
 import { FunnelHeader } from "@/components/FunnelHeader";
-import { CheckpointLayout, useVerifySteps } from "@/components/VerifyShell";
+import { CheckpointLayout, useVerifySteps, useLinkvertiseResume } from "@/components/VerifyShell";
 import { supabase } from "@/integrations/supabase/client";
 
 
@@ -30,6 +30,7 @@ export default function VerifyStep3() {
   // Monetag popunder lives on the verify steps (2 & 3), not the key-generation page.
   usePopunder(isAdEnabled("verify-step3", "popunder"));
   const [isLoading, setIsLoading] = useState(false);
+  const markLeaving = useLinkvertiseResume("step3", () => setIsLoading(false));
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<string | null>("linkvertise");
   const links = useVerifyLinks();
@@ -50,6 +51,7 @@ export default function VerifyStep3() {
   }, [navigate, toast, t]);
 
   const handleVerification = () => {
+    markLeaving();
     setIsLoading(true);
     localStorage.setItem("selected_ad_provider", "linkvertise");
     localStorage.setItem("verification_step", "step3");

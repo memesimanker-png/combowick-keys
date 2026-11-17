@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import { Crown, ArrowRight, Check, KeyRound } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "@/lib/translation-context";
@@ -120,6 +121,7 @@ export function CheckpointLayout({ n, steps, video, button }: { n: number; steps
         <div>{video}</div>
         <div>
           <p className="text-sm leading-relaxed text-foreground/85">{text}</p>
+          <LinkvertiseGuide />
           <div className="mt-4">{button}</div>
           <PremiumGlowBar title={premium.title} sub={premium.sub} />
           <p className="mt-3 text-xs text-muted-foreground">{t("Heads up — the wait timer is set by Linkvertise, not us.")}</p>
@@ -143,4 +145,80 @@ export function PremiumGlowBar({ title, sub }: { title: string; sub: string }) {
       </span>
     </a>
   );
+}
+
+/** 2026-11-17: Linkvertise's page is now a feed with ~20 "Get access" buttons, pushes its own free trial first, and
+ *  "Open here" returns in a NEW tab. Half the players who started checkpoint 1 never came back. Three plain lines. */
+export function LinkvertiseGuide() {
+  const { t } = useTranslation();
+  const lines = [
+    t('Tap the first "Get access" at the top. That\'s ours.'),
+    t('Pick "Watch Ads", not the trial, then tap Skip Ad.'),
+    t('Tap "Open here". You continue in a new tab.'),
+  ];
+  return (
+    <div className="mt-3 rounded-lg border border-border/60 bg-background/40 px-3 py-2.5">
+      <p className="text-xs font-semibold text-foreground/90">{t("How to get through Linkvertise")}</p>
+      <ol className="mt-1.5 space-y-1">
+        {lines.map((l, i) => (
+          <li key={i} className="flex gap-2 text-xs leading-snug text-foreground/75">
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary/20 text-[10px] font-bold text-primary">{i + 1}</span>
+            <span>{l}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+/** The tab a player left for Linkvertise: if they come back to it (Back button, switching tabs) after finishing that
+ *  checkpoint in the new tab, send it where the new tab went; if they came back without finishing, un-stick the button.
+ *  AdReturn writes "cw_lv_done" = {step, next, at}. Returns the function to call right before leaving for Linkvertise. */
+export function useLinkvertiseResume(step: "step1" | "step2" | "step3", onBack: () => void) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const clickKey = "cw_lv_click_" + step;
+    const check = () => {
+      try {
+        const clickAt = Number(localStorage.getItem(clickKey)) || 0;
+        const done = JSON.parse(localStorage.getItem("cw_lv_done") || "null");
+        if (clickAt && done && done.step === step && done.at > clickAt && Date.now() - done.at < 15 * 60 * 1000 && typeof done.next === "string") {
+          localStorage.removeItem(clickKey);
+          navigate(done.next, { replace: true });
+          return true;
+        }
+      } catch {
+        /* storage blocked: nothing to resume */
+      }
+      return false;
+    };
+    const onShow = (e: PageTransitionEvent) => {
+      if (!check() && e.persisted) onBack();
+    };
+    const onVis = () => {
+      if (document.visibilityState === "visible" && !check()) onBack();
+    };
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === "cw_lv_done") check();
+    };
+    window.addEventListener("pageshow", onShow);
+    window.addEventListener("focus", check);
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("storage", onStorage);
+    check();
+    return () => {
+      window.removeEventListener("pageshow", onShow);
+      window.removeEventListener("focus", check);
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("storage", onStorage);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step]);
+  return () => {
+    try {
+      localStorage.setItem("cw_lv_click_" + step, String(Date.now()));
+    } catch {
+      /* ignore */
+    }
+  };
 }
