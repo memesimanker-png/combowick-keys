@@ -14,6 +14,10 @@ export function AdBlockGate({ page }: { page: AdPage }) {
   const [blocked, setBlocked] = useState(false);
   const [checking, setChecking] = useState(false);
   const brave = isBraveBrowser();
+  const ua = typeof navigator !== "undefined" ? navigator.userAgent || "" : "";
+  const android = /Android/i.test(ua);
+  const ios = /iPhone|iPad|iPod/i.test(ua);
+  const samsung = /SamsungBrowser/i.test(ua);
 
   const run = useCallback(async () => {
     setChecking(true);
@@ -43,8 +47,8 @@ export function AdBlockGate({ page }: { page: AdPage }) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl border border-primary/40 bg-card p-6 text-center shadow-2xl">
+    <div className="fixed inset-0 z-[100] flex overflow-y-auto bg-black/90 p-4 backdrop-blur-sm">
+      <div className="m-auto w-full max-w-md rounded-2xl border border-primary/40 bg-card p-6 text-center shadow-2xl">
         <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/15">
           <ShieldOff className="h-7 w-7 text-primary" />
         </div>
@@ -55,15 +59,23 @@ export function AdBlockGate({ page }: { page: AdPage }) {
 
         <div className="mt-4 rounded-lg border border-border bg-secondary/30 p-3 text-left text-xs">
           <p className="mb-1.5 font-semibold text-foreground">{t("How to turn it off:")}</p>
-          {brave ? (
-            <p className="text-muted-foreground">🦁 {t("Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.")}</p>
-          ) : (
-            <ul className="list-disc space-y-1 pl-4 text-muted-foreground">
-              <li>{t("Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.")}</li>
-              <li>{t("Brave: tap the lion icon and turn Shields DOWN for this site.")}</li>
-              <li>{t("Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.")}</li>
-            </ul>
-          )}
+          {/* 2026-11-19 (ticket axdi0533): phones often block ads system-wide (Android Private DNS such as
+              AdGuard DNS, VPN / blocker apps), so "I turned everything off" players stayed stuck. Phone tips first. */}
+          <ul className="list-disc space-y-1 pl-4 text-muted-foreground">
+            {android && <li>{t("Android: open Settings, search \"Private DNS\" and set it to Automatic or Off.")}</li>}
+            {ios && <li>{t("iPhone: Settings > Safari > Extensions, turn off any ad blocker.")}</li>}
+            {samsung && <li>{t("Samsung Internet: Menu > Ad blockers, turn them off.")}</li>}
+            {brave ? (
+              <li>🦁 {t("Brave: tap the lion icon in the address bar and turn Shields DOWN for this site.")}</li>
+            ) : (
+              <>
+                {!android && !ios && <li>{t("Ad blocker extension (uBlock, AdBlock, AdGuard): click its icon and pause it on this site.")}</li>}
+                <li>{t("Brave: tap the lion icon and turn Shields DOWN for this site.")}</li>
+                <li>{t("Opera / other browsers: tap the shield icon in the address bar and turn ad blocking off.")}</li>
+              </>
+            )}
+            <li>{t("Turn off any VPN or ad-blocking app (AdGuard, Blokada, 1.1.1.1) for a minute.")}</li>
+          </ul>
         </div>
 
         <button

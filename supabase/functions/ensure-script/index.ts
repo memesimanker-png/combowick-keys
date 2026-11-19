@@ -28,24 +28,52 @@ Deno.serve(async (req) => {
   try {
     const { universe, name } = await req.json().catch(() => ({}));
     if (!universe) return ok({ error: "universe required" });
-    const uni = String(universe);
+    let uni = String(universe).trim();
+    if (!/^\d{1,15}$/.test(uni)) return ok({ error: "bad universe", slug: null });
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const findSlug = async (u: string) => {
+      const { data } = await supabase
+        .from("scripts").select("slug").eq("game_universe_id", u).eq("is_paid", false).limit(1).maybeSingle();
+      return (data?.slug as string | undefined) || null;
+    };
 
     // Already exists for this universe?
-    const { data: existing } = await supabase
-      .from("scripts").select("slug").eq("game_universe_id", uni).eq("is_paid", false).limit(1).maybeSingle();
-    if (existing?.slug) return ok({ slug: existing.slug, created: false });
+    const existingSlug = await findSlug(uni);
+    if (existingSlug) return ok({ slug: existingSlug, created: false });
 
-    // Resolve the game name (prefer passed name, else Roblox games API), then clean it.
-    let rawName = (name && String(name).trim()) || "";
-    if (!rawName) {
+    // 2026-11-19: the game MUST exist on Roblox. This function is public, and fake ids used to create
+    // "Roblox Game" pages with broken icons on /scripts (14 junk rows on 2026-11-16).
+    let rootPlace = "";
+    const robloxName = async (u: string) => {
       try {
-        const r = await fetch(`https://games.roblox.com/v1/games?universeIds=${uni}`);
+        const r = await fetch(`https://games.roblox.com/v1/games?universeIds=${u}`);
         const j = await r.json();
-        rawName = j?.data?.[0]?.name || "";
+        const g = j?.data?.[0];
+        // Unknown ids come back as a placeholder: id 0, name "[TITLE UNAVAILABLE]".
+        if (!g || String(g.id) !== u || !g.rootPlaceId) return "";
+        const n = String(g.name || "");
+        rootPlace = String(g.rootPlaceId);
+        return cleanName(n) === "Roblox Game" ? "" : n;
+      } catch { return ""; }
+    };
+    let rawName = await robloxName(uni);
+    if (!rawName) {
+      // Maybe a place id: map it to its universe and check again.
+      try {
+        const r = await fetch(`https://apis.roblox.com/universes/v1/places/${uni}/universe`);
+        const j = await r.json();
+        if (j?.universeId) {
+          uni = String(j.universeId);
+          const s = await findSlug(uni);
+          if (s) return ok({ slug: s, created: false });
+          rawName = await robloxName(uni);
+        }
       } catch { /* ignore */ }
     }
+    if (!rawName) return ok({ error: "game not found on Roblox", slug: null });
+    // Always the real Roblox name (a passed `name` is ignored now: anyone could put any text on a page).
+    void name;
     const game = cleanName(rawName);
 
     // Template from the newest existing script (keeps a valid loadstring/category/tags).
@@ -74,6 +102,8 @@ Deno.serve(async (req) => {
       description,
       long_description: longDescription,
       game_universe_id: uni,
+      // roblox.com/games/ takes a PLACE id; the page fell back to the universe id = wrong game
+      game_url: rootPlace ? `https://www.roblox.com/games/${rootPlace}` : null,
       is_paid: false,
       verified: true,
       trending: false,

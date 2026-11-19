@@ -143,11 +143,21 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Burn the token early (single-use)
-    await supabase
+    // Burn the token early (single-use). 2026-11-19: claim it atomically (only if still unused), so parallel
+    // requests with one token can't each get a key.
+    const { data: claimed } = await supabase
       .from("verify_tokens")
       .update({ used: true, used_at: new Date().toISOString() })
-      .eq("id", tokenRow.id);
+      .eq("id", tokenRow.id)
+      .eq("used", false)
+      .select("id");
+    if (!claimed || claimed.length === 0) {
+      logFail(supabase, "token_race", ip, tokenRow.ip);
+      return new Response(
+        JSON.stringify({ success: false, error: "Verification token already used. Please verify again." }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
 
     // Hours were decided when the verify token was issued (offer 24 / CPC 8 / Linkvertise 6, admin-set).
     const keyHours = Number((tokenRow as any).hours) > 0 ? Number((tokenRow as any).hours) : 6;

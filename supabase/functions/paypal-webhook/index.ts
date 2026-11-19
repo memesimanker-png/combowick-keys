@@ -91,8 +91,12 @@ async function fetchPlanPrice(planId: string, accessToken: string): Promise<numb
   }
 }
 
+// 2026-11-19: PayPal ids go straight into API URLs. Without this check "../../checkout/orders/<id>" walked to another
+// endpoint (fetch resolves ../), so a forged event could mint a key off any completed order. Ids are 17 chars A-Z0-9.
+const PP_ID_RE = /^[A-Z0-9]{10,25}$/;
+
 async function fetchCapture(captureId: string, accessToken: string): Promise<
-  { ok: true; status: string; amount: number; currency: string; email: string | null; customId: string | null } | { ok: false }
+  { ok: true; status: string; amount: number; currency: string; email: string | null; customId: string | null; orderId: string | null } | { ok: false }
 > {
   try {
     const res = await fetch(`${PAYPAL_API}/v2/payments/captures/${captureId}`, {
@@ -100,6 +104,7 @@ async function fetchCapture(captureId: string, accessToken: string): Promise<
     });
     if (!res.ok) return { ok: false };
     const d = await res.json();
+    if (String(d?.id || "") !== captureId) return { ok: false };
     return {
       ok: true,
       status: d.status,
@@ -107,6 +112,7 @@ async function fetchCapture(captureId: string, accessToken: string): Promise<
       currency: d.amount?.currency_code || "USD",
       email: d.payer?.email_address || null,
       customId: d.custom_id || null,
+      orderId: d.supplementary_data?.related_ids?.order_id || null,
     };
   } catch (e) {
     console.error("[webhook] fetchCapture threw:", e);
@@ -178,8 +184,15 @@ serve(async (req) => {
     // Handle payment capture completed (one-time purchases).
     if (eventType === "PAYMENT.CAPTURE.COMPLETED") {
       const capture = event.resource;
-      const captureId = capture.id;
-      const orderId = capture.supplementary_data?.related_ids?.order_id || captureId;
+      const captureId = String(capture?.id || "");
+      const rawOrderId = String(capture?.supplementary_data?.related_ids?.order_id || "");
+      const orderId = PP_ID_RE.test(rawOrderId) ? rawOrderId : captureId;
+      if (!PP_ID_RE.test(captureId)) {
+        console.warn("[webhook] bad capture id — ignoring");
+        return new Response(JSON.stringify({ status: "ignored", reason: "bad-id" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       // Authoritative confirmation from PayPal.
       const confirmed = await fetchCapture(captureId, accessToken);
@@ -190,6 +203,12 @@ serve(async (req) => {
         });
       }
 
+      if (confirmed.orderId && PP_ID_RE.test(confirmed.orderId) && confirmed.orderId !== orderId) {
+        console.warn(`[webhook] event order id doesn't match PayPal's — ignoring`);
+        return new Response(JSON.stringify({ status: "ignored", reason: "order-mismatch" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       const amount = confirmed.amount;
       const email = confirmed.email;
       const tag = decodeOrderTag(confirmed.customId);
@@ -224,7 +243,10 @@ serve(async (req) => {
       const tooLow = checkedAtCheckout ? false : confirmed.currency !== "USD" || lockedTier
         ? confirmed.currency !== "USD" || await lockedOrderTooLow(supabase, tag, amount, orderId)
         : !!floorTier && KEY_MIN_PRICE[floorTier] !== undefined && amount < KEY_MIN_PRICE[floorTier] - 0.001;
-      if (existing && existing.status === "completed" && existing.key_generated) {
+      if (!lockedTier && !existing) {
+        // Every real checkout since 2026-10-27 locks its tier in custom_id (paypal-create-order) or has a row by now.
+        console.warn(`[webhook] Order ${orderId} has no locked tier and no checkout row — no key`);
+      } else if (existing && existing.status === "completed" && existing.key_generated) {
         console.log(`[webhook] Order ${orderId} already completed — skipping`);
       } else if (existing?.status === "underpaid" || tooLow) {
         console.warn(`[webhook] Order ${orderId} UNDERPAID (tier ${floorTier}, paid $${amount}) — no key`);
@@ -292,14 +314,28 @@ serve(async (req) => {
 
     // eCheck (or any capture) was denied/reversed — confirm with PayPal, then
     // mark the row failed AND revoke the key on the key server if one exists.
-    if (eventType === "PAYMENT.CAPTURE.DENIED" || eventType === "PAYMENT.CAPTURE.REVERSED") {
+    if (eventType === "PAYMENT.CAPTURE.DENIED" || eventType === "PAYMENT.CAPTURE.REVERSED" || eventType === "PAYMENT.CAPTURE.REFUNDED") {
       const capture = event.resource;
-      const captureId = capture.id;
-      const orderId = capture.supplementary_data?.related_ids?.order_id || captureId;
+      // REFUNDED / REVERSED carry a refund object: its own id is the refund's, the capture is the "up" link.
+      // deno-lint-ignore no-explicit-any
+      const upHref = String((capture?.links || []).find((l: any) => l?.rel === "up")?.href || "");
+      const upId = (upHref.match(/\/v2\/payments\/captures\/([A-Z0-9]+)/) || [])[1] || "";
+      const captureId = upId || String(capture?.id || "");
+      const rawOrderId = String(capture?.supplementary_data?.related_ids?.order_id || "");
+      const orderId = PP_ID_RE.test(rawOrderId) ? rawOrderId : captureId;
+      if (!PP_ID_RE.test(captureId)) {
+        console.warn("[webhook] bad capture id — ignoring");
+        return new Response(JSON.stringify({ status: "ignored", reason: "bad-id" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
 
       const confirmed = await fetchCapture(captureId, accessToken);
-      const reallyBad = !confirmed.ok || ["DECLINED", "FAILED", "REVERSED", "REFUNDED"].includes(confirmed.status);
-      if (!reallyBad) {
+      // Only PayPal's own answer counts (an unconfirmed event used to revoke too), and only for PayPal's own order id.
+      const reallyBad = confirmed.ok && ["DECLINED", "FAILED", "REVERSED", "REFUNDED"].includes(confirmed.status);
+      if (confirmed.ok && confirmed.orderId && PP_ID_RE.test(confirmed.orderId) && confirmed.orderId !== orderId) {
+        console.warn(`[webhook] event order id doesn't match PayPal's — ignoring`);
+      } else if (!reallyBad) {
         console.warn(`[webhook] Reversal event for ${captureId} but PayPal status is ${confirmed.ok ? confirmed.status : "unknown"} — not revoking`);
       } else {
         const { data: rows } = await supabase.from("premium_key_purchases")
@@ -326,7 +362,10 @@ serve(async (req) => {
     }
 
     // Subscription activated / renewed — confirm status ACTIVE with PayPal first.
-    if (eventType === "BILLING.SUBSCRIPTION.ACTIVATED" || eventType === "BILLING.SUBSCRIPTION.RENEWED") {
+    // Subscriptions aren't sold any more; a replayed RENEWED event added +30 days each time, so only signed events count.
+    if (!signatureOk && eventType.startsWith("BILLING.SUBSCRIPTION.")) {
+      console.warn(`[webhook] unsigned ${eventType} — ignoring`);
+    } else if (eventType === "BILLING.SUBSCRIPTION.ACTIVATED" || eventType === "BILLING.SUBSCRIPTION.RENEWED") {
       const subId = event.resource.id;
       const confirmed = await fetchSubscription(subId, accessToken);
       if (!confirmed.ok || confirmed.status !== "ACTIVE") {

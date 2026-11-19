@@ -61,6 +61,44 @@ function remainingHours(expiresAt?: string | null): number | null {
   return Math.round((ms / (1000 * 60 * 60)) * 100) / 100;
 }
 
+// ---- Linkvertise step chain (2026-11-19) ----
+// The Linkvertise path used to need no proof: start + complete added hours to ANY key (seen live: 6 extensions of one
+// key in 4 minutes). Now ExtendReturn reports every step to issue-verify-token (table verify_steps, own sid) and this
+// function needs the same complete chain issue-verify-token needs for a free key, started after this extension.
+const MIN_STEP_GAP_S = 8;
+const CHAIN_MAX_MIN = 60;
+const SID_RE = /^[a-f0-9]{32}$/;
+const LV_ENFORCE = (Deno.env.get("LV_ENFORCE") || "false") === "true";
+// deno-lint-ignore no-explicit-any
+async function chainComplete(supabase: any, sid: string, notBefore: number): Promise<{ ok: boolean; reason?: string }> {
+  let last = "step3";
+  try {
+    const { data } = await supabase.from("verify_settings").select("verify_steps").eq("id", 1).maybeSingle();
+    if (Number(data?.verify_steps) === 2) last = "step2";
+  } catch { /* keep 3 */ }
+  const STEPS = ["step1", "step2", "step3"];
+  const need = ["start", ...STEPS.slice(0, STEPS.indexOf(last) + 1)];
+  const { data: rows } = await supabase.from("verify_steps").select("step, created_at, lv_ok").eq("sid", sid);
+  // deno-lint-ignore no-explicit-any
+  const at = new Map((rows || []).map((r: any) => [r.step, new Date(r.created_at).getTime()]));
+  if (at.has("token")) return { ok: false, reason: "used" };
+  if (LV_ENFORCE) {
+    const steps = need.slice(1);
+    // deno-lint-ignore no-explicit-any
+    const confirmed = steps.filter((st) => { const r = (rows || []).find((x: any) => x.step === st); return r && r.lv_ok !== false; }).length;
+    if (confirmed < Math.max(1, steps.length - 1)) return { ok: false, reason: "lv_not_verified" };
+  }
+  for (let i = 0; i < need.length; i++) {
+    const t = at.get(need[i]) as number | undefined;
+    if (!t) return { ok: false, reason: "missing_" + need[i] };
+    if (i > 0 && t - (at.get(need[i - 1]) as number) < MIN_STEP_GAP_S * 1000) return { ok: false, reason: "too_fast" };
+  }
+  const start = at.get("start") as number;
+  if (start < notBefore - 5000) return { ok: false, reason: "old_session" };
+  if (Date.now() - start > CHAIN_MAX_MIN * 60000) return { ok: false, reason: "expired" };
+  return { ok: true };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -72,7 +110,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json().catch(() => ({}));
-    const { token, hwid, cpa_subid } = body as { token?: string; hwid?: string; cpa_subid?: string };
+    const { token, hwid, cpa_subid, sid } = body as { token?: string; hwid?: string; cpa_subid?: string; sid?: string };
 
     if (!token || typeof token !== "string") {
       return json({ success: false, error: "Missing completion token." }, 400);
@@ -125,6 +163,18 @@ Deno.serve(async (req) => {
       if ((vs as any)?.linkvertise_enabled === false) {
         return json({ success: false, error: "Complete an offer to add hours." }, 403);
       }
+      const cleanSid = typeof sid === "string" ? sid : "";
+      if (!SID_RE.test(cleanSid)) {
+        return json({ success: false, error: "Finish the 3 steps first, then try again." }, 403);
+      }
+      const chk = await chainComplete(service, cleanSid, new Date(row.created_at).getTime());
+      if (!chk.ok) {
+        console.warn("[complete-key-extension] chain refused:", chk.reason);
+        return json({ success: false, error: "Those steps didn't count. Start again from the Add Hours page.", reason: chk.reason }, 403);
+      }
+      // one extension per chain (primary key sid+step)
+      const { error: tErr } = await service.from("verify_steps").insert({ sid: cleanSid, step: "token", ip: req.headers.get("cf-connecting-ip") || (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown" });
+      if (tErr) return json({ success: false, error: "This completion was already used." }, 409);
     }
 
     // Atomically claim the row (pending -> processing). If another request already
@@ -150,6 +200,7 @@ Deno.serve(async (req) => {
     if (!ext.ok) {
       // Roll back the claim so the user can retry the same completion.
       await service.from("key_extensions").update({ status: "pending" }).eq("id", row.id);
+      if (!cleanSubid && typeof sid === "string" && SID_RE.test(sid)) await service.from("verify_steps").delete().eq("sid", sid).eq("step", "token");
       return json({ success: false, error: ext.data?.error || "Failed to extend key on server." }, 502);
     }
 

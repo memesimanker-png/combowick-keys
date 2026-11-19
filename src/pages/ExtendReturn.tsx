@@ -7,6 +7,7 @@ import { NoIndex } from "@/components/NoIndex";
 import { supabase } from "@/integrations/supabase/client";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
+import { extSid, reportStep } from "@/lib/verify-session";
 
 type Step = "step1" | "step2" | "step3";
 
@@ -41,11 +42,14 @@ export default function ExtendReturn() {
   const [msg, setMsg] = useState("Validating completion…");
   const [result, setResult] = useState<{ before?: number | null; after?: number | null; hours?: number } | null>(null);
   const [ranWithLinks, setRanWithLinks] = useState(false);
+  const [linksTimedOut, setLinksTimedOut] = useState(false);
+  useEffect(() => { const id = setTimeout(() => setLinksTimedOut(true), 2500); return () => clearTimeout(id); }, []);
 
   useEffect(() => {
-    // Wait until admin links have loaded (needed to build next hop).
-    if (links.every((l) => l === null) || ranWithLinks) return;
+    // Wait until admin links have loaded (needed to build next hop), or give up waiting after 2.5 s.
+    if ((links.every((l) => l === null) && !linksTimedOut) || ranWithLinks) return;
     setRanWithLinks(true);
+    void (async () => {
 
     const step = routeStep;
     const hash = params.get("hash");
@@ -73,15 +77,25 @@ export default function ExtendReturn() {
       return;
     }
 
-    // Anti-bypass: referrer must come from a real Linkvertise domain + hash present.
-    const refDomain = extractDomain(document.referrer);
-    if (isBlocked(refDomain)) {
-      navigate("/blocked?reason=suspicious_activity&redirect=/extend-key", { replace: true });
+    // 2026-11-19: report the step to the server FIRST (Linkvertise's hash lives ~10 s). complete-key-extension only
+    // adds hours for a complete server-side chain; before this, a script could add hours to any key in seconds.
+    const sid = extSid();
+    const rep = sid && hash ? await reportStep({ action: "step", sid, step, hash }) : { ok: false, reason: "no_session" };
+    const serverOk = rep.ok || rep.reason === "repeat";
+    if (!serverOk && rep.reason !== "network") {
+      localStorage.removeItem("ext_pending");
+      toast({ variant: "destructive", title: "Step not counted", description: "Start again from the Add Hours page." });
+      setMsg("That step didn't count. Start again from the Add Hours page.");
+      setTimeout(() => navigate("/extend-key", { replace: true }), 2500);
       return;
     }
-    if (!hash || !isApproved(refDomain)) {
-      navigate("/blocked?reason=suspicious_activity&redirect=/extend-key", { replace: true });
-      return;
+    // Server unreachable: fall back to the old browser check (referrer must be a real Linkvertise domain + hash).
+    if (!serverOk) {
+      const refDomain = extractDomain(document.referrer);
+      if (isBlocked(refDomain) || !hash || !isApproved(refDomain)) {
+        navigate("/blocked?reason=suspicious_activity&redirect=/extend-key", { replace: true });
+        return;
+      }
     }
 
     // Advance to the next hop, or finalize on step 3.
@@ -98,11 +112,11 @@ export default function ExtendReturn() {
     }
 
     // Step 3 — verify + apply the extension server-side.
-    (async () => {
+    await (async () => {
       setMsg("All steps complete. Adding your hours…");
       try {
         const { data, error } = await supabase.functions.invoke("complete-key-extension", {
-          body: { token: pending!.token, hwid: pending!.hwid },
+          body: { token: pending!.token, hwid: pending!.hwid, sid },
         });
         let serverErr = "";
         if (error) {
@@ -129,7 +143,8 @@ export default function ExtendReturn() {
         setTimeout(() => navigate("/extend-key", { replace: true }), 2500);
       }
     })();
-  }, [links, ranWithLinks, routeStep, params, navigate, toast]);
+    })();
+  }, [links, linksTimedOut, ranWithLinks, routeStep, params, navigate, toast]);
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">

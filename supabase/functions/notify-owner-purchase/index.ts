@@ -32,7 +32,7 @@ serve(async (req) => {
   try {
     const { order_id, discord_username } = await req.json();
     const username = String(discord_username || "").slice(0, 80).trim();
-    if (!order_id || !username) {
+    if (!order_id || !username || !/^[A-Z0-9]{10,25}$/.test(String(order_id))) {
       return new Response(JSON.stringify({ error: "Missing order_id or discord_username" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

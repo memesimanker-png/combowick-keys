@@ -39,7 +39,7 @@ const TranslationContext = createContext<TranslationContextType>({
 });
 
 // Load cache from localStorage on init
-const TRANSLATION_CACHE_VERSION = "v8-manual"; // bump to seed hand-translated strings
+const TRANSLATION_CACHE_VERSION = "v9-manual"; // bump to seed hand-translated strings
 const translationCache: Record<string, Record<string, string>> = (() => {
   try {
     const ver = localStorage.getItem("combowick-translations-ver");
@@ -81,11 +81,15 @@ async function fetchTranslations(lang: string, _texts: string[]): Promise<Record
   return translationCache[lang];
 }
 
+// 2026-11-19: storage can be blocked (WebViews with DOM storage off, "block all cookies"): a throw here took down the whole app.
+const lsGet = (k: string): string | null => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
+
 export function TranslationProvider({ children }: { children: React.ReactNode }) {
   const [currentLanguage, setCurrentLanguage] = useState<LangCode>(() => {
-    const saved = localStorage.getItem("combowick-lang");
-    if (saved) return saved as LangCode;
     const supported: LangCode[] = ["en","fr","th","ko","zh-CN","de","ru","id","pt","fil","es","vi","ar"];
+    const saved = lsGet("combowick-lang");
+    if (saved && supported.includes(saved as LangCode)) return saved as LangCode;
     const navLang = (navigator.language || "en").toLowerCase();
     const exact = supported.find((c) => c.toLowerCase() === navLang);
     if (exact) return exact;
@@ -99,8 +103,8 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
 
   // IP-based country detection — refines auto-pick if user hasn't manually set a language
   useEffect(() => {
-    if (localStorage.getItem("combowick-lang")) return;
-    if (localStorage.getItem("combowick-geo-checked")) return;
+    if (lsGet("combowick-lang")) return;
+    if (lsGet("combowick-geo-checked")) return;
     const COUNTRY_TO_LANG: Record<string, LangCode> = {
       FR: "fr", BE: "fr", LU: "fr", MC: "fr",
       ES: "es", MX: "es", AR: "es", CO: "es", CL: "es", PE: "es", VE: "es",
@@ -119,14 +123,14 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
       .then((txt) => {
         const country = ((txt.match(/loc=([A-Z]{2})/) || [])[1] || "").toUpperCase();
         const detected = COUNTRY_TO_LANG[country];
-        localStorage.setItem("combowick-geo-checked", "1");
+        lsSet("combowick-geo-checked", "1");
         if (detected && detected !== langRef.current) {
           setCurrentLanguage(detected);
           langRef.current = detected;
           applyDir(detected);
         }
       })
-      .catch(() => { localStorage.setItem("combowick-geo-checked", "1"); });
+      .catch(() => { lsSet("combowick-geo-checked", "1"); });
   }, []);
 
   // Reflect the DOM auto-translator's network activity in the floating indicator,
@@ -147,7 +151,7 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
     const code = langCode as LangCode;
     setCurrentLanguage(code);
     langRef.current = code;
-    localStorage.setItem("combowick-lang", langCode);
+    lsSet("combowick-lang", langCode);
     applyDir(langCode);
   }, []);
 

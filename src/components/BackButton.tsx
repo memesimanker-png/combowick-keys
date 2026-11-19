@@ -34,12 +34,15 @@ export function BackButton() {
   const current = pathname + search;
 
   useEffect(() => {
+    // 2026-11-19: never go "back" to a one-time checkpoint return link or the warning page (replaying
+    // /ad-return?hash=... with our own site as referrer used to land on /blocked).
+    if (/^\/(ad-return|blocked)/.test(pathname)) return;
     const stack = readStack();
     if (stack[stack.length - 1] !== current) {
       stack.push(current);
       writeStack(stack);
     }
-  }, [current]);
+  }, [current, pathname]);
 
   if (pathname === "/") return null;
 

@@ -31,8 +31,15 @@ async function getGames(): Promise<GameItem[]> {
     /* ignore */
   }
   if (inflight) return inflight;
-  inflight = fetch(`${EXECUTOR}/api/public/games`)
-    .then((r) => r.json())
+  // 2026-11-19: one retry, and an empty list is never cached (a failed load used to look like "we don't have your game")
+  const load = () => fetch(`${EXECUTOR}/api/public/games`).then((r) => r.json());
+  inflight = load()
+    .catch(() => new Promise((r) => setTimeout(r, 1500)).then(load))
+    .then((j) => {
+      const list: GameItem[] = Array.isArray(j?.games) ? j.games : [];
+      if (!list.length) throw new Error("empty");
+      return j;
+    })
     .then((j) => {
       const games: GameItem[] = Array.isArray(j?.games) ? j.games : [];
       mem = games;
@@ -55,6 +62,7 @@ async function getGames(): Promise<GameItem[]> {
 export function useGamesList() {
   const [games, setGames] = useState<GameItem[]>(mem || []);
   const [loading, setLoading] = useState(!mem);
+  const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     let alive = true;
     getGames().then((g) => {
@@ -66,6 +74,9 @@ export function useGamesList() {
     return () => {
       alive = false;
     };
-  }, []);
-  return { games, loading };
+  }, [attempt]);
+  // failed = the list could not be loaded at all (network / key server down), not "game not supported"
+  const failed = !loading && games.length === 0;
+  const retry = () => { setLoading(true); setAttempt((a) => a + 1); };
+  return { games, loading, failed, retry };
 }

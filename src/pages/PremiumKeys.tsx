@@ -128,7 +128,9 @@ export default function PremiumKeys() {
   }, []);
 
   const handlePurchase = (tier: Tier) => {
-    const disc = applyDiscount(tier.price, keyDiscounts?.get(tier.id));
+    // Paid-game scripts have their own price (server: _shared/key-pricing.ts) and no Premium sale on top: discounting
+    // them here made every weekend game checkout fail with "Invalid amount".
+    const disc = tier.gameKey ? null : applyDiscount(tier.price, keyDiscounts?.get(tier.id));
     setSelectedTier(disc ? { ...tier, price: disc.final } : tier);
     setCheckoutMethod("paypal");
     setModalOpen(true);

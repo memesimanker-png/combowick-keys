@@ -2,8 +2,9 @@ import { useEffect } from "react";
 
 export function NoIndex() {
   useEffect(() => {
-    const crawlableGatePaths = ["/verify", "/ad-return", "/access-key", "/claim-access", "/blocked", "/register"];
-    if (crawlableGatePaths.some((path) => window.location.pathname.startsWith(path))) return;
+    // 2026-11-19: only the free-key landing stays indexable (people search for the key page). Checkpoints, the
+    // return links, the "Security Warning" page and the key page itself were indexable (left over from AdSense review).
+    if (window.location.pathname === "/verify/provider-select") return;
 
     const meta = document.createElement("meta");
     meta.name = "robots";

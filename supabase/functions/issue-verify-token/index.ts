@@ -104,8 +104,8 @@ async function recordStep(supabase: any, sid: string, step: string, hash: string
     if (!hash || hash.length < 6) return { ok: false, reason: "no_hash" };
   }
   // ask Linkvertise right away (the hash expires 10 s after the visitor finished the page)
+  // (not refused here: one slow page load can miss the 10 s window; chainComplete decides with the whole chain)
   const lv = step === "start" ? { ok: null, resp: null } : await lvVerify(hash as string);
-  if (LV_ENFORCE && step !== "start" && lv.ok === false) return { ok: false, reason: "lv_not_verified" };
   const { error } = await supabase.from("verify_steps").insert({ sid, step, hash: step === "start" ? null : hash, ip, lv_ok: lv.ok, lv_resp: lv.resp });
   if (error) return { ok: false, reason: String(error.code) === "23505" ? "repeat" : "db" };
   return { ok: true };
@@ -114,9 +114,16 @@ async function recordStep(supabase: any, sid: string, step: string, hash: string
 async function chainComplete(supabase: any, sid: string): Promise<{ ok: boolean; reason?: string }> {
   const last = await lastStepName(supabase);
   const need = ["start", ...STEPS.slice(0, STEPS.indexOf(last) + 1)];
-  const { data: rows } = await supabase.from("verify_steps").select("step, created_at").eq("sid", sid);
+  const { data: rows } = await supabase.from("verify_steps").select("step, created_at, lv_ok").eq("sid", sid);
   const at = new Map((rows || []).map((r: any) => [r.step, new Date(r.created_at).getTime()]));
   if (at.has("token")) return { ok: false, reason: "used" };
+  if (LV_ENFORCE) {
+    // Linkvertise must confirm all steps but one (a slow phone can miss one 10 s window; a faked run fails them all).
+    // lv_ok null = Linkvertise unreachable / no answer: not the visitor's fault, counts as confirmed.
+    const steps = need.slice(1);
+    const confirmed = steps.filter((s) => { const r = (rows || []).find((x: any) => x.step === s); return r && r.lv_ok !== false; }).length;
+    if (confirmed < Math.max(1, steps.length - 1)) return { ok: false, reason: "lv_not_verified" };
+  }
   for (let i = 0; i < need.length; i++) {
     const t = at.get(need[i]) as number | undefined;
     if (!t) return { ok: false, reason: "missing_" + need[i] };

@@ -32,7 +32,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   const { t } = useTranslation();
   // PayPal/card checks out here; Payoneer opens a Discord ticket (Payoneer needs $20+, so the lifetime key keeps its
   // plan at today's sale price and the cheaper keys become the 60-day pack). Paid-game scripts stay PayPal-only.
-  const payoneerOk = !tier.script && !tier.isSubscription;
+  const payoneerOk = !tier.script && !tier.gameKey && !tier.isSubscription;
   const payoneerPlan = tier.id === "lifetime" ? "lifetime" : "60d";
   const payoneerPrice = payoneerPlan === "lifetime" ? Math.max(20, tier.price) : PAYONEER_PLANS["60d"].price;
   const [method, setMethod] = useState<"paypal" | "payoneer">(initialMethod);
@@ -63,7 +63,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   const [planId, setPlanId] = useState<string | null>(null);
   const [loadingPlan, setLoadingPlan] = useState(false);
   // Creator code or promo coupon: Premium monthly/lifetime by PayPal/card only. The server re-checks the code and the price.
-  const codeEligible = !tier.script && !tier.isSubscription && (tier.id === "monthly" || tier.id === "lifetime");
+  const codeEligible = !tier.script && !tier.gameKey && !tier.isSubscription && (tier.id === "monthly" || tier.id === "lifetime");
   const [codeOpen, setCodeOpen] = useState(false);
   const [codeInput, setCodeInput] = useState("");
   const [code, setCode] = useState<CheckoutCode | null>(null);
@@ -116,11 +116,10 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
     if (!pendingOrderId) return;
     let active = true;
     const interval = setInterval(async () => {
-      const { data } = await supabase
-        .from("premium_key_purchases")
-        .select("status,key_generated,expires_at")
-        .eq("payment_id", pendingOrderId)
-        .maybeSingle();
+      // 2026-11-19: guests can't read the purchases table (RLS), so the old table read never saw the key arrive.
+      // purchase_status() returns only the row for this PayPal order id.
+      const { data: rows } = await (supabase as any).rpc("purchase_status", { p_order: pendingOrderId });
+      const data = Array.isArray(rows) ? rows[0] : null;
       if (!active || !data) return;
       if (data.status === "completed" && data.key_generated) {
         persistKey(data.key_generated, data.expires_at as string);

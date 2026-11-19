@@ -131,16 +131,8 @@ export default function Scripts() {
           </p>
           {/* AI-retrieval paragraph */}
           <p className="mt-2 text-xs text-muted-foreground max-w-2xl">
-            ComboWick provides free, verified Roblox Lua scripts for popular games including Blox Fruits, Pet Simulator X, Arsenal, Brookhaven, and more. All scripts are tested for safety, updated daily, and can be copied instantly. Use with any compatible executor like Velocity, Delta, or Codex.
+            ComboWick makes free Roblox scripts for the games listed below. Every game uses the same loadstring and one key: pick your game, copy the loadstring, and run it with a working executor (see the Executors page).
           </p>
-          {/* SEO landing page links — internal crawl path for high-volume game keywords */}
-          <div className="mt-4 flex flex-wrap gap-2">
-            <span className="text-xs text-muted-foreground/70 mr-1 self-center">Popular:</span>
-            <Link to="/games/blox-fruits" className="text-xs px-3 py-1 rounded-full bg-bronze/10 border border-bronze/30 text-bronze-light hover:bg-bronze/20 transition-colors">Blox Fruits Script</Link>
-            <Link to="/games/arsenal" className="text-xs px-3 py-1 rounded-full bg-bronze/10 border border-bronze/30 text-bronze-light hover:bg-bronze/20 transition-colors">Arsenal Script</Link>
-            <Link to="/games/pet-simulator" className="text-xs px-3 py-1 rounded-full bg-bronze/10 border border-bronze/30 text-bronze-light hover:bg-bronze/20 transition-colors">Pet Simulator Script</Link>
-            <Link to="/games/jurassic-blocky" className="text-xs px-3 py-1 rounded-full bg-bronze/10 border border-bronze/30 text-bronze-light hover:bg-bronze/20 transition-colors">Jurassic Blocky Script</Link>
-          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">

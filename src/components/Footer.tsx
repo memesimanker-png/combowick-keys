@@ -36,19 +36,12 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
               title: t("Resources"),
               links: [
                 { to: "/fix-key", label: t("Fix Your Key") },
-                { to: "/guides", label: t("Guides") },
-                { to: "/tutorials", label: "Lua Tutorials" },
-                { to: "/docs", label: "Docs" },
-                { to: "/blog", label: t("Blog") },
-                { to: "/changelog", label: "Changelog" },
-                { to: "/faq", label: t("FAQ") },
+                { to: "/request", label: t("Request a Script") },
               ],
             },
             {
               title: t("Legal"),
               links: [
-                { to: "/about", label: "About" },
-                { to: "/fair-use", label: "Fair Use" },
                 { to: "/privacy", label: "Privacy" },
                 { to: "/terms", label: "Terms" },
                 { to: "/refund-policy", label: "Refund" },
@@ -57,10 +50,8 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
             {
               title: t("Community"),
               links: [
-                { to: "/wall-of-fame", label: "Wall of Fame" },
                 { href: "https://discord.com/invite/ufrz9Zaqs8", label: "Discord" },
                 { href: "mailto:support@combowick.com", label: "Email" },
-                { to: "/contact", label: "Contact" },
               ],
             },
           ].map((section) => (

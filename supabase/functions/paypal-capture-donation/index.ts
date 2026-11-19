@@ -28,7 +28,7 @@ serve(async (req) => {
 
   try {
     const { order_id, amount } = await req.json();
-    if (!order_id) {
+    if (!order_id || !/^[A-Z0-9]{10,25}$/.test(String(order_id))) {
       return new Response(JSON.stringify({ error: "Missing order_id" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

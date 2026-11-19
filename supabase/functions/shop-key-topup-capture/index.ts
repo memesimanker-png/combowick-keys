@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
       order_id?: string; key?: string; pack?: string;
     };
 
-    if (!order_id || !key || !pack || !PACKS[pack]) {
+    if (!order_id || !key || !pack || !PACKS[pack] || !/^[A-Z0-9]{10,25}$/.test(String(order_id))) {
       return json({ error: "Missing or invalid order_id / key / pack" }, 400);
     }
     const { hours, price } = PACKS[pack];

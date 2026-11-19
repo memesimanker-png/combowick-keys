@@ -58,7 +58,7 @@ serve(async (req) => {
   try {
     const { subscription_id, tier, amount, customer_email, user_id } = await req.json();
 
-    if (!subscription_id) {
+    if (!subscription_id || !/^I-[A-Z0-9]{8,24}$/.test(String(subscription_id))) {
       return new Response(JSON.stringify({ error: "Missing subscription_id" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

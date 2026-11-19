@@ -79,7 +79,7 @@ serve(async (req) => {
     // where the buyer came from (?src= remembered by the site, e.g. hub-offer); analytics only, never trusted for price
     const saleSrc = typeof source === "string" && /^[a-z0-9_-]{2,40}$/i.test(source) ? source.toLowerCase() : null;
 
-    if (!order_id) {
+    if (!order_id || !/^[A-Z0-9]{10,25}$/.test(String(order_id))) {   // 2026-11-19: id goes into the PayPal URL ("../" walked to other endpoints)
       return new Response(JSON.stringify({ error: "Missing order_id" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },

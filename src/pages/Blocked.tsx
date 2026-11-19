@@ -5,12 +5,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from "@/components/ui/button";
 import { NoIndex } from "@/components/NoIndex";
 import { InAppBrowserNotice } from "@/components/InAppBrowserNotice";
+import { useTranslation } from "@/lib/translation-context";
 
 export default function Blocked() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const reason = searchParams.get("reason") || "suspicious_activity";
-  const redirect = searchParams.get("redirect") || "/verify/step1";
+  // 2026-11-19: only our own paths (was any value: "//evil.com" redirected off-site, "javascript:" ran code on click)
+  const rawRedirect = searchParams.get("redirect") || "";
+  const redirect = /^\/(?![\/\\])[A-Za-z0-9/_?=&.-]*$/.test(rawRedirect) ? rawRedirect : "/verify/step1";
   const [countdown, setCountdown] = useState(5);
 
   useEffect(() => {
@@ -67,26 +71,26 @@ export default function Blocked() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-amber-500" />
-                <CardTitle>{blockingInfo.title}</CardTitle>
+                <CardTitle>{t(blockingInfo.title)}</CardTitle>
               </div>
-              <CardDescription>{blockingInfo.description}</CardDescription>
+              <CardDescription>{t(blockingInfo.description)}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm">{blockingInfo.message}</p>
+              <p className="text-sm">{t(blockingInfo.message)}</p>
               <div className="rounded-lg bg-muted p-4 text-sm">
                 <ul className="list-disc pl-5 space-y-1">
-                  {blockingInfo.bulletPoints.map((point, index) => <li key={index}>{point}</li>)}
+                  {blockingInfo.bulletPoints.map((point, index) => <li key={index}>{t(point)}</li>)}
                 </ul>
               </div>
               <div className="text-center text-sm">
-                <p>Redirecting in <span className="font-medium">{countdown}</span> seconds...</p>
+                <p>{t("Redirecting in {n} seconds...").replace("{n}", String(countdown))}</p>
               </div>
-              <p className="text-sm text-muted-foreground">If you believe this is an error, you can return to the verification process.</p>
+              <p className="text-sm text-muted-foreground">{t("If you believe this is an error, you can return to the verification process.")}</p>
             </CardContent>
             <CardFooter>
               <Link to={redirect} className="w-full">
                 <Button className="w-full bg-transparent" variant="outline">
-                  <Lock className="mr-2 h-4 w-4" /> Return to Verification
+                  <Lock className="mr-2 h-4 w-4" /> {t("Return to Verification")}
                 </Button>
               </Link>
             </CardFooter>

@@ -562,7 +562,7 @@ Message: ${supportForm.message || "(none)"}
                 <MessageSquare className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
                 <p className="text-lg font-semibold mb-2">No Messages Yet</p>
                 <p className="text-muted-foreground mb-6">Send us a message from the contact page — replies will appear here.</p>
-                <Button onClick={() => navigate("/contact")}>Go to Contact</Button>
+                <Button onClick={() => window.open("https://discord.com/invite/ufrz9Zaqs8", "_blank", "noopener,noreferrer")}>Ask on Discord</Button>
               </Card>
             ) : (
               <div className="space-y-4">

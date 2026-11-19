@@ -112,8 +112,34 @@ async function lifetimePrice(admin: ReturnType<typeof createClient>) {
 const out = (body: Record<string, unknown>, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
+// Pay now in the buyer's Discord card points here first (?go=<order>.<sig>, same HMAC as the bot's poSig): the first
+// press starts the 30-minute "Verifying your payment" screen and pings staff, then we redirect to the Payoneer link.
+async function poSig(id: string) {
+  const k = await crypto.subtle.importKey("raw", new TextEncoder().encode(Deno.env.get("DISCORD_CRON_SECRET") || ""), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const s = new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode("po:" + id)));
+  return [...s.slice(0, 12)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+async function payNow(go: string) {
+  const [id, sig] = go.split(".");
+  const back = Response.redirect("https://keys.combowick.com/payoneer-order", 302);
+  if (!/^\d+$/.test(id || "") || !sig || sig !== await poSig(id)) return back;
+  const url = Deno.env.get("SUPABASE_URL")!;
+  const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  const { data: o } = await admin.from("payoneer_orders").select("status, payment_link, paid_claimed_at").eq("id", id).maybeSingle();
+  if (!o?.payment_link || !["pending", "approving"].includes(o.status)) return back;
+  if (!o.paid_claimed_at) {
+    // @ts-ignore EdgeRuntime is a Supabase global
+    EdgeRuntime.waitUntil(fetch(`${url}/functions/v1/discord-interactions?task=payoneer_click&id=${id}`, {
+      method: "POST", headers: { "x-cw-cron": Deno.env.get("DISCORD_CRON_SECRET") || "" },
+    }).catch(() => null));
+  }
+  return Response.redirect(o.payment_link, 302);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
+  const go = new URL(req.url).searchParams.get("go");
+  if (req.method === "GET" && go) return await payNow(go);
   if (req.method !== "POST") return out({ error: "method" }, 405);
 
   const url = Deno.env.get("SUPABASE_URL")!;
@@ -129,17 +155,67 @@ Deno.serve(async (req) => {
 
   let body: Record<string, unknown> = {};
   try { body = await req.json(); } catch { /* empty */ }
+  const guild = Deno.env.get("DISCORD_GUILD_ID") || "";
+  const ticketUrl = (ch: string) => `https://discord.com/channels/${guild}/${ch}`;
+  // where the buyer's card is: their DMs, or a private ticket if their DMs were closed
+  const cardUrl = (o: { dm_channel_id?: string | null; ticket_channel_id?: string | null }) =>
+    o.dm_channel_id ? `https://discord.com/channels/@me/${o.dm_channel_id}` : o.ticket_channel_id ? ticketUrl(o.ticket_channel_id) : null;
+  const latest = async () =>
+    (await admin.from("payoneer_orders").select("*").eq("discord_id", discordId).order("id", { ascending: false }).limit(1)).data?.[0];
+
+  // order page (/payoneer-order): the buyer's latest order. The payment link itself stays in Discord (Payoneer
+  // doesn't allow payment links on a website). verifying = the server-side 30-minute window after Pay now, so a
+  // refresh never restarts it; the key shows here once staff approve.
+  if (body.action === "status") {
+    const o = await latest();
+    if (!o) return out({ order: null });
+    const now = Date.now();
+    const live = ["pending", "approving"].includes(o.status);
+    return out({
+      order: {
+        id: o.id, plan: o.plan, price: Number(o.price), status: o.status, created_at: o.created_at,
+        card: cardUrl(o), dm: !!o.dm_channel_id, link_ready: !!o.payment_link,
+        pay_pressed: !!o.paid_claimed_at,
+        verifying: live && !!o.paid_claimed_at && (!o.verify_until || now < new Date(o.verify_until).getTime()),
+        temp_key: live ? o.temp_key : null,
+        key: o.status === "approved" ? o.key_value : null,
+      },
+    });
+  }
+
+  // payment screenshot -> private bucket -> the bot posts it in the ticket with Approve / Deny
+  if (body.action === "proof") {
+    const m = String(body.image || "").match(/^data:(image\/(png|jpeg|webp));base64,([A-Za-z0-9+/=]+)$/);
+    if (!m) return out({ error: "bad_image" });
+    const bin = atob(m[3]);
+    if (bin.length > 5 * 1024 * 1024) return out({ error: "too_big" });
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const o = await latest();
+    if (!o || !["pending", "expired"].includes(o.status)) return out({ error: "no_order" });
+    if ((o.proof_count ?? 0) >= 5) return out({ error: "too_many" });
+    const file = `${o.id}/${Date.now()}.${m[2] === "jpeg" ? "jpg" : m[2]}`;
+    const up = await admin.storage.from("payoneer-proofs").upload(file, bytes, { contentType: m[1] });
+    if (up.error) return out({ error: "upload_failed" });
+    const now = new Date().toISOString();
+    await admin.from("payoneer_orders").update({
+      proof_path: file, proof_at: now, paid_claimed_at: o.paid_claimed_at || now, proof_count: (o.proof_count ?? 0) + 1,
+    }).eq("id", o.id);
+    const r = await fetch(`${url}/functions/v1/discord-interactions?task=payoneer_proof&id=${o.id}`, {
+      method: "POST", headers: { "x-cw-cron": Deno.env.get("DISCORD_CRON_SECRET") || "" },
+    });
+    const t = await r.json().catch(() => ({}));
+    return out({ ok: true, posted: t.posted === 200 });
+  }
+
   const plan = String(body.plan || "");
   const roblox = String(body.roblox || "").trim().slice(0, 32);
   if (plan !== "lifetime" && plan !== "60d") return out({ error: "bad_plan" });
   if (roblox && !/^[A-Za-z0-9_]{3,20}$/.test(roblox)) return out({ error: "bad_roblox" });
 
-  const guild = Deno.env.get("DISCORD_GUILD_ID") || "";
-  const ticketUrl = (ch: string) => `https://discord.com/channels/${guild}/${ch}`;
-
-  // one open order per buyer: send them back to the ticket they already have
-  const { data: open } = await admin.from("payoneer_orders").select("id, ticket_channel_id").eq("discord_id", discordId).in("status", ["pending", "approving"]).order("id", { ascending: false }).limit(1);
-  if (open?.[0]?.ticket_channel_id) return out({ ok: true, existing: true, order: open[0].id, ticket: ticketUrl(open[0].ticket_channel_id) });
+  // one open order per buyer: send them back to the card they already have
+  const { data: open } = await admin.from("payoneer_orders").select("id, ticket_channel_id, dm_channel_id").eq("discord_id", discordId).in("status", ["pending", "approving"]).order("id", { ascending: false }).limit(1);
+  if (open?.[0] && cardUrl(open[0])) return out({ ok: true, existing: true, order: open[0].id, ticket: cardUrl(open[0]), dm: !!open[0].dm_channel_id });
 
   const orderId = open?.[0]?.id ?? (await admin.from("payoneer_orders").insert({
     plan, price: plan === "lifetime" ? await lifetimePrice(admin) : 21.99, discord_id: discordId, discord_name: discordName, roblox_username: roblox || null, email: user.email || null, user_id: user.id,
@@ -150,7 +226,7 @@ Deno.serve(async (req) => {
     method: "POST", headers: { "x-cw-cron": Deno.env.get("DISCORD_CRON_SECRET") || "" },
   });
   const t = await r.json().catch(() => ({}));
-  if (t.channel) return out({ ok: true, order: orderId, ticket: ticketUrl(t.channel) });
+  if (t.channel) return out({ ok: true, order: orderId, ticket: t.dm ? `https://discord.com/channels/@me/${t.channel}` : ticketUrl(t.channel), dm: !!t.dm });
   if (t.error === "not_in_server") return out({ error: "not_in_server", invite: "https://discord.com/invite/ufrz9Zaqs8" });
   return out({ error: "ticket_failed" });
 });

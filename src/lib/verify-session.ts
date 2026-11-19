@@ -34,3 +34,17 @@ export async function reportStep(body: Record<string, unknown>, timeoutMs = 4000
   const timer = new Promise<{ ok: boolean; reason: string }>((r) => setTimeout(() => r({ ok: false, reason: "network" }), timeoutMs));
   return Promise.race([call, timer]);
 }
+
+// 2026-11-19: the "add hours" (extend key) Linkvertise path gets the same server-side chain. Its own id, so an
+// extension never touches a free-key run in another tab. complete-key-extension checks the chain for this sid.
+const EXT_SID_KEY = "ext_verify_sid";
+export function newExtSid(): string {
+  const a = new Uint8Array(16);
+  crypto.getRandomValues(a);
+  const sid = Array.from(a).map((b) => b.toString(16).padStart(2, "0")).join("");
+  try { localStorage.setItem(EXT_SID_KEY, sid); } catch { /* private mode */ }
+  return sid;
+}
+export function extSid(): string | null {
+  try { return localStorage.getItem(EXT_SID_KEY); } catch { return null; }
+}

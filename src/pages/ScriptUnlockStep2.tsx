@@ -33,9 +33,12 @@ export default function ScriptUnlockStep2() {
   const links = useVerifyLinks();
   const [msg, setMsg] = useState("Validating step 1…");
   const [ran, setRan] = useState(false);
+  // don't wait forever for the admin Linkvertise links (a failed settings read used to spin here for good)
+  const [waited, setWaited] = useState(false);
+  useEffect(() => { const id = setTimeout(() => setWaited(true), 2500); return () => clearTimeout(id); }, []);
 
   useEffect(() => {
-    if (links.every((l) => l === null) || ran) return;
+    if ((links.every((l) => l === null) && !waited) || ran) return;
     setRan(true);
 
     const slug = params.get("slug");
@@ -72,7 +75,7 @@ export default function ScriptUnlockStep2() {
     toast({ title: "Step 1 complete", description: "Redirecting to step 2…" });
     const destination = `${window.location.origin}/ad-return/script?slug=${encodeURIComponent(slug)}&hash=${nonce2}`;
     setTimeout(() => { window.location.href = buildLinkvertiseUrl(links[1], destination); }, 600);
-  }, [links, ran, params, navigate, toast]);
+  }, [links, ran, params, navigate, toast, waited]);
 
   return (
     <div className="min-h-screen bg-black/70 flex flex-col">

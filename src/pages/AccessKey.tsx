@@ -102,7 +102,7 @@ export default function AccessKey() {
         ? localStorage.getItem("step2_completed")
         : localStorage.getItem("step3_completed");
       if (!isAdmin && !finalStepDone) {
-        toast({ variant: "destructive", title: "Access Denied", description: "Please complete all verification steps." });
+        toast({ variant: "destructive", title: t("Access Denied"), description: t("Please complete all verification steps.") });
         navigate("/verify/provider-select");
         return;
       }
@@ -118,7 +118,9 @@ export default function AccessKey() {
       const storedData = localStorage.getItem("hwid_key_data");
       if (storedData) {
         const keyData: StoredKeyData = JSON.parse(storedData);
-        const expiryDate = new Date(keyData.generated_at + 10 * 60 * 1000); // 10 minutes
+        // 2026-11-19: keep showing the key for its REAL length (was 10 minutes, then "Key Expired, verify again" while
+        // the key still had hours left; a player back from Roblox lost it and hit the cooldown redoing the steps).
+        const expiryDate = new Date(keyData.generated_at + (keyData.key_hours ? keyData.key_hours * 3600e3 : 10 * 60 * 1000));
         if (new Date() < expiryDate) {
           setGeneratedKey(keyData.key);
           setKeyExpiresAt(expiryDate.toISOString());
@@ -176,12 +178,13 @@ export default function AccessKey() {
           setGeneratedKey("");
           setKeyExpiresAt(null);
           localStorage.removeItem("hwid_key_data");
-          toast({ title: "Key Expired", description: "Your access key has expired. Please verify again to generate a new key." });
+          toast({ title: t("Key Expired"), description: t("Your key ended. Do the steps again for a new one.") });
           navigate("/verify/provider-select");
         }
       }, 10000);
       return () => clearInterval(interval);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keyExpiresAt, toast, navigate]);
 
 
@@ -221,7 +224,7 @@ export default function AccessKey() {
 
     if (!isAdmin && !verifyToken) {
       setError("Your verification expired. Please verify again.");
-      toast({ variant: "destructive", title: "Verification required", description: "Please complete the verification steps again." });
+      toast({ variant: "destructive", title: t("Verification required"), description: t("Please complete the verification steps again.") });
       setIsLoading(false);
       navigate("/verify/provider-select");
       return;
@@ -267,7 +270,8 @@ export default function AccessKey() {
 
       if (data?.success) {
         const now = Date.now();
-        const expiryDate = new Date(now + 10 * 60 * 1000); // 10 minutes display timer
+        const realHours = Number(data.hours) || readPendingKeyHours();
+        const expiryDate = new Date(now + realHours * 3600e3); // shown until the key really ends
 
         const keyData: StoredKeyData = {
           key: data.key,
@@ -286,7 +290,7 @@ export default function AccessKey() {
         setCanGenerate(false);
         setWeekKeys(logKey(now));
 
-        toast({ title: "Key Generated!", description: `Your ${data.hours || readPendingKeyHours()}-hour HWID key has been generated.` });
+        toast({ title: t("Key Generated!"), description: t("Your {n}-hour key is ready.").replace("{n}", String(data.hours || readPendingKeyHours())) });
       } else {
         setError(data?.error || "Failed to generate key");
         toast({ variant: "destructive", title: "Error", description: data?.error || "Failed to generate key." });
@@ -294,7 +298,7 @@ export default function AccessKey() {
     } catch (err) {
       console.error("Network error in generateKey:", err);
       setError("Network error occurred");
-      toast({ variant: "destructive", title: "Error", description: "Network error occurred." });
+      toast({ variant: "destructive", title: t("Error"), description: t("Network error. Check your connection and try again.") });
     } finally {
       setIsLoading(false);
     }
@@ -303,7 +307,7 @@ export default function AccessKey() {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast({ title: "Copied!", description: "Key copied to clipboard." });
+      toast({ title: t("Copied!"), description: t("Key copied to clipboard.") });
     } catch {
       toast({ variant: "destructive", title: "Error", description: "Failed to copy to clipboard." });
     }

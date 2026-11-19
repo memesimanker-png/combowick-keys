@@ -42,7 +42,7 @@ export function GamePicker({
   onChange: (g: GameItem) => void;
   disabled?: boolean;
 }) {
-  const { games, loading } = useGamesList();
+  const { games, loading, failed, retry } = useGamesList();
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
@@ -105,6 +105,13 @@ export function GamePicker({
             {loading ? (
               <div className="flex items-center gap-2 px-3 py-6 text-sm text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" /> {t("Loading games…")}
+              </div>
+            ) : failed ? (
+              <div className="space-y-2 px-3 py-4 text-center text-sm">
+                <p className="text-muted-foreground">{t("Couldn't load the game list. Check your connection.")}</p>
+                <button type="button" onClick={retry} className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-accent">
+                  {t("Try again")}
+                </button>
               </div>
             ) : filtered.length === 0 ? (
               // Their game isn't supported, so a free key can't help them yet: two ways out (owner 2026-10-29) —

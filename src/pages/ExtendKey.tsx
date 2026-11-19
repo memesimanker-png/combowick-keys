@@ -13,6 +13,7 @@ import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { getDeviceId } from "@/lib/device-id";
 import { CpaGate } from "@/components/CpaGate";
+import { newExtSid, reportStep } from "@/lib/verify-session";
 
 // Extension in progress with the CPALead offer wall (kept for a reload / returning visitor).
 type ExtPending = { token: string; hwid: string; key: string; mode?: "cpa"; step?: number; ts: number };
@@ -89,9 +90,11 @@ export default function ExtendKey() {
   };
 
   // Old Linkvertise path for this extension (only when Linkvertise is on and the visitor has no offers).
-  const linkvertiseFallback = () => {
+  const linkvertiseFallback = async () => {
     if (!pending) return;
     localStorage.setItem("ext_pending", JSON.stringify({ ...pending, mode: undefined, step: 1, ts: Date.now() }));
+    // Server-side step chain (complete-key-extension checks it): start is reported as Linkvertise opens.
+    await reportStep({ action: "start", sid: newExtSid() }, 3000);
     window.location.href = buildLinkvertiseUrl(links[0], `${window.location.origin}/ad-return/ext/step1`);
   };
 
