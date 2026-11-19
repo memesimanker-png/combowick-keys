@@ -26,8 +26,13 @@ function isAllowedOrigin(origin: string | null): boolean {
 }
 
 function getIp(req: Request): string {
+  // 2026-11-19: Cloudflare's header first. The first x-forwarded-for entry can be sent by the client, so a fake one
+  // gave a fresh 5-keys-per-IP quota on every request.
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf) return cf.trim();
   const fwd = req.headers.get("x-forwarded-for") || "";
-  return fwd.split(",")[0].trim() || req.headers.get("cf-connecting-ip") || "unknown";
+  const parts = fwd.split(",").map((s) => s.trim()).filter(Boolean);
+  return parts[parts.length - 1] || "unknown";
 }
 
 function randomToken(): string {
@@ -92,7 +97,7 @@ async function lastStepName(supabase: any): Promise<string> {
   } catch { return "step3"; }
 }
 // deno-lint-ignore no-explicit-any
-async function recordStep(supabase: any, sid: string, step: string, hash: string | null, ip: string): Promise<{ ok: boolean; reason?: string }> {
+async function recordStep(supabase: any, sid: string, step: string, hash: string | null, ip: string, ua = ""): Promise<{ ok: boolean; reason?: string }> {
   const { data: rows } = await supabase.from("verify_steps").select("step, created_at").eq("sid", sid);
   const have = new Map((rows || []).map((r: any) => [r.step, new Date(r.created_at).getTime()]));
   if (have.has("token")) return { ok: false, reason: "used" };
@@ -106,7 +111,8 @@ async function recordStep(supabase: any, sid: string, step: string, hash: string
   // ask Linkvertise right away (the hash expires 10 s after the visitor finished the page)
   // (not refused here: one slow page load can miss the 10 s window; chainComplete decides with the whole chain)
   const lv = step === "start" ? { ok: null, resp: null } : await lvVerify(hash as string);
-  const { error } = await supabase.from("verify_steps").insert({ sid, step, hash: step === "start" ? null : hash, ip, lv_ok: lv.ok, lv_resp: lv.resp });
+  // 2026-11-19: browser user agent on every row (column ua), to see which browsers/in-app webviews lose players
+  const { error } = await supabase.from("verify_steps").insert({ sid, step, hash: step === "start" ? null : hash, ip, lv_ok: lv.ok, lv_resp: lv.resp, ua: ua ? ua.slice(0, 300) : null });
   if (error) return { ok: false, reason: String(error.code) === "23505" ? "repeat" : "db" };
   return { ok: true };
 }
@@ -161,7 +167,7 @@ Deno.serve(async (req) => {
       const step = body.action === "start" ? "start" : String(body?.step || "");
       if (step !== "start" && !STEPS.includes(step)) return json({ success: false, error: "bad_step" }, 400);
       const hash = typeof body?.hash === "string" ? body.hash.slice(0, 300) : null;
-      const r = await recordStep(getExternalSupabase(), sid, step, hash, getIp(req));
+      const r = await recordStep(getExternalSupabase(), sid, step, hash, getIp(req), req.headers.get("user-agent") || "");
       if (!r.ok) console.warn("[issue-verify-token] step refused:", step, r.reason, getIp(req));
       return json({ success: r.ok, reason: r.reason }, r.ok ? 200 : 403);
     }

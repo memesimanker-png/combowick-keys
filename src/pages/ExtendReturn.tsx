@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 import { extSid, reportStep } from "@/lib/verify-session";
+import { useTranslation } from "@/lib/translation-context";
 
 type Step = "step1" | "step2" | "step3";
 
@@ -37,9 +38,10 @@ export default function ExtendReturn() {
   const { step: routeStep } = useParams<{ step?: string }>();
   const [params] = useSearchParams();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const links = useVerifyLinks();
   const [done, setDone] = useState(false);
-  const [msg, setMsg] = useState("Validating completion…");
+  const [msg, setMsg] = useState(() => t("Validating completion…"));
   const [result, setResult] = useState<{ before?: number | null; after?: number | null; hours?: number } | null>(null);
   const [ranWithLinks, setRanWithLinks] = useState(false);
   const [linksTimedOut, setLinksTimedOut] = useState(false);
@@ -84,8 +86,8 @@ export default function ExtendReturn() {
     const serverOk = rep.ok || rep.reason === "repeat";
     if (!serverOk && rep.reason !== "network") {
       localStorage.removeItem("ext_pending");
-      toast({ variant: "destructive", title: "Step not counted", description: "Start again from the Add Hours page." });
-      setMsg("That step didn't count. Start again from the Add Hours page.");
+      toast({ variant: "destructive", title: t("Step not counted"), description: t("Start again from the Add Hours page.") });
+      setMsg(t("That step didn't count. Start again from the Add Hours page."));
       setTimeout(() => navigate("/extend-key", { replace: true }), 2500);
       return;
     }
@@ -104,8 +106,8 @@ export default function ExtendReturn() {
       pending.step = nextStep;
       localStorage.setItem("ext_pending", JSON.stringify(pending));
       setDone(true);
-      setMsg(`Step ${stepNum} of 3 complete. Continuing…`);
-      toast({ title: "Step Complete", description: `Step ${stepNum} of 3 done.` });
+      setMsg(t("Step {n} of 3 complete. Continuing…").replace("{n}", String(stepNum)));
+      toast({ title: t("Step Complete"), description: t("Step {n} of 3 done.").replace("{n}", String(stepNum)) });
       const returnUrl = `${window.location.origin}/ad-return/ext/step${nextStep}`;
       setTimeout(() => { window.location.href = buildLinkvertiseUrl(links[nextStep - 1], returnUrl); }, 800);
       return;
@@ -113,7 +115,7 @@ export default function ExtendReturn() {
 
     // Step 3 — verify + apply the extension server-side.
     await (async () => {
-      setMsg("All steps complete. Adding your hours…");
+      setMsg(t("All steps complete. Adding your hours…"));
       try {
         const { data, error } = await supabase.functions.invoke("complete-key-extension", {
           body: { token: pending!.token, hwid: pending!.hwid, sid },
@@ -127,19 +129,19 @@ export default function ExtendReturn() {
         localStorage.removeItem("ext_pending");
 
         if (error || data?.success === false) {
-          toast({ variant: "destructive", title: "Extension failed", description: serverErr || "Try again." });
-          setMsg(serverErr || "Extension failed.");
+          toast({ variant: "destructive", title: t("Extension failed"), description: t(serverErr || "Try again.") });
+          setMsg(t(serverErr || "Extension failed."));
           setTimeout(() => navigate("/extend-key", { replace: true }), 2500);
           return;
         }
 
         setDone(true);
         setResult({ before: data.before_hours_left, after: data.after_hours_left, hours: data.hours });
-        setMsg(`Success! +${data.hours}h added to your key.`);
-        toast({ title: "Hours Added!", description: `+${data.hours}h stacked onto your key.` });
+        setMsg(t("Success! +{n}h added to your key.").replace("{n}", String(data.hours)));
+        toast({ title: t("Hours Added!"), description: t("+{n}h stacked onto your key.").replace("{n}", String(data.hours)) });
       } catch {
         localStorage.removeItem("ext_pending");
-        toast({ variant: "destructive", title: "Network error", description: "Please try again." });
+        toast({ variant: "destructive", title: t("Network error"), description: t("Please try again.") });
         setTimeout(() => navigate("/extend-key", { replace: true }), 2500);
       }
     })();
@@ -152,14 +154,14 @@ export default function ExtendReturn() {
       <header className="container py-6">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
         </div>
       </header>
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Key Extension</CardTitle>
-            <CardDescription>Finalizing your added hours…</CardDescription>
+            <CardTitle>{t("Key Extension")}</CardTitle>
+            <CardDescription>{t("Finalizing your added hours…")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8">
@@ -167,10 +169,10 @@ export default function ExtendReturn() {
               <p className="mt-4 text-center text-muted-foreground">{msg}</p>
               {result && (
                 <div className="mt-6 w-full rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm space-y-2">
-                  <div className="flex items-center gap-2 font-semibold text-primary"><Clock className="h-4 w-4" /> Time stacked</div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Before</span><span>{result.before != null ? `${result.before}h left` : "—"}</span></div>
-                  <div className="flex justify-between"><span className="text-muted-foreground">Added</span><span>+{result.hours}h</span></div>
-                  <div className="flex justify-between font-semibold"><span>After</span><span>{result.after != null ? `${result.after}h left` : "—"}</span></div>
+                  <div className="flex items-center gap-2 font-semibold text-primary"><Clock className="h-4 w-4" /> {t("Time stacked")}</div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">{t("Before")}</span><span>{result.before != null ? t("{n}h left").replace("{n}", String(result.before)) : "—"}</span></div>
+                  <div className="flex justify-between"><span className="text-muted-foreground">{t("Added")}</span><span dir="ltr">+{result.hours}h</span></div>
+                  <div className="flex justify-between font-semibold"><span>{t("After")}</span><span>{result.after != null ? t("{n}h left").replace("{n}", String(result.after)) : "—"}</span></div>
                 </div>
               )}
             </div>

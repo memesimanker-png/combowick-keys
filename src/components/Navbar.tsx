@@ -29,7 +29,7 @@ export function Navbar() {
     (user?.user_metadata as any)?.full_name ||
     (user?.user_metadata as any)?.name ||
     user?.email ||
-    "Account";
+    t("Account");
   const avatarUrl: string | undefined =
     (user?.user_metadata as any)?.avatar_url ||
     (user?.user_metadata as any)?.picture;
@@ -47,7 +47,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity group shrink-0">
             <div className="relative">
-              <img src="/images/combo-wick-logo.png" alt="ComboWick Logo" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg" />
+              <img src="/images/combo-wick-logo-128.webp" alt="ComboWick Logo" className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg" />
               <div className="absolute inset-0 rounded-lg bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <span className="font-heading font-bold text-base sm:text-lg tracking-wider">
@@ -91,7 +91,7 @@ export function Navbar() {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button
-                    aria-label="Account menu"
+                    aria-label={t("Account menu")}
                     className="flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/40 hover:bg-secondary/70 transition-colors px-1 pr-3 py-1"
                   >
                     <Avatar className="h-7 w-7 ring-2 ring-primary/30">
@@ -129,7 +129,7 @@ export function Navbar() {
           {/* Mobile top-bar: language selector always visible + hamburger */}
           <div className="flex items-center gap-1 xl:hidden">
             <LanguageSelector />
-            <button aria-label={mobileOpen ? "Close menu" : "Open menu"} className="min-h-11 min-w-11 p-2 text-muted-foreground hover:text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
+            <button aria-label={mobileOpen ? t("Close menu") : t("Open menu")} className="min-h-11 min-w-11 p-2 text-muted-foreground hover:text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>

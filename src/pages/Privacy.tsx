@@ -73,7 +73,7 @@ Each provider has access only to the minimum information necessary to perform th
 • Why: to save ticket transcripts so staff can review past support and payment cases, to answer common questions automatically, to reply to you in your language, and to keep the server safe from spam and scams
 • Ticket transcripts: stored privately, visible only to our staff, deleted after 30 days
 • What we never do: we do not sell or share message content, use it for advertising, or use it to train AI models
-• Your choices: you can ask staff to delete your ticket transcripts at any time by opening a ticket or emailing support@combowick.com`
+• Your choices: you can ask staff to delete your ticket transcripts at any time by opening a ticket in our Discord (https://discord.com/invite/ufrz9Zaqs8)`
               },
               {
                 title: "5. Cookies and Tracking Technologies",
@@ -106,7 +106,7 @@ While we employ best-in-class security practices, no method of internet transmis
 • Portability: Receive your data in a structured, commonly used, machine-readable format
 • Withdraw Consent: Opt out of marketing communications at any time
 
-To exercise any of these rights, contact us at support@combowick.com. We will respond within 30 days as required by law.`
+To exercise any of these rights, open a ticket in our Discord (https://discord.com/invite/ufrz9Zaqs8). We will respond within 30 days as required by law.`
               },
               {
                 title: "8. Children's Privacy",
@@ -131,7 +131,7 @@ To exercise any of these rights, contact us at support@combowick.com. We will re
               {
                 title: "12. Contact Us",
                 content: `For privacy-related questions, data requests, or concerns about our data practices:
-• Email: support@combowick.com
+• Discord: https://discord.com/invite/ufrz9Zaqs8
 • Discord: discord.com/invite/ufrz9Zaqs8
 • Response Time: Within 30 days for formal data rights requests; within 24 hours for general privacy inquiries`
               },

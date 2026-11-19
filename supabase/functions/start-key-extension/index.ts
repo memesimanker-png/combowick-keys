@@ -26,8 +26,13 @@ function isAllowedOrigin(origin: string | null): boolean {
 }
 
 function getIp(req: Request): string {
+  // 2026-11-19: Cloudflare's header first. The first x-forwarded-for entry can be sent by the client, so a fake one
+  // gave a fresh 5-keys-per-IP quota on every request.
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf) return cf.trim();
   const fwd = req.headers.get("x-forwarded-for") || "";
-  return fwd.split(",")[0].trim() || req.headers.get("cf-connecting-ip") || "unknown";
+  const parts = fwd.split(",").map((s) => s.trim()).filter(Boolean);
+  return parts[parts.length - 1] || "unknown";
 }
 
 function randomToken(): string {
@@ -103,6 +108,29 @@ Deno.serve(async (req) => {
     const info = await keyInfo(cleanKey);
     if (!info.ok || info.data?.success === false) {
       return json({ success: false, error: "Key not found. Check your key and try again." }, 404);
+    }
+
+    // 2026-11-19: Add Hours is for FREE keys only. Premium / all-access / account-bound keys could be kept alive
+    // forever with free checkpoints (no rebuy), and a key the owner deactivated came back on (extend sets is_active).
+    {
+      const execUrl = Deno.env.get("EXEC_SB_URL"), execKey = Deno.env.get("EXEC_SB_SERVICE");
+      if (execUrl && execKey) {
+        try {
+          const r = await fetch(`${execUrl}/rest/v1/keys?select=game_id,is_active&key_value=eq.${encodeURIComponent(cleanKey)}&limit=1`, {
+            headers: { apikey: execKey, Authorization: `Bearer ${execKey}` },
+          });
+          const rows = await r.json();
+          const k = Array.isArray(rows) ? rows[0] : null;
+          // all-access = Premium / tester keys (free keys are locked to one game; they also get bound_user_id, so
+          // that column says nothing about paid vs free)
+          if (k && k.game_id === "*") {
+            return json({ success: false, error: "Premium keys don't need extra hours." }, 400);
+          }
+          if (k && k.is_active === false) {
+            return json({ success: false, error: "This key was turned off. Get a new key." }, 400);
+          }
+        } catch { /* key DB unreachable: the key-info check above still applies */ }
+      }
     }
 
     // Configurable +hours from admin (verify_settings.extension_hours).

@@ -146,7 +146,8 @@ export function VideoBackground({ className = "", overlay = true }: VideoBackgro
       {images.map((src, i) => (
         <img
           key={src}
-          src={src}
+          // 2026-11-19: only the first slide loads right away; the rest start once it's on screen (all 6 were eager)
+          src={i === 0 || loaded[0] ? src : undefined}
           alt=""
           aria-hidden="true"
           onLoad={() => markLoaded(i)}
@@ -159,7 +160,7 @@ export function VideoBackground({ className = "", overlay = true }: VideoBackgro
           }}
           loading="eager"
           decoding="async"
-          {...{ fetchpriority: i <= 1 ? "high" : "low" }}
+          {...{ fetchpriority: i === 0 ? "high" : "low" }}
         />
       ))}
 

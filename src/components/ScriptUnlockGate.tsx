@@ -84,7 +84,7 @@ export function ScriptUnlockGate({ slug }: Props) {
       const destination = `${origin}/ad-return/script-step2?slug=${encodeURIComponent(slug)}&hash=${nonce}`;
       window.location.href = buildLinkvertiseUrl(links[0], destination);
     } catch (e: any) {
-      toast({ title: "Unlock failed", description: e?.message || "Try again", variant: "destructive" });
+      toast({ title: t("Unlock failed"), description: t(e?.message || "Try again"), variant: "destructive" });
       setLoading(false);
     }
   };

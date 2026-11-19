@@ -223,7 +223,7 @@ export default function AccessKey() {
     }
 
     if (!isAdmin && !verifyToken) {
-      setError("Your verification expired. Please verify again.");
+      setError(t("Your verification expired. Please verify again."));
       toast({ variant: "destructive", title: t("Verification required"), description: t("Please complete the verification steps again.") });
       setIsLoading(false);
       navigate("/verify/provider-select");
@@ -244,7 +244,7 @@ export default function AccessKey() {
           if (ctx && typeof ctx.json === "function") {
             const j = await ctx.json();
             serverErr = j?.error || j?.message || "";
-            if (j?.code === "rate_limited") serverErr = t("You can get {n} free keys every 10 hours. Your next free key is available in {time}.").replace("{n}", "5").replace("{time}", waitLabel(j?.resets_at));
+            if (j?.code === "rate_limited") serverErr = t("You can get {n} free keys every 10 hours. Your next free key is available in {time}.").replace("{n}", "5").replace("{time}", waitLabel(j?.resets_at, t));
           }
         } catch { /* noop */ }
       }
@@ -252,8 +252,8 @@ export default function AccessKey() {
 
       if (fnError || (data && data.success === false)) {
         const msg = serverErr || "Failed to generate key. Please try again.";
-        setError(msg);
-        toast({ variant: "destructive", title: "Error", description: msg });
+        setError(t(msg));
+        toast({ variant: "destructive", title: t("Error"), description: t(msg) });
         // If verification failed/expired, clear token and bounce to verify
         if (/verification|verify/i.test(msg)) {
           localStorage.removeItem("verify_token");
@@ -292,12 +292,12 @@ export default function AccessKey() {
 
         toast({ title: t("Key Generated!"), description: t("Your {n}-hour key is ready.").replace("{n}", String(data.hours || readPendingKeyHours())) });
       } else {
-        setError(data?.error || "Failed to generate key");
-        toast({ variant: "destructive", title: "Error", description: data?.error || "Failed to generate key." });
+        setError(t(data?.error || "Failed to generate key"));
+        toast({ variant: "destructive", title: t("Error"), description: t(data?.error || "Failed to generate key.") });
       }
     } catch (err) {
       console.error("Network error in generateKey:", err);
-      setError("Network error occurred");
+      setError(t("Network error occurred"));
       toast({ variant: "destructive", title: t("Error"), description: t("Network error. Check your connection and try again.") });
     } finally {
       setIsLoading(false);
@@ -309,7 +309,7 @@ export default function AccessKey() {
       await navigator.clipboard.writeText(text);
       toast({ title: t("Copied!"), description: t("Key copied to clipboard.") });
     } catch {
-      toast({ variant: "destructive", title: "Error", description: "Failed to copy to clipboard." });
+      toast({ variant: "destructive", title: t("Error"), description: t("Failed to copy to clipboard.") });
     }
   };
 
@@ -393,13 +393,13 @@ export default function AccessKey() {
                   {error && <p className="text-sm text-red-400">{error}</p>}
                   <Button onClick={generateKey} disabled={!canGenerate || isLoading || !selectedGame} className="h-12 w-full text-[15px] font-bold">
                     {isLoading ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("Generating...")}</>
+                      <><Loader2 className="me-2 h-4 w-4 animate-spin" /> {t("Generating...")}</>
                     ) : !selectedGame ? (
-                      <><Gamepad2 className="mr-2 h-4 w-4" /> {t("Select a game first")}</>
+                      <><Gamepad2 className="me-2 h-4 w-4" /> {t("Select a game first")}</>
                     ) : adClicks < REQUIRED_AD_CLICKS ? (
-                      <><Key className="mr-2 h-4 w-4" /> {t("Click Ad Button")} ({adClicks}/{REQUIRED_AD_CLICKS})</>
+                      <><Key className="me-2 h-4 w-4" /> {t("Click Ad Button")} ({adClicks}/{REQUIRED_AD_CLICKS})</>
                     ) : (
-                      <><Key className="mr-2 h-4 w-4" /> {t("Get My {n}-Hour Key").replace("{n}", String(pendingKeyHours))}</>
+                      <><Key className="me-2 h-4 w-4" /> {t("Get My {n}-Hour Key").replace("{n}", String(pendingKeyHours))}</>
                     )}
                   </Button>
                   <button type="button" onClick={() => navigate("/extend-key")} className="mx-auto flex items-center gap-1.5 text-sm text-primary hover:underline">
@@ -412,7 +412,7 @@ export default function AccessKey() {
                     <pre className="select-all whitespace-pre-wrap break-all font-mono text-sm leading-relaxed tracking-wider text-[#f3e6c8] sm:text-lg">{generatedKey}</pre>
                   </div>
                   <div className="grid grid-cols-2 gap-2.5">
-                    <Button onClick={() => copyToClipboard(generatedKey)} className="h-11 font-bold"><Copy className="mr-2 h-4 w-4" /> {t("Copy Key")}</Button>
+                    <Button onClick={() => copyToClipboard(generatedKey)} className="h-11 font-bold"><Copy className="me-2 h-4 w-4" /> {t("Copy Key")}</Button>
                     <a href="/scripts" className="flex h-11 items-center justify-center gap-2 rounded-md border border-primary/40 text-sm font-semibold hover:bg-primary/10"><Code2 className="h-4 w-4" /> {t("Get Script")}</a>
                   </div>
                   <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
@@ -422,7 +422,7 @@ export default function AccessKey() {
                   </div>
                   <div className="text-sm text-foreground/85">
                     <p className="font-semibold">{t("How to use it")}</p>
-                    <ol className="mt-1.5 list-decimal space-y-1 pl-5">
+                    <ol className="mt-1.5 list-decimal space-y-1 ps-5">
                       <li>{t("Run the COMBO_WICK script in Roblox")}</li>
                       <li>{t("Paste this key when it asks")}</li>
                       <li>{t("Done. It stays on this device until it runs out.")}</li>

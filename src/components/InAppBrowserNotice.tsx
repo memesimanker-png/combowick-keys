@@ -47,12 +47,12 @@ export function InAppBrowserNotice({ always = false, url }: { always?: boolean; 
         {info.os !== "other" && (
           <a href={chromeUrl(target, info.os)}>
             <Button size="sm" className="bg-amber-500 text-black hover:bg-amber-400">
-              <Globe className="mr-1 h-4 w-4" /> {tx.open}
+              <Globe className="me-1 h-4 w-4" /> {tx.open}
             </Button>
           </a>
         )}
         <Button size="sm" variant="outline" onClick={copy}>
-          {copied ? <Check className="mr-1 h-4 w-4" /> : <Copy className="mr-1 h-4 w-4" />} {copied ? tx.copied : tx.copy}
+          {copied ? <Check className="me-1 h-4 w-4" /> : <Copy className="me-1 h-4 w-4" />} {copied ? tx.copied : tx.copy}
         </Button>
       </div>
     </div>

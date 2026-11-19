@@ -332,7 +332,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "cpc_take" }); confirm(); }}
               className="inline-flex h-10 items-center justify-center gap-1.5 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground hover:opacity-90">
-              {t("Get my {n}-hour key").replace("{n}", String(hours.cpc))} <ArrowRight className="h-4 w-4" />
+              {t("Get my {n}-hour key").replace("{n}", String(hours.cpc))} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </button>
             <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "cpc_keepgoing" }); setCpcDismissed(true); }}
               className="inline-flex h-10 items-center justify-center rounded-lg border border-border px-4 text-sm font-medium hover:bg-secondary/60">
@@ -391,7 +391,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                   <p className="text-muted-foreground">{t("Stuck? Try the alternate offers instead.")}</p>
                   <button type="button" onClick={() => { cpaTrack(subid, "tab", { kind: "stuck_alt" }); openLocker(); }}
                     className="mt-2 inline-flex items-center gap-1 rounded-md bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground hover:opacity-90">
-                    {t("Alternate offers")}{showHours ? ` · ${hoursLabel(hours.cpc)}` : ""} <ArrowRight className="h-3 w-3" />
+                    {t("Alternate offers")}{showHours ? ` · ${hoursLabel(hours.cpc)}` : ""} <ArrowRight className="h-3 w-3 rtl:rotate-180" />
                   </button>
                 </div>
               )}
@@ -399,7 +399,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <p className="text-muted-foreground">{t("Stuck? You can unlock with Linkvertise instead.")}</p>
               <button type="button" onClick={() => { cpaTrack(subid, "stuck_lv"); onStuckFallback(); }}
                 className="mt-2 inline-flex items-center gap-1 rounded-md border border-primary/40 px-2.5 py-1 text-[11px] font-semibold text-primary hover:bg-primary/10">
-                {t("Use Linkvertise instead")}{showHours ? ` · ${hoursLabel(hours.lv)}` : ""} <ArrowRight className="h-3 w-3" />
+                {t("Use Linkvertise instead")}{showHours ? ` · ${hoursLabel(hours.lv)}` : ""} <ArrowRight className="h-3 w-3 rtl:rotate-180" />
               </button>
               </>)}
             </div>
@@ -465,7 +465,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => onOfferClick(e, o)}
-                className="group flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] p-3 text-left transition-colors hover:bg-primary/5"
+                className="group flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] p-3 text-start transition-colors hover:bg-primary/5"
               >
                 <img
                   src={o.offerphoto}
@@ -479,7 +479,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
                   <span className="line-clamp-2 block text-xs text-muted-foreground">{o.description}</span>
                 </span>
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-md shadow-primary/30 transition-transform group-hover:scale-105">
-                  {current?.offer_id === o.offer_id ? t("Continue") : t("Start")} <ArrowRight className="h-3.5 w-3.5" />
+                  {current?.offer_id === o.offer_id ? t("Continue") : t("Start")} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180" />
                 </span>
               </a>
               {hint === "tile:" + o.offer_id && <p className="px-3 pb-2 text-[11px] font-medium text-amber-400">{t("Just opened — check your other tab. If nothing opened, tap again in a few seconds.")}</p>}
@@ -513,7 +513,7 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
               <div className="flex items-center gap-2 border-b border-border/60 px-3 py-2">
                 <span className="text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
                 {showHours && <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] font-bold uppercase text-muted-foreground">{hoursLabel(hours.cpc)}</span>}
-                <button type="button" onClick={() => setLockerOpen(false)} aria-label={t("Close")} className="ml-auto rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground">
+                <button type="button" onClick={() => setLockerOpen(false)} aria-label={t("Close")} className="ms-auto rounded-md p-1 text-muted-foreground hover:bg-secondary hover:text-foreground">
                   <X className="h-4 w-4" />
                 </button>
               </div>
@@ -528,31 +528,31 @@ export function CpaOfferWall({ offers, subid, onDone, onStuckFallback, country =
           <button
             type="button"
             onClick={openLocker}
-            className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/40 hover:bg-secondary/40"
+            className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-start transition-colors hover:border-primary/40 hover:bg-secondary/40"
           >
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-lg">💻</span>
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-semibold text-foreground">{t("Alternate offers")}</span>
               <span className="block text-xs text-muted-foreground">{t("A different list of offers. Finish any one.")}</span>
             </span>
-            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180" />
           </button>
           )}
           {showLv && (lvReady ? (
             <button
               type="button"
               onClick={() => { cpaTrack(subid, "tab", { kind: "lv_option" }); linkvertiseOption!(); }}
-              className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-left transition-colors hover:border-primary/40 hover:bg-secondary/40"
+              className="group flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/20 p-3 text-start transition-colors hover:border-primary/40 hover:bg-secondary/40"
             >
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary text-muted-foreground"><Link2 className="h-5 w-5" /></span>
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-semibold text-foreground">Linkvertise</span>
                 <span className="block text-xs text-muted-foreground">{t("Offer didn't work? A few short ad steps instead.")}</span>
               </span>
-              <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 rtl:rotate-180" />
             </button>
           ) : (
-            <div className="flex w-full items-center gap-3 rounded-lg border border-dashed border-border/70 bg-secondary/10 p-3 text-left" aria-disabled>
+            <div className="flex w-full items-center gap-3 rounded-lg border border-dashed border-border/70 bg-secondary/10 p-3 text-start" aria-disabled>
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-secondary/60 text-muted-foreground/60"><Link2 className="h-5 w-5" /></span>
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-semibold text-muted-foreground">Linkvertise</span>

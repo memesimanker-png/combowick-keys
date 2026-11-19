@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/lib/translation-context";
 
 interface Props {
   script: {
@@ -19,6 +20,7 @@ interface Props {
 
 export function EmailScriptButton({ script }: Props) {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,14 +28,14 @@ export function EmailScriptButton({ script }: Props) {
   const handleSend = async () => {
     const trimmed = email.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      toast({ variant: "destructive", title: "Invalid email", description: "Please enter a valid email address." });
+      toast({ variant: "destructive", title: t("Invalid email"), description: t("Please enter a valid email address.") });
       return;
     }
     setLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        toast({ variant: "destructive", title: "Sign in required", description: "Please log in to email yourself a script." });
+        toast({ variant: "destructive", title: t("Sign in required"), description: t("Please log in to email yourself a script.") });
         setLoading(false);
         return;
       }
@@ -53,14 +55,14 @@ export function EmailScriptButton({ script }: Props) {
       });
       if (error) {
         const msg = (data as any)?.error || error.message || "Try again later.";
-        toast({ variant: "destructive", title: "Slow down", description: msg });
+        toast({ variant: "destructive", title: t("Slow down"), description: t(msg) });
         return;
       }
-      toast({ title: "Sent!", description: `Script emailed to ${trimmed}.` });
+      toast({ title: t("Sent!"), description: t("Script emailed to {email}.").replace("{email}", trimmed) });
       setOpen(false);
       setEmail("");
     } catch (e: any) {
-      toast({ variant: "destructive", title: "Failed to send", description: e?.message ?? "Try again later." });
+      toast({ variant: "destructive", title: t("Failed to send"), description: t(e?.message || "Try again later.") });
     } finally {
       setLoading(false);
     }
@@ -70,16 +72,16 @@ export function EmailScriptButton({ script }: Props) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
-          <Mail className="h-4 w-4" /> Email me
+          <Mail className="h-4 w-4" /> {t("Email me")}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Email this script</DialogTitle>
-          <DialogDescription>We'll send <strong>{script.title}</strong> to your inbox.</DialogDescription>
+          <DialogTitle>{t("Email this script")}</DialogTitle>
+          <DialogDescription>{(() => { const [a, b = ""] = t("We'll send {script} to your inbox.").split("{script}"); return <>{a}<strong>{script.title}</strong>{b}</>; })()}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="email-script-input">Your email</Label>
+          <Label htmlFor="email-script-input">{t("Your email")}</Label>
           <Input
             id="email-script-input"
             type="email"
@@ -92,7 +94,7 @@ export function EmailScriptButton({ script }: Props) {
         <DialogFooter>
           <Button onClick={handleSend} disabled={loading} className="gap-2">
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Mail className="h-4 w-4" />}
-            Send
+            {t("Send")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -8,7 +8,7 @@ const featureKeys = [
   { title: "Verified & Secure Scripts", desc: "feat_1_desc" },
   { title: "Instant Automated Delivery", desc: "feat_2_desc" },
   { title: "Encrypted & Safe Payments", desc: "feat_3_desc" },
-  { title: "24/7 Discord Support", desc: "feat_4_desc" },
+  { title: "Discord Support", desc: "feat_4_desc" },
   { title: "Quality Updates", desc: "feat_5_desc" },
   { title: "Growing Community", desc: "feat_6_desc" },
 ];

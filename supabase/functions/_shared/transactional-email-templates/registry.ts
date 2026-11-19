@@ -24,4 +24,5 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
 }
 
 // templates only the server (service role) may send: they carry codes or are marketing
-export const SERVER_ONLY_TEMPLATES = new Set(['trial-winback', 'trial-day2'])
+// 2026-11-19: key-delivery + contact-confirmation too (the public endpoint mailed fake keys to anyone)
+export const SERVER_ONLY_TEMPLATES = new Set(['trial-winback', 'trial-day2', 'key-delivery', 'contact-confirmation'])

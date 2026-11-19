@@ -36,7 +36,10 @@ export function VerifyCard({ children, wide = false, allowOverflow = false }: { 
   // free-key pages only: in an app's built-in browser the steps lose progress and look like a bypass (2026-11-10).
   // "Open in Chrome" always goes back to the START, since a half-done step doesn't carry over to another browser.
   const path = typeof window !== "undefined" ? window.location.pathname : "";
-  const keyFlow = path.startsWith("/verify") || path.startsWith("/access-key");
+  // 2026-11-19: only BEFORE the first Linkvertise pass (provider-select, checkpoint 1). On step 2/3 and the key page
+  // its button sent players who were getting through back to the start (wiping step 1); restarts after step 1 rose
+  // from 7% to 10% after it shipped. Players who really are stuck still get it on /blocked.
+  const keyFlow = path.startsWith("/verify/provider-select") || path.startsWith("/verify/step1");
   const startUrl = typeof window !== "undefined"
     ? (path.startsWith("/verify/provider-select") ? window.location.href : window.location.origin + "/verify/provider-select")
     : "https://keys.combowick.com/verify/provider-select";
@@ -58,7 +61,7 @@ export function VerifyHeader({ title, sub, percent, tracker }: { title: string; 
           <h1 className="text-xl font-bold leading-tight sm:text-3xl">{title}</h1>
           {sub && <p className="mt-1 text-sm text-muted-foreground">{sub}</p>}
         </div>
-        <div className="shrink-0 text-right">
+        <div className="shrink-0 text-end">
           <p className="text-[11px] text-muted-foreground sm:text-xs">{t("Progress")}</p>
           <p className="text-lg font-bold text-primary sm:text-2xl">{percent}%</p>
         </div>
@@ -87,7 +90,7 @@ export function CheckpointTracker({ steps, current, keyDone = false }: { steps: 
         </span>
       ))}
       <span className={`${base} ${keyDone ? done : current > steps ? now : todo} sm:flex-[0.8]`}>
-        <KeyRound className="h-4 w-4" /><span className="ml-1 hidden sm:inline">{t("Key")}</span>
+        <KeyRound className="h-4 w-4" /><span className="ms-1 hidden sm:inline">{t("Key")}</span>
       </span>
     </div>
   );
@@ -141,7 +144,7 @@ export function PremiumGlowBar({ title, sub }: { title: string; sub: string }) {
           <span className="flex items-center gap-1.5"><Crown className="h-4 w-4 shrink-0 text-primary" />{title}</span>
           <span className="block text-xs font-normal text-muted-foreground">{sub}</span>
         </span>
-        <span className="inline-flex shrink-0 items-center gap-1 text-sm font-extrabold text-primary">{t("Premium")} <ArrowRight className="h-4 w-4" /></span>
+        <span className="inline-flex shrink-0 items-center gap-1 text-sm font-extrabold text-primary">{t("Premium")} <ArrowRight className="h-4 w-4 rtl:rotate-180" /></span>
       </span>
     </a>
   );

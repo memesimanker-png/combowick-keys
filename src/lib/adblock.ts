@@ -54,8 +54,19 @@ export function isBraveBrowser(): boolean {
   return typeof (navigator as any).brave?.isBrave === "function";
 }
 
+// 2026-11-19: a clean result is remembered for 15 minutes in this tab. Each check downloads the Monetag tag and Google's
+// adsbygoogle.js uncached (~250 KB), and it ran on every checkpoint page. A "blocked" result is never cached, so
+// "Try again" always re-checks for real.
+const OK_KEY = "cw_adblock_ok_at";
+const OK_TTL_MS = 15 * 60 * 1000;
+
 export async function detectAdBlock(): Promise<boolean> {
+  try {
+    const at = Number(sessionStorage.getItem(OK_KEY)) || 0;
+    if (at && Date.now() - at < OK_TTL_MS) return false;
+  } catch { /* storage blocked: just check */ }
   const [monetag, google, bait] = await Promise.all([probe(MONETAG_PROBE), probe(GOOGLE_PROBE), baitHidden()]);
-  if (monetag !== "blocked") return false;
-  return google === "blocked" || bait;
+  const blocked = monetag === "blocked" && (google === "blocked" || bait);
+  if (!blocked) { try { sessionStorage.setItem(OK_KEY, String(Date.now())); } catch { /* ignore */ } }
+  return blocked;
 }

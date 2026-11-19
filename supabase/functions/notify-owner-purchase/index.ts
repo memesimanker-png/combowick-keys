@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // Pings the owner's Discord (@everyone x2) when someone buys Owner/Admin access.
 // The webhook URL is a SERVER SECRET (never shipped to the browser). The payment
@@ -59,6 +60,17 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Payment not verified", status, value }), {
         status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    // 2026-11-19: once per order (the same real order id could repeat the two @everyone pings forever)
+    {
+      const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+      const { error: dupErr } = await sb.from("owner_notify_log").insert({ order_id: String(order_id) });
+      if (dupErr) {
+        return new Response(JSON.stringify({ ok: true, already: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
     }
 
     const safe = username.replace(/[`@]/g, ""); // avoid breaking markdown / stray pings on the name

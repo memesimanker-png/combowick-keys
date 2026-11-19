@@ -69,7 +69,7 @@ export function GamePicker({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-left text-sm transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex w-full items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-start text-sm transition-colors hover:border-primary/50 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {value ? (
           <>
@@ -144,7 +144,7 @@ export function GamePicker({
                       setOpen(false);
                       setQ("");
                     }}
-                    className={`flex w-full items-center gap-2 px-3 py-2 text-left text-sm transition-colors hover:bg-accent ${
+                    className={`flex w-full items-center gap-2 px-3 py-2 text-start text-sm transition-colors hover:bg-accent ${
                       active ? "bg-accent/60" : ""
                     }`}
                   >

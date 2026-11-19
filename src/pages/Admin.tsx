@@ -17,7 +17,6 @@ import { PAID_GAMES } from "@/lib/paid-games";
 import { useQueryClient } from "@tanstack/react-query";
 
 const DEFAULT_SCRIPT_CODE = `loadstring(game:HttpGet('https://raw.githubusercontent.com/checkurasshole/Script/refs/heads/main/IQ'))();`;
-const LOADER_API_BASE = "https://vcuwjyjkbtxccywzeadu.supabase.co/functions/v1/public-api/repos/checkurasshole/Loaders/files";
 
 const getLoaderFileName = (game: string) => game
   .replace(/[^a-zA-Z0-9 ]/g, "")
@@ -57,7 +56,9 @@ export default function Admin() {
   const defaultTab = (allowedTabs[0] as string) || "scripts";
 
   if (!user) return <Navigate to="/login" replace />;
-  if (!isAdmin) {
+  // 2026-11-19: moderators get in too, but only with the tabs a super admin gave them (get_admin_tabs returns []
+  // for everyone else). The database checks each tab again (has_tab), so hiding a tab here is not the only lock.
+  if (!isAdmin && allowedTabs.length === 0) {
     return (
       <Layout>
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
@@ -190,7 +191,7 @@ function GenerateKeyTab() {
         <div>
           <label className="text-sm font-medium mb-1 block">Tier *</label>
           <select value={tier} onChange={e => setTier(e.target.value)} className={inputCls}>
-            <option value="trial-7day">3-Day Trial ($5)</option>
+            <option value="trial-7day">7-Day Trial ($5)</option>
             <option value="monthly">Monthly Access ($9.99)</option>
             <option value="lifetime">Lifetime Key ($49.99)</option>
             <option value="custom">⚙ Custom Duration</option>
@@ -694,14 +695,10 @@ function ScriptsTab() {
       let finalCode = form.code;
       const loaderFileName = getLoaderFileName(form.game);
       if (!editingId && loaderFileName && form.code.trim() === DEFAULT_SCRIPT_CODE) {
-        const res = await fetch(`${LOADER_API_BASE}/${loaderFileName}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: DEFAULT_SCRIPT_CODE, message: `Add loader for ${form.game}` }),
-        });
-        if (!res.ok) {
-          const txt = await res.text();
-          throw new Error(`GitHub loader failed (${res.status}): ${txt.slice(0, 180)}`);
+        // 2026-11-19: our own staff-only function (was an open third-party GitHub proxy called from the browser)
+        const { data: lf, error: lfErr } = await supabase.functions.invoke("loader-file", { body: { fileName: loaderFileName, game: form.game } });
+        if (lfErr || !(lf as any)?.ok) {
+          throw new Error(`GitHub loader failed: ${(lf as any)?.error || lfErr?.message || "unknown error"}`);
         }
         finalCode = getLoaderCode(loaderFileName);
         toast({ title: `GitHub loader created: ${loaderFileName}` });

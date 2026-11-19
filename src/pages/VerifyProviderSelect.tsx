@@ -258,12 +258,12 @@ export default function VerifyProviderSelect() {
       render: () => (
         <div className="space-y-2">
           <Button onClick={handleYoutubeClick} disabled={youtubeCompleted || youtubeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
-            <Youtube className="mr-2 h-4 w-4" />
+            <Youtube className="me-2 h-4 w-4" />
             {youtubeCompleted ? `✓ ${t("YouTube Subscribed")}` : youtubeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(youtubeTimer)) : t("Subscribe to YouTube")}
           </Button>
           {youtubeTimer > 0 && <Progress value={youtubeProgress} className="h-1" />}
           <Button onClick={handleDiscordClick} disabled={discordCompleted || discordTimer > 0} className="w-full bg-indigo-600 hover:bg-indigo-700">
-            <MessageCircle className="mr-2 h-4 w-4" />
+            <MessageCircle className="me-2 h-4 w-4" />
             {discordCompleted ? `✓ ${t("Discord Joined")}` : discordTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(discordTimer)) : t("Join Discord")}
           </Button>
           {discordTimer > 0 && <Progress value={discordProgress} className="h-1" />}
@@ -286,12 +286,12 @@ export default function VerifyProviderSelect() {
       render: () => (
         <div className="space-y-2">
           <Button onClick={handleSubscribeClick} disabled={youtubeCompleted || youtubeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
-            <Youtube className="mr-2 h-4 w-4" />
+            <Youtube className="me-2 h-4 w-4" />
             {youtubeCompleted ? `✓ ${t("YouTube Subscribed")}` : youtubeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(youtubeTimer)) : t("Subscribe to YouTube")}
           </Button>
           {youtubeTimer > 0 && <Progress value={subProgress} className="h-1" />}
           <Button onClick={handleLikeClick} disabled={likeCompleted || likeTimer > 0} className="w-full bg-red-600 hover:bg-red-700">
-            <ThumbsUp className="mr-2 h-4 w-4" />
+            <ThumbsUp className="me-2 h-4 w-4" />
             {likeCompleted ? `✓ ${t("Video Liked")}` : likeTimer > 0 ? t("Waiting {n}s...").replace("{n}", String(likeTimer)) : t("Like the Video")}
           </Button>
           {likeTimer > 0 && <Progress value={likeProgress} className="h-1" />}
@@ -345,7 +345,7 @@ export default function VerifyProviderSelect() {
           onStuckFallback={() => { cpaSession.setChoice(null); handleStart(); }} />
         {lvChoice && (
           <button type="button" onClick={() => { cpaSession.setChoice(null); setChoice(null); }} className="inline-flex items-center gap-1 text-[11px] text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-3 w-3" /> {t("Use the other method instead")}
+            <ArrowLeft className="h-3 w-3 rtl:rotate-180" /> {t("Use the other method instead")}
           </button>
         )}
       </div>
@@ -355,7 +355,7 @@ export default function VerifyProviderSelect() {
       <div className="space-y-3">
         <div className="cw-glow">
         <button type="button" onClick={() => pickChoice("linkvertise")}
-          className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-left transition-colors hover:from-primary/25">
+          className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-start transition-colors hover:from-primary/25">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary"><Link2 className="h-5 w-5" /></span>
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold">
@@ -364,11 +364,11 @@ export default function VerifyProviderSelect() {
             </span>
             <span className="block text-xs font-medium text-foreground/80">{t("Complete {n} short Linkvertise checkpoints.").replace("{n}", String(verifySteps))}</span>
           </span>
-          <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
+          <ArrowRight className="h-5 w-5 shrink-0 text-primary rtl:rotate-180" />
         </button>
         </div>
         <button type="button" onClick={() => pickChoice("cpa")}
-          className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
+          className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-start transition-colors hover:border-primary/50">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-muted-foreground"><Zap className="h-5 w-5" /></span>
           <span className="min-w-0 flex-1">
             <span className="flex flex-wrap items-center gap-2 font-semibold">
@@ -391,7 +391,7 @@ export default function VerifyProviderSelect() {
     <div className="space-y-3">
       <div className="cw-glow">
         <button type="button" onClick={handleStart} disabled={starting}
-          className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-left transition-colors hover:from-primary/25 disabled:opacity-70">
+          className="relative flex w-full items-center gap-3 rounded-[calc(0.5rem-1.5px)] bg-gradient-to-br from-primary/15 to-primary/5 p-4 text-start transition-colors hover:from-primary/25 disabled:opacity-70">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary">
             {starting ? <Loader2 className="h-5 w-5 animate-spin" /> : <Link2 className="h-5 w-5" />}
           </span>
@@ -403,11 +403,11 @@ export default function VerifyProviderSelect() {
             </span>
             <span className="block text-xs font-medium text-foreground/80">{t("Complete {n} short Linkvertise checkpoints.").replace("{n}", String(verifySteps))}</span>
           </span>
-          <ArrowRight className="h-5 w-5 shrink-0 text-primary" />
+          <ArrowRight className="h-5 w-5 shrink-0 text-primary rtl:rotate-180" />
         </button>
       </div>
       <a href="/premium-keys"
-        className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-left transition-colors hover:border-primary/50">
+        className="flex w-full items-center gap-3 rounded-lg border border-border bg-secondary/30 p-4 text-start transition-colors hover:border-primary/50">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-secondary text-primary"><Zap className="h-5 w-5" /></span>
         <span className="min-w-0 flex-1">
           <span className="flex flex-wrap items-center gap-2 font-semibold">
@@ -416,7 +416,7 @@ export default function VerifyProviderSelect() {
           </span>
           <span className="block text-xs text-muted-foreground">{t("Skip every step. One key for every game.")}</span>
         </span>
-        <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground" />
+        <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground rtl:rotate-180" />
       </a>
     </div>
   );
@@ -500,7 +500,7 @@ export default function VerifyProviderSelect() {
         {state === "done" ? <CheckCircle2 className="h-4 w-4" /> : n}
       </span>
       <h3 className="text-sm font-bold sm:text-base">{title}</h3>
-      <span className={`ml-auto text-xs ${state === "done" ? "font-semibold text-green-400" : "text-muted-foreground"}`}>{meta}</span>
+      <span className={`ms-auto text-xs ${state === "done" ? "font-semibold text-green-400" : "text-muted-foreground"}`}>{meta}</span>
     </div>
   );
 
@@ -555,7 +555,7 @@ export default function VerifyProviderSelect() {
                             {cpaAvailable ? <li>✓ {t("or 1 offer for a {n}-hour key").replace("{n}", String(keyHours.offer))}</li> : <li>✓ Linkvertise</li>}
                           </ul>
                           <Button onClick={startFree} disabled={starting || cpa.status === "loading"} className="mt-auto h-10 w-full font-bold sm:h-11">
-                            {starting || cpa.status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t("Start free")} <ArrowRight className="ml-1 h-4 w-4" /></>}
+                            {starting || cpa.status === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{t("Start free")} <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" /></>}
                           </Button>
                         </div>
                         <a href="/premium-keys" data-no-popunder className="flex flex-col rounded-xl border border-border bg-secondary/40 p-3 transition-colors hover:border-primary/50 sm:p-5">
@@ -567,7 +567,7 @@ export default function VerifyProviderSelect() {
                             <li>✓ {t("Every game")}</li>
                           </ul>
                           <span className="mt-auto flex h-10 w-full items-center justify-center gap-1 rounded-md border border-primary/40 text-sm font-bold sm:h-11">
-                            {t("See Premium")} <ArrowRight className="h-4 w-4" />
+                            {t("See Premium")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
                           </span>
                         </a>
                       </div>

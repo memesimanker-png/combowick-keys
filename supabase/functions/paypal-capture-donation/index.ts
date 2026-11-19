@@ -41,7 +41,7 @@ serve(async (req) => {
     });
     const captureData = await captureRes.json();
     if (!captureRes.ok || captureData.status !== "COMPLETED") {
-      return new Response(JSON.stringify({ error: "Payment not completed", details: captureData }), {
+      return new Response(JSON.stringify({ error: "Payment not completed", status: captureData?.status || null }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -56,7 +56,8 @@ serve(async (req) => {
         payment_id: order_id,
         tier: "donation",
         key_generated: "DONATION",
-        amount: Number(amount) || 0,
+        // what PayPal really captured (the browser's "amount" was trusted before)
+        amount: Number(captureData?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value) || 0,
         currency: "USD",
         status: "completed",
         customer_email: captureData.payer?.email_address || null,

@@ -22,10 +22,10 @@ export function RobloxUserField({ value, onChange, disabled }: { value: string; 
     setBusy(true); setErr("");
     try {
       const { data, error } = await supabase.functions.invoke("roblox-lookup", { body });
-      if (error || data?.success === false) { setErr(data?.error || error?.message || "Lookup failed."); setUser(null); return; }
+      if (error || data?.success === false) { setErr(t(data?.error || error?.message || "Lookup failed.")); setUser(null); return; }
       setUser(data.user);
       onChange(String(data.user.id));
-    } catch { setErr("Network error — try again."); }
+    } catch { setErr(t("Network error — try again.")); }
     finally { setBusy(false); }
   };
 
@@ -58,7 +58,7 @@ export function RobloxUserField({ value, onChange, disabled }: { value: string; 
             : <div className="h-14 w-14 rounded-full bg-secondary flex items-center justify-center shrink-0"><User className="h-6 w-6 text-muted-foreground" /></div>}
           <div className="min-w-0 flex-1">
             <p className="font-semibold flex items-center gap-1 truncate">{user.displayName}{user.hasVerifiedBadge && <BadgeCheck className="h-4 w-4 text-primary shrink-0" />}</p>
-            <p className="text-xs text-muted-foreground truncate">@{user.name} · UserId {user.id}</p>
+            <p className="text-xs text-muted-foreground truncate">@{user.name} · {t("UserId")} {user.id}</p>
             <button type="button" onClick={reset} disabled={disabled} className="mt-1 text-xs text-primary hover:underline flex items-center gap-1"><RefreshCw className="h-3 w-3" /> {t("Not you? Change")}</button>
           </div>
         </div>

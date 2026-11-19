@@ -43,7 +43,6 @@ export default function RefundPolicy() {
                 "Premium keys cannot be returned or reversed once delivered",
                 "License keys provide immediate access to premium features",
                 "All product information, pricing, and features are clearly displayed before purchase",
-                "PayPal buyer protection applies to all transactions for additional security",
               ].map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm">
                   <ShieldCheck className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
@@ -87,9 +86,6 @@ export default function RefundPolicy() {
             <div className="flex flex-col sm:flex-row gap-4">
               <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer">
                 <Button>Contact Support on Discord</Button>
-              </a>
-              <a href="mailto:support@combowick.com">
-                <Button variant="outline">Email: support@combowick.com</Button>
               </a>
             </div>
             <p className="text-xs text-muted-foreground mt-6 italic">

@@ -6,15 +6,12 @@ import { SERVER_ONLY_TEMPLATES, TEMPLATES } from '../_shared/transactional-email
 // role of the caller: the project's own service key (inside functions it may be the new non-JWT
 // sb_secret_ format), else the role claim of the JWT (the gateway already verified it: verify_jwt = true)
 function callerRole(req: Request): string | null {
-  try {
-    const token = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '')
-    const own = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-    if (own && (token === own || req.headers.get('apikey') === own)) return 'service_role'
-    const part = token.split('.')[1]
-    return JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/'))).role ?? null
-  } catch {
-    return null
-  }
+  // 2026-11-19: ONLY the project's own service key counts. The old fallback read the role claim of an
+  // unverified JWT (this function runs with verify_jwt off), so a forged "service_role" token passed.
+  const token = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '')
+  const own = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+  if (own && (token === own || req.headers.get('apikey') === own)) return 'service_role'
+  return null
 }
 
 // Configuration baked in at scaffold time — do NOT change these manually.
@@ -143,6 +140,35 @@ Deno.serve(async (req) => {
 
   // Create Supabase client with service role (bypasses RLS)
   const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+  // 2026-11-19: script-delivery is the only template the site may send. It needs a signed-in user, and the
+  // title / link / code come from the scripts table (they came from the caller: anyone could mail any text
+  // and any link from combowick.com).
+  if (templateName === 'script-delivery' && callerRole(req) !== 'service_role') {
+    const jwt = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '')
+    const { data: u } = await supabase.auth.getUser(jwt)
+    if (!u?.user) {
+      return new Response(JSON.stringify({ error: 'Please log in to email yourself a script.' }), {
+        status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+    const sid = String(templateData?.scriptId || templateData?.script_id || '')
+    const { data: sc } = sid
+      ? await supabase.from('scripts').select('id, title, game, slug, code').eq('id', sid).maybeSingle()
+      : { data: null }
+    if (!sc) {
+      return new Response(JSON.stringify({ error: 'Script not found' }), {
+        status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
+    templateData = {
+      scriptId: sc.id,
+      scriptTitle: sc.title,
+      scriptGame: sc.game,
+      scriptUrl: `https://keys.combowick.com/scripts/${sc.slug}`,
+      scriptCode: sc.code,
+    }
+  }
 
   // 1.5 Rate limit script-delivery sends: 5/hour per recipient + 60s/script cooldown.
   if (templateName === 'script-delivery') {

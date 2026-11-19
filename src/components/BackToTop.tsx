@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
+import { useTranslation } from "@/lib/translation-context";
 
 export function BackToTop() {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -16,7 +18,7 @@ export function BackToTop() {
   return (
     <button
       type="button"
-      aria-label="Back to top"
+      aria-label={t("Back to top")}
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-40 h-11 w-11 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/40 hover:scale-110 active:scale-95 transition-transform flex items-center justify-center border border-primary/40"
     >

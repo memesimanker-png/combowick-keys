@@ -72,7 +72,7 @@ export default function VerifyStep3() {
           video={<YouTubeVideoPlayer step="step3" timerSeconds={4} onTimerComplete={() => setButtonEnabled(true)} />}
           button={
             <Button className="h-12 w-full text-[15px] font-bold" onClick={handleVerification} disabled={isLoading || !buttonEnabled}>
-              <ExternalLink className="mr-2 h-4 w-4" />
+              <ExternalLink className="me-2 h-4 w-4" />
               {isLoading ? t("Processing...") : !buttonEnabled ? `${t("Please wait")}…` : t("Finish & Get My Key")}
             </Button>
           }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/lib/translation-context";
 
 type Notification = {
   id: string;
@@ -17,6 +18,7 @@ type Notification = {
 };
 
 export function NotificationBell() {
+  const { t } = useTranslation();
   const [items, setItems] = useState<Notification[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -69,10 +71,10 @@ export function NotificationBell() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative h-9 w-9" aria-label="Notifications">
+        <Button variant="ghost" size="icon" className="relative h-9 w-9" aria-label={t("Notifications")}>
           <Bell className="h-4 w-4" />
           {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border border-background">
+            <span className="absolute -top-0.5 -end-0.5 min-w-[1.1rem] h-[1.1rem] px-1 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center border border-background">
               {unreadCount > 9 ? "9+" : unreadCount}
             </span>
           )}
@@ -80,16 +82,16 @@ export function NotificationBell() {
       </PopoverTrigger>
       <PopoverContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between px-3 py-2 border-b border-border">
-          <span className="text-sm font-semibold">Notifications</span>
+          <span className="text-sm font-semibold">{t("Notifications")}</span>
           {unreadCount > 0 && (
             <button onClick={markAllRead} className="text-xs text-primary hover:underline inline-flex items-center gap-1">
-              <Check className="h-3 w-3" /> Mark all read
+              <Check className="h-3 w-3" /> {t("Mark all read")}
             </button>
           )}
         </div>
         <ScrollArea className="max-h-80">
           {items.length === 0 ? (
-            <p className="text-xs text-muted-foreground text-center py-8">No notifications yet</p>
+            <p className="text-xs text-muted-foreground text-center py-8">{t("No notifications yet")}</p>
           ) : (
             <ul className="divide-y divide-border">
               {items.map((n) => {

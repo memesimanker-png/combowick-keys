@@ -74,7 +74,7 @@ function FAQItem({ q, a }: { q: string; a: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="border-t border-border">
-      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-sm hover:bg-secondary/40">
+      <button onClick={() => setOpen(!open)} className="flex w-full items-center justify-between gap-3 px-4 py-3 text-start text-sm hover:bg-secondary/40">
         <span className="font-medium">{q}</span>
         <span className="shrink-0 text-muted-foreground">{open ? "−" : "+"}</span>
       </button>
@@ -158,7 +158,7 @@ export default function PremiumKeys() {
         </div>
         <div className="mt-1.5 flex items-center justify-between gap-3">
           <div data-no-translate>
-            <span className="mr-1.5 text-[26px] font-extrabold">{money(p.now)}</span>
+            <span className="me-1.5 text-[26px] font-extrabold">{money(p.now)}</span>
             {p.was && <span className="text-[13px] text-muted-foreground line-through">{money(p.was)}</span>}
             <span className="block text-[11.5px] text-muted-foreground">{t(c.period)}</span>
           </div>
@@ -186,7 +186,7 @@ export default function PremiumKeys() {
         <div data-no-translate className="mt-2 flex items-baseline gap-2">
           <span className="text-[34px] font-extrabold">{money(p.now)}</span>
           {p.was && <span className="text-[15px] text-muted-foreground line-through">{money(p.was)}</span>}
-          {p.percent > 0 && <span className="rounded-md bg-green-500/15 px-1.5 py-0.5 text-[11px] font-extrabold text-green-400">{p.percent}% OFF</span>}
+          {p.percent > 0 && <span className="rounded-md bg-green-500/15 px-1.5 py-0.5 text-[11px] font-extrabold text-green-400">{t("{n}% OFF").replace("{n}", String(p.percent))}</span>}
         </div>
         <p className="mt-0.5 text-xs text-muted-foreground">{t(c.pcLine)}</p>
         <ul className="my-4 grid gap-1.5 text-[13px]">
@@ -243,7 +243,7 @@ export default function PremiumKeys() {
             <div className="mb-4 overflow-hidden rounded-2xl border border-primary/35 lg:hidden">
               <img src="/images/premium-cowboy.webp" alt="COMBO_WICK" className="aspect-square w-full object-cover" />
             </div>
-            <div className="text-center lg:text-left">
+            <div className="text-center lg:text-start">
               <h1 className="font-heading text-[30px] font-bold text-gradient-primary sm:text-[40px]">{t("Premium Key")}</h1>
               <p className="mt-1.5 text-sm text-foreground/85 sm:text-base">{t("One key. Every game. No checkpoints, no ads, no cooldown.")}</p>
             </div>
@@ -283,7 +283,7 @@ export default function PremiumKeys() {
               <p className="mt-1 text-xs text-muted-foreground">{t("Your own script with your features, built before every free request.")}</p>
             </div>
             <span className="mt-2.5 flex h-10 items-center justify-center gap-1.5 rounded-[10px] bg-primary px-5 text-[13.5px] font-extrabold text-primary-foreground lg:mt-0 lg:shrink-0">
-              {t("Get a price on Discord")} <ArrowRight className="h-4 w-4" />
+              {t("Get a price on Discord")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
             </span>
           </div>
         </a>
@@ -304,7 +304,7 @@ export default function PremiumKeys() {
             <h2 className="px-4 pb-2.5 pt-3.5 font-heading text-base font-bold">{t("Free vs Premium")}</h2>
             <table className="w-full text-[12.5px]">
               <thead>
-                <tr className="border-t border-border text-left text-[11px] uppercase tracking-wider text-muted-foreground">
+                <tr className="border-t border-border text-start text-[11px] uppercase tracking-wider text-muted-foreground">
                   <th className="px-3 py-2 font-bold" /><th className="px-3 py-2 font-bold">{t("Free key")}</th><th className="px-3 py-2 font-bold">{t("Premium")}</th>
                 </tr>
               </thead>
@@ -327,7 +327,7 @@ export default function PremiumKeys() {
             <div className="overflow-hidden rounded-2xl border border-border bg-card">
               <h2 className="px-4 pb-2.5 pt-3.5 font-heading text-base font-bold">{t("Questions")}</h2>
               <FAQItem q={t("How fast do I get my key?")} a={t("With PayPal or card, right away: it shows on the screen and is sent to your email. With Payoneer, it unlocks as soon as the payment clears and comes to your Discord DMs, email and order page.")} />
-              <FAQItem q={t("Does it work on my phone and PC?")} a={t("Yes. Run the script on any supported executor, phone or PC, and paste your key in the Premium Key tab. The key locks to the first device you use it on.")} />
+              <FAQItem q={t("Does it work on my phone and PC?")} a={t("Yes. Run the script on any supported executor, phone or PC, and paste your key in the Premium Key tab. The key locks to the Roblox account you first use it on.")} />
               <FAQItem q={t("What if my key stops working?")} a={<>{t("Use Fix Key on the website or open a ticket in our Discord and we'll sort it out.")} <a href="/fix-key" className="text-primary underline">{t("Fix Key")}</a></>} />
               <FAQItem q={t("Can I get a refund?")} a={<>{t("Keys are digital and delivered instantly, so sales are final. If your key is broken and we can't fix it, we replace it.")} <a href="/refund-policy" className="text-primary underline">{t("Refund Policy")}</a></>} />
             </div>
@@ -390,7 +390,8 @@ export default function PremiumKeys() {
                   pauseMessage={setting?.pause_message}
                   onSelectPlan={(plan) => handlePurchase({
                     id: plan.period === "month" ? "monthly" : "lifetime",
-                    nameKey: `${title} — ${plan.label}`,
+                    // each part is its own dictionary key (the composed string never matched one)
+                    nameKey: `${t(title)} — ${t(plan.label)}`,
                     price: plan.price,
                     script: g.script,
                     gameKey: g.key,
@@ -416,7 +417,7 @@ export default function PremiumKeys() {
                   <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 shrink-0 text-yellow-400" /> {t("Direct line to the founder")}</li>
                 </ul>
               </div>
-              <div className="text-center sm:text-right">
+              <div className="text-center sm:text-end">
                 <div className="text-4xl font-extrabold text-yellow-300">$500</div>
                 <p className="text-xs text-muted-foreground">{t("5 months • one-time")}</p>
                 <p className="mb-4 mt-0.5 text-[10px] font-semibold uppercase tracking-wider text-yellow-400/70">{t("All sales are final — NO REFUNDS")}</p>

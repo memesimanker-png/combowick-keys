@@ -14,6 +14,15 @@ import { SEOHead } from "@/components/SEOHead";
 import { TopUpModal } from "@/components/TopUpModal";
 import { RobloxUserField } from "@/components/RobloxUserField";
 import { Link } from "react-router-dom";
+import { useTranslation } from "@/lib/translation-context";
+
+// Fill {name} slots in a translated sentence with JSX (keeps word order per language).
+function fill(s: string, map: Record<string, React.ReactNode>): React.ReactNode[] {
+  return s.split(/(\{\w+\})/).map((p, i) => {
+    const k = p.slice(1, -1);
+    return p.startsWith("{") && k in map ? <span key={i}>{map[k]}</span> : p;
+  });
+}
 
 type KeyPurchase = {
   id: string;
@@ -39,7 +48,7 @@ type ContactMessage = {
 };
 
 const tierNames: Record<string, string> = {
-  "trial-7day": "3-Day Trial",
+  "trial-7day": "7-Day Trial",
   monthly: "Monthly Access",
   lifetime: "Lifetime Access",
 };
@@ -69,6 +78,7 @@ function getUserBadge(keys: KeyPurchase[]): BadgeInfo | null {
 export default function Dashboard() {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [user, setUser] = useState<any>(null);
   const [keys, setKeys] = useState<KeyPurchase[]>([]);
   const [loading, setLoading] = useState(true);
@@ -90,7 +100,7 @@ export default function Dashboard() {
   const SELF_SKIP = "https://v0-remix-of-roblox-executor-system.vercel.app/api/self-skip";
   const submitFix = async (keyValue: string) => {
     const uid = fixUserId.trim();
-    if (!/^\d{2,20}$/.test(uid)) { toast({ variant: "destructive", title: "Enter a valid Roblox UserId (numbers only)" }); return; }
+    if (!/^\d{2,20}$/.test(uid)) { toast({ variant: "destructive", title: t("Enter a valid Roblox UserId (numbers only)") }); return; }
     setFixBusy(true);
     try {
       const res = await fetch(SELF_SKIP, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: keyValue, user_id: uid }) });
@@ -99,12 +109,12 @@ export default function Dashboard() {
         setFixDone((s) => ({ ...s, [keyValue]: true }));
         setFixKey(null);
         setFixUserId("");
-        toast({ title: "Device whitelisted!", description: "Re-run the script — it'll work now." });
+        toast({ title: t("Device whitelisted!"), description: t("Re-run the script — it'll work now.") });
       } else {
-        toast({ variant: "destructive", title: "Couldn't fix it", description: data?.error || "Please try again." });
+        toast({ variant: "destructive", title: t("Couldn't fix it"), description: t(data?.error || "Please try again.") });
       }
     } catch {
-      toast({ variant: "destructive", title: "Network error", description: "Please try again." });
+      toast({ variant: "destructive", title: t("Network error"), description: t("Please try again.") });
     } finally { setFixBusy(false); }
   };
 
@@ -115,7 +125,7 @@ export default function Dashboard() {
         body: { action: "info", key: keyValue },
       });
       if (error || data?.success === false) {
-        toast({ variant: "destructive", title: "Couldn't load status", description: data?.error || error?.message });
+        toast({ variant: "destructive", title: t("Couldn't load status"), description: t(data?.error || error?.message || "Please try again.") });
         return;
       }
       setLiveStatus((s) => ({ ...s, [keyValue]: data }));
@@ -188,7 +198,7 @@ export default function Dashboard() {
   const submitSupport = (e: React.FormEvent) => {
     e.preventDefault();
     if (!supportForm.paypalEmail.trim()) {
-      toast({ title: "Missing PayPal email", description: "Please enter the email address shown on your PayPal receipt.", variant: "destructive" });
+      toast({ title: t("Missing PayPal email"), description: t("Please enter the email address shown on your PayPal receipt."), variant: "destructive" });
       return;
     }
     setSupportSubmitting(true);
@@ -203,14 +213,13 @@ Message: ${supportForm.message || "(none)"}
 
 — Sent from /dashboard support form`;
 
-    // Best-effort: open email client AND Discord invite so the buyer reaches us either way.
-    const mailto = `mailto:support@combowick.app?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(mailto, "_self");
+    // 2026-11-19: the support email never existed (no mail server) -> copy the details and open the Discord ticket.
+    try { void navigator.clipboard?.writeText(`${subject}\n\n${body}`); } catch { /* ignore */ }
     setTimeout(() => {
       window.open("https://discord.com/invite/ufrz9Zaqs8", "_blank", "noopener,noreferrer");
       toast({
-        title: "Support request prepared",
-        description: "Email draft opened + Discord invite launched. We respond fastest in Discord.",
+        title: t("Details copied"),
+        description: t("Open a ticket in our Discord and paste them there."),
       });
       setSupportSubmitting(false);
       setSupportOpen(false);
@@ -234,9 +243,9 @@ Message: ${supportForm.message || "(none)"}
         <div className="min-h-[60vh] flex items-center justify-center">
           <Card className="p-12 text-center max-w-md">
             <LogIn className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h2 className="font-heading text-2xl font-bold mb-2">Login Required</h2>
-            <p className="text-muted-foreground mb-6">Sign in to view your purchased premium keys and support messages.</p>
-            <Button onClick={() => navigate("/login")} className="w-full">Sign In</Button>
+            <h2 className="font-heading text-2xl font-bold mb-2">{t("Login Required")}</h2>
+            <p className="text-muted-foreground mb-6">{t("Sign in to view your purchased premium keys and support messages.")}</p>
+            <Button onClick={() => navigate("/login")} className="w-full">{t("Sign In")}</Button>
           </Card>
         </div>
       </Layout>
@@ -252,8 +261,8 @@ Message: ${supportForm.message || "(none)"}
       <section className="py-12 sm:py-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="font-heading text-3xl font-bold mb-2">My Dashboard</h1>
-            <p className="text-muted-foreground">Manage your premium keys and support messages</p>
+            <h1 className="font-heading text-3xl font-bold mb-2">{t("My Dashboard")}</h1>
+            <p className="text-muted-foreground">{t("Manage your premium keys and support messages")}</p>
           </div>
 
           {(() => {
@@ -266,7 +275,7 @@ Message: ${supportForm.message || "(none)"}
                 {badge && Icon && (
                   <Badge variant="outline" className={`gap-1.5 px-2.5 py-1 text-xs font-semibold ${badge.className}`}>
                     <Icon className="h-3.5 w-3.5" />
-                    {badge.label}
+                    {t(badge.label)}
                   </Badge>
                 )}
               </div>
@@ -285,22 +294,22 @@ Message: ${supportForm.message || "(none)"}
                 <div className="flex items-start gap-3">
                   <Link2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold mb-1">Purchase Link Status</p>
+                    <p className="text-sm font-semibold mb-1">{t("Purchase Link Status")}</p>
                     <div className="flex flex-wrap gap-2 text-xs">
                       {linkedById > 0 && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-success/15 text-success border border-success/30">
-                          <Check className="h-3 w-3" /> {linkedById} linked to your account
+                          <Check className="h-3 w-3" /> {t("{n} linked to your account").replace("{n}", String(linkedById))}
                         </span>
                       )}
                       {linkedByEmail > 0 && (
                         <span className="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/15 text-primary border border-primary/30">
-                          <Mail className="h-3 w-3" /> {linkedByEmail} matched by email
+                          <Mail className="h-3 w-3" /> {t("{n} matched by email").replace("{n}", String(linkedByEmail))}
                         </span>
                       )}
                     </div>
                     {linkedByEmail > 0 && (
                       <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-                        These keys were purchased as a guest using <span className="font-mono text-foreground">{user.email}</span> and have been automatically attached to your account.
+                        {fill(t("These keys were purchased as a guest using {email} and have been automatically attached to your account."), { email: <span dir="ltr" className="font-mono text-foreground">{user.email}</span> })}
                       </p>
                     )}
                   </div>
@@ -315,55 +324,55 @@ Message: ${supportForm.message || "(none)"}
               <div className="flex items-start gap-3">
                 <AlertCircle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold mb-1">Don't see a key you paid for?</p>
+                  <p className="text-sm font-semibold mb-1">{t("Don't see a key you paid for?")}</p>
                   <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-                    Most "missing key" issues = your PayPal receipt was sent to a <span className="font-semibold text-foreground">different email</span> than the one you signed in with.
-                    Sign in with the <span className="font-semibold text-foreground">exact email</span> on your PayPal receipt and your key will appear instantly.
+                    {fill(t('Most "missing key" issues = your PayPal receipt was sent to a {b} than the one you signed in with.'), { b: <span className="font-semibold text-foreground">{t("different email")}</span> })}{" "}
+                    {fill(t("Sign in with the {b} on your PayPal receipt and your key will appear instantly."), { b: <span className="font-semibold text-foreground">{t("exact email")}</span> })}
                   </p>
                   <p className="text-xs text-muted-foreground mb-3">
-                    Currently signed in as: <span className="font-mono text-foreground">{user.email}</span>
+                    {t("Currently signed in as:")} <span dir="ltr" className="font-mono text-foreground">{user.email}</span>
                   </p>
                   <div className="flex gap-2 flex-wrap">
                     <Button size="sm" variant="outline" onClick={async () => { await supabase.auth.signOut(); navigate("/login"); }}>
-                      <Mail className="h-3.5 w-3.5 mr-1.5" /> Sign in with PayPal email
+                      <Mail className="h-3.5 w-3.5 me-1.5" /> {t("Sign in with PayPal email")}
                     </Button>
                     <Button size="sm" variant="default" onClick={() => setSupportOpen((o) => !o)}>
-                      <LifeBuoy className="h-3.5 w-3.5 mr-1.5" /> {supportOpen ? "Hide support form" : "Contact support"}
+                      <LifeBuoy className="h-3.5 w-3.5 me-1.5" /> {supportOpen ? t("Hide support form") : t("Contact support")}
                     </Button>
                   </div>
 
                   {supportOpen && (
                     <form onSubmit={submitSupport} className="mt-5 space-y-3 p-4 rounded-lg bg-background/50 border border-border">
                       <div>
-                        <Label htmlFor="paypalEmail" className="text-xs">PayPal receipt email *</Label>
+                        <Label htmlFor="paypalEmail" className="text-xs">{t("PayPal receipt email *")}</Label>
                         <Input
                           id="paypalEmail"
                           type="email"
                           required
                           autoComplete="email"
-                          placeholder="the email PayPal sent your receipt to"
+                          placeholder={t("the email PayPal sent your receipt to")}
                           value={supportForm.paypalEmail}
                           onChange={(e) => setSupportForm((f) => ({ ...f, paypalEmail: e.target.value }))}
                           className="mt-1 h-9 text-sm"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="orderId" className="text-xs">PayPal Order / Transaction ID</Label>
+                        <Label htmlFor="orderId" className="text-xs">{t("PayPal Order / Transaction ID")}</Label>
                         <Input
                           id="orderId"
-                          placeholder="e.g. 9XR12345AB678901C (from your PayPal email)"
+                          placeholder={t("e.g. 9XR12345AB678901C (from your PayPal email)")}
                           value={supportForm.orderId}
                           onChange={(e) => setSupportForm((f) => ({ ...f, orderId: e.target.value }))}
                           className="mt-1 h-9 text-sm font-mono"
                         />
-                        <p className="text-[10px] text-muted-foreground mt-1">Found in your PayPal receipt email — speeds up our lookup massively.</p>
+                        <p className="text-[10px] text-muted-foreground mt-1">{t("Found in your PayPal receipt email — speeds up our lookup massively.")}</p>
                       </div>
                       <div>
-                        <Label htmlFor="message" className="text-xs">Anything else? (optional)</Label>
+                        <Label htmlFor="message" className="text-xs">{t("Anything else? (optional)")}</Label>
                         <Textarea
                           id="message"
                           rows={2}
-                          placeholder="What did you buy? When? Any error messages?"
+                          placeholder={t("What did you buy? When? Any error messages?")}
                           value={supportForm.message}
                           onChange={(e) => setSupportForm((f) => ({ ...f, message: e.target.value }))}
                           className="mt-1 text-sm resize-none"
@@ -371,10 +380,10 @@ Message: ${supportForm.message || "(none)"}
                       </div>
                       <div className="flex gap-2 flex-wrap items-center">
                         <Button type="submit" size="sm" disabled={supportSubmitting}>
-                          <Send className="h-3.5 w-3.5 mr-1.5" />
-                          {supportSubmitting ? "Sending..." : "Send & open Discord"}
+                          <Send className="h-3.5 w-3.5 me-1.5" />
+                          {supportSubmitting ? t("Sending...") : t("Send & open Discord")}
                         </Button>
-                        <p className="text-[10px] text-muted-foreground">We reply fastest in Discord — usually under 1 hour.</p>
+                        <p className="text-[10px] text-muted-foreground">{t("We reply fastest in Discord — usually under 1 hour.")}</p>
                       </div>
                     </form>
                   )}
@@ -389,15 +398,15 @@ Message: ${supportForm.message || "(none)"}
               onClick={() => setTab("keys")}
               className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${tab === "keys" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
-              <Key className="h-4 w-4" /> Premium Keys ({keys.length})
+              <Key className="h-4 w-4" /> {t("Premium Keys ({n})").replace("{n}", String(keys.length))}
             </button>
             <button
               onClick={() => setTab("messages")}
               className={`flex items-center gap-2 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${tab === "messages" ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
             >
-              <MessageSquare className="h-4 w-4" /> Messages ({messages.length})
+              <MessageSquare className="h-4 w-4" /> {t("Messages ({n})").replace("{n}", String(messages.length))}
               {messages.some(m => m.admin_reply && m.status === "new") && (
-                <span className="ml-1 inline-block h-2 w-2 rounded-full bg-primary animate-pulse" />
+                <span className="ms-1 inline-block h-2 w-2 rounded-full bg-primary animate-pulse" />
               )}
             </button>
           </div>
@@ -406,16 +415,16 @@ Message: ${supportForm.message || "(none)"}
             keys.length === 0 ? (
               <Card className="p-12 text-center border-dashed">
                 <Key className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-                <p className="text-lg font-semibold mb-2">No Premium Keys Yet</p>
-                <p className="text-muted-foreground mb-6">Purchase a premium key to get started</p>
-                <Button onClick={() => navigate("/premium-keys")}>Browse Premium Keys</Button>
+                <p className="text-lg font-semibold mb-2">{t("No Premium Keys Yet")}</p>
+                <p className="text-muted-foreground mb-6">{t("Purchase a premium key to get started")}</p>
+                <Button onClick={() => navigate("/premium-keys")}>{t("Browse Premium Keys")}</Button>
               </Card>
             ) : (
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border/60 bg-secondary/30 px-4 py-2.5">
-                  <p className="text-sm text-muted-foreground flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" /> Key says "Invalid Key" on your device? Fix it yourself in seconds.</p>
+                  <p className="text-sm text-muted-foreground flex items-center gap-2"><Smartphone className="h-4 w-4 text-primary" /> {t('Key says "Invalid Key" on your device? Fix it yourself in seconds.')}</p>
                   <Button asChild variant="outline" size="sm" className="gap-1.5">
-                    <Link to="/fix-key"><Smartphone className="h-3.5 w-3.5" /> Open Fix Key page</Link>
+                    <Link to="/fix-key"><Smartphone className="h-3.5 w-3.5" /> {t("Open Fix Key page")}</Link>
                   </Button>
                 </div>
                 {keys.map((purchase) => {
@@ -434,15 +443,15 @@ Message: ${supportForm.message || "(none)"}
                           <Clock className="h-5 w-5 text-primary shrink-0 mt-0.5 animate-pulse" />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1 flex-wrap">
-                              <h3 className="font-bold text-lg">{tierNames[purchase.tier] || purchase.tier}</h3>
-                              <span className="text-[10px] px-2 py-0.5 rounded bg-primary/20 text-primary uppercase tracking-wider font-semibold">Payment clearing</span>
+                              <h3 className="font-bold text-lg">{t(tierNames[purchase.tier] || purchase.tier)}</h3>
+                              <span className="text-[10px] px-2 py-0.5 rounded bg-primary/20 text-primary uppercase tracking-wider font-semibold">{t("Payment clearing")}</span>
                             </div>
                             <p className="text-sm text-muted-foreground leading-relaxed">
-                              Your eCheck payment is still clearing (usually a few business days). Your license key will appear here automatically — this page refreshes itself — and is also emailed the moment funds clear.
+                              {t("Your eCheck payment is still clearing (usually a few business days). Your license key will appear here automatically — this page refreshes itself — and is also emailed the moment funds clear.")}
                             </p>
                             <div className="flex items-center gap-2 mt-3 text-xs text-muted-foreground">
                               <div className="h-3 w-3 rounded-full border-2 border-primary/40 border-t-primary animate-spin" />
-                              Checking for updates… · Ordered {new Date(purchase.created_at).toLocaleDateString()} · ${purchase.amount}
+                              {t("Checking for updates…")} · {t("Ordered {date}").replace("{date}", new Date(purchase.created_at).toLocaleDateString())} · ${purchase.amount}
                             </div>
                           </div>
                         </div>
@@ -457,18 +466,18 @@ Message: ${supportForm.message || "(none)"}
                           <div className="flex items-center gap-3 mb-3">
                             <Key className={`h-5 w-5 ${isExpired || isFailed ? "text-destructive" : "text-primary"}`} />
                             <div>
-                              <h3 className="font-bold text-lg">{tierNames[purchase.tier] || purchase.tier}</h3>
+                              <h3 className="font-bold text-lg">{t(tierNames[purchase.tier] || purchase.tier)}</h3>
                               <div className="flex items-center gap-2 text-sm">
                                 {isFailed ? (
-                                  <><XCircle className="h-4 w-4 text-destructive" /><span className="text-destructive font-medium">Payment failed / reversed</span></>
+                                  <><XCircle className="h-4 w-4 text-destructive" /><span className="text-destructive font-medium">{t("Payment failed / reversed")}</span></>
                                 ) : isExpired ? (
-                                  <><XCircle className="h-4 w-4 text-destructive" /><span className="text-destructive font-medium">Expired</span></>
+                                  <><XCircle className="h-4 w-4 text-destructive" /><span className="text-destructive font-medium">{t("Expired")}</span></>
                                 ) : (
                                   <>
                                     <div className="w-2 h-2 bg-success rounded-full animate-pulse" />
-                                    <span className="text-success font-medium">Active</span>
+                                    <span className="text-success font-medium">{t("Active")}</span>
                                     {daysLeft !== null && daysLeft <= 365 && (
-                                      <span className="text-muted-foreground">· {daysLeft} day{daysLeft === 1 ? "" : "s"} left</span>
+                                      <span className="text-muted-foreground">· {t(daysLeft === 1 ? "{n} day left" : "{n} days left").replace("{n}", String(daysLeft))}</span>
                                     )}
                                   </>
                                 )}
@@ -477,13 +486,13 @@ Message: ${supportForm.message || "(none)"}
                           </div>
                           {!isFailed && (
                             <div className="bg-background/50 p-4 rounded-lg mb-3 border border-border/50">
-                              <p className="text-xs text-muted-foreground mb-1">License Key:</p>
+                              <p className="text-xs text-muted-foreground mb-1">{t("License Key:")}</p>
                               <code className="text-sm font-mono break-all font-semibold">{purchase.key_generated}</code>
                             </div>
                           )}
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span>Purchased: {new Date(purchase.created_at).toLocaleDateString()}</span>
-                            {purchase.expires_at && <span>Expires: {new Date(purchase.expires_at).toLocaleDateString()}</span>}
+                            <span>{t("Purchased:")} {new Date(purchase.created_at).toLocaleDateString()}</span>
+                            {purchase.expires_at && <span>{t("Expires:")} {new Date(purchase.expires_at).toLocaleDateString()}</span>}
                             <span>${purchase.amount}</span>
                           </div>
 
@@ -491,16 +500,16 @@ Message: ${supportForm.message || "(none)"}
                             <div className="mt-3 flex flex-wrap gap-2">
                               {!isExpired && (
                                 <Button size="sm" variant="default" className="gap-1.5" onClick={() => setTopUpKey(purchase.key_generated)}>
-                                  <Plus className="h-3.5 w-3.5" /> Add More Hours
+                                  <Plus className="h-3.5 w-3.5" /> {t("Add More Hours")}
                                 </Button>
                               )}
                               <Button size="sm" variant="outline" className="gap-1.5" disabled={checkingKey === purchase.key_generated} onClick={() => checkLiveStatus(purchase.key_generated)}>
                                 {checkingKey === purchase.key_generated ? <div className="h-3.5 w-3.5 rounded-full border-2 border-primary/40 border-t-primary animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
-                                Check live status
+                                {t("Check live status")}
                               </Button>
                               {!isExpired && !fixDone[purchase.key_generated] && (
                                 <Button size="sm" variant="outline" className="gap-1.5" onClick={() => { setFixKey(fixKey === purchase.key_generated ? null : purchase.key_generated); setFixUserId(""); }}>
-                                  <Smartphone className="h-3.5 w-3.5" /> Fix device ("Invalid Key")
+                                  <Smartphone className="h-3.5 w-3.5" /> {t('Fix device ("Invalid Key")')}
                                 </Button>
                               )}
                             </div>
@@ -509,19 +518,19 @@ Message: ${supportForm.message || "(none)"}
                           {fixDone[purchase.key_generated] && (
                             <div className="mt-3 rounded-lg border border-success/30 bg-success/5 p-3 text-xs flex items-center gap-2">
                               <Check className="h-4 w-4 text-success shrink-0" />
-                              <span>Device whitelisted — re-run the script and it'll work (until your key expires).</span>
+                              <span>{t("Device whitelisted — re-run the script and it'll work (until your key expires).")}</span>
                             </div>
                           )}
 
                           {fixKey === purchase.key_generated && !fixDone[purchase.key_generated] && (
                             <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 space-y-2.5">
                               <p className="text-xs text-muted-foreground">
-                                Getting "Invalid Key" on your own device even though your key is valid? Confirm your <b>Roblox account</b> to whitelist this device.
+                                {fill(t('Getting "Invalid Key" on your own device even though your key is valid? Confirm your {b} to whitelist this device.'), { b: <b>{t("Roblox account")}</b> })}
                               </p>
                               <RobloxUserField value={fixKey === purchase.key_generated ? fixUserId : ""} onChange={setFixUserId} disabled={fixBusy} />
                               <Button size="sm" className="gap-1.5 w-full sm:w-auto" disabled={fixBusy || !fixUserId} onClick={() => submitFix(purchase.key_generated)}>
                                 {fixBusy ? <div className="h-3.5 w-3.5 rounded-full border-2 border-white/40 border-t-white animate-spin" /> : <Smartphone className="h-3.5 w-3.5" />}
-                                Whitelist my device
+                                {t("Whitelist my device")}
                               </Button>
                             </div>
                           )}
@@ -531,12 +540,12 @@ Message: ${supportForm.message || "(none)"}
                             const tr = li.time_remaining;
                             return (
                               <div className="mt-3 rounded-lg border border-primary/30 bg-primary/5 p-3 text-xs space-y-1.5">
-                                <p className="font-semibold text-foreground flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-primary" /> Live key status</p>
+                                <p className="font-semibold text-foreground flex items-center gap-1.5"><Smartphone className="h-3.5 w-3.5 text-primary" /> {t("Live key status")}</p>
                                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-muted-foreground">
-                                  <span>{li.is_active && !li.is_expired ? <span className="text-success font-medium">● Active</span> : <span className="text-destructive font-medium">● Inactive</span>}</span>
-                                  <span>HWID: {li.hwid_bound ? "Bound to a device" : "Not bound yet"}</span>
-                                  {tr && <span>{tr.days}d {tr.hours % 24}h left</span>}
-                                  {li.expires_at && <span>Expires {new Date(li.expires_at).toLocaleDateString()}</span>}
+                                  <span>{li.is_active && !li.is_expired ? <span className="text-success font-medium">● {t("Active")}</span> : <span className="text-destructive font-medium">● {t("Inactive")}</span>}</span>
+                                  <span>HWID: {li.hwid_bound ? t("Bound to a device") : t("Not bound yet")}</span>
+                                  {tr && <span>{t("{d}d {h}h left").replace("{d}", String(tr.days)).replace("{h}", String(tr.hours % 24))}</span>}
+                                  {li.expires_at && <span>{t("Expires")} {new Date(li.expires_at).toLocaleDateString()}</span>}
                                 </div>
                               </div>
                             );
@@ -560,9 +569,9 @@ Message: ${supportForm.message || "(none)"}
             messages.length === 0 ? (
               <Card className="p-12 text-center border-dashed">
                 <MessageSquare className="h-10 w-10 text-muted-foreground mx-auto mb-4" />
-                <p className="text-lg font-semibold mb-2">No Messages Yet</p>
-                <p className="text-muted-foreground mb-6">Send us a message from the contact page — replies will appear here.</p>
-                <Button onClick={() => window.open("https://discord.com/invite/ufrz9Zaqs8", "_blank", "noopener,noreferrer")}>Ask on Discord</Button>
+                <p className="text-lg font-semibold mb-2">{t("No Messages Yet")}</p>
+                <p className="text-muted-foreground mb-6">{t("Send us a message from the contact page — replies will appear here.")}</p>
+                <Button onClick={() => window.open("https://discord.com/invite/ufrz9Zaqs8", "_blank", "noopener,noreferrer")}>{t("Ask on Discord")}</Button>
               </Card>
             ) : (
               <div className="space-y-4">
@@ -571,14 +580,14 @@ Message: ${supportForm.message || "(none)"}
                     <div className="flex items-start justify-between gap-3 flex-wrap mb-2">
                       <h3 className="font-semibold">{m.subject}</h3>
                       {m.admin_reply ? (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-success/20 text-success uppercase tracking-wider">Replied</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-success/20 text-success uppercase tracking-wider">{t("Replied")}</span>
                       ) : (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground uppercase tracking-wider">Awaiting reply</span>
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground uppercase tracking-wider">{t("Awaiting reply")}</span>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mb-3">Sent {new Date(m.created_at).toLocaleString()}</p>
+                    <p className="text-xs text-muted-foreground mb-3">{t("Sent")} {new Date(m.created_at).toLocaleString()}</p>
                     <div className="rounded-lg bg-background/50 border border-border/50 p-3 mb-3">
-                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Your message</p>
+                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">{t("Your message")}</p>
                       <p className="text-sm whitespace-pre-wrap break-words">{m.message}</p>
                     </div>
                     {m.admin_reply && (

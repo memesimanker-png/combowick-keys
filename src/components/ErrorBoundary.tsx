@@ -1,6 +1,15 @@
 import { Component, ErrorInfo, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, RefreshCw, MessageCircle } from "lucide-react";
+import { manualText } from "@/lib/translation-context";
+
+// The boundary sits outside TranslationProvider, so read the page language (set by applyDir) directly.
+const tr = (s: string): string => {
+  try {
+    const lang = document.documentElement.lang || "en";
+    return manualText(lang, s);
+  } catch { return s; }
+};
 
 interface Props { children: ReactNode; }
 interface State { hasError: boolean; error: Error | null; }
@@ -17,6 +26,12 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
+    // A page file from an older deploy is gone: reload once instead of showing the error screen (2026-11-19).
+    if (/dynamically imported module|Importing a module script failed|error loading dynamically/i.test(String(error?.message || ""))) {
+      let tried = false;
+      try { tried = Date.now() - Number(sessionStorage.getItem("cw_chunk_reload") || 0) < 60000; sessionStorage.setItem("cw_chunk_reload", String(Date.now())); } catch { /* ignore */ }
+      if (!tried) { window.location.reload(); return; }
+    }
     // eslint-disable-next-line no-console
     console.error("[ErrorBoundary]", error, info.componentStack);
     // Hook for Sentry / Lovable Cloud logging — uncomment when DSN is added:
@@ -31,22 +46,22 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="mx-auto h-14 w-14 rounded-full bg-destructive/15 flex items-center justify-center">
             <AlertTriangle className="h-7 w-7 text-destructive" />
           </div>
-          <h1 className="font-heading text-2xl font-bold">Something broke</h1>
+          <h1 className="font-heading text-2xl font-bold">{tr("Something broke")}</h1>
           <p className="text-sm text-muted-foreground">
-            A glitch tripped the page. Reload usually fixes it. If not, ping us in Discord and we'll patch it fast.
+            {tr("A glitch tripped the page. Reload usually fixes it. If not, ping us in Discord and we'll patch it fast.")}
           </p>
           {this.state.error?.message && (
-            <pre className="text-[10px] text-left bg-muted/40 p-2 rounded overflow-auto max-h-24 text-muted-foreground">
+            <pre dir="ltr" className="text-[10px] text-left bg-muted/40 p-2 rounded overflow-auto max-h-24 text-muted-foreground">
               {this.state.error.message}
             </pre>
           )}
           <div className="flex gap-2 justify-center">
             <Button onClick={() => window.location.reload()} size="sm">
-              <RefreshCw className="h-4 w-4 mr-1.5" /> Reload
+              <RefreshCw className="h-4 w-4 me-1.5" /> {tr("Reload")}
             </Button>
             <Button asChild variant="outline" size="sm">
               <a href="https://discord.com/invite/ufrz9Zaqs8" target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="h-4 w-4 mr-1.5" /> Discord
+                <MessageCircle className="h-4 w-4 me-1.5" /> Discord
               </a>
             </Button>
           </div>

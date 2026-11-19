@@ -54,7 +54,7 @@ export function TrustSection() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="https://rscripts.net/u/Combo_WICK" target="_blank" rel="noopener noreferrer">
+          <a href="https://rscripts.net/@ComboWick" target="_blank" rel="noopener noreferrer">
             <Button variant="outline" className="uppercase tracking-wider border-bronze/30 hover:bg-bronze/10 hover:text-bronze-light">
               <BadgeCheck className="mr-2 h-4 w-4" /> Verify on Rscripts
             </Button>

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ShieldCheck, ChevronRight, TrendingUp, DollarSign, Play, Share2, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/lib/translation-context";
 import { useScriptBySlug } from "@/hooks/useScripts";
 import { Layout } from "@/components/Layout";
 import { CopyButton } from "@/components/CopyButton";
@@ -35,6 +36,7 @@ export default function ScriptDetail() {
   const { data: script, isLoading } = useScriptBySlug(slug);
   const displayCode = buildStoreLoadstring(script);
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [shared, setShared] = useState(false);
 
   const handleShare = async () => {
@@ -85,11 +87,11 @@ export default function ScriptDetail() {
     const ok = await copyText(url);
     if (ok) {
       setShared(true);
-      toast({ title: "Link copied!", description: "Share link copied to clipboard." });
+      toast({ title: t("Link copied!"), description: t("Share link copied to clipboard.") });
       setTimeout(() => setShared(false), 2000);
     } else {
       // Last resort: prompt user to copy manually
-      window.prompt("Copy this link:", url);
+      window.prompt(t("Copy this link:"), url);
     }
   };
 
@@ -152,10 +154,10 @@ export default function ScriptDetail() {
     return (
       <Layout>
         <main className="mx-auto max-w-7xl px-4 py-20 text-center">
-          <h1 className="text-2xl font-bold">Script Not Found</h1>
-          <p className="text-muted-foreground mt-2">The script you're looking for doesn't exist.</p>
+          <h1 className="text-2xl font-bold">{t("Script Not Found")}</h1>
+          <p className="text-muted-foreground mt-2">{t("The script you're looking for doesn't exist.")}</p>
           <Link to="/scripts" className="text-primary text-sm mt-4 inline-block hover:underline">
-            Browse all scripts
+            {t("Browse all scripts")}
           </Link>
         </main>
       </Layout>
@@ -166,7 +168,7 @@ export default function ScriptDetail() {
     <Layout>
       <SEOHead
         title={`${script.game} Script — ${script.title} | Free Roblox | ComboWick`.slice(0, 70)}
-        description={`Free ${script.game} script for Roblox. ${script.description} Auto farm, ESP & more — copy & execute with any Roblox executor. Safe, verified, working ${new Date().getFullYear()}.`.slice(0, 160)}
+        description={`Free ${script.game} script for Roblox. ${script.description} Auto farm, ESP & more — copy & execute with any Roblox executor. Updated ${new Date().getFullYear()}.`.slice(0, 160)}
         breadcrumbs={[
           { name: "Home", url: "/" },
           { name: "Scripts", url: "/scripts" },
@@ -179,10 +181,10 @@ export default function ScriptDetail() {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <nav className="mb-6">
           <ol className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <li><Link to="/" className="hover:text-primary transition-colors">Home</Link></li>
-            <ChevronRight className="h-3 w-3" />
-            <li><Link to="/scripts" className="hover:text-primary transition-colors">Scripts</Link></li>
-            <ChevronRight className="h-3 w-3" />
+            <li><Link to="/" className="hover:text-primary transition-colors">{t("Home")}</Link></li>
+            <ChevronRight className="h-3 w-3 rtl:rotate-180" />
+            <li><Link to="/scripts" className="hover:text-primary transition-colors">{t("Scripts")}</Link></li>
+            <ChevronRight className="h-3 w-3 rtl:rotate-180" />
             <li className="truncate max-w-xs">{script.title}</li>
           </ol>
         </nav>
@@ -202,17 +204,17 @@ export default function ScriptDetail() {
                     </span>
                     {script.is_paid && (
                       <span className="flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-                        <DollarSign className="h-3 w-3" /> PAID
+                        <DollarSign className="h-3 w-3" /> {t("PAID")}
                       </span>
                     )}
                     {script.trending && (
                       <span className="flex items-center gap-1 text-xs text-primary">
-                        <TrendingUp className="h-3 w-3" /> Trending
+                        <TrendingUp className="h-3 w-3" /> {t("Trending")}
                       </span>
                     )}
                     {script.verified && (
                       <span className="flex items-center gap-1 text-xs text-green-400">
-                        <ShieldCheck className="h-3 w-3" /> Verified
+                        <ShieldCheck className="h-3 w-3" /> {t("Verified")}
                       </span>
                     )}
                   </div>
@@ -227,15 +229,15 @@ export default function ScriptDetail() {
                 ))}
               </div>
               <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
-                <span>Added {script.createdAt}</span>
-                <span>Updated {script.updatedAt}</span>
+                <span>{t("Added")} {script.createdAt}</span>
+                <span>{t("Updated")} {script.updatedAt}</span>
               </div>
             </header>
 
             {/* YouTube Video Tutorial */}
             {script.youtube_url && (
               <section className="mb-8">
-                <h2 className="text-lg font-semibold mb-3">Video Tutorial</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("Video Tutorial")}</h2>
                 <YouTubeEmbed url={script.youtube_url} />
               </section>
             )}
@@ -243,46 +245,44 @@ export default function ScriptDetail() {
             {/* Script Code - show purchase CTA for paid scripts */}
             {script.is_paid ? (
               <section className="mb-8">
-                <h2 className="text-lg font-semibold mb-3">Script Code</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("Script Code")}</h2>
                 <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/5 p-8 text-center">
                   <DollarSign className="h-10 w-10 text-yellow-400 mx-auto mb-3" />
-                  <p className="text-lg font-semibold mb-2">This is a Premium Script</p>
-                  <p className="text-sm text-muted-foreground mb-4">Purchase a premium key to access this script.</p>
+                  <p className="text-lg font-semibold mb-2">{t("This is a Premium Script")}</p>
+                  <p className="text-sm text-muted-foreground mb-4">{t("Purchase a premium key to access this script.")}</p>
                   <Link to="/premium-keys" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-yellow-500 text-black font-bold hover:bg-yellow-400 transition-colors">
-                    Purchase Access
+                    {t("Purchase Access")}
                   </Link>
                 </div>
               </section>
             ) : unlocked ? (
               <section className="mb-8">
                 <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-                  <h2 className="text-lg font-semibold">Script Code</h2>
+                  <h2 className="text-lg font-semibold">{t("Script Code")}</h2>
                   <div className="flex gap-2">
                     <EmailScriptButton script={{ ...script, code: displayCode }} />
                     <CopyButton text={displayCode} />
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-secondary/50 p-4 overflow-x-auto">
-                  <pre className="text-sm text-muted-foreground whitespace-pre font-mono leading-relaxed">
+                  <pre dir="ltr" className="text-sm text-muted-foreground whitespace-pre font-mono leading-relaxed">
                     {displayCode}
                   </pre>
                 </div>
               </section>
             ) : (
               <section className="mb-8">
-                <h2 className="text-lg font-semibold mb-3">Script Code</h2>
+                <h2 className="text-lg font-semibold mb-3">{t("Script Code")}</h2>
                 <ScriptUnlockGate slug={slug!} title={script.title} thumbnail={(script as any).thumbnail_url} />
               </section>
             )}
 
             {/* In-article AdSense — only AFTER unlock, so the Linkvertise gate view carries no ad
                 code (keeps AdSense and the content-locker on separate views). */}
-            {!script.is_paid && unlocked && (
-              <AdSlot slot="4444444444" format="fluid" layout="in-article" responsive={false} minHeight={200} />
-            )}
+            {/* 2026-11-19: AdSense slot removed (AdSense is retired; placeholder slot id) */}
 
             <section className="mb-8">
-              <h2 className="text-lg font-semibold mb-3">Tags</h2>
+              <h2 className="text-lg font-semibold mb-3">{t("Tags")}</h2>
               <div className="flex flex-wrap gap-2">
                 {script.tags.map((tag) => (
                   <Link
@@ -298,7 +298,7 @@ export default function ScriptDetail() {
 
             {script.faqs.length > 0 && (
               <section className="mb-8">
-                <h2 className="text-lg font-semibold mb-4">Frequently Asked Questions</h2>
+                <h2 className="text-lg font-semibold mb-4">{t("Frequently Asked Questions")}</h2>
                 <div className="space-y-4">
                   {script.faqs.map((faq, i) => (
                     <div key={i} className="rounded-lg border border-border bg-card p-5">
@@ -314,21 +314,21 @@ export default function ScriptDetail() {
           <aside className="lg:w-80 shrink-0">
             <div className="sticky top-20 space-y-6">
               <div className="rounded-lg border border-border bg-card p-5">
-                <h3 className="font-semibold mb-3">Script Info</h3>
+                <h3 className="font-semibold mb-3">{t("Script Info")}</h3>
                 <dl className="space-y-3 text-sm">
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Game</dt><dd>{script.game}</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Category</dt><dd>{script.category}</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Added</dt><dd>{script.createdAt}</dd></div>
-                  <div className="flex justify-between"><dt className="text-muted-foreground">Updated</dt><dd>{script.updatedAt}</dd></div>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">{t("Game")}</dt><dd>{script.game}</dd></div>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">{t("Category")}</dt><dd>{script.category}</dd></div>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">{t("Added")}</dt><dd>{script.createdAt}</dd></div>
+                  <div className="flex justify-between"><dt className="text-muted-foreground">{t("Updated")}</dt><dd>{script.updatedAt}</dd></div>
                   {script.is_paid && (
-                    <div className="flex justify-between"><dt className="text-muted-foreground">Access</dt><dd className="text-yellow-400 font-semibold">Premium</dd></div>
+                    <div className="flex justify-between"><dt className="text-muted-foreground">{t("Access")}</dt><dd className="text-yellow-400 font-semibold">{t("Premium")}</dd></div>
                   )}
                 </dl>
               </div>
 
               {script.is_paid ? (
                 <Link to="/premium-keys" className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-yellow-500 text-black font-bold hover:bg-yellow-400 transition-colors">
-                  <DollarSign className="h-4 w-4" /> Purchase Access
+                  <DollarSign className="h-4 w-4" /> {t("Purchase Access")}
                 </Link>
               ) : (
                 <CopyButton text={displayCode} className="w-full justify-center" />
@@ -345,19 +345,19 @@ export default function ScriptDetail() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-semibold transition-all shadow-sm shadow-green-500/20"
-                aria-label={`Play ${script.game} on Roblox`}
+                aria-label={t("Play {game} on Roblox").replace("{game}", script.game)}
               >
-                <Play className="h-4 w-4 fill-current" /> Play Game on Roblox
+                <Play className="h-4 w-4 fill-current" /> {t("Play Game on Roblox")}
               </a>
 
               <button
                 type="button"
                 onClick={handleShare}
                 className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border border-primary/30 bg-secondary/40 hover:bg-secondary/70 text-foreground font-medium transition-colors"
-                aria-label="Share this script"
+                aria-label={t("Share this script")}
               >
                 {shared ? <Check className="h-4 w-4 text-green-400" /> : <Share2 className="h-4 w-4" />}
-                {shared ? "Copied!" : "Share Script"}
+                {shared ? t("Copied!") : t("Share Script")}
               </button>
             </div>
           </aside>

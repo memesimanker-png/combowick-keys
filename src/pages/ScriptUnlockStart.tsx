@@ -127,7 +127,7 @@ export default function ScriptUnlockStart() {
       const destination = `${origin}/ad-return/script-step2?slug=${encodeURIComponent(slug)}&hash=${nonce}`;
       window.location.href = buildLinkvertiseUrl(links[0], destination);
     } catch (e: any) {
-      setError(e?.message || "Could not start unlock. Try again.");
+      setError(t(e?.message || "Could not start unlock. Try again."));
     }
   };
 
@@ -166,7 +166,7 @@ export default function ScriptUnlockStart() {
         <header className="container py-6">
           <div className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">ComboWick Verify</h1>
+            <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
           </div>
         </header>
         <main className="flex-1 container flex flex-col items-center justify-center pb-12">
@@ -174,7 +174,7 @@ export default function ScriptUnlockStart() {
             <div className="aspect-video w-full bg-black">
               <iframe
                 src={`https://www.youtube.com/embed/${gateV}?rel=0`}
-                title="Video"
+                title={t("Video")}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full"
@@ -221,7 +221,7 @@ export default function ScriptUnlockStart() {
         <header className="container py-6">
           <div className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-primary" />
-            <h1 className="text-xl font-bold">ComboWick Verify</h1>
+            <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
           </div>
         </header>
         <main className="flex-1 container flex flex-col items-center justify-center py-12">
@@ -248,28 +248,28 @@ export default function ScriptUnlockStart() {
       <header className="container py-6">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
         </div>
       </header>
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Opening your script</CardTitle>
-            <CardDescription>Taking you to the download page…</CardDescription>
+            <CardTitle>{t("Opening your script")}</CardTitle>
+            <CardDescription>{t("Taking you to the download page…")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8 gap-4">
               {error ? (
                 <>
                   <p className="text-center text-sm text-red-400">{error}</p>
-                  <Button onClick={launch} className="gap-2"><Unlock className="h-4 w-4" /> Try again</Button>
+                  <Button onClick={launch} className="gap-2"><Unlock className="h-4 w-4" /> {t("Try again")}</Button>
                 </>
               ) : (
                 <>
                   <Loader2 className="h-12 w-12 text-primary animate-spin" />
-                  <p className="text-center text-muted-foreground">Preparing your unlock…</p>
+                  <p className="text-center text-muted-foreground">{t("Preparing your unlock…")}</p>
                   <Button variant="outline" onClick={launch} className="gap-2">
-                    <Unlock className="h-4 w-4" /> Continue
+                    <Unlock className="h-4 w-4" /> {t("Continue")}
                   </Button>
                 </>
               )}

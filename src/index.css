@@ -257,6 +257,9 @@
     border-radius: var(--glow-radius);
     padding: 1.5px;
     overflow: hidden;
+    /* 2026-11-19: "clip" can't be scrolled. With "hidden" the spinning ::before (150% wide) made the box scrollable,
+       and when checkout closed the browser scrolled it to re-show the focused button: trial card shifted, price gone. */
+    overflow: clip;
     isolation: isolate;
     animation: cw-glow-pulse var(--glow-speed) ease-in-out infinite;
   }

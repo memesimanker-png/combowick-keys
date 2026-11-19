@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "@/lib/translation-context";
 
 interface YouTubeVideoPlayerProps {
   step: string;
@@ -49,6 +50,7 @@ async function getVideos(): Promise<string[]> {
 }
 
 export function YouTubeVideoPlayer({ step, onTimerComplete, timerSeconds = 0, allowPause = false }: YouTubeVideoPlayerProps) {
+  const { t } = useTranslation();
   const [videoId, setVideoId] = useState<string>(FALLBACK[STEP_INDEX[step] ?? 0]);
   const [timeLeft, setTimeLeft] = useState(timerSeconds);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -120,7 +122,7 @@ export function YouTubeVideoPlayer({ step, onTimerComplete, timerSeconds = 0, al
         <iframe
           ref={iframeRef}
           src={`https://www.youtube.com/embed/${videoId}?autoplay=${allowPause ? 0 : 1}&mute=${shouldMute ? 1 : 0}&rel=0&enablejsapi=1`}
-          title="YouTube video player"
+          title={t("YouTube video player")}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           className="w-full h-full"

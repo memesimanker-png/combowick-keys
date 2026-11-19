@@ -94,19 +94,11 @@ export default function ScriptAdmin() {
         .join("");
       let finalCode = form.code;
       if (fileName) {
-        const loaderContent = `loadstring(game:HttpGet('https://raw.githubusercontent.com/checkurasshole/Script/refs/heads/main/IQ'))();`;
         try {
-          const res = await fetch(
-            `https://vcuwjyjkbtxccywzeadu.supabase.co/functions/v1/public-api/repos/checkurasshole/Loaders/files/${fileName}`,
-            {
-              method: "PUT",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ content: loaderContent, message: `Add loader for ${form.game}` }),
-            }
-          );
-          if (!res.ok) {
-            const txt = await res.text();
-            throw new Error(`GitHub API ${res.status}: ${txt.slice(0, 200)}`);
+          // 2026-11-19: our own staff-only function (was an open third-party GitHub proxy called from the browser)
+          const { data: lf, error: lfErr } = await supabase.functions.invoke("loader-file", { body: { fileName, game: form.game } });
+          if (lfErr || !(lf as any)?.ok) {
+            throw new Error(`GitHub ${(lf as any)?.error || lfErr?.message || "error"}`);
           }
           finalCode = `loadstring(game:HttpGet('https://raw.githubusercontent.com/checkurasshole/Loaders/refs/heads/main/${fileName}'))();`;
           toast({ title: `GitHub loader created: ${fileName}` });

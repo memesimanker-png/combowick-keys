@@ -6,7 +6,9 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 //   loadstring(game:HttpGet("https://keys.combowick.com/api/hub?t=TOKEN&p="..game.PlaceId))()
 
 const EX = "https://v0-remix-of-roblox-executor-system.vercel.app";
-const HUB_SECRET = "cwhub_Z8n4Kq2Rp9mXvL6bW1sT5yH0jC3aF7d";
+// 2026-11-19: was hardcoded here, and this repo is PUBLIC (anyone could pull every script from the key server).
+// Now a Supabase secret; the key server reads its own copy from an env var.
+const HUB_SECRET = Deno.env.get("HUB_SCRIPT_SECRET") ?? "";
 const SELECTOR = "https://raw.githubusercontent.com/combowick-hub/combowick-selector/main/selector.lua";
 
 // Obfuscated anti-cheat kick guard (Steal An Egg). Self-scoped at runtime by game.GameId,

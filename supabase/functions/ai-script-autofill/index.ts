@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { getClientIp, rateLimit, tooManyRequests } from "../_shared/throttle.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +13,16 @@ serve(async (req) => {
   // Throttle: AI auto-fill is expensive — max 10/min per IP
   const ip = getClientIp(req);
   if (!rateLimit(`ai-autofill:${ip}`, 10, 60_000)) return tooManyRequests(corsHeaders);
+
+  // 2026-11-19: admins only (anyone with the public anon key could spend AI credits)
+  {
+    const url = Deno.env.get("SUPABASE_URL") ?? "";
+    const userClient = createClient(url, Deno.env.get("SUPABASE_ANON_KEY") ?? "", { global: { headers: { Authorization: req.headers.get("Authorization") ?? "" } } });
+    const { data: u } = await userClient.auth.getUser();
+    const admin = createClient(url, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "");
+    const { data: isAdmin } = u?.user ? await admin.rpc("has_tab", { _user_id: u.user.id, _tab: "scripts" }) : { data: false };
+    if (!isAdmin) return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+  }
 
   try {
     const { code, existing } = await req.json();

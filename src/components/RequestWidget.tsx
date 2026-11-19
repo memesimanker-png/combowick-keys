@@ -126,7 +126,7 @@ export function RequestWidget({ embedded = false }: { embedded?: boolean } = {})
         )}
 
         <Link to="/request" className="flex items-center justify-center gap-1 text-xs font-semibold text-violet-300 hover:underline">
-          <Key className="h-3 w-3" /> {t("See all requests")} <ChevronRight className="h-3 w-3" />
+          <Key className="h-3 w-3" /> {t("See all requests")} <ChevronRight className="h-3 w-3 rtl:rotate-180" />
         </Link>
     </>
   );
@@ -168,10 +168,10 @@ export function RequestStrip() {
   const toggle = () => setOpen((o) => { try { sessionStorage.setItem("cw_req_open", o ? "0" : "1"); } catch { /* ignore */ } return !o; });
   return (
     <div className="border-b border-border/50 bg-gradient-to-r from-violet-500/15 to-transparent">
-      <button type="button" onClick={toggle} className="flex w-full items-center gap-3 px-4 py-3 text-left sm:px-7">
+      <button type="button" onClick={toggle} className="flex w-full items-center gap-3 px-4 py-3 text-start sm:px-7">
         <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-500/25">
           <Lightbulb className="h-4 w-4 text-violet-300" />
-          <span className="absolute -left-2 -top-2 rounded-full bg-violet-500 px-1.5 py-px text-[8.5px] font-extrabold uppercase text-white">{t("New")}</span>
+          <span className="absolute -start-2 -top-2 rounded-full bg-violet-500 px-1.5 py-px text-[8.5px] font-extrabold uppercase text-white">{t("New")}</span>
         </span>
         <span className="min-w-0 flex-1 text-sm font-semibold leading-tight">
           {t("Don't see your game?")}

@@ -130,15 +130,15 @@ function normalizeExternalUrl(url?: string): string | undefined {
   return trimmed;
 }
 
-function formatRelative(ts: number, now: number): string {
+function formatRelative(ts: number, now: number, t: (s: string) => string = (s) => s): string {
   const s = Math.max(0, Math.round((now - ts) / 1000));
-  if (s < 10) return "just now";
-  if (s < 60) return `${s}s ago`;
+  if (s < 10) return t("just now");
+  if (s < 60) return t("{n}s ago").replace("{n}", String(s));
   const m = Math.round(s / 60);
-  if (m < 60) return `${m}m ago`;
+  if (m < 60) return t("{n}m ago").replace("{n}", String(m));
   const h = Math.round(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.round(h / 24)}d ago`;
+  if (h < 24) return t("{n}h ago").replace("{n}", String(h));
+  return t("{n}d ago").replace("{n}", String(Math.round(h / 24)));
 }
 
 function formatAbsolute(ts: number): string {
@@ -267,7 +267,7 @@ export default function Executors() {
       setError(null);
       try { localStorage.setItem(CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), data: list })); } catch { /* ignore */ }
     } catch (e: any) {
-      setError(e?.message || "Failed to load executors");
+      setError(t(e?.message || "Failed to load executors"));
     } finally {
       setLoading(false);
     }
@@ -399,7 +399,7 @@ export default function Executors() {
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-success/30 bg-success/10 px-3 py-1 text-success">
                 <span className="relative flex h-2 w-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" /><span className="relative inline-flex h-2 w-2 rounded-full bg-success" /></span>
-                {t("Live status")}{fetchedAt ? ` · ${formatRelative(fetchedAt, Date.now())}` : ""}
+                {t("Live status")}{fetchedAt ? ` · ${formatRelative(fetchedAt, Date.now(), t)}` : ""}
               </span>
               {versions?.Windows && (
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 px-3 py-1 text-muted-foreground">
@@ -500,7 +500,7 @@ export default function Executors() {
                   className="h-9 w-full rounded-lg border border-border/60 bg-background/60 pl-9 pr-9 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/60"
                 />
                 {search && (
-                  <button onClick={() => setSearch("")} aria-label="Clear search" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <button onClick={() => setSearch("")} aria-label={t("Clear search")} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                     <X className="h-4 w-4" />
                   </button>
                 )}
@@ -777,7 +777,7 @@ function ExecutorModal({ exec, onClose }: { exec: Executor | null; onClose: () =
         <div className="mt-4 space-y-1.5 text-xs text-muted-foreground">
           <div className="flex justify-between gap-2"><span>{t("Device")}</span><span className="text-foreground">{t(PLATS.find((p) => p.id === plat)!.label)}</span></div>
           <div className="flex justify-between gap-2"><span>{t("Roblox version")}</span><span className="truncate text-foreground">{exec.rbxversion ? String(exec.rbxversion) : "—"}</span></div>
-          <div className="flex justify-between gap-2"><span>{t("Last updated")}</span><span className="text-foreground">{updatedTs ? `${formatRelative(updatedTs, Date.now())} · ${formatAbsolute(updatedTs)}` : "—"}</span></div>
+          <div className="flex justify-between gap-2"><span>{t("Last updated")}</span><span className="text-foreground">{updatedTs ? `${formatRelative(updatedTs, Date.now(), t)} · ${formatAbsolute(updatedTs)}` : "—"}</span></div>
           {exec.detectionReason && <div className="flex justify-between gap-2"><span>{t("Detection note")}</span><span className="text-right text-foreground">{exec.detectionReason}</span></div>}
           {description && <div className="whitespace-pre-line rounded-lg border border-primary/30 bg-primary/5 p-3 text-foreground">{description}</div>}
         </div>

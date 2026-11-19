@@ -60,12 +60,12 @@ export function DonateCard({ paypalClientId }: { paypalClientId: string }) {
           onClick={() => { setOpen(true); setSuccess(false); setError(null); }}
           className="px-8 py-5 font-bold bg-pink-600 hover:bg-pink-700 text-white"
         >
-          <Heart className="h-4 w-4 mr-2" /> {t("Donate")}
+          <Heart className="h-4 w-4 me-2" /> {t("Donate")}
         </Button>
       </Card>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={() => { if (!processing) setOpen(false); }}
@@ -75,7 +75,7 @@ export function DonateCard({ paypalClientId }: { paypalClientId: string }) {
             <div className="p-6">
               <button
                 onClick={() => { if (!processing) setOpen(false); }}
-                className="absolute top-5 right-5 text-muted-foreground hover:text-foreground rounded-full p-1.5 hover:bg-secondary"
+                className="absolute top-5 end-5 text-muted-foreground hover:text-foreground rounded-full p-1.5 hover:bg-secondary"
                 aria-label="Close"
               >
                 <X className="w-4 h-4" />

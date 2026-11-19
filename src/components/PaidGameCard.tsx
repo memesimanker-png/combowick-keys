@@ -82,7 +82,7 @@ export function PaidGameCard({
           height={360}
         />
         {badge && (
-          <span className={`absolute top-3 right-3 text-xs font-bold px-2.5 py-1 rounded-full border ${badgeStyles[badge.variant]}`}>
+          <span className={`absolute top-3 end-3 text-xs font-bold px-2.5 py-1 rounded-full border ${badgeStyles[badge.variant]}`}>
             {t(badge.text)}
           </span>
         )}
@@ -102,7 +102,7 @@ export function PaidGameCard({
                   className="w-full h-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
-                  title="Preview video"
+                  title={t("Preview video")}
                 />
               </div>
             ) : (
@@ -135,9 +135,9 @@ export function PaidGameCard({
               {showChangelog ? t("Hide") : t("View")} {t("changelog")} ({changelog.length})
             </button>
             {showChangelog && (
-              <div className="space-y-1.5 pl-1 border-l-2 border-primary/20 ml-1">
+              <div className="space-y-1.5 ps-1 border-s-2 border-primary/20 ms-1">
                 {changelog.map((log) => (
-                  <div key={log.id} className="pl-3 py-1">
+                  <div key={log.id} className="ps-3 py-1">
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-mono font-bold text-primary">{log.version}</span>
                       <span className="text-[10px] text-muted-foreground">
@@ -192,10 +192,10 @@ export function PaidGameCard({
                   <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{tier.label}</span>
                 </div>
                 <div className="text-2xl font-heading font-bold">${tier.price}</div>
-                <div className="text-[10px] text-muted-foreground mb-1">/{tier.period === "month" ? "mo" : "lifetime"}</div>
+                <div className="text-[10px] text-muted-foreground mb-1">{tier.period === "month" ? t("/mo") : t("/lifetime")}</div>
                 {isBestValue && monthlySavings > 0 && (
                   <div className="text-[9px] font-semibold text-primary bg-primary/10 rounded-full px-2 py-0.5 inline-block">
-                    {t("Save")} {monthlySavings}% vs {t("monthly")}
+                    {t("Save {n}% vs monthly").replace("{n}", String(monthlySavings))}
                   </div>
                 )}
                 <div className={`mt-2 flex items-center justify-center gap-1.5 text-xs font-semibold rounded-md py-1.5 ${
@@ -204,7 +204,7 @@ export function PaidGameCard({
                     : "bg-secondary-foreground/10 text-secondary-foreground group-hover:bg-secondary-foreground/20"
                 }`}>
                   {t("Get Access")}
-                  <ArrowRight className="w-3 h-3" />
+                  <ArrowRight className="w-3 h-3 rtl:rotate-180" />
                 </div>
                 {tier.note && (
                   <p className="mt-2 text-[9px] leading-tight text-muted-foreground">{t(tier.note)}</p>

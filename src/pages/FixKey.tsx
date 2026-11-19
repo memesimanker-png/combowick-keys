@@ -56,7 +56,7 @@ export default function FixKey() {
         setDone(true);
         toast({ title: t("Device whitelisted!"), description: t("Re-run the script — it'll work now.") });
       } else {
-        toast({ variant: "destructive", title: t("Couldn't fix it"), description: data?.error || t("Please try again.") });
+        toast({ variant: "destructive", title: t("Couldn't fix it"), description: t(data?.error || "Please try again.") });
       }
     } catch {
       toast({ variant: "destructive", title: t("Network error"), description: t("Please try again.") });
@@ -107,7 +107,7 @@ export default function FixKey() {
                     <RobloxUserField value={userId} onChange={setUserId} disabled={loading} />
                   </div>
                   <Button onClick={submit} disabled={loading} className="w-full bg-gradient-to-r from-primary to-purple-500 hover:shadow-lg transition-all">
-                    {loading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t("Whitelisting…")}</> : <>{t("Whitelist My Device")}</>}
+                    {loading ? <><Loader2 className="me-2 h-4 w-4 animate-spin" /> {t("Whitelisting…")}</> : <>{t("Whitelist My Device")}</>}
                   </Button>
                 </>
               )}

@@ -61,7 +61,7 @@ export function BackButton() {
       onClick={goBack}
       aria-label={t("Go back")}
       // On phones the verify flow has no spare corner — the floating button covered the offer cards there.
-      className={`fixed bottom-20 left-4 md:bottom-6 z-50 ${pathname.startsWith("/verify") ? "hidden md:flex" : "flex"} items-center gap-1.5 rounded-full border border-border bg-background/85 px-3.5 py-2 text-xs font-semibold text-foreground shadow-lg backdrop-blur-xl transition hover:bg-secondary active:scale-95`}
+      className={`fixed bottom-20 left-4 md:bottom-6 z-50 ${/^\/(verify|premium-keys|payoneer-order|access-key|fix-key|blocked|scripts\/)/.test(pathname) ? "hidden md:flex" : "flex"} items-center gap-1.5 rounded-full border border-border bg-background/85 px-3.5 py-2 text-xs font-semibold text-foreground shadow-lg backdrop-blur-xl transition hover:bg-secondary active:scale-95`}
     >
       <ArrowLeft className="h-3.5 w-3.5" />
       {t("Back")}

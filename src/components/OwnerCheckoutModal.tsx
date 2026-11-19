@@ -80,12 +80,12 @@ export function OwnerCheckoutModal({ isOpen, onClose, paypalClientId }: Props) {
   const guardedClose = () => { if (!processing && !success) onClose(); };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={guardedClose} />
       <div className="relative z-10 w-full max-w-md overflow-y-auto rounded-2xl border border-yellow-500/40 bg-card shadow-2xl max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
         <div className="h-1.5 bg-gradient-to-r from-yellow-500 via-yellow-300 to-yellow-500/40" />
         <div className="p-6">
-          <button onClick={success ? onClose : guardedClose} disabled={processing} className="absolute right-5 top-5 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-30" aria-label={t("Close")}>
+          <button onClick={success ? onClose : guardedClose} disabled={processing} className="absolute end-5 top-5 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-30" aria-label={t("Close")}>
             <X className="h-4 w-4" />
           </button>
 

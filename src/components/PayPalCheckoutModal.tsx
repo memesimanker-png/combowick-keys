@@ -163,7 +163,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
     supabase.functions.invoke("paypal-create-subscription", { body: { amount: price } })
       .then(({ data, error: fnError }) => {
         if (fnError || !data?.plan_id) {
-          setError("Failed to load subscription plan. Please try again.");
+          setError(t("Failed to load subscription plan. Please try again."));
         } else {
           setPlanId(data.plan_id);
         }
@@ -195,7 +195,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
       if (fnError || !data?.order_id) throw new Error("Failed to create order");
       return data.order_id;
     } catch (err: any) {
-      setError(err.message || t("modal_generic_error"));
+      setError(err?.message ? t(err.message) : t("modal_generic_error"));
       throw err;
     }
   };
@@ -297,7 +297,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={guardedClose} />
       <div
         className="relative bg-card border border-border rounded-2xl w-full max-w-md shadow-2xl z-10 max-h-[90vh] overflow-y-auto"
@@ -308,8 +308,8 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
           <button
             onClick={(success || pending) ? dismissSuccess : guardedClose}
             disabled={processing}
-            className="absolute top-5 right-5 text-muted-foreground hover:text-foreground transition-colors rounded-full p-1.5 hover:bg-secondary disabled:opacity-30 disabled:cursor-not-allowed"
-            aria-label="Close"
+            className="absolute top-5 end-5 text-muted-foreground hover:text-foreground transition-colors rounded-full p-1.5 hover:bg-secondary disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label={t("Close")}
           >
             <X className="w-4 h-4" />
           </button>
@@ -352,7 +352,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
               <p className="text-xs text-muted-foreground">{t("Expires:")} {new Date(success.expires_at).toLocaleDateString()}</p>
               <p className="text-xs text-muted-foreground mt-1">{t("modal_key_saved_dashboard")}</p>
               {upgrade && (
-                <div className="mt-5 text-left bg-primary/10 p-4 rounded-lg border border-primary/40">
+                <div className="mt-5 text-start bg-primary/10 p-4 rounded-lg border border-primary/40">
                   <p className="text-sm font-semibold mb-1">{t("Want to keep Premium for good?")}</p>
                   <p className="text-xs text-muted-foreground mb-3">
                     {t("Your code {code} takes {pct}% off Lifetime or Monthly. It works once, for 7 days.").replace("{code}", upgrade.code).replace("{pct}", String(upgrade.pct))}
@@ -368,7 +368,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                 </div>
               )}
               {tier.script && (
-                <div className="mt-5 text-left bg-background/50 backdrop-blur-sm p-4 rounded-lg border border-primary/30">
+                <div className="mt-5 text-start bg-background/50 backdrop-blur-sm p-4 rounded-lg border border-primary/30">
                   <p className="text-xs text-muted-foreground mb-2 font-medium">{t("Your Script (run with your key):")}</p>
                   <code className="block text-[11px] font-mono break-all text-primary select-all mb-3">{tier.script}</code>
                   <button
@@ -401,12 +401,12 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                       { id: "payoneer", label: "Payoneer", sub: t("Automatic key") },
                     ] as const).map((m) => (
                       <button key={m.id} type="button" onClick={() => setMethod(m.id)}
-                        className={`rounded-lg border p-3 text-left transition-all ${method === m.id ? "border-primary bg-primary/15" : "border-border bg-secondary/40 hover:bg-secondary"}`}>
+                        className={`rounded-lg border p-3 text-start transition-all ${method === m.id ? "border-primary bg-primary/15" : "border-border bg-secondary/40 hover:bg-secondary"}`}>
                         <div className="flex items-center gap-2 text-sm font-semibold">
                           <span className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 ${method === m.id ? "border-primary bg-primary" : "border-muted-foreground/50"}`} />
                           {m.label}
                         </div>
-                        <div className="mt-1 pl-[22px] text-[11px] leading-snug text-muted-foreground">{m.sub}</div>
+                        <div className="mt-1 ps-[22px] text-[11px] leading-snug text-muted-foreground">{m.sub}</div>
                       </button>
                     ))}
                     <div aria-disabled="true" className="col-span-2 flex cursor-not-allowed items-center justify-between gap-2 rounded-lg border border-dashed border-border bg-secondary/20 px-3 py-2.5 opacity-70">
@@ -514,13 +514,14 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
                 <div className="flex items-center gap-1.5 bg-secondary rounded-full px-3 py-1 text-[10px] text-muted-foreground"><Lock className="w-3 h-3 text-primary" /> PayPal</div>
               </div>
 
-              {paypalFee > 0 && (
-                <div className="mb-4 rounded-lg border border-border bg-secondary/40 px-3 py-2.5 text-xs" data-no-translate>
-                  <div className="flex justify-between text-muted-foreground"><span>{tier.name}</span><span>${displayPrice.toFixed(2)}</span></div>
+              {/* 2026-11-19: always show what will be charged (Lifetime/Monthly showed no total at all) */}
+              <div className="mb-4 rounded-lg border border-border bg-secondary/40 px-3 py-2.5 text-xs" data-no-translate>
+                <div className="flex justify-between text-muted-foreground"><span>{tier.name}</span><span>${displayPrice.toFixed(2)}</span></div>
+                {paypalFee > 0 && (
                   <div className="mt-1 flex justify-between text-muted-foreground"><span>{t("PayPal fee")}</span><span>${paypalFee.toFixed(2)}</span></div>
-                  <div className="mt-1.5 flex justify-between border-t border-border pt-1.5 text-sm font-bold text-foreground"><span>{t("Total")}</span><span>${chargePrice.toFixed(2)}</span></div>
-                </div>
-              )}
+                )}
+                <div className="mt-1.5 flex justify-between border-t border-border pt-1.5 text-sm font-bold text-foreground"><span>{t("Total")}</span><span>${chargePrice.toFixed(2)}</span></div>
+              </div>
 
               {error && (
                 <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 mb-4 text-sm text-destructive text-center">{error}</div>
@@ -577,7 +578,7 @@ export function PayPalCheckoutModal({ isOpen, onClose, tier, paypalClientId, ini
 
               <div className="mt-4 rounded-lg border border-border bg-secondary/40 p-3 text-[11px] leading-relaxed text-muted-foreground">
                 <p className="font-medium text-foreground mb-1">{t("Card declined or blocked?")}</p>
-                <p>{t("Some banks or countries block this type of payment. Try paying with your PayPal balance, use a different card, or connect through a VPN. Still stuck? We'll get you sorted on Discord.")}</p>
+                <p>{t("Some banks block this kind of payment. Pay with your PayPal balance or another card, or pick Payoneer above.")}</p>
                 <a
                   href="https://discord.com/invite/ufrz9Zaqs8"
                   target="_blank"

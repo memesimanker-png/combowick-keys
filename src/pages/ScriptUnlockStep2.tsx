@@ -4,6 +4,7 @@ import { Shield, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { NoIndex } from "@/components/NoIndex";
+import { useTranslation } from "@/lib/translation-context";
 import { buildLinkvertiseUrl } from "@/lib/linkvertise";
 import { useVerifyLinks } from "@/hooks/useVerifyLinks";
 
@@ -30,8 +31,9 @@ export default function ScriptUnlockStep2() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const links = useVerifyLinks();
-  const [msg, setMsg] = useState("Validating step 1…");
+  const [msg, setMsg] = useState(() => t("Validating step 1…"));
   const [ran, setRan] = useState(false);
   // don't wait forever for the admin Linkvertise links (a failed settings read used to spin here for good)
   const [waited, setWaited] = useState(false);
@@ -71,8 +73,8 @@ export default function ScriptUnlockStep2() {
     // Rotate nonce, write step2 pending, then send through the 2nd Linkvertise link.
     const nonce2 = makeNonce();
     localStorage.setItem("script_unlock_pending", JSON.stringify({ slug, nonce: nonce2, ts: Date.now() }));
-    setMsg("Redirecting to step 2…");
-    toast({ title: "Step 1 complete", description: "Redirecting to step 2…" });
+    setMsg(t("Redirecting to step 2…"));
+    toast({ title: t("Step 1 complete"), description: t("Redirecting to step 2…") });
     const destination = `${window.location.origin}/ad-return/script?slug=${encodeURIComponent(slug)}&hash=${nonce2}`;
     setTimeout(() => { window.location.href = buildLinkvertiseUrl(links[1], destination); }, 600);
   }, [links, ran, params, navigate, toast, waited]);
@@ -83,14 +85,14 @@ export default function ScriptUnlockStep2() {
       <header className="container py-6">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
         </div>
       </header>
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Step 1 of 2 Complete</CardTitle>
-            <CardDescription>Preparing final unlock…</CardDescription>
+            <CardTitle>{t("Step 1 of 2 Complete")}</CardTitle>
+            <CardDescription>{t("Preparing final unlock…")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8">

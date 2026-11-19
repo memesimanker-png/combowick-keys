@@ -231,7 +231,7 @@ export default function AdReturn() {
       <header className="container py-6">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
         </div>
       </header>
       <main className="flex-1 container flex flex-col items-center justify-center py-12">

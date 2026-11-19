@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { LangCode, EN_TEXTS, applyDir } from "./translations";
-import { MANUAL_TRANSLATIONS } from "./manual-translations";
 import { supabase } from "@/integrations/supabase/client";
 import { startAutoTranslator, stopAutoTranslator, setAutoTranslateBusyListener, setTranslationOutageListener, reportTranslationOutage } from "./auto-translator";
 
@@ -39,7 +38,7 @@ const TranslationContext = createContext<TranslationContextType>({
 });
 
 // Load cache from localStorage on init
-const TRANSLATION_CACHE_VERSION = "v9-manual"; // bump to seed hand-translated strings
+const TRANSLATION_CACHE_VERSION = "v10-manual"; // bump to seed hand-translated strings
 const translationCache: Record<string, Record<string, string>> = (() => {
   try {
     const ver = localStorage.getItem("combowick-translations-ver");
@@ -54,11 +53,41 @@ const translationCache: Record<string, Record<string, string>> = (() => {
   } catch { return {}; }
 })();
 
-// Seed hand-translated (manual) strings for the premium + verify/key pages so they render
-// instantly on language-select with zero runtime translation. Manual entries win over cache.
-for (const [lang, dict] of Object.entries(MANUAL_TRANSLATIONS)) {
-  if (!translationCache[lang]) translationCache[lang] = {};
-  Object.assign(translationCache[lang], dict);
+// Hand-translated (manual) strings. 2026-11-19: loaded as a SEPARATE chunk, only when a non-English language is in
+// use (it was ~1.1 MB of the main bundle, parsed by every visitor). main.tsx waits for it before the first render
+// when the visitor's language isn't English, so translated pages don't flash English. Manual entries win over cache.
+let manualPromise: Promise<void> | null = null;
+export function loadManualTranslations(): Promise<void> {
+  if (!manualPromise) {
+    manualPromise = import("./manual-translations")
+      .then((m) => {
+        for (const [lang, dict] of Object.entries(m.MANUAL_TRANSLATIONS)) {
+          if (!translationCache[lang]) translationCache[lang] = {};
+          Object.assign(translationCache[lang], dict);
+        }
+      })
+      .catch(() => { manualPromise = null; });   // a failed chunk load can be retried on the next language switch
+  }
+  return manualPromise;
+}
+
+/** Translation lookup for code outside the provider (ErrorBoundary). English if not loaded yet. */
+export function manualText(lang: string, s: string): string {
+  return (lang && lang !== "en" && translationCache[lang]?.[s]) || s;
+}
+
+const SUPPORTED_LANGS: LangCode[] = ["en","fr","th","ko","zh-CN","de","ru","id","pt","fil","es","vi","ar"];
+/** The language the site starts in: the saved choice, else the browser language, else English. */
+export function initialLanguage(): LangCode {
+  let saved: string | null = null;
+  try { saved = localStorage.getItem("combowick-lang"); } catch { /* storage blocked */ }
+  if (saved && SUPPORTED_LANGS.includes(saved as LangCode)) return saved as LangCode;
+  const navLang = (typeof navigator !== "undefined" && navigator.language ? navigator.language : "en").toLowerCase();
+  const exact = SUPPORTED_LANGS.find((c) => c.toLowerCase() === navLang);
+  if (exact) return exact;
+  const base = navLang.split("-")[0];
+  const match = SUPPORTED_LANGS.find((c) => c.toLowerCase().split("-")[0] === base);
+  return (match || "en") as LangCode;
 }
 
 function persistCache() {
@@ -86,17 +115,7 @@ const lsGet = (k: string): string | null => { try { return localStorage.getItem(
 const lsSet = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } };
 
 export function TranslationProvider({ children }: { children: React.ReactNode }) {
-  const [currentLanguage, setCurrentLanguage] = useState<LangCode>(() => {
-    const supported: LangCode[] = ["en","fr","th","ko","zh-CN","de","ru","id","pt","fil","es","vi","ar"];
-    const saved = lsGet("combowick-lang");
-    if (saved && supported.includes(saved as LangCode)) return saved as LangCode;
-    const navLang = (navigator.language || "en").toLowerCase();
-    const exact = supported.find((c) => c.toLowerCase() === navLang);
-    if (exact) return exact;
-    const base = navLang.split("-")[0];
-    const match = supported.find((c) => c.toLowerCase().split("-")[0] === base);
-    return (match || "en") as LangCode;
-  });
+  const [currentLanguage, setCurrentLanguage] = useState<LangCode>(() => initialLanguage());
   const [isTranslating, setIsTranslating] = useState(false);
   const [, forceUpdate] = useState(0);
   const langRef = useRef(currentLanguage);
@@ -160,6 +179,12 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
   useEffect(() => {
     applyDir(currentLanguage); // also covers the saved/browser language on first load
     forceUpdate((n) => n + 1);
+    // non-English: make sure the dictionary chunk is in, then re-render (instant if main.tsx already loaded it)
+    if (currentLanguage !== "en") {
+      let alive = true;
+      void loadManualTranslations().then(() => { if (alive) forceUpdate((n) => n + 1); });
+      return () => { alive = false; };
+    }
   }, [currentLanguage]);
 
   // Flush queued texts

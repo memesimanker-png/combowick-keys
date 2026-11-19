@@ -57,11 +57,11 @@ export function AdBlockGate({ page }: { page: AdPage }) {
           {t("Free keys are paid for by ads. Please turn off your ad blocker for this site, then tap Try again.")}
         </p>
 
-        <div className="mt-4 rounded-lg border border-border bg-secondary/30 p-3 text-left text-xs">
+        <div className="mt-4 rounded-lg border border-border bg-secondary/30 p-3 text-start text-xs">
           <p className="mb-1.5 font-semibold text-foreground">{t("How to turn it off:")}</p>
           {/* 2026-11-19 (ticket axdi0533): phones often block ads system-wide (Android Private DNS such as
               AdGuard DNS, VPN / blocker apps), so "I turned everything off" players stayed stuck. Phone tips first. */}
-          <ul className="list-disc space-y-1 pl-4 text-muted-foreground">
+          <ul className="list-disc space-y-1 ps-4 text-muted-foreground">
             {android && <li>{t("Android: open Settings, search \"Private DNS\" and set it to Automatic or Off.")}</li>}
             {ios && <li>{t("iPhone: Settings > Safari > Extensions, turn off any ad blocker.")}</li>}
             {samsung && <li>{t("Samsung Internet: Menu > Ad blockers, turn them off.")}</li>}

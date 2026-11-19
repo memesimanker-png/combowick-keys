@@ -77,12 +77,8 @@ serve(async (req) => {
       });
     }
 
-    const { data: roleData } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("role", "admin")
-      .maybeSingle();
+    // 2026-11-19: admins, or a moderator who was given the "generate" tab (has_tab checks both)
+    const { data: roleData } = await supabase.rpc("has_tab", { _user_id: user.id, _tab: "generate" });
 
     if (!roleData) {
       return new Response(JSON.stringify({ error: "Admin access required" }), {

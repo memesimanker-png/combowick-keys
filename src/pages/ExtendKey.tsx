@@ -55,7 +55,7 @@ export default function ExtendKey() {
   const handleStart = async () => {
     const cleanKey = key.trim();
     if (cleanKey.length < 4) {
-      toast({ variant: "destructive", title: "Enter your key", description: "Paste the HWID key you want to extend." });
+      toast({ variant: "destructive", title: t("Enter your key"), description: t("Paste the HWID key you want to extend.") });
       return;
     }
     setLoading(true);
@@ -73,7 +73,7 @@ export default function ExtendKey() {
       }
       if (!serverErr && data?.success === false) serverErr = data.error || "";
       if (error || data?.success === false) {
-        toast({ variant: "destructive", title: "Cannot start", description: serverErr || "Try again." });
+        toast({ variant: "destructive", title: t("Cannot start"), description: t(serverErr || "Try again.") });
         setLoading(false);
         return;
       }
@@ -84,7 +84,7 @@ export default function ExtendKey() {
       setPending(p);
       setLoading(false);
     } catch {
-      toast({ variant: "destructive", title: "Network error", description: "Please try again." });
+      toast({ variant: "destructive", title: t("Network error"), description: t("Please try again.") });
       setLoading(false);
     }
   };

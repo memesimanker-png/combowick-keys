@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
         status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       })
     }
-    const { data: isAdmin } = await admin.rpc('has_role', { _user_id: userRes.user.id, _role: 'admin' })
+    const { data: isAdmin } = await admin.rpc('has_tab', { _user_id: userRes.user.id, _tab: 'scripts' })
     if (!isAdmin) {
       return new Response(JSON.stringify({ error: 'Forbidden' }), {
         status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },

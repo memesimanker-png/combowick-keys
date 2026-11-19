@@ -9,8 +9,10 @@ import { SEOHead } from "@/components/SEOHead";
 import { GameThumbnail } from "@/components/GameThumbnail";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdSlot } from "@/components/AdSlot";
+import { useTranslation } from "@/lib/translation-context";
 
 export default function Scripts() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [category, setCategory] = useState(searchParams.get("category") ?? "All");
@@ -107,7 +109,7 @@ export default function Scripts() {
     <Layout>
       <SEOHead
         title="Free Roblox Scripts — Auto Farm, ESP, Aimbot | ComboWick"
-        description="100+ verified free Roblox Lua scripts. Auto-farm, ESP, aimbot, fly and teleport for Blox Fruits, Pet Sim, Arsenal and more."
+        description="Free Roblox scripts by COMBO_WICK for the games listed here: auto farm, ESP and more. One loadstring, one key."
         breadcrumbs={[
           { name: "Home", url: "/" },
           { name: "Scripts", url: "/scripts" },
@@ -116,7 +118,7 @@ export default function Scripts() {
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           name: "Free Roblox Scripts",
-          description: "Browse verified Roblox Lua scripts. Auto-farm, ESP, aimbot, and utility scripts updated daily.",
+          description: "COMBO_WICK Roblox scripts: auto farm, ESP and utility features for the games listed.",
           url: "https://combowick.com/scripts",
           isPartOf: { "@type": "WebSite", name: "ComboWick", url: "https://combowick.com" },
         }}
@@ -124,14 +126,14 @@ export default function Scripts() {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold font-heading" style={{ textWrap: "balance" as any }}>
-            Free Roblox Scripts
+            {t("Free Roblox Scripts")}
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Browse verified Roblox scripts by COMBO_WICK. Copy and execute instantly.
+            {t("Browse verified Roblox scripts by COMBO_WICK. Copy and execute instantly.")}
           </p>
           {/* AI-retrieval paragraph */}
           <p className="mt-2 text-xs text-muted-foreground max-w-2xl">
-            ComboWick makes free Roblox scripts for the games listed below. Every game uses the same loadstring and one key: pick your game, copy the loadstring, and run it with a working executor (see the Executors page).
+            {t("ComboWick makes free Roblox scripts for the games listed below. Every game uses the same loadstring and one key: pick your game, copy the loadstring, and run it with a working executor (see the Executors page).")}
           </p>
         </div>
 
@@ -140,20 +142,20 @@ export default function Scripts() {
             <div className="sticky top-20">
               <div className="flex items-center gap-2 mb-4">
                 <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-semibold">Filter by Category</span>
+                <span className="text-sm font-semibold">{t("Filter by Category")}</span>
               </div>
               <ul className="flex flex-col gap-1">
                 {CATEGORIES.map((cat) => (
                   <li key={cat}>
                     <button
                       onClick={() => handleCategory(cat)}
-                      className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
+                      className={`w-full text-start px-3 py-2 rounded-md text-sm transition-colors ${
                         category === cat
                           ? "bg-primary text-primary-foreground font-semibold"
                           : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                       }`}
                     >
-                      {cat}
+                      {t(cat)}
                     </button>
                   </li>
                 ))}
@@ -169,20 +171,20 @@ export default function Scripts() {
                 to="/premium-keys"
                 className="group relative block mb-6 overflow-hidden rounded-xl border border-yellow-500/30 bg-gradient-to-br from-yellow-500/10 via-card to-primary/10 p-4 sm:p-5 hover:border-yellow-500/60 transition-all"
               >
-                <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-[10px] font-bold uppercase tracking-wider text-yellow-400">
-                  <Crown className="h-3 w-3" /> Featured
+                <div className="absolute top-3 end-3 flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/20 border border-yellow-500/40 text-[10px] font-bold uppercase tracking-wider text-yellow-400">
+                  <Crown className="h-3 w-3" /> {t("Featured")}
                 </div>
                 <div className="flex items-center gap-4">
                   <GameThumbnail gameName={featured.game} universeId={(featured as any).game_universe_id} size="lg" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-yellow-400 uppercase tracking-wider mb-1">Premium • {featured.game}</p>
+                    <p className="text-[10px] font-semibold text-yellow-400 uppercase tracking-wider mb-1">{t("Premium")} • {featured.game}</p>
                     <h2 className="font-heading font-bold text-base sm:text-lg leading-tight group-hover:text-primary transition-colors truncate">
                       {featured.title}
                     </h2>
                     <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{featured.description}</p>
                   </div>
                   <div className="hidden sm:flex items-center gap-1 text-xs font-semibold text-primary whitespace-nowrap">
-                    Unlock <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    {t("Unlock")} <ArrowRight className="h-3.5 w-3.5 rtl:rotate-180 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-transform" />
                   </div>
                 </div>
               </Link>
@@ -195,7 +197,7 @@ export default function Scripts() {
                 type="search"
                 value={query}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Search scripts, games, or tags... (press / )"
+                placeholder={t("Search scripts, games, or tags... (press / )")}
                 className="w-full rounded-lg border border-border bg-card pl-10 pr-12 py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               />
               <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center justify-center h-6 px-1.5 rounded border border-border bg-secondary/60 text-[10px] text-muted-foreground font-mono pointer-events-none">
@@ -204,9 +206,9 @@ export default function Scripts() {
             </div>
 
             <p className="text-sm text-muted-foreground mb-4">
-              {isLoading ? "Loading..." : `${results.length} script${results.length !== 1 ? "s" : ""} found`}
-              {query && <span> for &ldquo;{query}&rdquo;</span>}
-              {category !== "All" && <span> in {category}</span>}
+              {isLoading ? t("Loading...") : t(results.length === 1 ? "{n} script found" : "{n} scripts found").replace("{n}", String(results.length))}
+              {query && <span> {t("for “{q}”").replace("{q}", query)}</span>}
+              {category !== "All" && <span> {t("in {category}").replace("{category}", t(category))}</span>}
             </p>
 
             {isLoading ? (
@@ -231,9 +233,7 @@ export default function Scripts() {
                     <ScriptCard key={script.id} script={script} />
                   ))}
                 </div>
-                {results.length > 6 && (
-                  <AdSlot slot="3333333333" format="auto" responsive minHeight={250} />
-                )}
+                {/* 2026-11-19: AdSense slot removed (AdSense is retired; placeholder slot id = 200 KB + an empty box) */}
                 {results.length > 6 && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
                     {results.slice(6).map((script) => (
@@ -244,8 +244,8 @@ export default function Scripts() {
               </>
             ) : (
               <div className="flex flex-col items-center justify-center py-20 text-center">
-                <p className="text-muted-foreground text-lg font-medium">No scripts found</p>
-                <p className="text-muted-foreground text-sm mt-2">Try a different search term or category.</p>
+                <p className="text-muted-foreground text-lg font-medium">{t("No scripts found")}</p>
+                <p className="text-muted-foreground text-sm mt-2">{t("Try a different search term or category.")}</p>
                 <button
                   onClick={() => {
                     setQuery("");
@@ -254,7 +254,7 @@ export default function Scripts() {
                   }}
                   className="mt-4 text-primary text-sm hover:underline"
                 >
-                  Clear filters
+                  {t("Clear filters")}
                 </button>
               </div>
             )}

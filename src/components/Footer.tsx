@@ -12,7 +12,7 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           <div className="md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <img src="/images/combo-wick-logo.png" alt="ComboWick" className="h-8 w-8 rounded-lg" />
+              <img src="/images/combo-wick-logo-128.webp" alt="ComboWick" className="h-8 w-8 rounded-lg" />
               <span className="font-heading font-bold text-sm tracking-wider">
                 <span className="text-primary">COMBO</span>WICK
               </span>
@@ -42,16 +42,15 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
             {
               title: t("Legal"),
               links: [
-                { to: "/privacy", label: "Privacy" },
-                { to: "/terms", label: "Terms" },
-                { to: "/refund-policy", label: "Refund" },
+                { to: "/privacy", label: t("Privacy") },
+                { to: "/terms", label: t("Terms") },
+                { to: "/refund-policy", label: t("Refund") },
               ],
             },
             {
               title: t("Community"),
               links: [
                 { href: "https://discord.com/invite/ufrz9Zaqs8", label: "Discord" },
-                { href: "mailto:support@combowick.com", label: "Email" },
               ],
             },
           ].map((section) => (
@@ -87,17 +86,17 @@ export const Footer = forwardRef<HTMLElement>(function Footer(_, ref) {
             >
               DayConquer
             </a>
-            <span className="text-muted-foreground/60 not-italic ml-2">— Discipline is the script that runs you.</span>
+            <span className="text-muted-foreground/60 not-italic ms-2">— {t("Discipline is the script that runs you.")}</span>
           </p>
         </div>
 
         <div className="relative border-t border-border/30 mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-muted-foreground">
-            © 2024–{new Date().getFullYear()} ComboWick. All rights reserved.
+            © 2024–{new Date().getFullYear()} ComboWick. {t("All rights reserved.")}
           </p>
           <p className="text-xs text-muted-foreground flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-            Secure payments powered by PayPal • SSL Encrypted
+            {t("Secure payments powered by PayPal • SSL Encrypted")}
           </p>
         </div>
       </div>

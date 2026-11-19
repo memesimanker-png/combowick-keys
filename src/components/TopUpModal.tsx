@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, Check, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "@/lib/translation-context";
 
 const PACKS = [
   { id: "7d", label: "+7 Days", price: 3, hint: "$0.43 / day" },
@@ -21,6 +22,7 @@ type Props = {
 
 export function TopUpModal({ isOpen, onClose, paypalClientId, keyValue, onSuccess }: Props) {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [pack, setPack] = useState<(typeof PACKS)[number]["id"]>("30d");
   const [processing, setProcessing] = useState(false);
   const [done, setDone] = useState<null | string>(null);
@@ -42,16 +44,16 @@ export function TopUpModal({ isOpen, onClose, paypalClientId, keyValue, onSucces
         body: { order_id: data.orderID, key: keyValue, pack },
       });
       if (error || res?.error) {
-        toast({ variant: "destructive", title: "Top-up failed", description: res?.error || error?.message });
+        toast({ variant: "destructive", title: t("Top-up failed"), description: t(res?.error || error?.message || "Please try again.") });
         return;
       }
       if (res?.status === "PENDING") {
-        toast({ title: "Payment clearing", description: "Your hours will be added once the payment completes." });
+        toast({ title: t("Payment clearing"), description: t("Your hours will be added once the payment completes.") });
         onClose();
         return;
       }
       setDone(res?.new_expires_at || "");
-      toast({ title: "Hours added!", description: `${selected.label} added to your key.` });
+      toast({ title: t("Hours added!"), description: t("{n} added to your key.").replace("{n}", t(selected.label)) });
       onSuccess();
     } finally {
       setProcessing(false);
@@ -62,7 +64,7 @@ export function TopUpModal({ isOpen, onClose, paypalClientId, keyValue, onSucces
     <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" /> Add More Hours</DialogTitle>
+          <DialogTitle className="flex items-center gap-2"><Clock className="h-5 w-5 text-primary" /> {t("Add More Hours")}</DialogTitle>
         </DialogHeader>
 
         {done !== null ? (
@@ -70,32 +72,32 @@ export function TopUpModal({ isOpen, onClose, paypalClientId, keyValue, onSucces
             <div className="mx-auto h-12 w-12 rounded-full bg-success/15 flex items-center justify-center">
               <Check className="h-6 w-6 text-success" />
             </div>
-            <p className="font-semibold">Time added to your key</p>
-            {done && <p className="text-sm text-muted-foreground">New expiry: {new Date(done).toLocaleString()}</p>}
-            <Button onClick={onClose} className="w-full mt-2">Done</Button>
+            <p className="font-semibold">{t("Time added to your key")}</p>
+            {done && <p className="text-sm text-muted-foreground">{t("New expiry:")} {new Date(done).toLocaleString()}</p>}
+            <Button onClick={onClose} className="w-full mt-2">{t("Done")}</Button>
           </div>
         ) : (
           <div className="space-y-4">
             <p className="text-sm text-muted-foreground break-all">
-              Extending key: <span className="font-mono text-foreground">{keyValue}</span>
+              {t("Extending key:")} <span className="font-mono text-foreground">{keyValue}</span>
             </p>
             <div className="grid grid-cols-2 gap-3">
               {PACKS.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => setPack(p.id)}
-                  className={`rounded-lg border p-4 text-left transition ${pack === p.id ? "border-primary bg-primary/10" : "border-border bg-secondary/30 hover:border-primary/40"}`}
+                  className={`rounded-lg border p-4 text-start transition ${pack === p.id ? "border-primary bg-primary/10" : "border-border bg-secondary/30 hover:border-primary/40"}`}
                 >
-                  <div className="font-bold text-lg">{p.label}</div>
+                  <div className="font-bold text-lg">{t(p.label)}</div>
                   <div className="text-2xl font-bold">${p.price}</div>
-                  <div className="text-xs text-muted-foreground">{p.hint}</div>
+                  <div className="text-xs text-muted-foreground">{t(p.hint)}</div>
                 </button>
               ))}
             </div>
 
             {processing ? (
               <div className="flex items-center justify-center py-4 gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" /> Adding hours…
+                <Loader2 className="h-4 w-4 animate-spin" /> {t("Adding hours…")}
               </div>
             ) : (
               <PayPalScriptProvider options={{ clientId: paypalClientId, currency: "USD", components: "buttons" }}>
@@ -104,7 +106,7 @@ export function TopUpModal({ isOpen, onClose, paypalClientId, keyValue, onSucces
                   forceReRender={[pack]}
                   createOrder={createOrder}
                   onApprove={onApprove}
-                  onError={() => toast({ variant: "destructive", title: "PayPal error", description: "Please try again." })}
+                  onError={() => toast({ variant: "destructive", title: t("PayPal error"), description: t("Please try again.") })}
                 />
               </PayPalScriptProvider>
             )}

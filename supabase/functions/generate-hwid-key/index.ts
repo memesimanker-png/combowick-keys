@@ -28,8 +28,13 @@ function isAllowedOrigin(origin: string | null): boolean {
 }
 
 function getIp(req: Request): string {
+  // 2026-11-19: Cloudflare's header first. The first x-forwarded-for entry can be sent by the client, so a fake one
+  // gave a fresh 5-keys-per-IP quota on every request.
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf) return cf.trim();
   const fwd = req.headers.get("x-forwarded-for") || "";
-  return fwd.split(",")[0].trim() || req.headers.get("cf-connecting-ip") || "unknown";
+  const parts = fwd.split(",").map((s) => s.trim()).filter(Boolean);
+  return parts[parts.length - 1] || "unknown";
 }
 
 async function sha256(input: string): Promise<string> {
@@ -141,6 +146,28 @@ Deno.serve(async (req) => {
         JSON.stringify({ success: false, code: "rate_limited", resets_at: quota.resets_at, error: "Rate limit: only 5 keys per 10 hours per IP." }),
         { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // 2026-11-19: a free key may only be for a game in the PUBLIC games list (the key page's picker). Any number
+    // was accepted, so a free key could be made for a private paid game (custom scripts). Checked before the
+    // token is burned; if the list can't be loaded we let it through (players pick from that same list).
+    {
+      const g = String((body as any)?.game_id ?? "").trim();
+      if (g) {
+        let list: any[] | null = null;
+        try {
+          const r = await fetch("https://v0-remix-of-roblox-executor-system.vercel.app/api/public/games", { signal: AbortSignal.timeout(4000) });
+          const j = await r.json();
+          if (Array.isArray(j?.games) && j.games.length) list = j.games;
+        } catch { /* unreachable: allow */ }
+        if (list && !list.some((x) => String(x?.universe_id ?? "") === g || String(x?.game_id ?? "") === g)) {
+          logFail(supabase, "game_not_public", ip, tokenRow.ip, g);
+          return new Response(
+            JSON.stringify({ success: false, error: "That game isn't available for free keys. Pick a game from the list." }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
     }
 
     // Burn the token early (single-use). 2026-11-19: claim it atomically (only if still unused), so parallel

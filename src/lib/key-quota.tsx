@@ -29,11 +29,13 @@ export function useKeyQuota(enabled = true) {
 }
 
 /** "3 h 20 min" until the next free key (rounded up to the minute). */
-export function waitLabel(resetsAt: string | null | undefined): string {
+export function waitLabel(resetsAt: string | null | undefined, t: (s: string) => string = (s) => s): string {
   const ms = resetsAt ? new Date(resetsAt).getTime() - Date.now() : 0;
   const mins = Math.max(1, Math.ceil(ms / 60000));
   const h = Math.floor(mins / 60), m = mins % 60;
-  return h > 0 ? `${h} h ${m} min` : `${m} min`;
+  return h > 0
+    ? t("{h} h {m} min").replace("{h}", String(h)).replace("{m}", String(m))
+    : t("{m} min").replace("{m}", String(m));
 }
 
 export function KeyLimitNotice({ resetsAt, limit = 5 }: { resetsAt: string | null | undefined; limit?: number }) {
@@ -45,7 +47,7 @@ export function KeyLimitNotice({ resetsAt, limit = 5 }: { resetsAt: string | nul
       <p className="mt-1 text-sm text-muted-foreground">
         {t("You can get {n} free keys every 10 hours. Your next free key is available in {time}.")
           .replace("{n}", String(limit))
-          .replace("{time}", waitLabel(resetsAt))}
+          .replace("{time}", waitLabel(resetsAt, t))}
       </p>
       <p className="mt-2 text-xs text-muted-foreground">{t("Your last key still works until it expires.")}</p>
       <p className="mt-3 text-[11px] text-muted-foreground">

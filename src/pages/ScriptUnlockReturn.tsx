@@ -4,6 +4,7 @@ import { Shield, CheckCircle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
 import { NoIndex } from "@/components/NoIndex";
+import { useTranslation } from "@/lib/translation-context";
 
 // Approved Linkvertise domains — referrer must come from one of these.
 const APPROVED_DOMAINS = [
@@ -36,6 +37,7 @@ export default function ScriptUnlockReturn() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [stage, setStage] = useState<"checking" | "ok">("checking");
 
   useEffect(() => {
@@ -77,12 +79,12 @@ export default function ScriptUnlockReturn() {
     localStorage.setItem(`script_unlock_${slug}`, String(Date.now()));
     localStorage.removeItem("script_unlock_pending");
     setStage("ok");
-    toast({ title: "Script Unlocked", description: "Redirecting…" });
+    toast({ title: t("Script Unlocked"), description: t("Redirecting…") });
 
-    const t = window.setTimeout(() => {
+    const timer = window.setTimeout(() => {
       navigate(`/scripts/${slug}`, { replace: true });
     }, 1200);
-    return () => window.clearTimeout(t);
+    return () => window.clearTimeout(timer);
   }, [params, navigate, toast]);
 
   return (
@@ -91,25 +93,25 @@ export default function ScriptUnlockReturn() {
       <header className="container py-6">
         <div className="flex items-center gap-2">
           <Shield className="h-6 w-6 text-primary" />
-          <h1 className="text-xl font-bold">ComboWick Verify</h1>
+          <h1 className="text-xl font-bold">{t("ComboWick Verify")}</h1>
         </div>
       </header>
       <main className="flex-1 container flex flex-col items-center justify-center py-12">
         <Card className="w-full max-w-md">
           <CardHeader>
-            <CardTitle>Script Unlock</CardTitle>
-            <CardDescription>Verifying your completion…</CardDescription>
+            <CardTitle>{t("Script Unlock")}</CardTitle>
+            <CardDescription>{t("Verifying your completion…")}</CardDescription>
           </CardHeader>
           <CardContent>
             {stage === "checking" ? (
               <div className="flex flex-col items-center justify-center py-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
-                <p className="mt-4 text-center text-muted-foreground">Validating referrer…</p>
+                <p className="mt-4 text-center text-muted-foreground">{t("Validating referrer…")}</p>
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-8">
                 <CheckCircle className="h-16 w-16 text-green-500" />
-                <p className="mt-4 text-center font-medium">Verified! Loading your script…</p>
+                <p className="mt-4 text-center font-medium">{t("Verified! Loading your script…")}</p>
               </div>
             )}
           </CardContent>

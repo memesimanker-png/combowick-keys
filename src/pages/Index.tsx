@@ -31,7 +31,7 @@ export default function Index() {
     <Layout>
       <SEOHead
         title="ComboWick — Free Roblox Scripts, Premium Keys & Executors"
-        description="Free Roblox Lua scripts, HWID premium keys, executor reviews and Lua tutorials. Instant PayPal delivery and 24/7 Discord support."
+        description="Free Roblox Lua scripts, HWID premium keys, executor reviews and Lua tutorials. Instant key delivery and Discord support."
       />
       {/* Hero */}
       <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-end overflow-hidden">
